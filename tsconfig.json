@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "strict": true,
+    "removeComments": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "esModuleInterop": false,
+  }
+}
