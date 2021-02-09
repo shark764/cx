@@ -1,51 +1,83 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-// import Admin from '../Scheduling/containers/Admin';
-// import Availability from '../Scheduling/containers/Agent/Availability';
-// import Messages from '../Scheduling/containers/Agent/Messages';
-// import Request from '../Scheduling/containers/Agent/Request';
-// import Schedule from '../Scheduling/containers/Agent/Schedule';
-// import Trade from '../Scheduling/containers/Agent/Trade';
-// import Forecasting from '../Forecasting';
-// import Scheduling from '../Scheduling/containers/Scheduling';
 import { NoMatch } from './noMatch';
 
-export function Navigation () {
+import Availability from '../pages/scheduling/Agent/Availability';
+import Messages from '../pages/scheduling/Agent/Messages';
+import Request from '../pages/scheduling/Agent/Request';
+import AgentSchedule from '../pages/scheduling/Agent/Schedule';
+import Trade from '../pages/scheduling/Agent/Trade';
+import Organization from '../pages/scheduling/Admin/Organization';
+import ActivityManagement from '../pages/scheduling/Admin/ActivityManagement';
+import CompetenceManagement from '../pages/scheduling/Admin/CompetenceManagement';
+import DayTypes from '../pages/scheduling/Admin/DayTypes';
+import DefaultRestriction from '../pages/scheduling/Admin/DefaultRestriction';
+import PlanningSchedule from '../pages/scheduling/Planning/Schedule';
+import Employees from '../pages/scheduling/Planning/Employees';
+import Settings from '../pages/scheduling/Planning/Settings';
+
+import Forecasting from '../pages/forecasting';
+
+export function Navigation() {
   return (
     <Switch>
       <Route exact path="/">
         <div />
       </Route>
-      <Route exact path={ [ '/agent', '/agent/schedule' ] }>
-        <div>schedule</div>
+
+      {/* PLANNING */ }
+      <Route exact path={ [ '/planning', '/planning/schedule' ] }>
+        <PlanningSchedule />
       </Route>
-      <Route path="/agent/availability">
-        <div>availability</div>
+      <Route path="/planning/employees">
+        <Employees />
       </Route>
-      <Route path="/agent/request">
-        <div>request</div>
-      </Route>
-      <Route path="/agent/trade">
-        <div>trade</div>
-      </Route>
-      <Route path="/agent/messages">
-        <div>messages</div>
+      <Route path="/planning/settings">
+        <Settings />
       </Route>
 
-      <Route path="/scheduling">
-        <div>sheduling</div>
+      {/* AGENT */ }
+      <Route exact path={ [ '/agent', '/agent/schedule' ] }>
+        <AgentSchedule />
       </Route>
-      <Route path="/forecasting">
-        <div>forcasting</div>
+      <Route path="/agent/availability">
+        <Availability />
       </Route>
-      <Route path="/admin">
-        <div>admin</div>
+      <Route path="/agent/request">
+        <Request />
       </Route>
+      <Route path="/agent/trade">
+        <Trade />
+      </Route>
+      <Route path="/agent/messages">
+        <Messages />
+      </Route>
+
+      {/* FORECASTING */ }
+      <Route exact path="/forecasting">
+        <Forecasting />
+      </Route>
+
+      {/* ADMIN */ }
+      <Route exact path={ [ '/admin', '/admin/organization' ] }>
+        <Organization />
+      </Route>
+      <Route path="/admin/activity-management">
+        <ActivityManagement />
+      </Route>
+      <Route path="/admin/competence-management">
+        <CompetenceManagement />
+      </Route>
+      <Route path="/admin/day-types">
+        <DayTypes />
+      </Route>
+      <Route path="/admin/default-restriction">
+        <DefaultRestriction />
+      </Route>
+
       <Route path="*">
         <NoMatch />
       </Route>
     </Switch>
   );
 }
-
-export default Navigation;
