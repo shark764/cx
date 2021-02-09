@@ -8,13 +8,13 @@ import { Route, Switch } from 'react-router-dom';
 // import Trade from '../Scheduling/containers/Agent/Trade';
 // import Forecasting from '../Forecasting';
 // import Scheduling from '../Scheduling/containers/Scheduling';
-// import NoMatch from './NoMatch';
+import { NoMatch } from './noMatch';
 
 export function Navigation () {
   return (
     <Switch>
       <Route exact path="/">
-        <div>exact path</div>
+        <div />
       </Route>
       <Route exact path={ [ '/agent', '/agent/schedule' ] }>
         <div>schedule</div>
@@ -42,7 +42,7 @@ export function Navigation () {
         <div>admin</div>
       </Route>
       <Route path="*">
-        <div>no match</div>
+        <NoMatch />
       </Route>
     </Switch>
   );
