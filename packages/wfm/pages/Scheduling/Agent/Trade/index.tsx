@@ -1,11 +1,5 @@
 import * as React from 'react';
 
-function Trade() {
-  return (
-    <div>
-      <span>Trade here!</span>
-    </div>
-  );
+export function Trade() {
+  return <div>Trade here!</div>;
 }
-
-export default Trade;

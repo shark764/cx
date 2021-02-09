@@ -1,8 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-// @ts-ignore
 import { Calendar } from 'react-big-calendar';
-// @ts-ignore
 import { DateTime } from 'luxon';
 import styled, { css } from 'styled-components';
 
@@ -95,6 +93,7 @@ export function BigCalendar({
       <Calendar
         localizer={luxonLocalizer}
         formats={calendarFormats}
+        // @ts-ignore
         components={calendarComponents}
         {...props}
       />

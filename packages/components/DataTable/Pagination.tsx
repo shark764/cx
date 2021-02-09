@@ -2,7 +2,11 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-interface PagProps {
+const Input = styled.input`
+  width: 100px;
+`;
+
+export interface PagProps {
   canPreviousPage: boolean;
   canNextPage: boolean;
   state: {
@@ -17,10 +21,6 @@ interface PagProps {
   previousPage(): void;
   setPageSize(arg: number): void;
 }
-
-const PageInput = styled.input`
-  width: 100px;
-`;
 export function Pagination(props: PagProps) {
   const {
     canPreviousPage,
@@ -71,8 +71,7 @@ export function Pagination(props: PagProps) {
       </span>
       <span>
         | Go to page:{' '}
-        <PageInput
-          title="go to page"
+        <Input
           type="number"
           defaultValue={pageIndex + 1}
           onChange={(e) => {
@@ -82,7 +81,8 @@ export function Pagination(props: PagProps) {
         />
       </span>{' '}
       <select
-        title="select page size"
+        name="page-size"
+        title="Page size options"
         value={pageSize}
         onChange={(e) => {
           setPageSize(Number(e.target.value));

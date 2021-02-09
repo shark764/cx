@@ -14,7 +14,7 @@ const Location = styled.span`
   color: ${(props) => props.theme.colors.secondary};
 `;
 
-function NoMatch() {
+export function NoMatch() {
   const location = useLocation();
 
   return (
@@ -25,5 +25,3 @@ function NoMatch() {
     </Box>
   );
 }
-
-export default NoMatch;

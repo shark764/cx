@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
+// @ts-ignore
 import { useFlexLayout, usePagination, useTable } from 'react-table';
 import styled from 'styled-components';
 import { LoadSpinner } from '../LoadSpinner';
@@ -11,6 +13,26 @@ const TrText = styled.span`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
+export interface ColumnData {
+  Header: string;
+  accessor: string;
+  Cell?: any;
+  width?: number;
+  minWidth?: number;
+  maxWidth?: number;
+}
+export interface TableData {
+  id: number | string;
+}
+export interface TableProps {
+  columns: ColumnData[];
+  data: TableData[];
+  showPagination?: boolean;
+  PaginationComponent?: typeof Pagination;
+  pageSizeOptions?: Array<number>;
+  loading?: boolean;
+  noDataText?: string;
+}
 export function DataTable({
   columns,
   data,
@@ -19,8 +41,7 @@ export function DataTable({
   pageSizeOptions = [5, 10, 20, 30, 40, 50, 100],
   loading = false,
   noDataText = 'No records found',
-}: any) {
-
+}: TableProps) {
   const defaultColumn = React.useMemo(
     () => ({
       // When using the useFlexLayout:
@@ -33,6 +54,7 @@ export function DataTable({
 
   const dataTable = useTable(
     {
+      // @ts-ignore
       columns,
       data,
       defaultColumn,
@@ -73,7 +95,12 @@ export function DataTable({
             <div className="tr">
               <div className="td">
                 <TrText>Loading...</TrText>
-                <LoadSpinner spinnerType="simple" size={25} weight={4} secondary />
+                <LoadSpinner
+                  spinnerType="simple"
+                  size={25}
+                  weight={4}
+                  secondary
+                />
               </div>
             </div>
           )) ||
@@ -96,8 +123,30 @@ export function DataTable({
       </div>
 
       {showPagination && trData.length > 0 && (
+        // @ts-ignore
         <PaginationComponent {...dataTable} pageSizeOptions={pageSizeOptions} />
       )}
     </>
   );
 }
+
+DataTable.propTypes = {
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      Header: PropTypes.string,
+      accessor: PropTypes.string,
+      // eslint-disable-next-line react/forbid-prop-types
+      Cell: PropTypes.any,
+    })
+  ),
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    })
+  ),
+  showPagination: PropTypes.bool,
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  PaginationComponent: PropTypes.node,
+  loading: PropTypes.bool,
+  noDataText: PropTypes.string,
+};

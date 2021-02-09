@@ -1,11 +1,5 @@
 import * as React from 'react';
 
-function Schedule() {
-  return (
-    <div>
-      Schedule here!
-    </div>
-  );
+export function PlanningSchedule() {
+  return <div>PlanningSchedule here!</div>;
 }
-
-export default Schedule;

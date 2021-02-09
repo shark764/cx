@@ -1,48 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Temporary description placeholder" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="canonical" href="https://localhost:8080" />
+    <link rel="apple-touch-icon" href="example.png" />
+    <meta name="theme-color" content="#317EFB" />
+    <!-- <link rel="preconnect" href="PUT YOUR SERVER NAME"> -->
+    <title>Test</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Temporary description placeholder">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="canonical" href="https://localhost:8080" />
-  <link rel="apple-touch-icon" href="example.png">
-  <meta name="theme-color" content="#317EFB" />
-  <!-- <link rel="preconnect" href="PUT YOUR SERVER NAME"> -->
-  <title>Test</title>
-</head>
+  <body>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+          'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
 
-<body>
-  <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-        'Droid Sans', 'Helvetica Neue', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+      }
+    </style>
 
-    code {
-      font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-    }
-  </style>
+    <div id="app"></div>
 
-  <div id="app"></div>
-
-  <script>
-    if ( navigator.serviceWorker ) {
-      navigator.serviceWorker.register( 'service-worker.js', { scope: '/' } )
-        .then(
-          function ( registration ) {
-            console.log( 'Service worker registered!' );
+    <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('service-worker.js', { scope: '/' }).then(
+          function(registration) {
+            console.log('Service worker registered!');
           },
-          function ( err ) {
-            console.error( 'Installation failed!', err );
+          function(err) {
+            console.error('Installation failed!', err);
           }
         );
-    }
-  </script>
-</body>
-
+      }
+    </script>
+  </body>
 </html>

@@ -1,20 +1,25 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Availability from '../pages/Scheduling/Agent/Availability';
-import Messages from '../pages/Scheduling/Agent/Messages';
-import Request from '../pages/Scheduling/Agent/Request';
-import AgentSchedule from '../pages/Scheduling/Agent/Schedule';
-import Trade from '../pages/Scheduling/Agent/Trade';
-import Forecasting from '../pages/Forecasting';
-import Organization from '../pages/Scheduling/Admin/Organization';
-import ActivityManagement from '../pages/Scheduling/Admin/ActivityManagement';
-import CompetenceManagement from '../pages/Scheduling/Admin/CompetenceManagement';
-import DayTypes from '../pages/Scheduling/Admin/DayTypes';
-import DefaultRestriction from '../pages/Scheduling/Admin/DefaultRestriction';
-import PlanningSchedule from '../pages/Scheduling/Planning/Schedule';
-import Employees from '../pages/Scheduling/Planning/Employees';
-import Settings from '../pages/Scheduling/Planning/Settings';
-import NoMatch from './NoMatch';
+
+import { Employees } from '../pages/Scheduling/Planning/Employees';
+import { PlanningSchedule } from '../pages/Scheduling/Planning/Schedule';
+import { Settings } from '../pages/Scheduling/Planning/Settings';
+
+import { AgentSchedule } from '../pages/Scheduling/Agent/Schedule';
+import { Availability } from '../pages/Scheduling/Agent/Availability';
+import { Messages } from '../pages/Scheduling/Agent/Messages';
+import { Request } from '../pages/Scheduling/Agent/Request';
+import { Trade } from '../pages/Scheduling/Agent/Trade';
+
+import { Forecasting } from '../pages/Forecasting';
+
+import { Organization } from '../pages/Scheduling/Admin/Organization';
+import { ActivityManagement } from '../pages/Scheduling/Admin/ActivityManagement';
+import { CompetenceManagement } from '../pages/Scheduling/Admin/CompetenceManagement';
+import { DayTypes } from '../pages/Scheduling/Admin/DayTypes';
+import { DefaultRestriction } from '../pages/Scheduling/Admin/DefaultRestriction';
+
+import { NoMatch } from './NoMatch';
 
 export function Navigation() {
   return (

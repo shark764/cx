@@ -1,11 +1,5 @@
 import * as React from 'react';
 
-function Shedule () {
-  return (
-    <div>
-      <span>Shedule here!</span>
-    </div>
-  );
+export function AgentSchedule() {
+  return <div>AgentSchedule here!</div>;
 }
-
-export default Shedule;
