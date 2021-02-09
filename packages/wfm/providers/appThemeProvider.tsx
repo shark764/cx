@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { loadTheme } from '../redux/thunks';
@@ -10,19 +9,19 @@ interface RootState {
   main: any;
 }
 
-export function AppThemeProvider( { children }: Props ) {
-  const theme = useSelector( ( state: RootState ) => state.main.theme );
+export function AppThemeProvider({ children }: Props) {
+  const theme = useSelector((state: RootState) => state.main.theme);
   const dispatch = useDispatch();
 
-  useEffect( () => {
-    dispatch( loadTheme() );
-  }, [ dispatch ] );
+  React.useEffect(() => {
+    dispatch(loadTheme());
+  }, [dispatch]);
 
-  if ( !theme ) {
+  if (!theme) {
     return null;
   }
 
-  return <ThemeProvider theme={ theme }>{ children }</ThemeProvider>;
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 }
 
 AppThemeProvider.propTypes = {

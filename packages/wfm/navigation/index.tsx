@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { NoMatch } from './noMatch';
-
-import Availability from '../pages/scheduling/Agent/Availability';
-import Messages from '../pages/scheduling/Agent/Messages';
-import Request from '../pages/scheduling/Agent/Request';
-import AgentSchedule from '../pages/scheduling/Agent/Schedule';
-import Trade from '../pages/scheduling/Agent/Trade';
-import Organization from '../pages/scheduling/Admin/Organization';
-import ActivityManagement from '../pages/scheduling/Admin/ActivityManagement';
-import CompetenceManagement from '../pages/scheduling/Admin/CompetenceManagement';
-import DayTypes from '../pages/scheduling/Admin/DayTypes';
-import DefaultRestriction from '../pages/scheduling/Admin/DefaultRestriction';
-import PlanningSchedule from '../pages/scheduling/Planning/Schedule';
-import Employees from '../pages/scheduling/Planning/Employees';
-import Settings from '../pages/scheduling/Planning/Settings';
-
-import Forecasting from '../pages/forecasting';
+import Availability from '../pages/Scheduling/Agent/Availability';
+import Messages from '../pages/Scheduling/Agent/Messages';
+import Request from '../pages/Scheduling/Agent/Request';
+import AgentSchedule from '../pages/Scheduling/Agent/Schedule';
+import Trade from '../pages/Scheduling/Agent/Trade';
+import Forecasting from '../pages/Forecasting';
+import Organization from '../pages/Scheduling/Admin/Organization';
+import ActivityManagement from '../pages/Scheduling/Admin/ActivityManagement';
+import CompetenceManagement from '../pages/Scheduling/Admin/CompetenceManagement';
+import DayTypes from '../pages/Scheduling/Admin/DayTypes';
+import DefaultRestriction from '../pages/Scheduling/Admin/DefaultRestriction';
+import PlanningSchedule from '../pages/Scheduling/Planning/Schedule';
+import Employees from '../pages/Scheduling/Planning/Employees';
+import Settings from '../pages/Scheduling/Planning/Settings';
+import NoMatch from './NoMatch';
 
 export function Navigation() {
   return (
@@ -25,8 +23,8 @@ export function Navigation() {
         <div />
       </Route>
 
-      {/* PLANNING */ }
-      <Route exact path={ [ '/planning', '/planning/schedule' ] }>
+      {/* PLANNING */}
+      <Route exact path={['/planning', '/planning/schedule']}>
         <PlanningSchedule />
       </Route>
       <Route path="/planning/employees">
@@ -36,8 +34,8 @@ export function Navigation() {
         <Settings />
       </Route>
 
-      {/* AGENT */ }
-      <Route exact path={ [ '/agent', '/agent/schedule' ] }>
+      {/* AGENT */}
+      <Route exact path={['/agent', '/agent/schedule']}>
         <AgentSchedule />
       </Route>
       <Route path="/agent/availability">
@@ -53,13 +51,13 @@ export function Navigation() {
         <Messages />
       </Route>
 
-      {/* FORECASTING */ }
+      {/* FORECASTING */}
       <Route exact path="/forecasting">
         <Forecasting />
       </Route>
 
-      {/* ADMIN */ }
-      <Route exact path={ [ '/admin', '/admin/organization' ] }>
+      {/* ADMIN */}
+      <Route exact path={['/admin', '/admin/organization']}>
         <Organization />
       </Route>
       <Route path="/admin/activity-management">

@@ -6,7 +6,7 @@ const Header = styled.header`
   display: grid;
   grid-template-areas: 'logo nav';
   height: 50px;
-  background-color: ${( props ) => props.theme.colors.brand};
+  background-color: ${(props) => props.theme.colors.brand};
   padding-left: 20px;
   padding-right: 20px;
 `;
@@ -17,12 +17,12 @@ const Nav = styled.nav`
   align-items: center;
   justify-items: center;
 `;
-const StyledNavLink = styled( NavLink )`
+const StyledNavLink = styled(NavLink)`
   text-decoration: none;
-  color: ${( { theme } ) => theme.colors[ 'accent-3' ]};
+  color: ${({ theme }) => theme.colors['accent-3']};
 
   &.active {
-    color: ${( { theme } ) => theme.colors[ 'accent-1' ]};
+    color: ${({ theme }) => theme.colors['accent-1']};
   }
 
   &:focus,
@@ -35,30 +35,30 @@ const StyledNavLink = styled( NavLink )`
 `;
 
 const links = [
-  { label: 'SCHEDULING', to: '/planning' },
+  { label: 'PLANNING', to: '/planning' },
   { label: 'FORECASTING', to: '/forecasting' },
   { label: 'AGENT', to: '/agent' },
   { label: 'ADMIN', to: '/admin' },
 ];
 
-export function PageHeader () {
+export function PageHeader() {
   return (
     <Header>
       <Nav>
-        { links.map( ( link ) => (
+        {links.map((link) => (
           <StyledNavLink
-            to={ link.to }
-            key={ link.to }
-            isActive={ ( match, location ) => {
-              if ( !match ) {
+            to={link.to}
+            key={link.to}
+            isActive={(match, location) => {
+              if (!match) {
                 return false;
               }
               return link.to === location.pathname;
-            } }
+            }}
           >
-            <span>{ link.label }</span>
+            <span>{link.label}</span>
           </StyledNavLink>
-        ) ) }
+        ))}
       </Nav>
     </Header>
   );

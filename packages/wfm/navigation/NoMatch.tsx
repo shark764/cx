@@ -11,19 +11,19 @@ const Box = styled.div`
 const Location = styled.span`
   font-size: 28px;
   font-weight: bold;
-  color: ${( props ) => props.theme.colors.secondary};
+  color: ${(props) => props.theme.colors.secondary};
 `;
 
-export function NoMatch() {
+function NoMatch() {
   const location = useLocation();
 
   return (
     <Box>
       <h2>
-        No match for
-        { ' ' }
-        <Location>{ location.pathname }</Location>
+        No match for <Location>{location.pathname}</Location>
       </h2>
     </Box>
   );
 }
+
+export default NoMatch;
