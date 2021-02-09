@@ -8,8 +8,8 @@ import { AppThemeProvider } from './providers/appThemeProvider';
 
 import styled from 'styled-components';
 const ColorButton = styled.button<{ isActive: boolean; }>`
-
-color: ${props => ( props.isActive ? 'green' : 'red' )}
+color: white;
+background: ${props => props.theme.colors.brand }
 
 `;
 
