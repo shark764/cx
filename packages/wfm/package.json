@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@cx/components": "1.0.0"
+    "@cx/components": "1.0.0",
+    "@types/luxon": "^1.25.1"
   },
   "scripts": {
     "start": "../../node_modules/.bin/webpack serve --mode development",

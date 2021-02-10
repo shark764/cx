@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { QuestionMark } from './icons/QuestionMark';
 import clsx from 'clsx';
-import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+import {
+  createStyles,
+  makeStyles,
+  useTheme,
+  Theme,
+} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
     },
     menuButton: {
-      marginRight:11,
+      marginRight: 11,
     },
     hide: {
       display: 'none',
@@ -86,28 +87,25 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       padding: theme.spacing(3),
     },
-  }),
+  })
 );
 
 export function PageSideBar() {
-
-  const linkMap: {[key: string]: any[]} = {
-    'planning': [
+  const linkMap: { [key: string]: any[] } = {
+    planning: [
       { label: 'Schedule', to: '/planning/schedule' },
       { label: 'Employees', to: '/planning/employees' },
       { label: 'Settings', to: '/planning/settings' },
     ],
-    'forecasting': [
-      { label: 'Schedule', to: '/admin/schedule' },
-    ],
-    'agent': [
+    forecasting: [{ label: 'Schedule', to: '/admin/schedule' }],
+    agent: [
       { label: 'Schedule', to: '/agent/schedule' },
       { label: 'Availability', to: '/agent/availability' },
       { label: 'Request', to: '/agent/request' },
       { label: 'Trade', to: '/agent/trade' },
-      { label: 'Messages', to: '/agent/messages' }
+      { label: 'Messages', to: '/agent/messages' },
     ],
-    'admin': [
+    admin: [
       { label: 'Organization', to: '/admin/organization' },
       { label: 'Activity Management', to: '/admin/activity-management' },
       { label: 'Competence Management', to: '/admin/competence-management' },
@@ -116,7 +114,7 @@ export function PageSideBar() {
     ],
   };
   const route: string = useLocation().pathname.split('/')?.[1];
-  const links = linkMap[route];
+  const links = route ? linkMap[route] : [];
 
   const classes = useStyles();
   const theme = useTheme();
@@ -138,8 +136,7 @@ export function PageSideBar() {
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
-      >
-      </AppBar>
+      ></AppBar>
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
@@ -155,7 +152,11 @@ export function PageSideBar() {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
           <IconButton
             color="inherit"
@@ -171,18 +172,24 @@ export function PageSideBar() {
         </div>
         <Divider />
         <List>
-        {links.map((link, index) => (
-          <Link
-            to={link.to}
-            key={link.to}
-            style={{ textDecoration: 'none', color: 'grey', fontWeight: 'bold' }}
-          >
-            <ListItem button key={link.to}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={link.label} />
-            </ListItem>
-          </Link>
-        ))}
+          {links.map((link, index) => (
+            <Link
+              to={link.to}
+              key={link.to}
+              style={{
+                textDecoration: 'none',
+                color: 'grey',
+                fontWeight: 'bold',
+              }}
+            >
+              <ListItem button key={link.to}>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={link.label} />
+              </ListItem>
+            </Link>
+          ))}
         </List>
       </Drawer>
     </div>

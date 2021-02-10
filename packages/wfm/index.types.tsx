@@ -14,3 +14,11 @@ export interface IconProps {
   className?: string;
   disabled?: boolean;
 }
+
+export interface IEvent {
+  start: Date;
+  end: Date;
+  desc?: string;
+  title?: string;
+  style?: any;
+}

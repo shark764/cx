@@ -58,7 +58,7 @@ const Path2 = styled.path<PathProps>`
 `;
 
 interface IconProps2 extends IconProps {
-  direction: string;
+  direction?: string;
 }
 export function Play({
   onClick,

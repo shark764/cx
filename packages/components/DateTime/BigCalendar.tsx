@@ -5,10 +5,10 @@ import { DateTime } from 'luxon';
 import styled, { css } from 'styled-components';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-// @ts-ignore
-import LuxonLocalizer from '../../intl/LuxonLocalizer';
-// @ts-ignore
-import { deepMerge } from '../../utilities';
+
+import { deepMerge } from '../../wfm/utilities';
+import { IEvent } from '../../wfm/index.types';
+import { LuxonLocalizer } from '../../wfm/intl/LuxonLocalizer';
 
 interface ContainerProps {
   height?: string;
@@ -49,11 +49,22 @@ const WeekHeader = styled.div`
 const luxonLocalizer = LuxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 
 interface BigCalendarProps {
+  events: IEvent[];
+  date: Date;
+  onNavigate(arg: Date): void;
   height?: string;
   width?: string;
   className?: string;
   components?: any;
   formats?: any;
+  defaultView?: string;
+  views?: any;
+  toolbar?: boolean;
+  min?: Date;
+  max?: Date;
+  step?: number;
+  timeslots?: number;
+  eventPropGetter(arg: IEvent): any;
 }
 export function BigCalendar({
   height,
