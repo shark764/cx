@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { QuestionMark } from './Icons/QuestionMark';
+import { QuestionMark } from './icons/QuestionMark';
 
 const SideMenu = styled.main`
   margin-top: 50px;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 interface PagProps {
   canPreviousPage: boolean;
@@ -16,6 +17,10 @@ interface PagProps {
   previousPage(): void;
   setPageSize(arg: number): void;
 }
+
+const PageInput = styled.input`
+  width: 100px;
+`;
 export function Pagination(props: PagProps) {
   const {
     canPreviousPage,
@@ -66,17 +71,18 @@ export function Pagination(props: PagProps) {
       </span>
       <span>
         | Go to page:{' '}
-        <input
+        <PageInput
+          title="go to page"
           type="number"
           defaultValue={pageIndex + 1}
           onChange={(e) => {
             const gtPage = e.target.value ? Number(e.target.value) - 1 : 0;
             gotoPage(gtPage);
           }}
-          style={{ width: '100px' }}
         />
       </span>{' '}
       <select
+        title="select page size"
         value={pageSize}
         onChange={(e) => {
           setPageSize(Number(e.target.value));

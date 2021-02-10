@@ -1,6 +1,4 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
-// @ts-ignore
 import { useFlexLayout, usePagination, useTable } from 'react-table';
 import styled from 'styled-components';
 import { LoadSpinner } from '../LoadSpinner';
@@ -13,15 +11,6 @@ const TrText = styled.span`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-interface TableProps {
-  columns: Array<object>;
-  data: Array<object>;
-  showPagination?: boolean;
-  PaginationComponent?: typeof Pagination;
-  pageSizeOptions?: Array<number>;
-  loading?: boolean;
-  noDataText?: string;
-}
 export function DataTable({
   columns,
   data,
@@ -30,7 +19,8 @@ export function DataTable({
   pageSizeOptions = [5, 10, 20, 30, 40, 50, 100],
   loading = false,
   noDataText = 'No records found',
-}: TableProps) {
+}: any) {
+
   const defaultColumn = React.useMemo(
     () => ({
       // When using the useFlexLayout:
@@ -46,6 +36,7 @@ export function DataTable({
       columns,
       data,
       defaultColumn,
+      // @ts-ignore
       initialState: { pageIndex: 0 },
     },
     useFlexLayout,
@@ -57,6 +48,7 @@ export function DataTable({
     headerGroups,
     rows,
     prepareRow,
+    // @ts-ignore
     page,
   } = dataTable;
 
@@ -109,24 +101,3 @@ export function DataTable({
     </>
   );
 }
-
-DataTable.propTypes = {
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      Header: PropTypes.string,
-      accessor: PropTypes.string,
-      // eslint-disable-next-line react/forbid-prop-types
-      Cell: PropTypes.any,
-    })
-  ),
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    })
-  ),
-  showPagination: PropTypes.bool,
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
-  PaginationComponent: PropTypes.node,
-  loading: PropTypes.bool,
-  noDataText: PropTypes.string,
-};
