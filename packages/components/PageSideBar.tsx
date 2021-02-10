@@ -1,88 +1,190 @@
 import * as React from 'react';
-import { useLocation, NavLink } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { QuestionMark } from './Icons/QuestionMark';
+import { QuestionMark } from './icons/QuestionMark';
+import clsx from 'clsx';
+import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
 
-const SideMenu = styled.main`
-  margin-top: 50px;
-`;
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    menuButton: {
+      marginRight:11,
+    },
+    hide: {
+      display: 'none',
+    },
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+      whiteSpace: 'nowrap',
+    },
+    drawerOpen: {
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      top: '50px',
+    },
+    drawerClose: {
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      overflowX: 'hidden',
+      width: theme.spacing(7) + 1,
+      [theme.breakpoints.up('sm')]: {
+        width: theme.spacing(9) + 1,
+      },
+      top: '50px',
+    },
+    toolbar: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: theme.spacing(0, 1),
+      // necessary for content to be below app bar
+      ...theme.mixins.toolbar,
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+    },
+  }),
+);
 
 export function PageSideBar() {
-  const { pathname } = useLocation();
 
-  let header: any = {};
-  let links: Array<any> = [];
-  if (pathname.startsWith('/planning')) {
-    header = { label: 'PLANNING', to: '/planning' };
-    links = [
-      { label: 'SCHEDULE', to: '/planning/schedule' },
-      { label: 'EMPLOYEES', to: '/planning/employees' },
-      { label: 'SETTINGS', to: '/planning/settings' },
-    ];
-  } else if (pathname.startsWith('/forecasting')) {
-    header = { label: 'FORECASTING', to: '/forecasting' };
-    // links = [
-    //   { label: 'SCHEDULE', to: '/admin/schedule' },
-    // ];
-  } else if (pathname.startsWith('/agent')) {
-    header = { label: 'AGENT', to: '/agent' };
-    links = [
-      { label: 'SCHEDULE', to: '/agent/schedule' },
-      { label: 'AVAILABILITY', to: '/agent/availability' },
-      { label: 'REQUEST', to: '/agent/request' },
-      { label: 'TRADE', to: '/agent/trade' },
-      { label: 'MESSAGES', to: '/agent/messages' },
-    ];
-  } else if (pathname.startsWith('/admin')) {
-    header = { label: 'ADMIN', to: '/admin' };
-    links = [
-      { label: 'ORGANIZATION', to: '/admin/organization' },
-      { label: 'ACTIVITY MANAGEMENT', to: '/admin/activity-management' },
-      { label: 'COMPETENCE MANAGEMENT', to: '/admin/competence-management' },
-      { label: 'DAY TYPES', to: '/admin/day-types' },
-      { label: 'DEFAULT RESTRICTION', to: '/admin/default-restriction' },
-    ];
-  }
+  const linkMap: {[key: string]: any[]} = {
+    'planning': [
+      { label: 'Schedule', to: '/planning/schedule' },
+      { label: 'Employees', to: '/planning/employees' },
+      { label: 'Settings', to: '/planning/settings' },
+    ],
+    'forecasting': [
+      { label: 'Schedule', to: '/admin/schedule' },
+    ],
+    'agent': [
+      { label: 'Schedule', to: '/agent/schedule' },
+      { label: 'Availability', to: '/agent/availability' },
+      { label: 'Request', to: '/agent/request' },
+      { label: 'Trade', to: '/agent/trade' },
+      { label: 'Messages', to: '/agent/messages' }
+    ],
+    'admin': [
+      { label: 'Organization', to: '/admin/organization' },
+      { label: 'Activity Management', to: '/admin/activity-management' },
+      { label: 'Competence Management', to: '/admin/competence-management' },
+      { label: 'Day Types', to: '/admin/day-types' },
+      { label: 'Default Restriction', to: '/admin/default-restriction' },
+    ],
+  };
+  const route: string = useLocation().pathname.split('/')?.[1];
+  const links = linkMap[route];
 
-  if (!links.length) {
-    return null;
-  }
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <SideMenu>
-      <NavLink
-        to={header.to}
-        isActive={(match, location) => {
-          if (!match) {
-            return false;
-          }
-          return header.to === location.pathname;
-        }}
-        className="menu-header"
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
       >
-        <span>{header.label}</span>
-        <QuestionMark
-          secondary
-          onClick={() => console.log('Question?')}
-          title="Go to documentation"
-        />
-      </NavLink>
-
-      {links.map((link) => (
-        <NavLink
-          to={link.to}
-          key={link.to}
-          isActive={(match, location) => {
-            if (!match) {
-              return false;
-            }
-            return link.to === location.pathname;
-          }}
-          className="menu-link"
-        >
-          <span>{link.label}</span>
-        </NavLink>
-      ))}
-    </SideMenu>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        className={clsx(classes.drawer, {
+          [classes.drawerOpen]: open,
+          [classes.drawerClose]: !open,
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: open,
+            [classes.drawerClose]: !open,
+          }),
+        }}
+      >
+        <div className={classes.toolbar}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
+            <MenuIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+        {links.map((link, index) => (
+          <Link
+            to={link.to}
+            key={link.to}
+            style={{ textDecoration: 'none', color: 'grey', fontWeight: 'bold' }}
+          >
+            <ListItem button key={link.to}>
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+              <ListItemText primary={link.label} />
+            </ListItem>
+          </Link>
+        ))}
+        </List>
+      </Drawer>
+    </div>
   );
 }

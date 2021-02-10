@@ -18,11 +18,9 @@ const Content = styled.section`
 export function App() {
   return (
     <>
-      <SideBar>
-        <PageSideBar />
-      </SideBar>
-
       <PageHeader />
+
+      <PageSideBar />
 
       <Main>
         <Content>
