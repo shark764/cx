@@ -11,7 +11,7 @@ module.exports = {
     },
     vendor: [ "react", "react-dom", "styled-components" ],
   },
-  // devtool: 'inline-source-map', // this causes production vendor bundle to be huge
+  devtool: 'source-map', // this causes production vendor bundle to be huge
   resolve: {
     extensions: [ '.ts', '.tsx', '.js' ]
   },
