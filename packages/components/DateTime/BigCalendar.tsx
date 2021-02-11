@@ -18,9 +18,8 @@ const CalendarContainer = styled.div<ContainerProps>`
   margin: 0 auto;
   padding: 10px;
   height: ${({ height }) => height || '500px'};
-  ${({ width }) =>
-    width &&
-    css`
+  ${({ width }) => width
+    && css`
       width: ${width};
     `};
 
@@ -67,12 +66,7 @@ interface BigCalendarProps {
   eventPropGetter(arg: IEvent): any;
 }
 export function BigCalendar({
-  height,
-  width,
-  className,
-  components = {},
-  formats = {},
-  ...props
+  height, width, className, components = {}, formats = {}, ...props
 }: BigCalendarProps) {
   let calendarComponents = {
     week: {

@@ -10,9 +10,13 @@ const Label = styled.span`
   vertical-align: super;
 `;
 
-export const Legend: React.FC<any> = () => {
-  return <span>
-    <Label>Competence</Label> <CheckRoundedIcon style={{color: 'rgb(69 107 46)'}} />
-    <Label>Conflict</Label> <WarningRoundedIcon style={{color: '#f17100'}}  />
-  </span>;
-}
+export const Legend: React.FC<any> = () => (
+  <span>
+    <Label>Competence</Label>
+    {' '}
+    <CheckRoundedIcon style={{ color: 'rgb(69 107 46)' }} />
+    <Label>Conflict</Label>
+    {' '}
+    <WarningRoundedIcon style={{ color: '#f17100' }} />
+  </span>
+);

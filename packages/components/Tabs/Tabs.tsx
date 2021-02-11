@@ -1,8 +1,9 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import styled, { css, keyframes } from 'styled-components';
-import { Message } from '../Message';
+import styled, { css } from 'styled-components';
 import { ButtonProps } from '@cx/wfm/index.types';
+import { Message } from '../Message';
+import { Button } from '../Inputs/Button';
+import { Wrapper } from '../Styled';
 
 export interface ITab extends ButtonProps {
   id?: string;
@@ -11,35 +12,41 @@ export interface ITab extends ButtonProps {
   children?: React.ReactElement;
 }
 
-const TabContent = styled.div`
-  margin: 25px;
-`;
-const TabList = styled.div`
-  margin-bottom: 50px;
+const TabList = styled(Wrapper)`
+  margin-bottom: 30px;
 `;
 
-const TabItem = styled.button<ITab>`
+const TabItem = styled(Button)<ITab>`
   cursor: pointer;
-  color: ${({ color }) => (color ? color : 'inherit')};
+  display: inline-block;
+  margin-right: 10px;
+  color: ${({ theme }) => theme.colors.text};
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: all ease-in-out 0.2s;
+  border-radius: 8px;
 
-  ${({ active, bgColor, primary, secondary, theme }) =>
-    active &&
-    ((bgColor &&
-      css`
+  ${({
+    active, bgColor, primary, secondary, theme,
+  }) => active
+    && ((bgColor
+      && css`
         background-color: ${bgColor};
-      `) ||
-      (primary &&
-        css`
+      `)
+      || (primary
+        && css`
+          color: ${theme.colors['accent-3']};
           background-color: ${theme.colors.primary};
-        `) ||
-      (secondary &&
-        css`
+        `)
+      || (secondary
+        && css`
+          color: ${theme.colors['accent-3']};
           background-color: ${theme.colors.secondary};
         `))};
 
-  ${({ disabled }) =>
-    disabled &&
-    css`
+  ${({ disabled }) => disabled
+    && css`
       background-color: #cccccc;
       color: #666666;
       cursor: not-allowed;
@@ -49,9 +56,13 @@ const TabItem = styled.button<ITab>`
 interface TProps {
   activeIndex?: number;
   children: React.ReactElement<any>[];
+  primary?: boolean;
+  secondary?: boolean;
+  color?: string;
+  bgColor?: string;
 }
 
-export function Tabs({ children, activeIndex = 0 }: TProps) {
+export function Tabs({ children, activeIndex = 0, ...parentRest }: TProps) {
   const [activeTab, setActiveTab] = React.useState(activeIndex);
 
   const handleChange = (index: number) => {
@@ -62,27 +73,22 @@ export function Tabs({ children, activeIndex = 0 }: TProps) {
     return <Message text="error" messageType="No tabs were added" />;
   }
 
-  let tabs = React.useMemo(
-    () =>
-      children.map((child: React.ReactElement) => {
-        return child.props.label;
-      }),
-    []
-  );
-
-  let content = React.useMemo(() => children[activeTab], [activeTab]);
+  const content = React.useMemo(() => children[activeTab], [activeTab]);
 
   return (
-    <div>
-      <TabList className="tab-buttons">
+    <>
+      <TabList>
         {children.map((child: React.ReactElement, index: number) => {
-          let { id, label, children, ...rest } = child.props;
+          const {
+            id, label, children, ...rest
+          } = child.props;
           return (
             <TabItem
               type="button"
               active={index === activeTab}
               onClick={() => handleChange(index)}
               key={id || label}
+              {...parentRest}
               {...rest}
             >
               {label}
@@ -91,8 +97,8 @@ export function Tabs({ children, activeIndex = 0 }: TProps) {
         })}
       </TabList>
 
-      <TabContent>{content}</TabContent>
-    </div>
+      {content}
+    </>
   );
 }
 

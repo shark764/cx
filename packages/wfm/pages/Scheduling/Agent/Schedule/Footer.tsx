@@ -24,16 +24,14 @@ const RtableCell = styled.div<RtableCellProps>`
   flex: 1;
   text-align: center;
 
-  ${({ header }) =>
-    header &&
-    css`
+  ${({ header }) => header
+    && css`
       width: 78px;
       min-width: 78px;
       max-width: 78px;
     `};
-  ${({ strong }) =>
-    strong &&
-    css`
+  ${({ strong }) => strong
+    && css`
       font-weight: 900;
     `};
 `;
@@ -83,9 +81,7 @@ export function Footer({ date, events }: FooterProps) {
       </Rtable>
       <Rtable>
         <RtableCell header>Total</RtableCell>
-        <RtableCell strong>
-          {hours.reduce((total, h) => total + h.hour, 0)}
-        </RtableCell>
+        <RtableCell strong>{hours.reduce((total, h) => total + h.hour, 0)}</RtableCell>
       </Rtable>
     </CalFooter>
   );
@@ -96,23 +92,11 @@ Footer.propTypes = {
     PropTypes.shape({
       id: PropTypes.string,
       title: PropTypes.string,
-      start: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.shape({}),
-      ]),
-      end: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.shape({}),
-      ]),
+      start: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.shape({})]),
+      end: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.shape({})]),
       style: PropTypes.shape({}),
       desc: PropTypes.string,
-    })
+    }),
   ),
-  date: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.shape({}),
-  ]),
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.shape({})]),
 };

@@ -24,9 +24,7 @@ const timeZonesOptions = [
   { label: 'Canada/Halifax', id: 4564576 },
 ];
 
-const competenceOptions = [
-  { label: 'Booking', id: 23425 },
-];
+const competenceOptions = [{ label: 'Booking', id: 23425 }];
 
 const FilterSections = styled.div`
   display: flex;
@@ -62,7 +60,6 @@ const RightSideFilters = styled.div`
   grid-template-columns: 300px;
 `;
 
-
 const customStyles = {
   option: (provided: any, state: any) => ({
     ...provided,
@@ -75,8 +72,8 @@ const customStyles = {
     const transition = 'opacity 300ms';
 
     return { ...provided, opacity, transition };
-  }
-}
+  },
+};
 
 export function Filters() {
   const [value, setValue] = React.useState([null, null]);

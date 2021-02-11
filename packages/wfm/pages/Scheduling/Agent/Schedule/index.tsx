@@ -2,19 +2,20 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 
-import { Event } from './Event';
-import { Footer } from './Footer';
-import { getAgentSchedule } from './fake-data';
 import { addDays } from '@cx/wfm/utilities/date';
 import { Message } from '@cx/components/Message';
-import { Play } from '@cx/components/icons/Play';
+import { Play } from '@cx/components/Icons/Play';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
 import { Divider } from '@cx/components/Divider';
-import { Calendar } from '@cx/components/icons/Calendar';
+import { Calendar } from '@cx/components/Icons/Calendar';
 import { BigCalendar } from '@cx/components/DateTime/BigCalendar';
 import { LoadSpinner } from '@cx/components/LoadSpinner';
+import { Wrapper } from '@cx/components/Styled';
+import { getAgentSchedule } from './fake-data';
+import { Footer } from './Footer';
+import { Event } from './Event';
 
-const Container = styled.div`
+const Container = styled(Wrapper)`
   width: 70%;
 `;
 const Toolbar = styled.div`
@@ -51,16 +52,15 @@ export function AgentSchedule() {
 
   const { data, isLoading, error } = useQuery(
     'fetchAgentSchedule',
-    async () =>
-      getAgentSchedule(agentId)
-        .then((result: any) => result.data)
-        .catch((err) => {
-          console.error(err);
-          throw err;
-        }),
+    async () => getAgentSchedule(agentId)
+      .then((result: any) => result.data)
+      .catch((err) => {
+        console.error(err);
+        throw err;
+      }),
     {
       refetchInterval: 30000,
-    }
+    },
   );
 
   const handleManuallyAddDays = (days: number) => {
@@ -81,17 +81,8 @@ export function AgentSchedule() {
   return (
     <Container>
       <Toolbar>
-        <Play
-          secondary
-          direction="left"
-          onClick={() => handleManuallyAddDays(-7)}
-          title="Previous week"
-        />
-        <Play
-          secondary
-          onClick={() => handleManuallyAddDays(7)}
-          title="Next week"
-        />
+        <Play secondary direction="left" onClick={() => handleManuallyAddDays(-7)} title="Previous week" />
+        <Play secondary onClick={() => handleManuallyAddDays(7)} title="Next week" />
 
         <DatePickerContainer>
           <DatePicker
@@ -107,11 +98,7 @@ export function AgentSchedule() {
 
           <Divider direction="vertical" secondary size={30} />
 
-          <Calendar
-            secondary
-            onClick={() => setDatePickerIsOpen(true)}
-            title="Open calendar"
-          />
+          <Calendar secondary onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />
         </DatePickerContainer>
       </Toolbar>
 
@@ -151,10 +138,10 @@ export function AgentSchedule() {
           <Footer date={calDate} events={events} />
         </>
       ) : (
-        <div>
+        <>
           <LoadingMessage>Loading...</LoadingMessage>
           <LoadSpinner spinnerType="simple" size={25} weight={4} secondary />
-        </div>
+        </>
       )}
     </Container>
   );

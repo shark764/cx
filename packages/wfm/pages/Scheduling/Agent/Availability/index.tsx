@@ -2,10 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 
-import { getAgentAvailability } from './fake-data';
 import { Message } from '@cx/components/Message';
-import { TableContainer } from '@cx/components/DataTable/TableContainer';
-import { DataTable } from '@cx/components/DataTable';
+import { TableContainer, DataTable } from '@cx/components/DataTable';
+
+import { Wrapper } from '@cx/components/Styled';
+import { getAgentAvailability } from './fake-data';
 
 const Container = styled.div`
   grid-area: list;
@@ -17,16 +18,15 @@ const agentId = 'b47027e0-1126-11ea-953d-9bdc6d6573af';
 export function Availability() {
   const { data, isLoading, error } = useQuery(
     'fetchAgentAvailability',
-    async () =>
-      getAgentAvailability(agentId)
-        .then((result: any) => result.data)
-        .catch((err) => {
-          console.error(err);
-          throw err;
-        }),
+    async () => getAgentAvailability(agentId)
+      .then((result: any) => result.data)
+      .catch((err) => {
+        console.error(err);
+        throw err;
+      }),
     {
       refetchInterval: 30000,
-    }
+    },
   );
 
   const formatColumn = ({ value }: any) => {
@@ -58,15 +58,10 @@ export function Availability() {
   }
 
   return (
-    <Container>
+    <Wrapper>
       <TableContainer>
-        <DataTable
-          columns={columns}
-          data={memoData}
-          showPagination={false}
-          loading={isLoading}
-        />
+        <DataTable columns={columns} data={memoData} loading={isLoading} />
       </TableContainer>
-    </Container>
+    </Wrapper>
   );
 }

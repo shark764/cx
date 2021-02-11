@@ -17,19 +17,20 @@ interface SvgG {
   secondary?: boolean;
 }
 const SvgG = styled.g<SvgG>`
-  ${({ fillColor, primary, secondary, theme }) =>
-    (fillColor &&
-      css`
+  ${({
+    fillColor, primary, secondary, theme,
+  }) => (fillColor
+      && css`
         color: ${fillColor};
         fill: ${fillColor};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         color: ${theme.colors.primary};
         fill: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         color: ${theme.colors.secondary};
         fill: ${theme.colors.secondary};
       `)};
@@ -50,20 +51,8 @@ export function QuestionMark({
   ...rest
 }: IconProps) {
   return (
-    <Container
-      size={size}
-      className={className}
-      onClick={onClick}
-      disabled={disabled}
-      {...rest}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        x="0"
-        y="0"
-        version="1.1"
-        viewBox="0 0 131.735 132.204"
-      >
+    <Container size={size} className={className} onClick={onClick} disabled={disabled} {...rest}>
+      <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" version="1.1" viewBox="0 0 131.735 132.204">
         <SvgG
           fillOpacity="1"
           fillRule="evenodd"

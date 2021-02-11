@@ -25,17 +25,18 @@ const Filler = styled.div<FillerProps>`
   border-radius: inherit;
   text-align: right;
 
-  ${({ bgColor, primary, secondary, theme }) =>
-    (bgColor &&
-      css`
+  ${({
+    bgColor, primary, secondary, theme,
+  }) => (bgColor
+      && css`
         background-color: ${bgColor};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         background-color: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         background-color: ${theme.colors.secondary};
       `)};
 `;
@@ -72,12 +73,7 @@ export function ProgressBar({
     <Container>
       <Caption>{caption}</Caption>
       <Wrapper>
-        <Filler
-          completed={completed}
-          bgColor={bgColor}
-          primary={primary}
-          secondary={secondary}
-        >
+        <Filler completed={completed} bgColor={bgColor} primary={primary} secondary={secondary}>
           <Label>
             {label || `${completed}%`}
             {children}

@@ -27,11 +27,9 @@ const spinAnimation = keyframes`
   }
 `;
 const Spinner = styled.div<SpinnerProps>`
-  --spinner-color: ${({ primary, secondary, color, theme }) =>
-    (primary && theme.colors.primary) ||
-    (secondary && theme.colors.secondary) ||
-    (color && color) ||
-    'black'};
+  --spinner-color: ${({
+    primary, secondary, color, theme,
+  }) => (primary && theme.colors.primary) || (secondary && theme.colors.secondary) || (color && color) || 'black'};
   --spinner-size: ${({ weight }) => weight}px;
 
   display: block;
@@ -45,24 +43,23 @@ const Spinner = styled.div<SpinnerProps>`
   border-bottom: var(--spinner-size) var(--spinner-color) solid;
   border-radius: 50%;
 
-  ${({ spinnerType, speed }) =>
-    (spinnerType === 'default' &&
-      css`
+  ${({ spinnerType, speed }) => (spinnerType === 'default'
+      && css`
         border-right: var(--spinner-size) var(--spinner-color) solid;
         animation: ${spinAnimation} ${speed}s infinite linear;
-      `) ||
-    (spinnerType === 'simple' &&
-      css`
+      `)
+    || (spinnerType === 'simple'
+      && css`
         border: var(--spinner-size) rgba(163, 172, 189, 0.25) solid;
         border-top: var(--spinner-size) var(--spinner-color) solid;
         animation: ${spinAnimation} ${speed}s infinite linear;
-      `) ||
-    (spinnerType === 'half' &&
-      css`
+      `)
+    || (spinnerType === 'half'
+      && css`
         animation: ${spinAnimation} ${speed}s infinite linear;
-      `) ||
-    (spinnerType === 'clock' &&
-      css`
+      `)
+    || (spinnerType === 'clock'
+      && css`
         position: relative;
         border: var(--spinner-size) var(--spinner-color) solid;
         &:before {

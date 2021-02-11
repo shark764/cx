@@ -13,9 +13,8 @@ const Container = styled.div<ContainerProps>`
   width: ${({ size }) => size}px;
 
   svg {
-    ${({ direction }) =>
-      direction === 'left' &&
-      css`
+    ${({ direction }) => direction === 'left'
+      && css`
         transform: rotate(180deg);
       `};
   }
@@ -27,32 +26,34 @@ interface PathProps {
   secondary?: boolean;
 }
 const Path1 = styled.path<PathProps>`
-  ${({ strokeColor, primary, secondary, theme }) =>
-    (strokeColor &&
-      css`
+  ${({
+    strokeColor, primary, secondary, theme,
+  }) => (strokeColor
+      && css`
         stroke: ${strokeColor};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         stroke: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         stroke: ${theme.colors.secondary};
       `)};
 `;
 const Path2 = styled.path<PathProps>`
-  ${({ fillColor, primary, secondary, theme }) =>
-    (fillColor &&
-      css`
+  ${({
+    fillColor, primary, secondary, theme,
+  }) => (fillColor
+      && css`
         fill: ${fillColor};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         fill: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         fill: ${theme.colors.secondary};
       `)};
 `;
@@ -72,22 +73,8 @@ export function Play({
   ...rest
 }: IconProps2) {
   return (
-    <Container
-      size={size}
-      className={className}
-      onClick={onClick}
-      direction={direction}
-      disabled={disabled}
-      {...rest}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.1"
-        x="0"
-        y="0"
-        viewBox="0 0 100 100"
-        xmlSpace="preserve"
-      >
+    <Container size={size} className={className} onClick={onClick} direction={direction} disabled={disabled} {...rest}>
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100" xmlSpace="preserve">
         <Path1
           d="M74.026 88H25.974C18.256 88 12 81.744 12 74.026V25.974C12 18.256 18.256 12 25.974 12h48.052C81.744 12 88 18.256 88 25.974v48.052C88 81.744 81.744 88 74.026 88z"
           strokeMiterlimit="10"

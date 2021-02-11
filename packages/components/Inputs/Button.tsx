@@ -1,14 +1,12 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
+import { ButtonProps } from '@cx/wfm/index.types';
 
-interface ButtonProps {
-  primary?: boolean;
-  secondary?: boolean;
-}
 const StyledButton = styled.button<ButtonProps>`
   padding: 15px 35px;
   border-radius: 16px;
+  color: ${({ color }) => color || 'initial'};
 
   &:focus,
   &:hover,
@@ -18,24 +16,32 @@ const StyledButton = styled.button<ButtonProps>`
     outline: 0;
   }
 
-  ${({ primary, secondary, theme }) =>
-    (primary &&
-      css`
+  ${({
+    bgColor, primary, secondary, theme,
+  }) => (bgColor
+      && css`
+        background-color: ${bgColor};
+        border-color: ${bgColor};
+      `)
+    || (primary
+      && css`
         color: ${theme.colors['accent-3']};
         background-color: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+        border-color: ${theme.colors.primary};
+      `)
+    || (secondary
+      && css`
         color: ${theme.colors['accent-3']};
         background-color: ${theme.colors.secondary};
+        border-color: ${theme.colors.secondary};
       `)};
 `;
 
-interface BtnProps {
+interface IButton extends ButtonProps {
   children?: React.ReactNode;
   label?: string;
 }
-export function Button({ label, children, ...rest }: BtnProps) {
+export function Button({ label, children, ...rest }: IButton) {
   return (
     <StyledButton {...rest}>
       {label}

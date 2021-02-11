@@ -11,16 +11,14 @@ const options = [
   { label: 'Draft 5', id: 3455 },
 ];
 
-export const ScheduleVersion: React.FC<any> = () => {
-  return (
-    <Autocomplete
-      id="choose_shcedule_version"
-      options={options}
-      getOptionLabel={(option: any) => option.label}
-      size="small"
-      style={{ width: 300, display: 'inline-block' }}
-      renderInput={(params: any) => <TextField {...params} label="Schedule Version" variant="outlined" />}
-      defaultValue={options[0]}
-    />
-  );
-}
+export const ScheduleVersion: React.FC<any> = () => (
+  <Autocomplete
+    id="choose_shcedule_version"
+    options={options}
+    getOptionLabel={(option: any) => option.label}
+    size="small"
+    style={{ width: 300, display: 'inline-block' }}
+    renderInput={(params: any) => <TextField {...params} label="Schedule Version" variant="outlined" />}
+    defaultValue={options[0]}
+  />
+);

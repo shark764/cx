@@ -5,7 +5,7 @@ export interface Props {
 }
 
 export interface IconProps {
-  onClick(event?: React.MouseEvent): void;
+  onClick?(event?: React.MouseEvent): void;
   title?: string;
   size?: number;
   fill?: string;
@@ -23,7 +23,8 @@ export interface IEvent {
   style?: any;
 }
 
-export interface ButtonProps {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  type?: 'submit' | 'reset' | 'button';
   size?: number;
   disabled?: boolean;
   primary?: boolean;

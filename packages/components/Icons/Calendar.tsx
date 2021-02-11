@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { IconProps } from '@cx/wfm/index.types';
+
 interface ContainerProps {
   size?: number;
   disabled?: boolean;
@@ -16,17 +17,18 @@ interface PathProps {
   secondary?: boolean;
 }
 const Path = styled.path<PathProps>`
-  ${({ fillColor, primary, secondary, theme }) =>
-    (fillColor &&
-      css`
+  ${({
+    fillColor, primary, secondary, theme,
+  }) => (fillColor
+      && css`
         fill: ${fillColor};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         fill: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         fill: ${theme.colors.secondary};
       `)};
 `;
@@ -42,13 +44,7 @@ export function Calendar({
   ...rest
 }: IconProps) {
   return (
-    <Container
-      size={size}
-      className={className}
-      onClick={onClick}
-      disabled={disabled}
-      {...rest}
-    >
+    <Container size={size} className={className} onClick={onClick} disabled={disabled} {...rest}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"

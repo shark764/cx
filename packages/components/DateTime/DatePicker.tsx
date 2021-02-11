@@ -1,11 +1,15 @@
 import * as React from 'react';
 // @ts-ignore
 import ReactDatePicker from 'react-datepicker';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { Calendar } from '../Icons/Calendar';
 
-const DatePickerContainer = styled.div`
+interface IDatePickerContainer {
+  calendarBtn: boolean;
+}
+const DatePickerContainer = styled.div<IDatePickerContainer>`
   .react-datepicker-popper {
     z-index: 5;
   }
@@ -85,20 +89,31 @@ const DatePickerContainer = styled.div`
     border-radius: 0.3rem;
     color: ${({ theme }) => theme.colors['accent-2']};
   }
+
+  ${({ calendarBtn }) => calendarBtn
+    && css`
+      display: flex;
+      flex-wrap: wrap;
+    `};
 `;
 
-export function DatePicker(props: any) {
+export function DatePicker({ calendarBtn = false, ...rest }: any) {
+  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
+
   return (
-    <DatePickerContainer>
+    <DatePickerContainer calendarBtn={calendarBtn}>
       <ReactDatePicker
         dateFormat="MMM dd, yyyy"
         placeholderText="MMM dd, yyyy"
         todayButton="Today"
         shouldCloseOnSelect={false}
-        open={false}
         closeOnScroll
-        {...props}
+        open={datePickerIsOpen}
+        onFocus={() => setDatePickerIsOpen(true)}
+        onClickOutside={() => setDatePickerIsOpen(false)}
+        {...rest}
       />
+      {calendarBtn && <Calendar secondary onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />}
     </DatePickerContainer>
   );
 }

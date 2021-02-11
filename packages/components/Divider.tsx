@@ -57,11 +57,7 @@ export const HorizontalDivider = styled.hr<DividerProps>`
 `;
 
 export function Divider({ direction = 'vertical', ...rest }: DividerProps) {
-  return direction === 'vertical' ? (
-    <VerticalDivider {...rest} />
-  ) : (
-    <HorizontalDivider {...rest} />
-  );
+  return direction === 'vertical' ? <VerticalDivider {...rest} /> : <HorizontalDivider {...rest} />;
 }
 
 Divider.propTypes = {

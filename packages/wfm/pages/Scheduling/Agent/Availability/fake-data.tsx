@@ -13,25 +13,20 @@ export const data = [
   },
 ];
 
-export const getAvailability = () =>
-  new Promise((resolve, reject) => {
-    if (!data) {
-      return setTimeout(() => reject(new Error('Agents not found')), 1000);
-    }
+export const getAvailability = () => new Promise((resolve, reject) => {
+  if (!data) {
+    return setTimeout(() => reject(new Error('Agents not found')), 1000);
+  }
 
-    return setTimeout(() => resolve({ data }), 1000);
-  });
+  return setTimeout(() => resolve({ data }), 1000);
+});
 
-export const getAgentAvailability = (id: any) =>
-  new Promise((resolve, reject) => {
-    const agentAvailability = data.filter((item) => item.agentId === id);
+export const getAgentAvailability = (id: any) => new Promise((resolve, reject) => {
+  const agentAvailability = data.filter((item) => item.agentId === id);
 
-    if (!agentAvailability.length) {
-      return setTimeout(
-        () => reject(new Error('Agent availability not found')),
-        1000
-      );
-    }
+  if (!agentAvailability.length) {
+    return setTimeout(() => reject(new Error('Agent availability not found')), 1000);
+  }
 
-    return setTimeout(() => resolve({ data: agentAvailability }), 1000);
-  });
+  return setTimeout(() => resolve({ data: agentAvailability }), 1000);
+});

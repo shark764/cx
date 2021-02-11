@@ -44,17 +44,16 @@ const TooltipTip = styled.div<TooltipTipProps>`
     margin-left: calc(var(--tooltip-arrow-size) * -1);
   }
 
-  ${({ direction }) =>
-    (direction === 'top' &&
-      css`
+  ${({ direction }) => (direction === 'top'
+      && css`
         top: calc(var(--tooltip-margin) * -1);
         &:before {
           top: 100%;
           border-top-color: var(--tooltip-background-color);
         }
-      `) ||
-    (direction === 'right' &&
-      css`
+      `)
+    || (direction === 'right'
+      && css`
         left: calc(100% + var(--tooltip-margin));
         top: 50%;
         transform: translateX(0) translateY(-50%);
@@ -64,17 +63,17 @@ const TooltipTip = styled.div<TooltipTipProps>`
           transform: translateX(0) translateY(-50%);
           border-right-color: var(--tooltip-background-color);
         }
-      `) ||
-    (direction === 'bottom' &&
-      css`
+      `)
+    || (direction === 'bottom'
+      && css`
         bottom: calc(var(--tooltip-margin) * -1);
         &:before {
           bottom: 100%;
           border-bottom-color: var(--tooltip-background-color);
         }
-      `) ||
-    (direction === 'left' &&
-      css`
+      `)
+    || (direction === 'left'
+      && css`
         left: auto;
         right: calc(100% + var(--tooltip-margin));
         top: 50%;
@@ -97,11 +96,7 @@ interface TooltipProps {
   trigger?: string;
 }
 export function Tooltip({
-  children,
-  content,
-  delay = 400,
-  direction = 'right',
-  trigger = 'click',
+  children, content, delay = 400, direction = 'right', trigger = 'click',
 }: TooltipProps) {
   let timeout: any;
   const [active, setActive] = React.useState(false);

@@ -14,10 +14,10 @@ export const theme = {
   },
 };
 
-export const fetchTheme = () => new Promise( ( resolve, reject ) => {
-  if ( !theme ) {
-    return setTimeout( () => reject( new Error( 'Theme not found' ) ), 100 );
+export const fetchTheme = () => new Promise((resolve, reject) => {
+  if (!theme) {
+    return setTimeout(() => reject(new Error('Theme not found')), 100);
   }
 
-  return setTimeout( () => resolve( { data: theme } ), 100 );
-} );
+  return setTimeout(() => resolve({ data: theme }), 100);
+});

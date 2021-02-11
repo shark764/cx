@@ -21,56 +21,49 @@ export interface PagProps {
   previousPage(): void;
   setPageSize(arg: number): void;
 }
-export function Pagination(props: PagProps) {
-  const {
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-    pageSizeOptions,
-  } = props;
-
+export function Pagination({
+  canPreviousPage,
+  canNextPage,
+  pageOptions,
+  pageCount,
+  gotoPage,
+  nextPage,
+  previousPage,
+  setPageSize,
+  state: { pageIndex, pageSize },
+  pageSizeOptions,
+}: PagProps) {
   return (
     <div className="pagination">
-      <button
-        type="button"
-        onClick={() => gotoPage(0)}
-        disabled={!canPreviousPage}
-      >
+      <button type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
         {'<<'}
-      </button>{' '}
-      <button
-        type="button"
-        onClick={() => previousPage()}
-        disabled={!canPreviousPage}
-      >
+      </button>
+      {' '}
+      <button type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
         {'<'}
-      </button>{' '}
+      </button>
+      {' '}
       <button type="button" onClick={() => nextPage()} disabled={!canNextPage}>
         {'>'}
-      </button>{' '}
-      <button
-        type="button"
-        onClick={() => gotoPage(pageCount - 1)}
-        disabled={!canNextPage}
-      >
+      </button>
+      {' '}
+      <button type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
         {'>>'}
-      </button>{' '}
+      </button>
+      {' '}
       <span>
-        Page{' '}
+        Page
+        {' '}
         <strong>
           {pageIndex + 1}
           {' of '}
           {pageOptions.length}
-        </strong>{' '}
+        </strong>
+        {' '}
       </span>
       <span>
-        | Go to page:{' '}
+        | Go to page:
+        {' '}
         <Input
           type="number"
           defaultValue={pageIndex + 1}
@@ -79,7 +72,8 @@ export function Pagination(props: PagProps) {
             gotoPage(gtPage);
           }}
         />
-      </span>{' '}
+      </span>
+      {' '}
       <select
         name="page-size"
         title="Page size options"
@@ -90,7 +84,9 @@ export function Pagination(props: PagProps) {
       >
         {pageSizeOptions.map((optPageSize: number) => (
           <option key={optPageSize} value={optPageSize}>
-            Show {optPageSize}
+            Show
+            {' '}
+            {optPageSize}
           </option>
         ))}
       </select>

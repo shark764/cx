@@ -422,25 +422,20 @@ export const events = [
   // },
 ];
 
-export const getSchedule = () =>
-  new Promise((resolve, reject) => {
-    if (!events) {
-      return setTimeout(() => reject(new Error('Agents not found')), 1000);
-    }
+export const getSchedule = () => new Promise((resolve, reject) => {
+  if (!events) {
+    return setTimeout(() => reject(new Error('Agents not found')), 1000);
+  }
 
-    return setTimeout(() => resolve({ data: events }), 1000);
-  });
+  return setTimeout(() => resolve({ data: events }), 1000);
+});
 
-export const getAgentSchedule = (id: string | number) =>
-  new Promise((resolve, reject) => {
-    const agentSchedule = events.filter((event) => event.agentId === id);
+export const getAgentSchedule = (id: string | number) => new Promise((resolve, reject) => {
+  const agentSchedule = events.filter((event) => event.agentId === id);
 
-    if (!agentSchedule.length) {
-      return setTimeout(
-        () => reject(new Error('Agent schedule not found')),
-        1000
-      );
-    }
+  if (!agentSchedule.length) {
+    return setTimeout(() => reject(new Error('Agent schedule not found')), 1000);
+  }
 
-    return setTimeout(() => resolve({ data: agentSchedule }), 1000);
-  });
+  return setTimeout(() => resolve({ data: agentSchedule }), 1000);
+});

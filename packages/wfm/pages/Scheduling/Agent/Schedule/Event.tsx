@@ -20,16 +20,17 @@ interface EventProps {
 export function Event({ event, title, ...rest }: EventProps) {
   return (
     <Tooltip
-      content={
+      content={(
         <div>
-          <strong>{title}</strong>{' '}
-          {DateTime.fromJSDate(event.start).toLocaleString(
-            DateTime.TIME_SIMPLE
-          )}{' '}
-          &#8213;{' '}
+          <strong>{title}</strong>
+          {' '}
+          {DateTime.fromJSDate(event.start).toLocaleString(DateTime.TIME_SIMPLE)}
+          {' '}
+          &#8213;
+          {' '}
           {DateTime.fromJSDate(event.end).toLocaleString(DateTime.TIME_SIMPLE)}
         </div>
-      }
+      )}
       direction="right"
       delay={100}
     >
@@ -47,16 +48,8 @@ Event.propTypes = {
   event: PropTypes.shape({
     id: PropTypes.string,
     title: PropTypes.string,
-    start: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.shape({}),
-    ]),
-    end: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.shape({}),
-    ]),
+    start: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.shape({})]),
+    end: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.shape({})]),
     style: PropTypes.shape({}),
     desc: PropTypes.string,
   }),

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Navigation } from './navigation';
 import { SideBar } from '@cx/components/SideBar';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
+import { Navigation } from './navigation';
 
 const Main = styled.main`
   margin: 0;

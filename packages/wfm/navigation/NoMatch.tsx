@@ -20,7 +20,9 @@ export function NoMatch() {
   return (
     <Box>
       <h2>
-        No match for <Location>{location.pathname}</Location>
+        No match for
+        {' '}
+        <Location>{location.pathname}</Location>
       </h2>
     </Box>
   );

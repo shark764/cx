@@ -2,17 +2,17 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import { useTable, useRowSelect } from 'react-table';
 import styled from 'styled-components';
-import { TimeBarSchedule } from './timeBarSchedule';
-import { TimeScale } from './timeScale';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
+import { agentShedules } from '@cx/fakedata';
+import { TimeBarSchedule } from './timeBarSchedule';
+import { TimeScale } from './timeScale';
 import { Legend } from './legend';
 
-import { agentShedules } from '@cx/fakedata';
-
 function CreateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
@@ -53,21 +53,21 @@ const SheduleHeader = styled.div`
 const TableBody = styled.div``;
 const TableHeader = styled.div``;
 
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }: any, ref) => {
-    const defaultRef = React.useRef()
-    const resolvedRef = ref || defaultRef
+const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref) => {
+  const defaultRef = React.useRef();
+  const resolvedRef = ref || defaultRef;
 
-    React.useEffect(() => {
-      // @ts-ignore
-      resolvedRef.current.indeterminate = indeterminate
-    }, [resolvedRef, indeterminate])
+  React.useEffect(() => {
+    // @ts-ignore
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
 
-    return (<>
-        <input title="selected agent" type="checkbox" ref={resolvedRef} {...rest} />
-      </>)
-  }
-)
+  return (
+    <>
+      <input title="selected agent" type="checkbox" ref={resolvedRef} {...rest} />
+    </>
+  );
+});
 
 const CenteredText = styled.div`
   text-align: center;
@@ -76,36 +76,61 @@ const CenteredText = styled.div`
 const CenteredNumber = styled.div`
   text-align: center;
 `;
-const CompetenceIcon = styled(CheckRoundedIcon)<{value: boolean}>`
-  display: ${({value}) => value ? 'inherit' : 'none !important'};
+const CompetenceIcon = styled(CheckRoundedIcon)<{ value: boolean }>`
+  display: ${({ value }) => (value ? 'inherit' : 'none !important')};
 `;
-const WarningIcon = styled(WarningRoundedIcon)<{value: boolean}>`
-  display: ${({value}) => value ? 'inherit' : 'none !important'};
+const WarningIcon = styled(WarningRoundedIcon)<{ value: boolean }>`
+  display: ${({ value }) => (value ? 'inherit' : 'none !important')};
 `;
 
 export function SheduleTable() {
-  const columns = useMemo(() => [
-    { Header: 'Agent', accessor: 'col1',  },
-    { Header: 'Team', accessor: 'col2',  },
-    { Header: <CenteredText>Agreed Hours</CenteredText>, Cell: ({value}: any) => <CenteredNumber>{value}</CenteredNumber>, accessor: 'col3',  },
-    { Header: <CenteredText>Sheduled Hours</CenteredText>, Cell: ({value}: any) => <CenteredNumber>{value}</CenteredNumber>, accessor: 'col4',  },
-    { Header: 'Timezone', accessor: 'col5',  },
-    { Header: '', Cell: ({value}: any) => <CompetenceIcon value={value} style={{color: 'rgb(69 107 46)'}} />, accessor: 'col6',  },
-    { Header: '', Cell: ({value}: any) => <WarningIcon value={value} style={{color: '#f17100'}} />, accessor: 'col7',  },
-    { Header: <TimeScale domain={[0,24]} />, Cell: ({value}: any) => <TimeBarSchedule domain={[0,24]} segments={value} />, accessor: 'col8', },
-  ],[])
+  const columns = useMemo(
+    () => [
+      { Header: 'Agent', accessor: 'col1' },
+      { Header: 'Team', accessor: 'col2' },
+      {
+        Header: <CenteredText>Agreed Hours</CenteredText>,
+        Cell: ({ value }: any) => <CenteredNumber>{value}</CenteredNumber>,
+        accessor: 'col3',
+      },
+      {
+        Header: <CenteredText>Sheduled Hours</CenteredText>,
+        Cell: ({ value }: any) => <CenteredNumber>{value}</CenteredNumber>,
+        accessor: 'col4',
+      },
+      { Header: 'Timezone', accessor: 'col5' },
+      {
+        Header: '',
+        Cell: ({ value }: any) => <CompetenceIcon value={value} style={{ color: 'rgb(69 107 46)' }} />,
+        accessor: 'col6',
+      },
+      {
+        Header: '',
+        Cell: ({ value }: any) => <WarningIcon value={value} style={{ color: '#f17100' }} />,
+        accessor: 'col7',
+      },
+      {
+        Header: <TimeScale domain={[0, 24]} />,
+        Cell: ({ value }: any) => <TimeBarSchedule domain={[0, 24]} segments={value} />,
+        accessor: 'col8',
+      },
+    ],
+    [],
+  );
 
   const data = useMemo(() => agentShedules, []);
 
-  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+  const {
+    getTableProps, headerGroups, rows, prepareRow,
+  } = useTable(
     {
       // @ts-ignore
       columns,
       data,
     },
     useRowSelect,
-    hooks => {
-      hooks.allColumns.push(columns => [
+    (hooks) => {
+      hooks.allColumns.push((columns) => [
         {
           id: 'selection',
           disableResizing: true,
@@ -126,14 +151,17 @@ export function SheduleTable() {
           ),
         },
         ...columns,
-      ])
-
-    }
-  )
+      ]);
+    },
+  );
 
   return (
     <TableWrapper {...getTableProps()} className="table">
-      <SheduleHeader><SheduleTitle> Shedule </SheduleTitle> <Legend /></SheduleHeader>
+      <SheduleHeader>
+        <SheduleTitle> Shedule </SheduleTitle>
+        {' '}
+        <Legend />
+      </SheduleHeader>
       <TableHeader>
         {headerGroups.map((headerGroup) => (
           <TableHeaderRow className="tr" {...headerGroup.getHeaderGroupProps({})}>
@@ -147,18 +175,18 @@ export function SheduleTable() {
       </TableHeader>
       <TableBody className="tbody">
         {rows.map((row) => {
-          prepareRow(row)
+          prepareRow(row);
           return (
             <TableRow {...row.getRowProps()} className="tr">
               {row.cells.map((cell) => (
-                <span className="td" key={CreateUUID()} >
+                <span className="td" key={CreateUUID()}>
                   {cell.render('Cell')}
                 </span>
               ))}
             </TableRow>
-          )
+          );
         })}
       </TableBody>
     </TableWrapper>
-  )
+  );
 }

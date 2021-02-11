@@ -38,9 +38,7 @@ interface StackedBarProps {
 }
 export function StackedBar({ columns }: StackedBarProps) {
   return (
-    <Meter
-      gridColValues={columns.map((column) => `${column.value}fr`).join(' ')}
-    >
+    <Meter gridColValues={columns.map((column) => `${column.value}fr`).join(' ')}>
       {columns.map((column) => (
         <Column bgColor={column.bgColor} title={column.name} key={column.name}>
           {column.value}
@@ -56,6 +54,6 @@ StackedBar.propTypes = {
       bgColor: PropTypes.string,
       name: PropTypes.string,
       value: PropTypes.number,
-    })
+    }),
   ),
 };

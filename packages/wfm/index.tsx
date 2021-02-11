@@ -20,5 +20,5 @@ ReactDOM.render(
       </Provider>
     </HashRouter>
   </React.StrictMode>,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
