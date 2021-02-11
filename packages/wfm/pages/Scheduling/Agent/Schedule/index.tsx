@@ -7,10 +7,10 @@ import { Footer } from './Footer';
 import { getAgentSchedule } from './fake-data';
 import { addDays } from '../../../../utilities/date';
 import { Message } from '../../../../../components/Message';
-import { Play } from '../../../../../components/Icons/Play';
+import { Play } from '../../../../../components/icons/Play';
 import { DatePicker } from '../../../../../components/DateTime/DatePicker';
 import { Divider } from '../../../../../components/Divider';
-import { Calendar } from '../../../../../components/Icons/Calendar';
+import { Calendar } from '../../../../../components/icons/Calendar';
 import { BigCalendar } from '../../../../../components/DateTime/BigCalendar';
 import { LoadSpinner } from '../../../../../components/LoadSpinner';
 

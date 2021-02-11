@@ -12,7 +12,7 @@ const Main = styled.main`
 
 const Content = styled.section`
   padding: 24px;
-  margin-left: 200px;
+  margin-left: 100px;
 `;
 
 export function App() {

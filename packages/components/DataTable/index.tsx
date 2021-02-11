@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-// @ts-ignore
 import { useFlexLayout, usePagination, useTable } from 'react-table';
 import styled from 'styled-components';
 import { LoadSpinner } from '../LoadSpinner';
