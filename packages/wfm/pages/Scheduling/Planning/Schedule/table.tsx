@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTable, useBlockLayout, useResizeColumns } from 'react-table';
+import { useTable, useRowSelect } from 'react-table';
 import { data } from './fakeData';
 import styled from 'styled-components';
 
@@ -7,136 +7,115 @@ const TableWrapper = styled.div`
   border: solid 1px #80808096;
   border-radius: 5px;
   padding: 20px;
+  background: white;
 `;
 
-const Styles = styled.div`
+const TableRow = styled.div`
+  display: grid;
+  /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
+  grid-template-columns: 40px 150px 80px 80px 80px 150px 90px 80px auto;
+`;
 
-  .table {
-    display: inline-block;
-    border-spacing: 0;
+const TableHeaderRow = styled.div`
+  color: grey;
+  display: grid;
+  margin-bottom: 30px;
+  /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
+  grid-template-columns: 40px 150px 80px 80px 80px 150px 90px 80px auto;
+`;
 
-    .tr {
-      :last-child {
-        .td {
-          border-bottom: 0;
-        }
-      }
-    }
-    .th {
-      margin-bottom: 15px;
-    }
+const TableBody = styled.div``;
+const TableHeader = styled.div``;
 
-    .td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid #8080801f;
-      border-right: 1px solid #8080801f;
-      position: relative;
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }: any, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
 
-      :last-child {
-        border-right: 0;
-      }
+    React.useEffect(() => {
+      // @ts-ignore
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
 
-      .resizer {
-        display: inline-block;
-        width: 10px;
-        height: 100%;
-        position: absolute;
-        right: 0;
-        top: 0;
-        transform: translateX(50%);
-        z-index: 1;
-        ${'' /* prevents from scrolling while dragging on touch devices */}
-        touch-action:none;
-
-        &.isResizing {
-          background: red;
-        }
-      }
-    }
+    return (<>
+        <input title="selected agent" type="checkbox" ref={resolvedRef} {...rest} />
+      </>)
   }
-`
+)
 
-export const SheduleTable = () => {
+export function SheduleTable() {
+  const columns = React.useMemo(() => [
+    { Header: 'Agent', accessor: 'col1',  },
+    { Header: 'Team', accessor: 'col2',  },
+    { Header: 'Agreed Hours', accessor: 'col3',  },
+    { Header: 'Scheduled Hours', accessor: 'col4',  },
+    { Header: 'Timezone', accessor: 'col5',  },
+    { Header: 'Competence', accessor: 'col6',  },
+    { Header: 'Conflict', accessor: 'col7',  },
+    { Header: 'Scheduled Hours Visualization', accessor: 'col8', },
+  ],[])
 
-  const defaultColumn = React.useMemo(
-    () => ({
-      minWidth: 30,
-      // width: 150,
-      // maxWidth: 400,
-    }),
-    []
+  const { getTableProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      // @ts-ignore
+      columns,
+      data,
+    },
+    useRowSelect,
+    hooks => {
+      hooks.allColumns.push(columns => [
+        {
+          id: 'selection',
+          disableResizing: true,
+          minWidth: 35,
+          width: 35,
+          maxWidth: 35,
+          // @ts-ignore
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <span>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </span>
+          ),
+          Cell: ({ row }: any) => (
+            <span>
+              {/* @ts-ignore */}
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </span>
+          ),
+        },
+        ...columns,
+      ])
+
+    }
   )
 
-  const columns = React.useMemo(() => [
-      { width: 100, Header: 'Agent', accessor: 'col1',  },
-      { width: 70, Header: 'Team', accessor: 'col2',  },
-      { width: 70, Header: 'Agreed Hours', accessor: 'col3',  },
-      { width: 80, Header: 'Scheduled Hours', accessor: 'col4',  },
-      { width: 190, Header: 'Timezone', accessor: 'col5',  },
-      { width: 100, Header: 'Competence', accessor: 'col6',  },
-      { width: 70, Header: 'Conflict', accessor: 'col7',  },
-      { width: 700, Header: 'Scheduled Hours Visualization', accessor: 'col8', },
-    ],[])
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    // @ts-ignore
-    resetResizing,
-    // @ts-ignore
-  } = useTable({ columns, data, defaultColumn }, useBlockLayout, useResizeColumns)
-
   return (
-    <>
-      <Styles>
-      {/* <button onClick={resetResizing}>Reset Resizing</button> */}
-      <TableWrapper>
-        <div {...getTableProps()} className="table">
-          <div>
-            {headerGroups.map(headerGroup => (
-              <div {...headerGroup.getHeaderGroupProps()} className="tr">
-                {headerGroup.headers.map(column => (
-                  <div {...column.getHeaderProps()} className="th">
-                    {column.render('Header')}
-                    {/* Use column.getResizerProps to hook up the events correctly */}
-                    <div
-                    // @ts-ignore
-                      {...column.getResizerProps()}
-                      className={`resizer ${
-                        // @ts-ignore
-                        column.isResizing ? 'isResizing' : ''
-                      }`}
-                    />
-                  </div>
-                ))}
-              </div>
+    <TableWrapper {...getTableProps()} className="table">
+      <TableHeader>
+        {headerGroups.map((headerGroup) => (
+          <TableHeaderRow className="tr" {...headerGroup.getHeaderGroupProps({})}>
+            {headerGroup.headers.map((column) => (
+              <span className="th">
+                {column.render('Header')}
+              </span>
             ))}
-          </div>
-
-          <div {...getTableBodyProps()}>
-            {rows.map((row, i) => {
-              prepareRow(row)
-              return (
-                <div {...row.getRowProps()} className="tr">
-                  {row.cells.map(cell => {
-                    return (
-                      <div {...cell.getCellProps()} className="td">
-                        {cell.render('Cell')}
-                      </div>
-                    )
-                  })}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </TableWrapper>
-      </Styles>
-
-    </>
+          </TableHeaderRow>
+        ))}
+      </TableHeader>
+      <TableBody className="tbody">
+        {rows.map((row) => {
+          prepareRow(row)
+          return (
+            <TableRow {...row.getRowProps()} className="tr">
+              {row.cells.map((cell) => (
+                <span className="td">
+                  {cell.render('Cell')}
+                </span>
+              ))}
+            </TableRow>
+          )
+        })}
+      </TableBody>
+    </TableWrapper>
   )
 }

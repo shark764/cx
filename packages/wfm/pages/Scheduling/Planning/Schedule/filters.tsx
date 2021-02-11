@@ -1,14 +1,15 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Select from 'react-select';
+import { isWhiteSpaceLike } from 'typescript';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
   border-radius: 5px;
   padding: 10px;
   width: 100%;
-  height: 80px;
+  /* height: 80px; */
+  background: white;
 `;
 
 const dateOptions = [
@@ -28,41 +29,77 @@ const competenceOptions = [
   { label: 'Booking', id: 23425 },
 ];
 
+const FilterSections = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
+const SelectSized = styled(Select)`
+  width: 250px;
+  display: inline-block;
+  margin: 0px 10px;
+`;
 
+const Title = styled.h4`
+  color: grey;
+  font-style: italic;
+  margin-top: 0px;
+  margin-left: 10px;
+`;
+
+const RightSideFilters = styled.div`
+  width: 550px;
+`;
+
+const customStyles = {
+  option: (provided: any, state: any) => ({
+    ...provided,
+    color: 'black',
+    background: 'white',
+  }),
+
+  singleValue: (provided: any, state: any) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = 'opacity 300ms';
+
+    return { ...provided, opacity, transition };
+  }
+}
 
 export function Filters() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
     <BoxDiv>
-      <Autocomplete
-        id="combo-box-demo"
-        options={dateOptions}
-        getOptionLabel={(option: any) => option.label}
-        size="small"
-        style={{ width: 300, display: 'inline-block' }}
-        renderInput={(params: any) => <TextField {...params} label="Time Span" />}
-        defaultValue={dateOptions[0]}
-      />
-      <Autocomplete
-        id="combo-box-demo"
-        options={timeZonesOptions}
-        getOptionLabel={(option: any) => option.label}
-        size="small"
-        style={{ width: 300, display: 'inline-block' }}
-        renderInput={(params: any) => <TextField {...params} label="Time Zone" />}
-        defaultValue={timeZonesOptions[0]}
-      />
-      <Autocomplete
-        id="combo-box-demo"
-        options={competenceOptions}
-        getOptionLabel={(option: any) => option.label}
-        size="small"
-        style={{ width: 300, display: 'inline-block' }}
-        renderInput={(params: any) => <TextField {...params} label="Competence" />}
-        defaultValue={competenceOptions[0]}
-      />
+      <Title> Feb 11 2021 - Feb 17 2021 </Title>
+      <FilterSections>
+        <SelectSized
+          className="choose-date-range"
+          classNamePrefix="select"
+          defaultValue={dateOptions[1]}
+          name="choose-date-range"
+          options={dateOptions}
+          styles={customStyles}
+        />
+        <RightSideFilters>
+          <SelectSized
+            className="choose_time_zone"
+            classNamePrefix="select"
+            defaultValue={timeZonesOptions[0]}
+            name="choose_time_zone"
+            options={timeZonesOptions}
+            styles={customStyles}
+          />
+          <SelectSized
+            className="choose_competence"
+            classNamePrefix="select"
+            defaultValue={competenceOptions[0]}
+            name="choose_competence"
+            options={competenceOptions}
+            styles={customStyles}
+          />
+        </RightSideFilters>
+      </FilterSections>
     </BoxDiv>
   );
 }

@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: {
@@ -14,6 +15,12 @@ module.exports = {
   devtool: 'source-map', // this causes production vendor bundle to be huge
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
+    alias: {
+      Utils: path.resolve(__dirname, 'src', 'utils'),
+    }
+  },
+  externals: {
+    CxEngage: 'CxEngage'
   },
   module: {
     rules: [
@@ -50,6 +57,9 @@ module.exports = {
       patterns: [{ from: path.join(__dirname, '../../', 'assets'), to: '' }],
     }),
     new GenerateSW(),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static'
+    // }),
   ],
   optimization: { moduleIds: 'deterministic' },
   mode: 'development',

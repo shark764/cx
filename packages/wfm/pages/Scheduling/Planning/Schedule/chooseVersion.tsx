@@ -14,12 +14,13 @@ const options = [
 export const ScheduleVersion: React.FC<any> = () => {
   return (
     <Autocomplete
-      id="combo-box-demo"
+      id="choose_shcedule_version"
       options={options}
       getOptionLabel={(option: any) => option.label}
       size="small"
       style={{ width: 300, display: 'inline-block' }}
       renderInput={(params: any) => <TextField {...params} label="Schedule Version" variant="outlined" />}
+      defaultValue={options[0]}
     />
   );
 }
