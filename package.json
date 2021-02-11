@@ -9,9 +9,19 @@
     "test": "cd packages/wfm && npm test",
     "test:all": "lerna run test",
     "new-version": "lerna version --conventional-commits --yes",
-    "diff": "lerna diff"
+    "diff": "lerna diff",
+    "lint": "eslint ./packages",
+    "lint:fix": "eslint ./packages --fix"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "lerna": "^3.22.1"
   },
   "dependencies": {
