@@ -96,9 +96,12 @@ export function PageSideBar() {
     agent: [
       { label: 'Schedule', to: '/agent/schedule' },
       { label: 'Availability', to: '/agent/availability' },
-      { label: 'Request', to: '/agent/request' },
-      { label: 'Trade', to: '/agent/trade' },
-      { label: 'Messages', to: '/agent/messages' },
+      /**
+       * NOT REQUIRED FOR MVP
+       */
+      // { label: 'Request', to: '/agent/request' },
+      // { label: 'Trade', to: '/agent/trade' },
+      // { label: 'Messages', to: '/agent/messages' },
     ],
     admin: [
       { label: 'Organization', to: '/admin/organization' },

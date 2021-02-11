@@ -1,10 +1,10 @@
-import React from 'react';
-import './App.css';
+import * as React from 'react';
 import styled from 'styled-components';
 import { SideBar } from '@cx/components/SideBar';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
 import { Navigation } from './navigation';
+import './App.css';
 
 const Main = styled.main`
   margin: 0;
@@ -16,7 +16,7 @@ const Content = styled.section`
   margin-left: 100px;
 `;
 
-export default function App() {
+export function App() {
   return (
     <>
       <PageHeader />

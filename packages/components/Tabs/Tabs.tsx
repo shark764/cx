@@ -1,11 +1,12 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { ButtonProps } from '@cx/wfm/index.types';
+import { IThemed } from '@cx/types';
+import { IButton } from '@cx/types/form';
 import { Message } from '../Message';
 import { Button } from '../Inputs/Button';
 import { Wrapper } from '../Styled';
 
-export interface ITab extends ButtonProps {
+export interface ITab extends IButton {
   id?: string;
   label?: string;
   active?: boolean;
@@ -53,16 +54,13 @@ const TabItem = styled(Button)<ITab>`
     `}
 `;
 
-interface TProps {
+interface ITabs extends IThemed {
   activeIndex?: number;
   children: React.ReactElement<any>[];
-  primary?: boolean;
-  secondary?: boolean;
-  color?: string;
   bgColor?: string;
 }
 
-export function Tabs({ children, activeIndex = 0, ...parentRest }: TProps) {
+export function Tabs({ children, activeIndex = 0, ...parentRest }: ITabs) {
   const [activeTab, setActiveTab] = React.useState(activeIndex);
 
   const handleChange = (index: number) => {

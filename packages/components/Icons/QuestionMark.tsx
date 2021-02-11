@@ -1,22 +1,14 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { IconProps } from '@cx/wfm/index.types';
+import { IContainer, IIcon, IPath } from '@cx/types/icon';
 
-interface ContainerProps {
-  size?: number;
-  disabled?: boolean;
-}
-const Container = styled.div<ContainerProps>`
+const Container = styled.div<IContainer>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   width: ${({ size }) => size}px;
 `;
-interface SvgG {
-  fillColor?: string;
-  primary?: boolean;
-  secondary?: boolean;
-}
-const SvgG = styled.g<SvgG>`
+
+const SvgG = styled.g<IPath>`
   ${({
     fillColor, primary, secondary, theme,
   }) => (fillColor
@@ -49,7 +41,7 @@ export function QuestionMark({
   className,
   disabled = false,
   ...rest
-}: IconProps) {
+}: IIcon) {
   return (
     <Container size={size} className={className} onClick={onClick} disabled={disabled} {...rest}>
       <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" version="1.1" viewBox="0 0 131.735 132.204">

@@ -309,7 +309,7 @@ export const getTimezones = () => new Promise((resolve, reject) => {
     return setTimeout(() => reject(new Error('Timezones not found')), 1000);
   }
 
-  return setTimeout(() => resolve({ data: timezones }), 5000);
+  return setTimeout(() => resolve({ data: timezones }), 3000);
 });
 
 const teams = Array.from(new Set(new Array(25).fill({}).map(() => faker.commerce.color()))).map((t) => ({
@@ -322,5 +322,36 @@ export const getTeams = () => new Promise((resolve, reject) => {
     return setTimeout(() => reject(new Error('Teams not found')), 1000);
   }
 
-  return setTimeout(() => resolve({ data: teams }), 6000);
+  return setTimeout(() => resolve({ data: teams }), 2000);
+});
+
+export const organization = (agentId: string) => ({
+  id: faker.random.uuid(),
+  agentId,
+  team: faker.commerce.color(),
+  validFrom: faker.date.past(),
+  validTo: faker.date.past(),
+});
+
+export const allOrganization: any = [];
+allAgentsInformation.forEach((agent) => {
+  const nOrganization = Math.floor(Math.random() * 6);
+  const agentHistory = new Array(nOrganization).fill({}).map(() => organization(agent.id));
+  agentHistory.forEach((history: any) => {
+    allOrganization.push(history);
+  });
+});
+
+export const getAgentOrganizationHistory = (agentId: string) => new Promise((resolve, reject) => {
+  if (!allOrganization) {
+    return setTimeout(() => reject(new Error('Organization history not found')), 1000);
+  }
+
+  const agentOrganizationHistory = allOrganization.filter((item: any) => item.agentId === agentId);
+
+  // if (!agentOrganizationHistory.length) {
+  //   return setTimeout(() => reject(new Error('Agent organization history not found')), 1000);
+  // }
+
+  return setTimeout(() => resolve({ data: agentOrganizationHistory }), 1000);
 });

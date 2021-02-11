@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
+import { Props } from '@cx/types';
 import { loadTheme } from '../redux/thunks';
-import { Props } from '../index.types';
 
 interface RootState {
   main: any;

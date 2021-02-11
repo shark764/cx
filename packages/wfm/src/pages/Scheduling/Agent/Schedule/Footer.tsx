@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { DateTime } from 'luxon';
 import { addDays, getMonday, isSameDay } from '@cx/utilities/date';
 import { round } from '@cx/utilities/number';
-import { IEvent } from '../../../../index.types';
+import { IEvent } from '@cx/types/time';
 
 const CalFooter = styled.div`
   margin: 0 auto;
@@ -15,12 +15,12 @@ const Rtable = styled.div`
   justify-content: space-between;
   margin: 15px auto;
 `;
-interface RtableCellProps {
+interface IRtableCell {
   header?: boolean;
   strong?: boolean;
 }
 
-const RtableCell = styled.div<RtableCellProps>`
+const RtableCell = styled.div<IRtableCell>`
   flex: 1;
   text-align: center;
 
@@ -36,12 +36,12 @@ const RtableCell = styled.div<RtableCellProps>`
     `};
 `;
 
-interface FooterProps {
+interface IFooter {
   date: Date;
   events: IEvent[];
 }
 
-export function Footer({ date, events }: FooterProps) {
+export function Footer({ date, events }: IFooter) {
   const now = new Date(date);
   const monday = getMonday(now);
   const hours = [

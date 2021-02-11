@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Props } from '../../../../../index.types';
+import { Props } from '@cx/types';
 
 // @ts-ignore
-export const DataContext = React.createContext();
+export const FormDataContext = React.createContext();
 
-export function DataProvider({ children }: Props) {
+export function FormDataProvider({ children }: Props) {
   const selectedRow = React.useState({});
   const open = React.useState(false);
 
@@ -16,7 +16,7 @@ export function DataProvider({ children }: Props) {
   };
 
   return (
-    <DataContext.Provider
+    <FormDataContext.Provider
       value={{
         selectedRow,
         open,
@@ -24,6 +24,14 @@ export function DataProvider({ children }: Props) {
       }}
     >
       {children}
-    </DataContext.Provider>
+    </FormDataContext.Provider>
   );
+}
+
+export function useFormState() {
+  const context = React.useContext(FormDataContext);
+  if (context === undefined) {
+    throw new Error('useFormState must be used within a FormDataProvider');
+  }
+  return context;
 }

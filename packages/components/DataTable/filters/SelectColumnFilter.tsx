@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FilterProps } from '../types';
+import { IFilter } from '@cx/types/table';
 
 // This is a custom filter UI for selecting
 // a unique option from a list
@@ -7,7 +7,7 @@ export function SelectColumnFilter({
   column: {
     filterValue, setFilter, preFilteredRows, id,
   },
-}: FilterProps) {
+}: IFilter) {
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {

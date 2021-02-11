@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { ButtonProps } from '@cx/wfm/index.types';
+import { IButton } from '@cx/types/form';
 
-const StyledButton = styled.button<ButtonProps>`
+const StyledButton = styled.button<IButton>`
   padding: 15px 35px;
   border-radius: 16px;
   color: ${({ color }) => color || 'initial'};
@@ -37,11 +37,11 @@ const StyledButton = styled.button<ButtonProps>`
       `)};
 `;
 
-interface IButton extends ButtonProps {
+interface IButton2 extends IButton {
   children?: React.ReactNode;
   label?: string;
 }
-export function Button({ label, children, ...rest }: IButton) {
+export function Button({ label, children, ...rest }: IButton2) {
   return (
     <StyledButton {...rest}>
       {label}

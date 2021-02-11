@@ -1,22 +1,14 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { IconProps } from '@cx/wfm/index.types';
+import { IContainer, IIcon, IPath } from '@cx/types/icon';
 
-interface ContainerProps {
-  size?: number;
-  disabled?: boolean;
-}
-const Container = styled.div<ContainerProps>`
+const Container = styled.div<IContainer>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   width: ${({ size }) => size}px;
 `;
-interface PathProps {
-  fillColor?: string;
-  primary?: boolean;
-  secondary?: boolean;
-}
-const Path = styled.path<PathProps>`
+
+const Path = styled.path<IPath>`
   ${({
     fillColor, primary, secondary, theme,
   }) => (fillColor
@@ -42,7 +34,7 @@ export function Calendar({
   className,
   disabled = false,
   ...rest
-}: IconProps) {
+}: IIcon) {
   return (
     <Container size={size} className={className} onClick={onClick} disabled={disabled} {...rest}>
       <svg

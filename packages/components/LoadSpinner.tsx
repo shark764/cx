@@ -1,15 +1,13 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css, keyframes } from 'styled-components';
+import { IThemed } from '@cx/types';
 
-interface SpinnerProps {
+interface ISpinner extends IThemed {
   spinnerType?: string;
   size?: number;
   weight?: number;
   speed?: number;
-  color?: string;
-  primary?: boolean;
-  secondary?: boolean;
 }
 
 const spinAnimation = keyframes`
@@ -26,7 +24,7 @@ const spinAnimation = keyframes`
     transform: rotate(359deg);
   }
 `;
-const Spinner = styled.div<SpinnerProps>`
+const Spinner = styled.div<ISpinner>`
   --spinner-color: ${({
     primary, secondary, color, theme,
   }) => (primary && theme.colors.primary) || (secondary && theme.colors.secondary) || (color && color) || 'black'};
@@ -85,7 +83,7 @@ export function LoadSpinner({
   primary = false,
   secondary = false,
   ...rest
-}: SpinnerProps) {
+}: ISpinner) {
   return (
     <Spinner
       spinnerType={spinnerType}

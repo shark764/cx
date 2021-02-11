@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { FilterProps } from '../types';
+import { IFilter } from '@cx/types/table';
+import { TextBox } from '../../Inputs/TextBox';
 
-export function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }: FilterProps) {
+export function DefaultColumnFilter({ column: { filterValue, preFilteredRows, setFilter } }: IFilter) {
   return (
-    <input
+    <TextBox
       value={filterValue || ''}
       onChange={(e) => {
         // Set undefined to remove the filter entirely

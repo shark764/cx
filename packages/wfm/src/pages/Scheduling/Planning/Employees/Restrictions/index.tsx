@@ -7,7 +7,7 @@ import { TableContainer, DataTable } from '@cx/components/DataTable';
 import { CheckMark } from '@cx/components/Icons/CheckMark';
 import { Dot } from '@cx/components/Icons/Dot';
 import { Wrapper } from '@cx/components/Styled';
-import { getRestrictions } from './fake-data';
+import { getRestrictions } from '@cx/fakedata/planningEmployeesRestrictions';
 
 const TeamLeaderCell = styled.div`
   display: flex;

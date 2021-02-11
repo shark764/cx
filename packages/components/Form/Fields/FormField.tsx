@@ -1,10 +1,8 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { IField, IFormField } from '@cx/types/form';
 
-interface IField {
-  align?: string;
-}
 const Field = styled.div<IField>`
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -20,11 +18,6 @@ const Field = styled.div<IField>`
   }
 `;
 
-interface IFormField {
-  label: string;
-  align?: string;
-  children: React.ReactNode;
-}
 export function FormField({
   label, align = 'left', children, ...rest
 }: IFormField) {

@@ -3,21 +3,31 @@ import styled from 'styled-components';
 
 import { Form } from './Form';
 import { List } from './List';
-import { DataProvider } from './context';
+import { FormDataProvider, useFormState } from './context';
 
-const Container = styled.div`
+const FullWrapper = styled.div`
   display: grid;
   grid-auto-columns: 3fr 1fr;
   gap: 15px;
 `;
 
+function Container() {
+  const {
+    open: [open],
+  }: any = useFormState();
+
+  return (
+    <FullWrapper>
+      <List />
+      {open && <Form />}
+    </FullWrapper>
+  );
+}
+
 export function Agents() {
   return (
-    <DataProvider>
-      <Container>
-        <List />
-        <Form />
-      </Container>
-    </DataProvider>
+    <FormDataProvider>
+      <Container />
+    </FormDataProvider>
   );
 }

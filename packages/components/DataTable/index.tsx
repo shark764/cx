@@ -9,9 +9,9 @@ import {
   useRowSelect,
 } from 'react-table';
 import styled from 'styled-components';
+import { ITable } from '@cx/types/table';
 import { LoadSpinner } from '../LoadSpinner';
 import { Pagination } from './Pagination';
-import { TableProps } from './types';
 import { DefaultColumnFilter } from './filters/DefaultColumnFilter';
 import { fuzzyText, startsWithText } from './filterTypes';
 
@@ -59,8 +59,10 @@ export function DataTable({
   pageSizeOptions = [5, 10, 20, 30, 40, 50, 100],
   loading = false,
   noDataText = 'No records found',
+  oneRowSelectable = false,
+  multipleRowSelectable = false,
   setSelectedRow,
-}: TableProps) {
+}: ITable) {
   const defaultColumn = React.useMemo(
     () => ({
       disableFilters: true,
@@ -127,44 +129,72 @@ export function DataTable({
     usePagination,
     useRowSelect,
     (hooks) => {
+      hooks.getTableProps.push((props, _ref) => {
+        const { instance } = _ref;
+        let gridTemplateColumns = instance.columns
+          .map((col) =>
+            // @ts-ignore
+            (col.columnWidth ? `${col.columnWidth}px` : 'auto'))
+          .join(' ');
+        if (oneRowSelectable || multipleRowSelectable) {
+          gridTemplateColumns = `auto ${gridTemplateColumns}`;
+        }
+
+        return [
+          props,
+          {
+            style: {
+              display: 'grid',
+              gridTemplateColumns,
+            },
+          },
+        ];
+      });
       hooks.visibleColumns.push((columns) => [
         // Let's make a column for selection
-        // {
-        //   id: 'selection',
-        //   // The header can use the table's getToggleAllRowsSelectedProps method
-        //   // to render a checkbox
-        //   // @ts-ignore
-        //   Header: ({ getToggleAllPageRowsSelectedProps }) => (
-        //     <div>
-        //       <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
-        //     </div>
-        //   ),
-        //   // The cell can use the individual row's getToggleRowSelectedProps method
-        //   // to the render a checkbox
-        //   Cell: ({ row }: any) => (
-        //     <div>
-        //       <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-        //     </div>
-        //   ),
-        // },
-        {
-          id: 'selection',
-          // The cell can use the individual row's getToggleRowSelectedProps method
-          // to the render a checkbox
-          Cell: ({ row }: any) => (
-            <div>
-              <IndeterminateRadio
-                {...row.getToggleRowSelectedProps()}
-                onClick={() => {
-                  // AWFUL solution, but it works
-                  toggleAllRowsSelected(false);
-                  toggleRowSelected(row.id, true);
-                  setSelectedRow && setSelectedRow(row.original);
-                }}
-              />
-            </div>
-          ),
-        },
+        ...(multipleRowSelectable
+          ? [
+            {
+              id: 'selection',
+              // The header can use the table's getToggleAllRowsSelectedProps method
+              // to render a checkbox
+              Header: ({ getToggleAllRowsSelectedProps }: any) => (
+                <div>
+                  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                </div>
+              ),
+              // The cell can use the individual row's getToggleRowSelectedProps method
+              // to the render a checkbox
+              Cell: ({ row }: any) => (
+                <div>
+                  <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                </div>
+              ),
+            },
+          ]
+          : []),
+        ...(oneRowSelectable
+          ? [
+            {
+              id: 'selection',
+              // The cell can use the individual row's getToggleRowSelectedProps method
+              // to the render a checkbox
+              Cell: ({ row }: any) => (
+                <div>
+                  <IndeterminateRadio
+                    {...row.getToggleRowSelectedProps()}
+                    onClick={() => {
+                      // AWFUL solution, but it works
+                      toggleAllRowsSelected(false);
+                      toggleRowSelected(row.id, true);
+                      setSelectedRow && setSelectedRow(row.original);
+                    }}
+                  />
+                </div>
+              ),
+            },
+          ]
+          : []),
         ...columns,
       ]);
     },
@@ -185,14 +215,9 @@ export function DataTable({
 
   const trData = showPagination ? page : rows;
 
-  const style = {
-    ...(getTableProps().style || {}),
-    gridTemplateColumns: `repeat(${columns.length + 1}, auto)`,
-  };
-
   return (
     <>
-      <div {...getTableProps({ style })} className="table">
+      <div {...getTableProps()} className="table">
         {headerGroups.map((headerGroup: any) => headerGroup.headers.map((column: any) => (
           <div {...column.getHeaderProps()} className="cell header">
             {column.render('Header')}
@@ -211,13 +236,21 @@ export function DataTable({
             && trData.length > 0
             && trData.map((row: any) => {
               prepareRow(row);
-              return row.cells.map((cell: any) => (
-                <div {...cell.getCellProps()} className="cell">
-                  {cell.render('Cell')}
+              return (
+                <div {...row.getRowProps()} className={`row${row.isSelected ? ' row-selected' : ''}`}>
+                  {row.cells.map((cell: any) => (
+                    <div {...cell.getCellProps()} className="cell">
+                      {cell.render('Cell')}
+                    </div>
+                  ))}
                 </div>
-              ));
+              );
             }))
-          || (!loading && trData.length === 0 && <TrText>{noDataText}</TrText>)}
+          || (!loading && trData.length === 0 && (
+            <div className="full-cell">
+              <TrText>{noDataText}</TrText>
+            </div>
+          ))}
       </div>
 
       {showPagination && trData.length > 0 && (
