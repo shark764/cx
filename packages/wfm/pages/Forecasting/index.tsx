@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Message } from '../../../components/Message';
+import { Message } from '@cx/components/Message';
 
 export function Forecasting() {
   return (

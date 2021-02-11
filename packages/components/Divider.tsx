@@ -17,17 +17,18 @@ export const VerticalDivider = styled.div<DividerProps>`
   margin: 0 8px;
   line-height: 28px;
 
-  ${({ color, primary, secondary, theme }) =>
-    (color &&
-      css`
+  ${({
+    color, primary, secondary, theme,
+  }) => (color
+      && css`
         border-color: ${color};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         border-color: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         border-color: ${theme.colors.secondary};
       `)};
 `;
@@ -39,17 +40,18 @@ export const HorizontalDivider = styled.hr<DividerProps>`
   height: 0;
   margin: 10px 15px;
 
-  ${({ color, primary, secondary, theme }) =>
-    (color &&
-      css`
+  ${({
+    color, primary, secondary, theme,
+  }) => (color
+      && css`
         border-color: ${color};
-      `) ||
-    (primary &&
-      css`
+      `)
+    || (primary
+      && css`
         border-color: ${theme.colors.primary};
-      `) ||
-    (secondary &&
-      css`
+      `)
+    || (secondary
+      && css`
         border-color: ${theme.colors.secondary};
       `)};
 `;

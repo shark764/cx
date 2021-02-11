@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-export type Props = {
+export interface Props {
   children: React.ReactNode;
-};
+}
 
 export interface IconProps {
   onClick(event?: React.MouseEvent): void;
@@ -21,4 +21,13 @@ export interface IEvent {
   desc?: string;
   title?: string;
   style?: any;
+}
+
+export interface ButtonProps {
+  size?: number;
+  disabled?: boolean;
+  primary?: boolean;
+  secondary?: boolean;
+  color?: string;
+  bgColor?: string;
 }

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { useQuery } from 'react-query';
 
 import { getAgentAvailability } from './fake-data';
-import { Message } from '../../../../../components/Message';
-import { TableContainer } from '../../../../../components/DataTable/TableContainer';
-import { DataTable } from '../../../../../components/DataTable';
+import { Message } from '@cx/components/Message';
+import { TableContainer } from '@cx/components/DataTable/TableContainer';
+import { DataTable } from '@cx/components/DataTable';
 
 const Container = styled.div`
   grid-area: list;

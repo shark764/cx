@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { DateTime } from 'luxon';
-import { Tooltip } from '../../../../../components/Tooltip';
-import { IEvent } from '../../../../index.types';
+import { Tooltip } from '@cx/components/Tooltip';
+import { IEvent } from '@cx/wfm/index.types';
 
 const Container = styled.div`
   display: flex;

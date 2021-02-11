@@ -5,14 +5,14 @@ import { useQuery } from 'react-query';
 import { Event } from './Event';
 import { Footer } from './Footer';
 import { getAgentSchedule } from './fake-data';
-import { addDays } from '../../../../utilities/date';
-import { Message } from '../../../../../components/Message';
-import { Play } from '../../../../../components/icons/Play';
-import { DatePicker } from '../../../../../components/DateTime/DatePicker';
-import { Divider } from '../../../../../components/Divider';
-import { Calendar } from '../../../../../components/icons/Calendar';
-import { BigCalendar } from '../../../../../components/DateTime/BigCalendar';
-import { LoadSpinner } from '../../../../../components/LoadSpinner';
+import { addDays } from '@cx/wfm/utilities/date';
+import { Message } from '@cx/components/Message';
+import { Play } from '@cx/components/Icons/Play';
+import { DatePicker } from '@cx/components/DateTime/DatePicker';
+import { Divider } from '@cx/components/Divider';
+import { Calendar } from '@cx/components/Icons/Calendar';
+import { BigCalendar } from '@cx/components/DateTime/BigCalendar';
+import { LoadSpinner } from '@cx/components/LoadSpinner';
 
 const Container = styled.div`
   width: 70%;

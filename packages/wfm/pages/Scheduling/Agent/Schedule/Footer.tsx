@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
 import { DateTime } from 'luxon';
-import { addDays, getMonday, isSameDay } from '../../../../utilities/date';
-import { round } from '../../../../utilities/number';
-import { IEvent } from '../../../../index.types';
+import { addDays, getMonday, isSameDay } from '@cx/wfm/utilities/date';
+import { round } from '@cx/wfm/utilities/number';
+import { IEvent } from '@cx/wfm/index.types';
 
 const CalFooter = styled.div`
   margin: 0 auto;

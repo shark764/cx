@@ -1,6 +1,6 @@
 // import { useTheme } from 'styled-components';
 
-import { addDays, getMonday } from '../../../../utilities/date';
+import { addDays, getMonday } from '@cx/wfm/utilities/date';
 
 const now = new Date();
 const monday = getMonday(now);

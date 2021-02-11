@@ -2,7 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   entry: {
@@ -17,10 +17,10 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js'],
     alias: {
       Utils: path.resolve(__dirname, 'src', 'utils'),
-    }
+    },
   },
   externals: {
-    CxEngage: 'CxEngage'
+    CxEngage: 'CxEngage',
   },
   module: {
     rules: [

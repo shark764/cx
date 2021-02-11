@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { IconProps } from '../../wfm/index.types';
+import { IconProps } from '@cx/wfm/index.types';
 
 interface ContainerProps {
   size?: number;
