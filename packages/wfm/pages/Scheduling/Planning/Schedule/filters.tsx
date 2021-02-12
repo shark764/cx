@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
-import { isWhiteSpaceLike } from 'typescript';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
@@ -47,9 +46,22 @@ const Title = styled.h4`
   margin-left: 10px;
 `;
 
-const RightSideFilters = styled.div`
-  width: 550px;
+const Label = styled.span`
+  font-size: 11px;
+  color: grey;
+  vertical-align: super;
+  margin-left: 10px;
 `;
+
+const LeftSideFilters = styled.div`
+  display: grid;
+  grid-template-columns: 300px 300px;
+`;
+const RightSideFilters = styled.div`
+  display: grid;
+  grid-template-columns: 300px;
+`;
+
 
 const customStyles = {
   option: (provided: any, state: any) => ({
@@ -73,31 +85,42 @@ export function Filters() {
     <BoxDiv>
       <Title> Feb 11 2021 - Feb 17 2021 </Title>
       <FilterSections>
-        <SelectSized
-          className="choose-date-range"
-          classNamePrefix="select"
-          defaultValue={dateOptions[1]}
-          name="choose-date-range"
-          options={dateOptions}
-          styles={customStyles}
-        />
+        <LeftSideFilters>
+          <span>
+            <Label> Time Span </Label>
+            <SelectSized
+              className="choose-date-range"
+              classNamePrefix="select"
+              defaultValue={dateOptions[1]}
+              name="choose-date-range"
+              options={dateOptions}
+              styles={customStyles}
+            />
+          </span>
+          <span>
+            <Label> Time Zone </Label>
+            <SelectSized
+              className="choose_time_zone"
+              classNamePrefix="select"
+              defaultValue={timeZonesOptions[0]}
+              name="choose_time_zone"
+              options={timeZonesOptions}
+              styles={customStyles}
+            />
+          </span>
+        </LeftSideFilters>
         <RightSideFilters>
-          <SelectSized
-            className="choose_time_zone"
-            classNamePrefix="select"
-            defaultValue={timeZonesOptions[0]}
-            name="choose_time_zone"
-            options={timeZonesOptions}
-            styles={customStyles}
-          />
-          <SelectSized
-            className="choose_competence"
-            classNamePrefix="select"
-            defaultValue={competenceOptions[0]}
-            name="choose_competence"
-            options={competenceOptions}
-            styles={customStyles}
-          />
+          <span>
+            <Label> Competence </Label>
+            <SelectSized
+              className="choose_competence"
+              classNamePrefix="select"
+              defaultValue={competenceOptions[0]}
+              name="choose_competence"
+              options={competenceOptions}
+              styles={customStyles}
+            />
+          </span>
         </RightSideFilters>
       </FilterSections>
     </BoxDiv>

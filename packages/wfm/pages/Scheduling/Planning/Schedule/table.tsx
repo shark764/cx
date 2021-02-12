@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { useMemo } from 'react';
 import { useTable, useRowSelect } from 'react-table';
-import { data } from './fakeData';
 import styled from 'styled-components';
 import { TimeBarSchedule } from './timeBarSchedule';
 import { TimeScale } from './timeScale';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
+import { Legend } from './legend';
 
 import { agentShedules } from '@cx/fakedata';
 
@@ -25,6 +26,7 @@ const TableWrapper = styled.div`
 
 const TableRow = styled.div`
   display: grid;
+  height: 25px;
   /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
   grid-template-columns: 40px 150px 80px 60px 60px 150px 40px 40px auto;
 `;
@@ -35,6 +37,17 @@ const TableHeaderRow = styled.div`
   margin-bottom: 30px;
   /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
   grid-template-columns: 40px 150px 80px 60px 60px 150px 40px 40px auto;
+`;
+
+const SheduleTitle = styled.h4`
+  color: grey;
+  font-style: italic;
+  margin-top: 0px;
+  margin-left: 10px;
+`;
+const SheduleHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const TableBody = styled.div``;
@@ -63,18 +76,26 @@ const CenteredText = styled.div`
 const CenteredNumber = styled.div`
   text-align: center;
 `;
+const CompetenceIcon = styled(CheckRoundedIcon)<{value: boolean}>`
+  display: ${({value}) => value ? 'inherit' : 'none !important'};
+`;
+const WarningIcon = styled(WarningRoundedIcon)<{value: boolean}>`
+  display: ${({value}) => value ? 'inherit' : 'none !important'};
+`;
 
 export function SheduleTable() {
-  const columns = React.useMemo(() => [
+  const columns = useMemo(() => [
     { Header: 'Agent', accessor: 'col1',  },
     { Header: 'Team', accessor: 'col2',  },
     { Header: <CenteredText>Agreed Hours</CenteredText>, Cell: ({value}: any) => <CenteredNumber>{value}</CenteredNumber>, accessor: 'col3',  },
     { Header: <CenteredText>Sheduled Hours</CenteredText>, Cell: ({value}: any) => <CenteredNumber>{value}</CenteredNumber>, accessor: 'col4',  },
     { Header: 'Timezone', accessor: 'col5',  },
-    { Header: '', Cell: <CheckRoundedIcon style={{color: 'rgb(69 107 46)'}} />, accessor: 'col6',  },
-    { Header: '', Cell: <WarningRoundedIcon style={{color: '#f17100'}} />, accessor: 'col7',  },
-    { Header: <TimeScale domain={[0,24]} />, Cell: <TimeBarSchedule />, accessor: 'col8', },
+    { Header: '', Cell: ({value}: any) => <CompetenceIcon value={value} style={{color: 'rgb(69 107 46)'}} />, accessor: 'col6',  },
+    { Header: '', Cell: ({value}: any) => <WarningIcon value={value} style={{color: '#f17100'}} />, accessor: 'col7',  },
+    { Header: <TimeScale domain={[0,24]} />, Cell: ({value}: any) => <TimeBarSchedule domain={[0,24]} segments={value} />, accessor: 'col8', },
   ],[])
+
+  const data = useMemo(() => agentShedules, []);
 
   const { getTableProps, headerGroups, rows, prepareRow } = useTable(
     {
@@ -112,6 +133,7 @@ export function SheduleTable() {
 
   return (
     <TableWrapper {...getTableProps()} className="table">
+      <SheduleHeader><SheduleTitle> Shedule </SheduleTitle> <Legend /></SheduleHeader>
       <TableHeader>
         {headerGroups.map((headerGroup) => (
           <TableHeaderRow className="tr" {...headerGroup.getHeaderGroupProps({})}>
