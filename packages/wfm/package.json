@@ -5,7 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "@cx/components": "1.0.0",
-    "@types/luxon": "^1.25.1"
+    "@types/luxon": "^1.25.1",
+    "@cx.fakedata": "1.0.0"
   },
   "scripts": {
     "start": "../../node_modules/.bin/webpack serve --mode development",

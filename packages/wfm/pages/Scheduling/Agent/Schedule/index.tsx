@@ -7,10 +7,10 @@ import { Footer } from './Footer';
 import { getAgentSchedule } from './fake-data';
 import { addDays } from '@cx/wfm/utilities/date';
 import { Message } from '@cx/components/Message';
-import { Play } from '@cx/components/Icons/Play';
+import { Play } from '@cx/components/icons/Play';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
 import { Divider } from '@cx/components/Divider';
-import { Calendar } from '@cx/components/Icons/Calendar';
+import { Calendar } from '@cx/components/icons/Calendar';
 import { BigCalendar } from '@cx/components/DateTime/BigCalendar';
 import { LoadSpinner } from '@cx/components/LoadSpinner';
 

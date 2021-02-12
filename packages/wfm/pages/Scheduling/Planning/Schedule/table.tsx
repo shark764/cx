@@ -2,6 +2,19 @@ import * as React from 'react';
 import { useTable, useRowSelect } from 'react-table';
 import { data } from './fakeData';
 import styled from 'styled-components';
+import { TimeBarSchedule } from './timeBarSchedule';
+import { TimeScale } from './timeScale';
+import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
+import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
+
+import { agentShedules } from '@cx/fakedata';
+
+function CreateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 const TableWrapper = styled.div`
   border: solid 1px #80808096;
@@ -13,7 +26,7 @@ const TableWrapper = styled.div`
 const TableRow = styled.div`
   display: grid;
   /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
-  grid-template-columns: 40px 150px 80px 80px 80px 150px 90px 80px auto;
+  grid-template-columns: 40px 150px 80px 60px 60px 150px 40px 40px auto;
 `;
 
 const TableHeaderRow = styled.div`
@@ -21,7 +34,7 @@ const TableHeaderRow = styled.div`
   display: grid;
   margin-bottom: 30px;
   /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
-  grid-template-columns: 40px 150px 80px 80px 80px 150px 90px 80px auto;
+  grid-template-columns: 40px 150px 80px 60px 60px 150px 40px 40px auto;
 `;
 
 const TableBody = styled.div``;
@@ -43,16 +56,24 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
+const CenteredText = styled.div`
+  text-align: center;
+  font-size: 11px;
+`;
+const CenteredNumber = styled.div`
+  text-align: center;
+`;
+
 export function SheduleTable() {
   const columns = React.useMemo(() => [
     { Header: 'Agent', accessor: 'col1',  },
     { Header: 'Team', accessor: 'col2',  },
-    { Header: 'Agreed Hours', accessor: 'col3',  },
-    { Header: 'Scheduled Hours', accessor: 'col4',  },
+    { Header: <CenteredText>Agreed Hours</CenteredText>, Cell: ({value}: any) => <CenteredNumber>{value}</CenteredNumber>, accessor: 'col3',  },
+    { Header: <CenteredText>Sheduled Hours</CenteredText>, Cell: ({value}: any) => <CenteredNumber>{value}</CenteredNumber>, accessor: 'col4',  },
     { Header: 'Timezone', accessor: 'col5',  },
-    { Header: 'Competence', accessor: 'col6',  },
-    { Header: 'Conflict', accessor: 'col7',  },
-    { Header: 'Scheduled Hours Visualization', accessor: 'col8', },
+    { Header: '', Cell: <CheckRoundedIcon style={{color: 'rgb(69 107 46)'}} />, accessor: 'col6',  },
+    { Header: '', Cell: <WarningRoundedIcon style={{color: '#f17100'}} />, accessor: 'col7',  },
+    { Header: <TimeScale domain={[0,24]} />, Cell: <TimeBarSchedule />, accessor: 'col8', },
   ],[])
 
   const { getTableProps, headerGroups, rows, prepareRow } = useTable(
@@ -95,7 +116,7 @@ export function SheduleTable() {
         {headerGroups.map((headerGroup) => (
           <TableHeaderRow className="tr" {...headerGroup.getHeaderGroupProps({})}>
             {headerGroup.headers.map((column) => (
-              <span className="th">
+              <span className="th" key={column.id}>
                 {column.render('Header')}
               </span>
             ))}
@@ -108,7 +129,7 @@ export function SheduleTable() {
           return (
             <TableRow {...row.getRowProps()} className="tr">
               {row.cells.map((cell) => (
-                <span className="td">
+                <span className="td" key={CreateUUID()} >
                   {cell.render('Cell')}
                 </span>
               ))}
