@@ -6,10 +6,17 @@ import styled, { css } from 'styled-components';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { deepMerge } from '@cx/wfm/utilities';
-import { IEvent } from '@cx/wfm/index.types';
-import { LuxonLocalizer } from '@cx/wfm/intl/LuxonLocalizer';
+import { deepMerge } from '@cx/utilities';
+import { LuxonLocalizer } from '@cx/utilities/LuxonLocalizer';
 
+
+export interface IEvent {
+  start: Date;
+  end: Date;
+  desc?: string;
+  title?: string;
+  style?: any;
+}
 interface ContainerProps {
   height?: string;
   width?: string;

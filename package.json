@@ -5,8 +5,8 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "cd packages/wfm && npm start",
-    "test": "cd packages/wfm && npm test",
+    "start": "yarn workspace @cx/cxwfm run start",
+    "build": "yarn workspace @cx/cxwfm run build",
     "test:all": "lerna run test",
     "new-version": "lerna version --conventional-commits --yes",
     "diff": "lerna diff"
@@ -14,70 +14,5 @@
   "devDependencies": {
     "lerna": "^3.22.1"
   },
-  "dependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/preset-typescript": "^7.12.7",
-    "@lhci/cli": "^0.7.0",
-    "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.57",
-    "@reduxjs/toolkit": "^1.5.0",
-    "@types/d3": "^6.3.0",
-    "@types/jest": "^26.0.20",
-    "@types/luxon": "^1.25.1",
-    "@types/node": "^14.14.22",
-    "@types/react": "^17.0.1",
-    "@types/react-big-calendar": "^0.30.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-redux": "^7.1.16",
-    "@types/react-router-dom": "^5.1.7",
-    "@types/react-select": "^4.0.13",
-    "@types/react-table": "^7.0.28",
-    "@types/redux": "^3.6.0",
-    "@types/styled-components": "^5.1.7",
-    "babel-jest": "^26.6.3",
-    "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^7.0.0",
-    "css-loader": "^5.0.2",
-    "d3": "^6.5.0",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^4.5.1",
-    "jest": "^26.6.3",
-    "lighthouse": "^7.0.1",
-    "luxon": "^1.25.0",
-    "prop-types": "^15.7.2",
-    "puppeteer": "^6.0.0",
-    "react": "^17.0.1",
-    "react-big-calendar": "^0.31.0",
-    "react-datepicker": "^3.4.1",
-    "react-dom": "^17.0.1",
-    "react-hook-form": "^6.15.1",
-    "react-query": "^3.8.2",
-    "react-redux": "^7.2.2",
-    "react-router-dom": "^5.2.0",
-    "react-select": "^4.1.0",
-    "react-spring": "^8.0.27",
-    "react-table": "^7.6.3",
-    "react-test-renderer": "^17.0.1",
-    "sass": "^1.32.7",
-    "sass-loader": "^11.0.1",
-    "style-loader": "^2.0.0",
-    "styled-components": "^5.2.1",
-    "ts-loader": "^8.0.14",
-    "typescript": "^4.1.3",
-    "webpack": "^5.21.2",
-    "webpack-bundle-analyzer": "^4.4.0",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2",
-    "workbox-webpack-plugin": "^6.1.0"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react",
-      "@babel/preset-typescript"
-    ]
-  }
+  "dependencies": {}
 }
