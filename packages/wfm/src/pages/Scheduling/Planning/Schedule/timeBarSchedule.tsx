@@ -50,8 +50,6 @@ export const TimeBarSchedule: React.FC<TimeBarScheduleProps> = ({ segments, doma
   const breakSegmentLength = segments.breaks[0].breakLength * secondsPerPixels;
   const breakSegmentOffset = segments.breaks[0].breakStartTime * secondsPerPixels;
 
-  console.log('><><><>', secondsPerPixels);
-
   // @ts-ignore
   const pixelsPerTick = width / domain[1];
   // @ts-ignore
