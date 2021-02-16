@@ -5,8 +5,8 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn workspace @cx/cxwfm run start",
-    "build": "yarn workspace @cx/cxwfm run build",
+    "start": "yarn workspace @cx/wfm run start",
+    "build": "yarn workspace @cx/wfm run build",
     "test:all": "lerna run test",
     "new-version": "lerna version --conventional-commits --yes",
     "diff": "lerna diff"
