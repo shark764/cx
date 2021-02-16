@@ -8,7 +8,7 @@ import { scaleLinear } from 'd3';
 const TimeScaleBox = styled.div``;
 
 const Tick = styled.span<{ xOffset: number }>`
-  position: absolute;
+  position: relative;
   left: ${(props) => props.xOffset || 0}px;
   &:after {
     content: '';
@@ -21,7 +21,7 @@ const Tick = styled.span<{ xOffset: number }>`
   }
 `;
 const TickLabel = styled.span<{ value: number }>`
-  position: absolute;
+  position: relative;
   left: ${({ value }) => (value > 9 ? '-8px' : '-4px')};
 `;
 

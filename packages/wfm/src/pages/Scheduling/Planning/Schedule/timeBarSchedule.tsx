@@ -7,14 +7,15 @@ const Bar = styled.div<{ offset: number; length: number }>`
   height: 20px;
   background: #07497aba;
   border-radius: 3px;
-  position: absolute;
+  position: relative;
   left: ${({ offset }) => `${offset}px`};
   width: ${({ length }) => `${length}px`};
 `;
 const Break = styled.div<{ offset: number; length: number }>`
   height: 20px;
   background: #c4c4c7;
-  position: absolute;
+  position: relative;
+  top: -20px;
   left: ${({ offset }) => `${offset}px`};
   width: ${({ length }) => `${length}px`};
 `;
