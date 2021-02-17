@@ -1,0 +1,1291 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "CxWFM Schedule Api",
+    "description": "This api covers working with schedules in CxWFM.\n"
+  },
+  "tags": [
+    {
+      "name": "Plans",
+      "description": "A plan is a collection of schedules. A contact center can have multiple plans for different purposes\nsuch as testing scenarios, doing preliminary planning, one plan will be set as the official plan and\nthis plan can be published to agents. A plan is not restricted to a date range but should be viewed\nas a (possibly) continuous set of schedules.\n"
+    },
+    {
+      "name": "Schedule Period",
+      "description": "A schedule period defines the period that is used scheduling within an organization. The schedule period allows the scheduling process to work around a common period within which schedules can be organized and moved between plans. The start- and end-date of the schedule period is related to the agent's own timezone and not strictly to the tenant's timezone. The actual time range of the schedule period is therefore dependent on the agents that are scheduled within it."
+    },
+    {
+      "name": "Schedules",
+      "description": "A schedule is a finite set of shifts limited by a date range. The schedule can but does not have to be\nassigned to an agent.\n"
+    },
+    {
+      "name": "Shifts",
+      "description": "A shift is a day's worth of work for an agent and consists of one or more activities that an agent is\nscheduled for during that day. A shift can stretch into the next day.\n"
+    },
+    {
+      "name": "Activities",
+      "description": "An activity is information about what an agent is scheduled to do.\n"
+    },
+    {
+      "name": "Optimization",
+      "description": "Optimization is the process of generating a schedule that is optimal to a set of agents and a forecast\nof expected workload.\n"
+    }
+  ],
+  "paths": {
+    "/tenants/{tenantId}/plans": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Retrieve plans",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Plan"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Add a new plan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPlan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Retrieve a single plan",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Update a single plan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPlan"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Plans"
+        ],
+        "summary": "Delete a plan",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/scheduleperiods": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedule Period"
+        ],
+        "summary": "Retrieve all schedule periods.",
+        "responses": {
+          "200": {
+            "description": "Succcess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriod"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Schedule Period"
+        ],
+        "summary": "Add a new schedule period",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSchedulePeriod"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succcess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriod"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure. Possible reasons are:\n  * The date-range overlaps with another SchedulePeriod.\n  * The name is not unique.\n"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/scheduleperiods/{schedulePeriodId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathSchedulePeriodId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedule Period"
+        ],
+        "summary": "Retrieve a single Schedule periods.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriod"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Schedule Period"
+        ],
+        "summary": "Update a single schedule period.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSchedulePeriod"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriod"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure, see `POST` for details."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Schedule Period"
+        ],
+        "summary": "Delete a schedule period.",
+        "description": "A schedule period can only be removed if there are no schedules associated with it.\n",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Possible reasons:\n  * There are schedules associated to the schedule period.\n"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}/schedules": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Retrieve all schedules for a plan",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Add a new set of schedules",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NewSchedule"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure, possible reasons:\n  * Missing or invalid `schedulePeriodId`\n"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}/schedules/query": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Query for schedules",
+        "description": "Returns all schedules that covers the period that is provided in the query (if any).\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Schedule"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}/schedules/copy": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Copy schedules from other plan.",
+        "description": "Copies the provided schedules from the source plan to this plan (target). Agents that have schedules in the\ntarget plan will have those overwritten unless the schedules are marked as locked. Schedules can only be copied\nfrom within the same schedule period.\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCopy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Failure. Possible error conditions:\n  * There are overlapping shifts with the previous or following schedule period in the target plan.\n\nIf a failure occurs, no schedules are copied.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}/schedules/{scheduleId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        },
+        {
+          "$ref": "#/components/parameters/pathScheduleId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Retrieve a single schedule",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Update a single schedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSchedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Schedule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure, see `POST`.\n"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Delete a schedule",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}/schedules/{scheduleId}/shifts": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        },
+        {
+          "$ref": "#/components/parameters/pathScheduleId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Retrieve all shifts for a schedule",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Shift"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Add a new set of shifts to a schedule.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NewShift"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shift"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/plans/{planId}/schedules/{scheduleId}/shifts/{shiftId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        },
+        {
+          "$ref": "#/components/parameters/pathScheduleId"
+        },
+        {
+          "$ref": "#/components/parameters/pathShiftId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Retrieve a single shift",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shift"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Update a single shift",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewShift"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Shift"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Shifts"
+        ],
+        "summary": "Delete a single shift",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenant/{tenantId}/activities": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Retrieve all activity types",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Activity"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Create a new activity type",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewActivity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Succcess",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenant/{tenantId}/activities/{activityId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathActivityId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Retrieve a single activity",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Update a single activity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Activity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Activities"
+        ],
+        "summary": "Delete a single activity",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenant/{tenantId}/plans/{planId}/optimizations": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        }
+      ],
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "$ref": "#/components/schemas/OptimizationStatus"
+            }
+          }
+        ],
+        "tags": [
+          "Optimization"
+        ],
+        "summary": "Retrieve all optimization runs.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Optimization"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Optimization"
+        ],
+        "summary": "Create a new optimization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOptimization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Optimization"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenant/{tenantId}/plans/{planId}/optimizations/{optimizationId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantId"
+        },
+        {
+          "$ref": "#/components/parameters/pathPlanId"
+        },
+        {
+          "$ref": "#/components/parameters/pathOptimizationId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Optimization"
+        ],
+        "summary": "Retrieve a single optimization run.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Optimization"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Optimization"
+        ],
+        "summary": "Cancel a single optimization run.",
+        "description": "Deleting an optimization will not remove the entity itself or the resulting schedules. The optimization run\nwill continue to run to end but the result will not be used in the schedules.\n",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Optimization"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Schedule": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/ScheduleBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "shifts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Shift"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ScheduleBase": {
+        "properties": {
+          "locked": {
+            "type": "boolean",
+            "default": false
+          },
+          "deleted": {
+            "type": "boolean",
+            "default": false
+          },
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedulePeriodId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "schedulePeriodId"
+        ]
+      },
+      "NewSchedule": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ScheduleBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "shifts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NewShift"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ScheduleQuery": {
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "agentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "ScheduleCopy": {
+        "properties": {
+          "schedulePeriod": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourcePlan": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedules": {
+            "description": "Either a list of the schedules that should be copied or the value `synchronize`. If `synchronize` is used\nthen a complete synchronization is being done meaning that all schedules in the target-plan will be removed\nbefore the new schedules are copied.\n",
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "synchronize"
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "NewPlan": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "official": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Plan": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewPlan"
+          }
+        ]
+      },
+      "NewSchedulePeriod": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "SchedulePeriod": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewSchedulePeriod"
+          }
+        ]
+      },
+      "NewShift": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "locked": {
+                "type": "boolean"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "activities": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ScheduledActivity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Shift": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewShift"
+          }
+        ]
+      },
+      "ScheduledActivity": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "activityId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "startTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endTime": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        ]
+      },
+      "NewActivity": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "paid": {
+            "type": "boolean"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "work",
+              "break",
+              "meeting",
+              "training",
+              "absence"
+            ]
+          }
+        }
+      },
+      "Activity": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewActivity"
+          }
+        ]
+      },
+      "EntityId": {
+        "properties": {
+          "id": {
+            "description": "The id of an entity",
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "NewOptimization": {
+        "properties": {
+          "periodStart": {
+            "type": "string",
+            "format": "date"
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "agents": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "competencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "Optimization": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewOptimization"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "startDateTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "completedDateTime": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "status": {
+                "$ref": "#/components/schemas/OptimizationStatus"
+              }
+            }
+          }
+        ]
+      },
+      "OptimizationStatus": {
+        "type": "string",
+        "enum": [
+          "running",
+          "cancelled",
+          "completed"
+        ]
+      },
+      "ErrorResponse": {
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "startParam": {
+        "in": "query",
+        "name": "startDateTime",
+        "description": "The start datetime for the request (inclusive).",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "endParam": {
+        "in": "query",
+        "name": "endDateTime",
+        "description": "The end datetime for the request (exclusive).",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "pathTenantId": {
+        "in": "path",
+        "name": "tenantId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathPlanId": {
+        "in": "path",
+        "name": "planId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathScheduleId": {
+        "in": "path",
+        "name": "scheduleId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathShiftId": {
+        "in": "path",
+        "name": "shiftId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathActivityId": {
+        "in": "path",
+        "name": "activityId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathOptimizationId": {
+        "in": "path",
+        "name": "optimizationId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathSchedulePeriodId": {
+        "in": "path",
+        "name": "schedulePeriodId",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  }
+}

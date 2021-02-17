@@ -1,0 +1,1714 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CX WFM Api (Historical, Forecast and Target)",
+    "description": "CxWFM platform api for handling historical data and generating and storing forecasts.\n",
+    "version": "0.0.1"
+  },
+  "tags": [
+    {
+      "name": "Competencies",
+      "description": "A competency corresponds to a queue or some other \"bucket\" with work that will need to be forecasted and scheduled for.\nCxEngage is the master source of competencies and therefore the endpoints that are published here will only contain\nmethods of amending the competencies with additional information that is required for forecasting and not the creation\nof the competencies themselves.\n"
+    },
+    {
+      "name": "Historical data",
+      "description": "Historical data is data about historical interaction volumes and patterns aggregated into 15-minute intervals. \nHistorical data is collected from an ACD and used to create the forecasts that are the basis for future schedules.\n"
+    },
+    {
+      "name": "Forecast Timeline",
+      "description": "A forecast timeline is a continuous timeline of forecast scenarios that can be used as the data source for schedule\ngeneration and optimization. A tenant can have multiple forecast timelines to allow customers to schedule based on\ndifferent scenarios or for different segments of the contact center.\n"
+    },
+    {
+      "name": "Forecast Scenario",
+      "description": "A forecast scenario is the result of forecast future workloads an interaction patterns for a specific time interval\nand combination of competencies, channels and directions.\n"
+    },
+    {
+      "name": "Forecast Series",
+      "description": "The Forecast series contains the actual data for a forecast metric. One forecast object can contain multiple data series where these\nseries must cover differe, non-overlapping, time ranges.\n\nThe data series are provided with a forecasted value per 15-minute period. The data is per day type (e.g. weekday) \nand split into two segments:\n* The curve is the distribution of forecasted values (e.g. interactions) over one day's (24 hours) quarters.\nThe sum of all values on the curve is always 1.0. The cure will always contain 96 values (one per quarter-hour).\n* The dayValues is the total number forecasted for one day.\n"
+    },
+    {
+      "name": "Adjustment",
+      "description": "Adjustments are changes to the forecasted values that are applied when the forecast is used to optimize a schedule.\nAdjustments can be made at different intervals (querter-hour, daily, monthly or yearly) and when applied it will update\nall values within that interval. The type of update can be set either as a percentage of existing values or as an absolute\nvalue. If set as an absolute value over anything else than a quarter-hour interval, the value will be distributed over the\nwhole interval.\n\nAdjustments can be stacked (i.e. multiple adjustments can be applied to an interval) and they can also overlap.\nWhen overlapping, percentage-based adjustments will be applied first.\n"
+    }
+  ],
+  "paths": {
+    "/tenants/{tenantId}/competencies": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Competencies"
+        ],
+        "summary": "Retrieve all competencies for a tenant.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Competency"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/competencies/{competencyId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathCompetencyIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Competencies"
+        ],
+        "summary": "Retrieve a single competency.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Competency"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/competencies/{competencyId}/historical": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathCompetencyIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Historical data"
+        ],
+        "summary": "Add data points to historical data",
+        "description": "Add new historical interaction data points. Overlapping data points are overwritten.",
+        "requestBody": {
+          "description": "The historical data that should be stored.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HistoricalTimeSeries"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Historical data"
+        ],
+        "summary": "Deletes a range of historical data.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startParam"
+          },
+          {
+            "$ref": "#/components/parameters/endParam"
+          },
+          {
+            "$ref": "#/components/parameters/channelTypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/directionTypeParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Historical data"
+        ],
+        "summary": "Retrieve a set of historical data",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startParam"
+          },
+          {
+            "$ref": "#/components/parameters/endParam"
+          },
+          {
+            "$ref": "#/components/parameters/channelTypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/directionTypeParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoricalTimeSeries"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/competencies/{competencyId}/historical/waste": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathCompetencyIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Historical data"
+        ],
+        "summary": "Retrieve all waste days",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WasteDay"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Historical data"
+        ],
+        "summary": "Add a waste day",
+        "description": "Days marked as waste will not be included in forecasts.\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WasteDay"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/competencies/{competencyId}/historical/waste/{date}": {
+      "delete": {
+        "summary": "Delete a waste day",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pathTenantIdParam"
+          },
+          {
+            "$ref": "#/components/parameters/pathCompetencyIdParam"
+          },
+          {
+            "in": "path",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "Historical data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecasttimelines": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Create a new timeline",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewForecastTimeline"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastTimeline"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Retrieve all timelines",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastTimeline"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecasttimelines/{forecastTimelineId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastTimelineIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Retrieve a single timeline",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastTimeline"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Updates a single timeline",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewForecastTimeline"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastTimeline"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Delete a single timeline",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecasttimelines/{forecastTimelineId}/series": {
+      "get": {
+        "summary": "Retrieve the data series for a timeline.",
+        "description": "Based on the input parameters this endpoint will return the data series for a timeline. If adjustments are\nstacked (i.e. more than one adjustment is applied to an interval), any percentage-based adjustment is applied\nbefore absolute adjustments.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pathTenantIdParam"
+          },
+          {
+            "$ref": "#/components/parameters/pathForecastTimelineIdParam"
+          },
+          {
+            "in": "query",
+            "name": "startDate",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "interval",
+            "description": "Defines the interval that the data series is broken down to.",
+            "schema": {
+              "$ref": "#/components/schemas/IntervalType"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "includeAdjustments",
+            "description": "If set to `true`, the response will include the data series with any adjustments applied to the original\nforecast data.\n",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeForecast",
+            "description": "If set to `true`, the response will include the original forecast data series.\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "in": "query",
+            "name": "competencies",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "all"
+                  ]
+                }
+              ],
+              "default": "all"
+            }
+          },
+          {
+            "in": "query",
+            "name": "channels",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChannelType"
+                  }
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "all"
+                  ]
+                }
+              ],
+              "default": "all"
+            }
+          },
+          {
+            "in": "query",
+            "name": "directions",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DirectionType"
+                  }
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "all"
+                  ]
+                }
+              ],
+              "default": "all"
+            }
+          }
+        ],
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimelineSeries"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecasttimelines/{forecastTimelineId}/scenarios": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastTimelineIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Add a forecast scenario to a timeline",
+        "description": "When a forecast scenario is added to a timeline it means that the forecast series of that scenario will be used\nas part of the timeline and therefore be the source for scheduling based on the timeline. Adding a scenario to a \ntimeline will fail if the timeline already contains a time series for the same combination of competency, channel\nand direction for the same time period. If the forecast for a scenario is re-run after it has been added to the\nscenarion the data used in the timeline will be updated.\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForecastTimelineScenario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Retrieve all scenarios for a timeline",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastTimelineScenario"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forecast Timeline"
+        ],
+        "summary": "Delete a single scenario from a timeline",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "forecastScenarioId",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenarios": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Stores a new forecast scenario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewForecastScenario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastScenario"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Retrieve forecast scenarios",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastScenario"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenarios/{forecastScenarioId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastScenarioIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Retrieve a single forecast scenario",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastScenario"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Delete a single forecast scenario.",
+        "description": "Deleting a forecast will simultaneously delete the forecast's data series and adjustments.\n",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Update a forecast scenario.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewForecastScenario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastScenario"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenarios/{forecastScenarioId}/params": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastScenarioIdParam"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Add or update forecast params",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForecastParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Retrieve forecast params",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Delete forecast params",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenarios/{forecastScenarioId}/forecast": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastScenarioIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Forecast Scenario"
+        ],
+        "summary": "Generate a new forecast",
+        "description": "Kicks off a a new forecast using the params that have been assigned to the scenario. The forecasting process is\ninitiated and the corresponding data series are generated as empty entities. The request will return before\nfinishing the forecasts and a client will have to monitor the data series to find out when the forecasting\nprocess has finished. The request will fail if there are ongoing forecast jobs running when the request is made.\nAll existing data series for the scenario will be overwritten. Any content in the request body will be disregarded.\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          },
+          "400": {
+            "description": "Failure. Possible reasons:\n  * If the scenario has any series that are pending (i.e. there are ongoing forecast jobs), the request\n  should fail.\n"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenario/{forecastScenarioId}/series": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastScenarioIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Forecast Series"
+        ],
+        "summary": "Add a new forecast data series",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewForecastSeries"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastSeries"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Forecast Series"
+        ],
+        "summary": "Retrieve a forecast's data series",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastSeries"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenario/{forecastScenarioId}/series/{seriesId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastScenarioIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathSeriesIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Forecast Series"
+        ],
+        "summary": "Retrieve a single data series",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastSeries"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Forecast Series"
+        ],
+        "summary": "Update a single data series",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewForecastSeries"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forecast Series"
+        ],
+        "summary": "Delete a single data series",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastscenario/{forecastScenarioId}/series/{seriesId}/target": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastScenarioIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathSeriesIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Forecast Series"
+        ],
+        "summary": "Retrieve the target staffing corresponding to the data series.",
+        "description": "The target is calculated based on the series' forecasted interactions and their AHT and the SLA that is assigned\nto the competence. If no SLA has been assigned to the competence then the default SLA for the tenant is used as\nthe basis for the calculation. If there is no default SLA then the calculation can not be made.\n",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TargetSeries"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecasttimeline/{forecastTimelineId}/adjustments": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastTimelineIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Adjustment"
+        ],
+        "summary": "Add a new adjustment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAdjustment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adjustment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Adjustment"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/competencyParam"
+          },
+          {
+            "$ref": "#/components/parameters/channelTypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/directionTypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/intervalTypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/startParam"
+          },
+          {
+            "$ref": "#/components/parameters/endParam"
+          }
+        ],
+        "summary": "Retrieve all adjustments",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Adjustment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/forecastTimeline/{forecastTimelineId}/adjustments/{adjustmentId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathForecastTimelineIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAdjustmentIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Adjustment"
+        ],
+        "summary": "Retrieve a single adjustment",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adjustment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Adjustment"
+        ],
+        "summary": "Update an adjustment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAdjustment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Adjustment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Adjustment"
+        ],
+        "summary": "Delete an adjustment",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Competency": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "TimeSeries": {
+        "properties": {
+          "series": {
+            "description": "The data series.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "nco": {
+                  "type": "integer"
+                },
+                "aht": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "abandons": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SeriesStart": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HistoricalTimeSeries": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "channelType": {
+                "$ref": "#/components/schemas/ChannelType"
+              },
+              "direction": {
+                "$ref": "#/components/schemas/DirectionType"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/TimeSeries"
+          }
+        ]
+      },
+      "WasteDay": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "NewForecastTimeline": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ForecastTimeline": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewForecastTimeline"
+          }
+        ]
+      },
+      "TimelineSeries": {
+        "properties": {
+          "competency": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/DirectionType"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "adjusted",
+                        "forecasted"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "$ref": "#/components/schemas/TimeSeries"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "ForecastTimelineScenario": {
+        "properties": {
+          "forecastScenarioId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "NewForecastScenario": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "scenarioType": {
+            "$ref": "#/components/schemas/ForecastScenarioType"
+          }
+        }
+      },
+      "ForecastScenario": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewForecastScenario"
+          }
+        ]
+      },
+      "NewForecastSeries": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/SeriesStatusType"
+          },
+          "competency": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/DirectionType"
+          },
+          "metric": {
+            "$ref": "#/components/schemas/MetricType"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "dayCurves": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "weekDay": {
+                  "description": "Day of week, 1 is Monday.",
+                  "type": "integer"
+                },
+                "curve": {
+                  "description": "The normalized distribution of values over the quarters of a day.",
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "format": "float"
+                  }
+                }
+              }
+            }
+          },
+          "dayValues": {
+            "description": "The total number forecasted per day. Each item in the array corresponds to one day\nin the forecast interval.\n",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "valueType": {
+                  "type": "string",
+                  "enum": [
+                    "forecast",
+                    "upper",
+                    "lower"
+                  ]
+                },
+                "values": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ForecastSeries": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewForecastSeries"
+          }
+        ]
+      },
+      "TargetSeries": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "staffing": {
+            "type": "integer"
+          }
+        }
+      },
+      "NewAdjustment": {
+        "properties": {
+          "competency": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/DirectionType"
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "intervalLength": {
+            "$ref": "#/components/schemas/IntervalType"
+          },
+          "numberOfIntervals": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "percentage",
+              "absolute"
+            ]
+          },
+          "value": {
+            "type": "integer"
+          }
+        }
+      },
+      "Adjustment": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewAdjustment"
+          }
+        ]
+      },
+      "EntityId": {
+        "properties": {
+          "id": {
+            "description": "The id of an entity",
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ForecastParams": {
+        "properties": {
+          "dayValueDateRanges": {
+            "description": "The date ranges that should be used for historical data.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "startDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
+          },
+          "dayCurveDateRange": {
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "competency": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "channel": {
+                  "$ref": "#/components/schemas/ChannelType"
+                },
+                "direction": {
+                  "$ref": "#/components/schemas/DirectionType"
+                }
+              }
+            }
+          },
+          "algorithm": {
+            "$ref": "#/components/schemas/ForecastAlgorithmType"
+          },
+          "includeDayCurve": {
+            "type": "boolean",
+            "default": true
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetricType"
+            }
+          },
+          "algorithmOptions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "option": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "MetricType": {
+        "description": "The type of data in a series.",
+        "type": "string",
+        "enum": [
+          "nco",
+          "aht",
+          "abandons"
+        ]
+      },
+      "ChannelType": {
+        "description": "The type of media that the time series is about.",
+        "type": "string",
+        "enum": [
+          "voice",
+          "messaging",
+          "sms",
+          "email",
+          "workitem"
+        ]
+      },
+      "DirectionType": {
+        "description": "The direction that is handled by a competency",
+        "type": "string",
+        "enum": [
+          "inbound",
+          "outbound"
+        ]
+      },
+      "ForecastAlgorithmType": {
+        "description": "The forecast algorithm that should be used.",
+        "type": "string",
+        "enum": [
+          "average",
+          "prophet"
+        ]
+      },
+      "SeriesStatusType": {
+        "description": "The current status of a forecast series.",
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "success",
+          "failed"
+        ]
+      },
+      "ForecastScenarioType": {
+        "description": "Indicates if the scenario is temporary or meant to be save permanently. All scenarios are saved after they are\ngenerated but scenarios tagged as `temporary` will be removed after a short period of time. \n",
+        "type": "string",
+        "enum": [
+          "temporary",
+          "permanent"
+        ]
+      },
+      "IntervalType": {
+        "description": "The aggregation interval",
+        "type": "string",
+        "enum": [
+          "quarter-hour",
+          "hour",
+          "day",
+          "week",
+          "month",
+          "year"
+        ]
+      }
+    },
+    "parameters": {
+      "startParam": {
+        "in": "query",
+        "name": "startDateTime",
+        "description": "The start datetime for the request (inclusive).",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": true
+      },
+      "endParam": {
+        "in": "query",
+        "name": "endDateTime",
+        "description": "The end datetime for the request (exclusive).",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": true
+      },
+      "competencyParam": {
+        "in": "query",
+        "name": "competencyId",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "channelTypeParam": {
+        "in": "query",
+        "name": "channel",
+        "description": "The channel type that is referenced.",
+        "schema": {
+          "$ref": "#/components/schemas/ChannelType"
+        }
+      },
+      "directionTypeParam": {
+        "in": "query",
+        "name": "direction",
+        "description": "The direction type that is referenced.",
+        "schema": {
+          "$ref": "#/components/schemas/DirectionType"
+        }
+      },
+      "intervalTypeParam": {
+        "in": "query",
+        "name": "interval",
+        "description": "The direction type that is referenced.",
+        "schema": {
+          "$ref": "#/components/schemas/IntervalType"
+        }
+      },
+      "timeZoneParam": {
+        "in": "query",
+        "name": "timezone",
+        "description": "The timezone that should be applied to the request.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "numberOfDaysParam": {
+        "in": "query",
+        "name": "numberOfDays",
+        "description": "The number of days from the forecast start date that should be generated.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "daysIncludedParam": {
+        "in": "query",
+        "name": "daysIncluded",
+        "description": "The number of days in the past to include.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "pathTenantIdParam": {
+        "in": "path",
+        "name": "tenantId",
+        "description": "The id of the tenant that the entity belongs to.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      },
+      "pathCompetencyIdParam": {
+        "in": "path",
+        "name": "competencyId",
+        "description": "The id of the competency.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      },
+      "pathForecastTimelineIdParam": {
+        "in": "path",
+        "name": "forecastTimelineId",
+        "description": "The id of the forecast timeline.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      },
+      "pathForecastScenarioIdParam": {
+        "in": "path",
+        "name": "forecastScenarioId",
+        "description": "The id of the forecast scenario.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      },
+      "pathSeriesIdParam": {
+        "in": "path",
+        "name": "seriesId",
+        "description": "The id of the data series.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      },
+      "pathAdjustmentIdParam": {
+        "in": "path",
+        "name": "adjustmentId",
+        "description": "The id of the data adjustment.",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "required": true
+      }
+    }
+  }
+}

@@ -1,0 +1,1340 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "CX WFM Agent API",
+    "description": "The purpose of this API is to provide endpoints for working with agent-data.\n"
+  },
+  "tags": [
+    {
+      "name": "Agent",
+      "description": "An agent is a person that works in the contact center.\n"
+    },
+    {
+      "name": "Availability",
+      "description": "Availabilities describe when an agent can be scheduled.\n"
+    },
+    {
+      "name": "Restrictions",
+      "description": "A RestrictionSet is a collection of the restrictions that applies when an\nagent is being scheduled.\n"
+    },
+    {
+      "name": "Organization",
+      "description": "Agents can be grouped into organizations that provides order and allows actions to be performed on multiple\nagents at once. Organizations are hierarchical meaning that an organization can have sub-organization (like a\ndepartemental structure). A sub-organization can only be a member of a single parent organization.\n\nAgents can be members of only one organization.\n"
+    }
+  ],
+  "paths": {
+    "/tenants/{tenantId}/agents": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Retrieve agents",
+        "description": "Returns all agents for the provided tenant",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BasicAgent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/agents/{agentId}/restrictions": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Get all restriction sets assigned to an agent.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedRestrictionSet"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Add a restriction set to a tenant.",
+        "description": "A restriction set can only be added if it does not overlap in time with an existing restriction set.\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAssignedRestrictionSet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedRestrictionSet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/agents/{agentId}/restrictions/{assignedRestrictionSetId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAssignedRestrictionSetIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Retrieve a single assigned restriction set.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedRestrictionSet"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Update a single restriction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAssignedRestrictionSet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedRestrictionSet"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Remove an assigned restriction set.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/agents/{agentId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Retrieve a single agent.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasicAgent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/agents/{agentId}/address": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Add an address to an agent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Retrieve the address of an agent",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Deletes an address",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/agents/{agentId}/employment": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Add an employment to an agent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Employment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Retrieve the employment of an agent",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Employment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Deletes an employment",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/agents/{agentId}/availability": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Retrieve the availability pattern for an agent",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentAvailabilityPattern"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Set the availability pattern for an agent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentAvailabilityPattern"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Remove the availability pattern for an agent",
+        "responses": {
+          "200": {
+            "description": "Sucess"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/restrictionsets": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Restrictions"
+        ],
+        "summary": "Retrieve all RestrictionSets.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RestrictionSet"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Restrictions"
+        ],
+        "summary": "Add a new RestrictionSet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRestrictionSet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestrictionSet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/restrictionsets/{restrictionSetId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathRestrictionSetIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Restrictions"
+        ],
+        "summary": "Retrieve a single restriction set.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestrictionSet"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Restrictions"
+        ],
+        "summary": "Update a single restriction set.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRestrictionSet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestrictionSet"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Restrictions"
+        ],
+        "summary": "Delete a single restriction set.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/availabilityPatterns": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/EntityId"
+                      },
+                      {
+                        "$ref": "#/components/schemas/AvailabilityPattern"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/availabilityPatterns/{availabilityPatternId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAvailabilityPatternIdParam"
+        }
+      ],
+      "put": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Adds or updates an availability pattern",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailabilityPattern"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Retrieve an availability pattern",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailabilityPattern"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Delete a single availability pattern",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/restrictions/breakSettings": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Break settings"
+        ],
+        "summary": "Add a new break setting to a tenant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBreakSetting"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreakSetting"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Break settings"
+        ],
+        "summary": "Retrieve all break settings for a tenant",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BreakSetting"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/restrictions/breakSettings/{breakSettingId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathBreakSettingIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Break settings"
+        ],
+        "summary": "Retrieve a single break setting",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreakSetting"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Break settings"
+        ],
+        "summary": "Update a single break setting",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBreakSetting"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreakSetting"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Break settings"
+        ],
+        "summary": "Delete a single break setting",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/organizations": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Retrieve all organizations",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Organization"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Add a new organization",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOrganization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Possible error conditions:\n  * A supervisor or sub-organization does not exist.\n  * A sub-organization is a member of another organization.\n  * Another organization exists with the same name.\n"
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/organizations/{organizationId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathOrganizationIdParam"
+        }
+      ],
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "full",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "If `true`, all organizations beneath the selected organization are returned recursively."
+          }
+        ],
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Retrieve a single organization and optionally its sub-organizations.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Organization"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Update a single organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOrganization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "See `POST`-method for `/tenants/{tenantId}/organizations`"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Delete an organization.",
+        "responses": {
+          "200": {
+            "description": "Success. Marks the organization as deleted."
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/organizations/{organizationId}/members": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathOrganizationIdParam"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Add agents to an organization.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "AgentId"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Possible error conditions:\n  * The agent does not exist.\n  * The agent is a member of another organization.\n"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Retrieve all agents in an organization.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BasicAgent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenantId}/organizations/{organizationId}/members/{agentId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/pathTenantIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathOrganizationIdParam"
+        },
+        {
+          "$ref": "#/components/parameters/pathAgentIdParam"
+        }
+      ],
+      "delete": {
+        "tags": [
+          "Organization"
+        ],
+        "summary": "Removes an agent from an organization.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EntityId": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "BasicAgent": {
+        "properties": {
+          "id": {
+            "description": "The id of the agent-data.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "description": "The id of the tenant that the agent belongs to.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalId": {
+            "description": "An optional agent id used by external systems",
+            "type": "string",
+            "format": "uuid"
+          },
+          "first_name": {
+            "description": "The first name of the agent.",
+            "type": "string"
+          },
+          "last_name": {
+            "description": "The last name of the agent.",
+            "type": "string"
+          },
+          "email": {
+            "description": "The agent's email-address",
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "description": "The agent's role in the contact center.",
+            "type": "string"
+          },
+          "organization": {
+            "description": "The agent's organization, can be `null`.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "active": {
+            "description": "An indication if the agent is active or not.",
+            "type": "boolean"
+          }
+        }
+      },
+      "Address": {
+        "properties": {
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "addressLine3": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "postCode": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        }
+      },
+      "Employment": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date"
+          },
+          "end": {
+            "type": "string",
+            "format": "date"
+          },
+          "hourlySalary": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          }
+        }
+      },
+      "NewRestrictionSet": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "default": {
+            "type": "boolean",
+            "default": false
+          },
+          "agreedWeeklyHours": {
+            "type": "integer"
+          },
+          "minHoursWeek": {
+            "type": "integer"
+          },
+          "maxHoursWeek": {
+            "type": "integer"
+          },
+          "agreedDaysPerWeek": {
+            "type": "integer"
+          },
+          "minDaysPerWeek": {
+            "type": "integer"
+          },
+          "maxDaysPerWeek": {
+            "type": "integer"
+          },
+          "minShiftLengthHours": {
+            "type": "integer"
+          },
+          "maxShiftLengthHours": {
+            "type": "integer"
+          },
+          "maxConsecutiveWorkDays": {
+            "type": "integer"
+          },
+          "minHoursNightRest": {
+            "type": "integer"
+          },
+          "maxConsecutiveWeekends": {
+            "type": "integer"
+          }
+        }
+      },
+      "RestrictionSet": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewRestrictionSet"
+          }
+        ]
+      },
+      "NewAssignedRestrictionSet": {
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "restrictionSetId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AssignedRestrictionSet": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewAssignedRestrictionSet"
+          }
+        ]
+      },
+      "AvailabilityPattern": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "availabilities": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "availabilityType": {
+                  "type": "string"
+                },
+                "dayNumber": {
+                  "type": "integer"
+                },
+                "startTime": {
+                  "type": "string"
+                },
+                "endTime": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AgentAvailabilityPattern": {
+        "properties": {
+          "availabilityPatternId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "NewBreakSetting": {
+        "properties": {
+          "shiftLengthMin": {
+            "type": "integer"
+          },
+          "shiftLenghtMax": {
+            "type": "integer"
+          },
+          "shiftStartMin": {
+            "type": "string"
+          },
+          "shiftStartMax": {
+            "type": "string"
+          },
+          "timeBetweenBreaksMin": {
+            "type": "integer"
+          },
+          "dayTypes": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "breaks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "paid": {
+                  "type": "boolean"
+                },
+                "length": {
+                  "type": "integer"
+                },
+                "interval_start": {
+                  "type": "integer"
+                },
+                "interval_end": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "BreakSetting": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/NewBreakSetting"
+          }
+        ]
+      },
+      "NewOrganization": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "supervisors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "subOrganizations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "Organization": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EntityId"
+          },
+          {
+            "$ref": "#/components/schemas/NewOrganization"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "deleted": {
+                "type": "boolean",
+                "default": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "pathTenantIdParam": {
+        "name": "tenantId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathAgentIdParam": {
+        "name": "agentId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathAvailabilityPatternIdParam": {
+        "name": "availabilityPatternId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathBreakSettingIdParam": {
+        "name": "breakSettingId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathRestrictionSetIdParam": {
+        "name": "restrictionSetId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathAssignedRestrictionSetIdParam": {
+        "name": "assignedRestrictionSetId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "pathOrganizationIdParam": {
+        "name": "organizationId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  }
+}
