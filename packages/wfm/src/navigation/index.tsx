@@ -12,6 +12,7 @@ import { Request } from '../pages/Scheduling/Agent/Request';
 import { Trade } from '../pages/Scheduling/Agent/Trade';
 
 import { Forecasting } from '../pages/Forecasting';
+import { ForecastingSettings } from '../pages/Forecasting/Settings';
 
 import { Organization } from '../pages/Scheduling/Admin/Organization';
 import { ActivityManagement } from '../pages/Scheduling/Admin/ActivityManagement';
@@ -59,6 +60,9 @@ export function Navigation() {
       {/* FORECASTING */}
       <Route exact path="/forecasting">
         <Forecasting />
+      </Route>
+      <Route exact path="/forecasting/settings">
+        <ForecastingSettings />
       </Route>
 
       {/* ADMIN */}

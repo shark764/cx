@@ -70,6 +70,7 @@
     "react-router-dom": "^5.2.0",
     "react-select": "^4.1.0",
     "react-table": "^7.6.3",
+    "recharts": "^2.0.6",
     "styled-components": "^5.2.1"
   }
 }
