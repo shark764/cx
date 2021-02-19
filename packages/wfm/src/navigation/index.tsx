@@ -58,7 +58,7 @@ export function Navigation() {
       </Route>
 
       {/* FORECASTING */}
-      <Route exact path="/forecasting">
+      <Route exact path={['/forecasting', '/forecasting/forecast']}>
         <Forecasting />
       </Route>
       <Route exact path="/forecasting/settings">

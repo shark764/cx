@@ -24,6 +24,7 @@ import AllInboxIcon from '@material-ui/icons/AllInbox';
 import PublicIcon from '@material-ui/icons/Public';
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
 import PeopleIcon from '@material-ui/icons/People';
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -89,27 +90,30 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 export function PageSideBar() {
   const linkMap: { [key: string]: any[] } = {
     planning: [
-      { label: 'Schedule', to: '/planning/schedule' },
-      { label: 'Employees', to: '/planning/employees' },
-      { label: 'Settings', to: '/planning/settings' },
+      { label: 'Schedule', to: '/planning/schedule', icon: <CalendarTodayIcon /> },
+      { label: 'Employees', to: '/planning/employees', icon: <PeopleIcon /> },
+      { label: 'Settings', to: '/planning/settings', icon: <SettingsIcon /> },
     ],
-    forecasting: [{ label: 'Settings', to: '/forecasting/settings' }],
+    forecasting: [
+      { label: 'Forecast', to: '/forecasting', icon: <TimelineIcon /> },
+      { label: 'Settings', to: '/forecasting/settings', icon: <SettingsIcon /> },
+    ],
     agent: [
-      { label: 'Schedule', to: '/agent/schedule' },
-      { label: 'Availability', to: '/agent/availability' },
+      { label: 'Schedule', to: '/agent/schedule', icon: <CalendarTodayIcon /> },
+      { label: 'Availability', to: '/agent/availability', icon: <AssignmentLateIcon /> },
       /**
        * NOT REQUIRED FOR MVP
        */
-      // { label: 'Request', to: '/agent/request' },
-      // { label: 'Trade', to: '/agent/trade' },
-      // { label: 'Messages', to: '/agent/messages' },
+      // { label: 'Request', to: '/agent/request', icon: <Icon /> },
+      // { label: 'Trade', to: '/agent/trade', icon: <Icon /> },
+      // { label: 'Messages', to: '/agent/messages', icon: <Icon /> },
     ],
     admin: [
-      { label: 'Organization', to: '/admin/organization' },
-      { label: 'Activity Management', to: '/admin/activity-management' },
-      { label: 'Competence Management', to: '/admin/competence-management' },
-      { label: 'Day Types', to: '/admin/day-types' },
-      { label: 'Default Restriction', to: '/admin/default-restriction' },
+      { label: 'Organization', to: '/admin/organization', icon: <AllInboxIcon /> },
+      { label: 'Activity Management', to: '/admin/activity-management', icon: <AssignmentLateIcon /> },
+      { label: 'Competence Management', to: '/admin/competence-management', icon: <AssignmentIndIcon /> },
+      { label: 'Day Types', to: '/admin/day-types', icon: <PublicIcon /> },
+      { label: 'Default Restriction', to: '/admin/default-restriction', icon: <DesktopAccessDisabledIcon /> },
     ],
   };
   const route: string = useLocation().pathname.split('/')?.[1];
@@ -125,26 +129,6 @@ export function PageSideBar() {
 
   const handleDrawerClose = () => {
     setOpen(false);
-  };
-
-  const IconMapper = (link: string) => {
-    const iconMap: {[key: string]: any} = {
-      '/agent/schedule': <CalendarTodayIcon />,
-      '/agent/availability': <AssignmentLateIcon />,
-
-      '/admin/organization': <AllInboxIcon />,
-      '/admin/activity-management': <AssignmentLateIcon />,
-      '/admin/competence-management': <AssignmentIndIcon />,
-      '/admin/day-types': <PublicIcon />,
-      '/admin/default-restriction': <DesktopAccessDisabledIcon />,
-
-      '/forecasting/settings': <SettingsIcon />,
-
-      '/planning/schedule': <CalendarTodayIcon />,
-      '/planning/employees': <PeopleIcon />,
-      '/planning/settings': <SettingsIcon />,
-    };
-    return iconMap[link];
   };
 
   return (
@@ -198,7 +182,7 @@ export function PageSideBar() {
               }}
             >
               <ListItem button key={link.to}>
-                <ListItemIcon>{ IconMapper(link.to) }</ListItemIcon>
+                <ListItemIcon>{ link.icon }</ListItemIcon>
                 <ListItemText primary={link.label} />
               </ListItem>
             </Link>
