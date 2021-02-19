@@ -34,7 +34,7 @@ export const theme = {
   },
 };
 
-export const hexToRgba = (hex: any, alpha: number = 1) => {
+export const hexToRgba = (hex: any, alpha = 1) => {
   const [r, g, b] = hex.match(/\w\w/g).map((x: string) => parseInt(x, 16));
   return `rgba(${r},${g},${b},${alpha})`;
 };
@@ -65,3 +65,12 @@ export const deepMerge = (target: any, source: any) => {
 
   return target;
 };
+
+export function groupBy(array: any, key: string) {
+  return array.reduce((groups: any, item: any) => {
+    const property = item[key];
+    groups[property] = groups[property] || [];
+    groups[property].push(item);
+    return groups;
+  }, {});
+}

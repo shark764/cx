@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { useQuery } from 'react-query';
 
-import { addDays } from '@cx/utilities/date';
+import { addDays, getMonday } from '@cx/utilities/date';
 import { Message } from '@cx/components/Message';
 import { Play } from '@cx/components/Icons/Play';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
@@ -11,7 +11,9 @@ import { Calendar } from '@cx/components/Icons/Calendar';
 import { BigCalendar } from '@cx/components/DateTime/BigCalendar';
 import { LoadSpinner } from '@cx/components/LoadSpinner';
 import { Wrapper } from '@cx/components/Styled';
-import { getAgentSchedule } from '@cx/fakedata/agentSchedule';
+import { agentId, getAgentSchedule } from '@cx/fakedata/agentSchedule';
+import { DateTime } from 'luxon';
+import { IQuery } from '@cx/types';
 import { Footer } from './Footer';
 import { Event } from './Event';
 
@@ -44,15 +46,21 @@ const LoadingMessage = styled.span`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
-const agentId = 'b47027e0-1126-11ea-953d-9bdc6d6573af';
-
 export function AgentSchedule() {
   const [calDate, setCalDate] = React.useState(new Date());
   const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
 
-  const { data, isLoading, error } = useQuery(
-    'fetchAgentSchedule',
-    async () => getAgentSchedule(agentId)
+  const monday = getMonday(calDate);
+  const fromDate = DateTime.fromJSDate(monday)
+    .startOf('day')
+    .toISO();
+  const toDate = DateTime.fromJSDate(addDays(monday, 6))
+    .endOf('day')
+    .toISO();
+
+  const { data, isLoading, error }: IQuery = useQuery(
+    ['fetchAgentSchedule', fromDate, toDate],
+    async () => getAgentSchedule(agentId, fromDate, toDate)
       .then((result: any) => result.data)
       .catch((err) => {
         console.error(err);
@@ -75,7 +83,7 @@ export function AgentSchedule() {
   }, [isLoading, data]);
 
   if (error) {
-    return <Message text="error" messageType="error" />;
+    return <Message text={error.message} messageType="error" />;
   }
 
   return (

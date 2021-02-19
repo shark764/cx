@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
 import {
   // @ts-ignore
   useGridLayout,
@@ -61,7 +60,8 @@ export function DataTable({
   noDataText = 'No records found',
   oneRowSelectable = false,
   multipleRowSelectable = false,
-  setSelectedRow,
+  onTableRowSelection,
+  onToggleAllRowsSelected,
 }: ITable) {
   const defaultColumn = React.useMemo(
     () => ({
@@ -132,12 +132,11 @@ export function DataTable({
       hooks.getTableProps.push((props, _ref) => {
         const { instance } = _ref;
         let gridTemplateColumns = instance.columns
-          .map((col) =>
-            // @ts-ignore
-            (col.columnWidth ? `${col.columnWidth}px` : 'auto'))
+          // @ts-ignore
+          .map((col) => (col.columnWidth ? `${col.columnWidth}px` : 'auto'))
           .join(' ');
         if (oneRowSelectable || multipleRowSelectable) {
-          gridTemplateColumns = `auto ${gridTemplateColumns}`;
+          gridTemplateColumns = `40px ${gridTemplateColumns}`;
         }
 
         return [
@@ -150,7 +149,7 @@ export function DataTable({
           },
         ];
       });
-      hooks.visibleColumns.push((columns) => [
+      hooks.visibleColumns.push((visibleColumns) => [
         // Let's make a column for selection
         ...(multipleRowSelectable
           ? [
@@ -165,11 +164,22 @@ export function DataTable({
               ),
               // The cell can use the individual row's getToggleRowSelectedProps method
               // to the render a checkbox
-              Cell: ({ row }: any) => (
-                <div>
-                  <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                </div>
-              ),
+              Cell: ({ row }: any) => {
+                const toggleRowSelectedProps: any = {};
+                if ((oneRowSelectable || multipleRowSelectable) && typeof onTableRowSelection === 'function') {
+                  toggleRowSelectedProps.onChange = (...args: any) => {
+                    row.getToggleRowSelectedProps().onChange(...args);
+
+                    onTableRowSelection(row);
+                  };
+                }
+
+                return (
+                  <div>
+                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps({ ...toggleRowSelectedProps })} />
+                  </div>
+                );
+              },
             },
           ]
           : []),
@@ -179,23 +189,33 @@ export function DataTable({
               id: 'selection',
               // The cell can use the individual row's getToggleRowSelectedProps method
               // to the render a checkbox
-              Cell: ({ row }: any) => (
-                <div>
-                  <IndeterminateRadio
-                    {...row.getToggleRowSelectedProps()}
-                    onClick={() => {
-                      // AWFUL solution, but it works
-                      toggleAllRowsSelected(false);
-                      toggleRowSelected(row.id, true);
-                      setSelectedRow && setSelectedRow(row.original);
-                    }}
-                  />
-                </div>
-              ),
+              Cell: ({ row }: any) => {
+                const toggleRowSelectedProps: any = {};
+                if ((oneRowSelectable || multipleRowSelectable) && typeof onTableRowSelection === 'function') {
+                  toggleRowSelectedProps.onChange = (...args: any) => {
+                    row.getToggleRowSelectedProps().onChange(...args);
+
+                    onTableRowSelection(row);
+                  };
+                }
+
+                return (
+                  <div>
+                    <IndeterminateRadio
+                      {...row.getToggleRowSelectedProps({ ...toggleRowSelectedProps })}
+                      onClick={() => {
+                        // AWFUL solution, but it works
+                        toggleAllRowsSelected(false);
+                        toggleRowSelected(row.id, true);
+                      }}
+                    />
+                  </div>
+                );
+              },
             },
           ]
           : []),
-        ...columns,
+        ...visibleColumns,
       ]);
     },
   );
@@ -259,26 +279,5 @@ export function DataTable({
     </>
   );
 }
-
-DataTable.propTypes = {
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      Header: PropTypes.string,
-      accessor: PropTypes.string,
-      // eslint-disable-next-line react/forbid-prop-types
-      Cell: PropTypes.any,
-    }),
-  ),
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    }),
-  ),
-  showPagination: PropTypes.bool,
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
-  PaginationComponent: PropTypes.node,
-  loading: PropTypes.bool,
-  noDataText: PropTypes.string,
-};
 
 export { TableContainer } from './styles';

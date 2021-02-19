@@ -171,7 +171,7 @@ export function PageSideBar() {
         </div>
         <Divider />
         <List>
-          {links.map((link, index) => (
+          {links.map((link) => (
             <Link
               to={link.to}
               key={link.to}
@@ -180,9 +180,10 @@ export function PageSideBar() {
                 color: 'grey',
                 fontWeight: 'bold',
               }}
+              title={link.label}
             >
               <ListItem button key={link.to}>
-                <ListItemIcon>{ link.icon }</ListItemIcon>
+                <ListItemIcon>{link.icon}</ListItemIcon>
                 <ListItemText primary={link.label} />
               </ListItem>
             </Link>

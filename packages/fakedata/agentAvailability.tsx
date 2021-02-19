@@ -1,8 +1,13 @@
+import * as faker from 'faker';
+
+export const agentId = faker.random.uuid();
+export const tenantId = faker.random.uuid();
+
 export const data = [
   {
-    id: '7020cc7e-68d3-11eb-9439-0242ac130002',
-    agentId: 'b47027e0-1126-11ea-953d-9bdc6d6573af',
-    tenantId: '7b5c0b99-bd29-4b19-bedd-5aa56f607c8d',
+    id: faker.random.uuid(),
+    agentId,
+    tenantId,
     sunday: { start: '07:00 AM', end: '08:00 PM' },
     monday: { start: '07:00 AM', end: '08:00 PM' },
     tuesday: { start: '07:00 AM', end: '09:00 PM' },

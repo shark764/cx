@@ -7,6 +7,7 @@ import { TableContainer, DataTable } from '@cx/components/DataTable';
 
 import { Wrapper } from '@cx/components/Styled';
 import { getAgents } from '@cx/fakedata/planningEmployeesAgents';
+import { IQuery } from '@cx/types';
 import { useFormState } from '../context';
 
 const ListWrapper = styled(Wrapper)`
@@ -16,7 +17,7 @@ const ListWrapper = styled(Wrapper)`
 export function List() {
   const { setFormState }: any = useFormState();
 
-  const { data, isLoading, error } = useQuery(
+  const { data, isLoading, error }: IQuery = useQuery(
     'fetchAgents',
     async () => getAgents()
       .then((result: any) => result.data)
@@ -66,13 +67,13 @@ export function List() {
     return data;
   }, [isLoading, data]);
 
-  if (error) {
-    return <Message text="error" messageType="error" />;
-  }
-
-  const setSelectedRow = (row: any) => {
-    setFormState(row, true);
+  const onTableRowSelection = ({ original }: any) => {
+    setFormState(original, true);
   };
+
+  if (error) {
+    return <Message text={error.message} messageType="error" />;
+  }
 
   return (
     <ListWrapper>
@@ -81,7 +82,7 @@ export function List() {
           columns={columns}
           data={memoData}
           loading={isLoading}
-          setSelectedRow={setSelectedRow}
+          onTableRowSelection={onTableRowSelection}
           oneRowSelectable
         />
       </TableContainer>

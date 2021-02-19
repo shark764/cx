@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const round = (number: number, digits: number = 0) => {
+export const round = (number: number, digits = 0) => {
   if (digits === 0) {
     return Math.round(number);
   }

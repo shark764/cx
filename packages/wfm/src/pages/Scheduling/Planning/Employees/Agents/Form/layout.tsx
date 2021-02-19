@@ -61,13 +61,13 @@ export function FormLayout({
       'team',
       teams.find((team: IOption) => team.value === defaultValues.team),
     );
-  }, [teams, defaultValues, setValue]);
+  }, [defaultValues.team, setValue, teams]);
   React.useEffect(() => {
     setValue(
       'timezone',
       timezones.find((timezone: IOption) => timezone.value === defaultValues.timezone),
     );
-  }, [timezones, defaultValues, setValue]);
+  }, [defaultValues.timezone, setValue, timezones]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
