@@ -92,7 +92,7 @@ export function PageSideBar() {
       { label: 'Employees', to: '/planning/employees' },
       { label: 'Settings', to: '/planning/settings' },
     ],
-    forecasting: [{ label: 'Schedule', to: '/admin/schedule' }],
+    forecasting: [{ label: 'Settings', to: '/forecasting/settings' }],
     agent: [
       { label: 'Schedule', to: '/agent/schedule' },
       { label: 'Availability', to: '/agent/availability' },

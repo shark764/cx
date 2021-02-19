@@ -14,7 +14,7 @@ _WFM - Scheduling + Forecasting_
 
 ## Tech Stack
 
-The UI project is made using the followint libraries:
+The UI project is made using the following libraries:
 
 - [React.js](https://reactjs.org/)
 - [Recharts](https://recharts.org/en-US/)
