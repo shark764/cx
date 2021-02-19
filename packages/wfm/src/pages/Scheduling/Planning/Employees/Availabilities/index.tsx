@@ -4,10 +4,8 @@ import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
 
-import { CheckMark } from '@cx/components/Icons/CheckMark';
-import { Dot } from '@cx/components/Icons/Dot';
 import { Wrapper } from '@cx/components/Styled';
-import { getAvailabilities } from './fake-data';
+import { getAvailabilities } from '@cx/fakedata/planningEmployeesAvailabilities';
 
 const Container = styled.div`
   display: grid;
@@ -23,11 +21,6 @@ const TimeTableWrapper = styled(Wrapper)`
 `;
 const FormWrapper = styled(Wrapper)`
   grid-column: 3;
-`;
-
-const TeamLeaderCell = styled.div`
-  display: flex;
-  justify-content: space-between;
 `;
 
 export function Availabilities() {

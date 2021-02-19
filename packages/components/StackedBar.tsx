@@ -2,22 +2,22 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-interface MeterProps {
+interface IMeter {
   gridColValues: string;
 }
-const Meter = styled.div<MeterProps>`
+const Meter = styled.div<IMeter>`
   border: 2px solid ${({ theme }) => theme.colors['accent-3']};
   border-radius: 8px;
   overflow: hidden;
   display: grid;
   grid-template-columns: ${({ gridColValues }) => gridColValues};
 `;
-interface ColumnProps {
+interface IColumn {
   bgColor: string;
 }
-const Column = styled.div.attrs<ColumnProps>((props) => ({
+const Column = styled.div.attrs<IColumn>((props) => ({
   bgColor: props.bgColor || props.theme.colors.primary,
-}))<ColumnProps>`
+}))<IColumn>`
   background: ${(props) => props.bgColor};
   color: white;
   font-family: sans-serif;
@@ -29,14 +29,14 @@ const Column = styled.div.attrs<ColumnProps>((props) => ({
   justify-content: center;
 `;
 
-interface StackedBarProps {
+interface IStackedBar {
   columns: Array<{
     value: number;
     bgColor: string;
     name: string;
   }>;
 }
-export function StackedBar({ columns }: StackedBarProps) {
+export function StackedBar({ columns }: IStackedBar) {
   return (
     <Meter gridColValues={columns.map((column) => `${column.value}fr`).join(' ')}>
       {columns.map((column) => (

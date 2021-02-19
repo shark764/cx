@@ -6,15 +6,15 @@ import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
 
 import { Wrapper } from '@cx/components/Styled';
-import { getAgents } from '../fake-data';
-import { DataContext } from '../context';
+import { getAgents } from '@cx/fakedata/planningEmployeesAgents';
+import { useFormState } from '../context';
 
 const ListWrapper = styled(Wrapper)`
   grid-column: 1;
 `;
 
 export function List() {
-  const { setFormState }: any = React.useContext(DataContext);
+  const { setFormState }: any = useFormState();
 
   const { data, isLoading, error } = useQuery(
     'fetchAgents',
@@ -36,6 +36,7 @@ export function List() {
         accessor: 'name',
         disableFilters: false,
         filter: 'fuzzyText',
+        // columnWidth: 150,
       },
       { Header: 'Email', accessor: 'email' },
       {
@@ -76,7 +77,13 @@ export function List() {
   return (
     <ListWrapper>
       <TableContainer>
-        <DataTable columns={columns} data={memoData} loading={isLoading} setSelectedRow={setSelectedRow} />
+        <DataTable
+          columns={columns}
+          data={memoData}
+          loading={isLoading}
+          setSelectedRow={setSelectedRow}
+          oneRowSelectable
+        />
       </TableContainer>
     </ListWrapper>
   );

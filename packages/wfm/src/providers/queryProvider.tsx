@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { Props } from '../index.types';
+import { Props } from '@cx/types';
 
 const queryClient = new QueryClient();
 

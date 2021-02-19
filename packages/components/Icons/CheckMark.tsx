@@ -1,21 +1,13 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
-import { IconProps } from '@cx/wfm/index.types';
+import { IContainer, IIcon, IPath } from '@cx/types/icon';
 
-interface IContainer {
-  size?: number;
-  disabled?: boolean;
-}
 const Container = styled.div<IContainer>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   width: ${({ size }) => size}px;
 `;
-interface PathProps {
-  fillColor?: string;
-  primary?: boolean;
-  secondary?: boolean;
-}
-const Path = styled.path<PathProps>`
+
+const Path = styled.path<IPath>`
   ${({
     fillColor, primary, secondary, theme,
   }) => (fillColor
@@ -41,7 +33,7 @@ export function CheckMark({
   className,
   disabled = false,
   ...rest
-}: IconProps) {
+}: IIcon) {
   return (
     <Container size={size} className={className} onClick={onClick} disabled={disabled} {...rest}>
       <svg

@@ -7,21 +7,11 @@ import styled, { css } from 'styled-components';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { deepMerge } from '@cx/utilities';
-import { LuxonLocalizer } from '@cx/utilities/LuxonLocalizer';
+import { LuxonLocalizer } from '@cx/utilities/intl/LuxonLocalizer';
+import { IContainer } from '@cx/types';
+import { IBigCalendar, IEvent } from '@cx/types/time';
 
-
-export interface IEvent {
-  start: Date;
-  end: Date;
-  desc?: string;
-  title?: string;
-  style?: any;
-}
-interface ContainerProps {
-  height?: string;
-  width?: string;
-}
-const CalendarContainer = styled.div<ContainerProps>`
+const CalendarContainer = styled.div<IContainer>`
   margin: 0 auto;
   padding: 10px;
   height: ${({ height }) => height || '500px'};
@@ -54,27 +44,9 @@ const WeekHeader = styled.div`
 
 const luxonLocalizer = LuxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 
-interface BigCalendarProps {
-  events: IEvent[];
-  date: Date;
-  onNavigate(arg: Date): void;
-  height?: string;
-  width?: string;
-  className?: string;
-  components?: any;
-  formats?: any;
-  defaultView?: string;
-  views?: any;
-  toolbar?: boolean;
-  min?: Date;
-  max?: Date;
-  step?: number;
-  timeslots?: number;
-  eventPropGetter(arg: IEvent): any;
-}
 export function BigCalendar({
   height, width, className, components = {}, formats = {}, ...props
-}: BigCalendarProps) {
+}: IBigCalendar) {
   let calendarComponents = {
     week: {
       header: ({ date, localizer }: { date: Date; localizer: any }) => (

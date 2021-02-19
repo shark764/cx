@@ -1,14 +1,8 @@
 import * as React from 'react';
 import styled, { css } from 'styled-components';
+import { IIcon } from '@cx/types/icon';
 
-interface IDot {
-  size?: number;
-  color?: string;
-  primary?: boolean;
-  secondary?: boolean;
-  className?: string;
-}
-const Circle = styled.span<IDot>`
+const Circle = styled.span<IIcon>`
   height: ${({ size }) => size}px;
   width: ${({ size }) => size}px;
   border-radius: 50%;
@@ -31,6 +25,6 @@ const Circle = styled.span<IDot>`
 
 export function Dot({
   size = 25, primary = false, secondary = false, ...rest
-}: IDot) {
+}: IIcon) {
   return <Circle size={size} primary={primary} secondary={secondary} {...rest} />;
 }

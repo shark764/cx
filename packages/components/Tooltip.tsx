@@ -9,10 +9,10 @@ const TooltipWrapper = styled.div`
   height: 100%;
   outline: none;
 `;
-interface TooltipTipProps {
+interface ITooltipTip {
   direction: string;
 }
-const TooltipTip = styled.div<TooltipTipProps>`
+const TooltipTip = styled.div<ITooltipTip>`
   --tooltip-text-color: black;
   --tooltip-background-color: ${({ theme }) => theme.colors['accent-3']};
   --tooltip-margin: 30px;
@@ -88,7 +88,7 @@ const TooltipTip = styled.div<TooltipTipProps>`
       `)};
 `;
 
-interface TooltipProps {
+interface ITooltip {
   children: React.ReactNode;
   content: React.ReactNode;
   delay?: number;
@@ -97,7 +97,7 @@ interface TooltipProps {
 }
 export function Tooltip({
   children, content, delay = 400, direction = 'right', trigger = 'click',
-}: TooltipProps) {
+}: ITooltip) {
   let timeout: any;
   const [active, setActive] = React.useState(false);
 

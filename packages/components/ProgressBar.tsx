@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
+import { IThemed } from '@cx/types';
 
 const Container = styled.div`
   margin: 50px;
@@ -11,13 +12,11 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.secondary};
   border-radius: 50px;
 `;
-interface FillerProps {
+interface IFiller extends IThemed {
   completed: number;
   bgColor?: string;
-  primary?: boolean;
-  secondary?: boolean;
 }
-const Filler = styled.div<FillerProps>`
+const Filler = styled.div<IFiller>`
   height: 100%;
   width: ${({ completed }) => completed}%;
   background-color: ${({ theme }) => theme.colors.brand};
@@ -51,12 +50,10 @@ const Label = styled.span`
   font-weight: bold;
 `;
 
-interface ProgressBarProps {
+interface IProgressBar extends IThemed {
   children?: React.ReactNode;
   completed?: number;
   bgColor?: string;
-  primary?: boolean;
-  secondary?: boolean;
   label?: string;
   caption?: string;
 }
@@ -68,7 +65,7 @@ export function ProgressBar({
   label,
   caption,
   children,
-}: ProgressBarProps) {
+}: IProgressBar) {
   return (
     <Container>
       <Caption>{caption}</Caption>

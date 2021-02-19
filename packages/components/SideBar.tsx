@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Props } from '@cx/wfm/index.types';
+import { Props } from '@cx/types';
 
 const Container = styled.section`
   margin: 0;

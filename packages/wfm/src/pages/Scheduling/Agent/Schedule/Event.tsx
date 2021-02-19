@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { DateTime } from 'luxon';
 import { Tooltip } from '@cx/components/Tooltip';
-import { IEvent } from '../../../../index.types';
+import { IEvent } from '@cx/types/time';
 
 const Container = styled.div`
   display: flex;
@@ -13,11 +13,11 @@ const Container = styled.div`
   height: 100%;
 `;
 
-interface EventProps {
+interface IEvent2 {
   event: IEvent;
   title: string;
 }
-export function Event({ event, title, ...rest }: EventProps) {
+export function Event({ event, title, ...rest }: IEvent2) {
   return (
     <Tooltip
       content={(

@@ -11,7 +11,7 @@ import { Calendar } from '@cx/components/Icons/Calendar';
 import { BigCalendar } from '@cx/components/DateTime/BigCalendar';
 import { LoadSpinner } from '@cx/components/LoadSpinner';
 import { Wrapper } from '@cx/components/Styled';
-import { getAgentSchedule } from './fake-data';
+import { getAgentSchedule } from '@cx/fakedata/agentSchedule';
 import { Footer } from './Footer';
 import { Event } from './Event';
 
@@ -81,9 +81,7 @@ export function AgentSchedule() {
   return (
     <Container>
       <Toolbar>
-        {/* @ts-ignore */}
         <Play secondary direction="left" onClick={() => handleManuallyAddDays(-7)} title="Previous week" />
-        {/* @ts-ignore */}
         <Play secondary onClick={() => handleManuallyAddDays(7)} title="Next week" />
 
         <DatePickerContainer>
@@ -100,7 +98,6 @@ export function AgentSchedule() {
 
           <Divider direction="vertical" secondary size={30} />
 
-          {/* @ts-ignore */}
           <Calendar secondary onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />
         </DatePickerContainer>
       </Toolbar>

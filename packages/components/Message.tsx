@@ -2,18 +2,18 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-interface ContentProps {
+interface IContent {
   messageType: string;
 }
-const Content = styled.span<ContentProps>`
+const Content = styled.span<IContent>`
   color: ${({ messageType, theme }) => theme.colors[messageType]};
 `;
 
-interface MessageProps {
+interface IMessage {
   messageType?: string;
   text: string;
 }
-export function Message({ text, messageType = 'info' }: MessageProps) {
+export function Message({ text, messageType = 'info' }: IMessage) {
   return <Content messageType={messageType}>{text}</Content>;
 }
 

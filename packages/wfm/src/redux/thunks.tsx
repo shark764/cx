@@ -1,4 +1,4 @@
-import { fetchTheme } from './fake-apis';
+import { fetchTheme } from '@cx/fakedata/theme';
 import { main } from './reducers/main';
 
 const { setTheme } = main.actions;

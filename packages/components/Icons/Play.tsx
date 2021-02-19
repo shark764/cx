@@ -1,14 +1,12 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled, { css } from 'styled-components';
-import { IconProps } from '@cx/wfm/index.types';
+import { IContainer, IIcon, IPath } from '@cx/types/icon';
 
-interface ContainerProps {
-  size?: number;
-  disabled?: boolean;
+interface IContainer2 extends IContainer {
   direction?: string;
 }
-const Container = styled.div<ContainerProps>`
+const Container = styled.div<IContainer2>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   width: ${({ size }) => size}px;
 
@@ -19,13 +17,10 @@ const Container = styled.div<ContainerProps>`
       `};
   }
 `;
-interface PathProps {
-  fillColor?: string;
+interface IPath2 extends IPath {
   strokeColor?: string;
-  primary?: boolean;
-  secondary?: boolean;
 }
-const Path1 = styled.path<PathProps>`
+const Path1 = styled.path<IPath2>`
   ${({
     strokeColor, primary, secondary, theme,
   }) => (strokeColor
@@ -41,7 +36,7 @@ const Path1 = styled.path<PathProps>`
         stroke: ${theme.colors.secondary};
       `)};
 `;
-const Path2 = styled.path<PathProps>`
+const Path2 = styled.path<IPath>`
   ${({
     fillColor, primary, secondary, theme,
   }) => (fillColor
@@ -58,7 +53,7 @@ const Path2 = styled.path<PathProps>`
       `)};
 `;
 
-interface IconProps2 extends IconProps {
+interface IIcon2 extends IIcon {
   direction?: string;
 }
 export function Play({
@@ -71,7 +66,7 @@ export function Play({
   className,
   disabled = false,
   ...rest
-}: IconProps2) {
+}: IIcon2) {
   return (
     <Container size={size} className={className} onClick={onClick} direction={direction} disabled={disabled} {...rest}>
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" viewBox="0 0 100 100" xmlSpace="preserve">

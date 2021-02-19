@@ -2,10 +2,9 @@ import * as React from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { Wrapper } from '@cx/components/Styled';
-import { IOption } from '@cx/components/Form/types';
-import { log } from '@cx/utilities';
-import { getTeams, getTimezones } from '../fake-data';
-import { DataContext } from '../context';
+import { DateTime } from 'luxon';
+import { getAgentOrganizationHistory, getTeams, getTimezones } from '@cx/fakedata/planningEmployeesAgents';
+import { useFormState } from '../context';
 import { FormLayout } from './layout';
 
 const FormWrapper = styled(Wrapper)`
@@ -24,10 +23,23 @@ const initialValues = {
 export function Form() {
   const {
     selectedRow: [selected],
-    open: [open],
     setFormState,
-  }: any = React.useContext(DataContext);
+  }: any = useFormState();
 
+  const { id } = selected;
+
+  const organizationHistoryQuery = useQuery(
+    ['fetchAgentOrganizationHistory', id],
+    async () => getAgentOrganizationHistory(id)
+      .then((result: any) => result.data)
+      .catch((err: Error) => {
+        console.error(err);
+        throw err;
+      }),
+    {
+      refetchInterval: 30000,
+    },
+  );
   const timezonesQuery = useQuery(
     'fetchTimezones',
     async () => getTimezones()
@@ -53,6 +65,29 @@ export function Form() {
     },
   );
 
+  const organizationHistoryColumns = React.useMemo(
+    () => [
+      { Header: 'Team', accessor: 'team' },
+      {
+        Header: 'Valid From',
+        accessor: 'validFrom',
+        Cell: ({ value }: any) => DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED),
+      },
+      {
+        Header: 'Valid To',
+        accessor: 'validTo',
+        Cell: ({ value }: any) => (value ? DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED) : ''),
+      },
+    ],
+    [],
+  );
+  const memoOrganizationHistory = React.useMemo(() => {
+    if (organizationHistoryQuery.isLoading && !organizationHistoryQuery.data) {
+      return [];
+    }
+    return organizationHistoryQuery.data;
+  }, [organizationHistoryQuery.isLoading, organizationHistoryQuery.data]);
+
   const memoTimezones = React.useMemo(() => {
     if (timezonesQuery.isLoading && !timezonesQuery.data) {
       return [];
@@ -73,30 +108,22 @@ export function Form() {
     }));
   }, [teamsQuery.isLoading, teamsQuery.data]);
 
-  const defaultValues = React.useMemo(() => {
-    const formattedValues: any = {};
-    if (selected.id) {
-      formattedValues.timezone = memoTimezones.find((item: IOption) => item.value === selected.timezone);
-      formattedValues.team = memoTeams.find((item: IOption) => item.value === selected.team);
-    }
-    log('warning', 'Not working yet');
-    return {
+  const defaultValues = React.useMemo(
+    () => ({
       ...initialValues,
       ...selected,
-      ...formattedValues,
-    };
-  }, [initialValues, selected, memoTimezones, memoTeams]);
+    }),
+    [selected],
+  );
 
   const onSubmit = (data: any) => console.log('submitted', data);
 
   const onCancel = () => setFormState({}, undefined);
 
-  if (!open) {
-    return null;
-  }
-
   return (
     <FormWrapper>
+      {selected.name && <h3>{selected.name}</h3>}
+
       <FormLayout
         onSubmit={onSubmit}
         defaultValues={defaultValues}
@@ -104,6 +131,9 @@ export function Form() {
         timezonesLoading={timezonesQuery.isLoading}
         teams={memoTeams}
         teamsLoading={teamsQuery.isLoading}
+        organizationHistoryColumns={organizationHistoryColumns}
+        organizationHistoryData={memoOrganizationHistory}
+        organizationHistoryLoading={organizationHistoryQuery.isLoading}
         onCancel={onCancel}
         key={defaultValues.id || 'register-new'}
       />

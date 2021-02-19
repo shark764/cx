@@ -1,26 +1,12 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { IPagination } from '@cx/types/table';
 
 const Input = styled.input`
   width: 100px;
 `;
 
-export interface PagProps {
-  canPreviousPage: boolean;
-  canNextPage: boolean;
-  state: {
-    pageIndex: number;
-    pageSize: number;
-  };
-  pageCount: number;
-  pageOptions: Array<number>;
-  pageSizeOptions: Array<number>;
-  gotoPage(arg: number): void;
-  nextPage(): void;
-  previousPage(): void;
-  setPageSize(arg: number): void;
-}
 export function Pagination({
   canPreviousPage,
   canNextPage,
@@ -32,7 +18,7 @@ export function Pagination({
   setPageSize,
   state: { pageIndex, pageSize },
   pageSizeOptions,
-}: PagProps) {
+}: IPagination) {
   return (
     <div className="pagination">
       <button type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
