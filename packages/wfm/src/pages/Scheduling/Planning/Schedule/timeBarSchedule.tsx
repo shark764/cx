@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useDivWidth } from './timeScale';
 
 const TimeBarScheduleBox = styled.div``;
+
 const Bar = styled.div<{ offset: number; length: number }>`
   height: 20px;
   background: #07497aba;
@@ -37,7 +38,6 @@ export interface Width {
 }
 
 export const TimeBarSchedule: React.FC<TimeBarScheduleProps> = ({ segments, domain }) => {
-  console.log(segments);
 
   const [ref, width] = useDivWidth();
   const [startingHour, endingHour] = domain;
@@ -49,11 +49,6 @@ export const TimeBarSchedule: React.FC<TimeBarScheduleProps> = ({ segments, doma
 
   const breakSegmentLength = segments.breaks[0].breakLength * secondsPerPixels;
   const breakSegmentOffset = segments.breaks[0].breakStartTime * secondsPerPixels;
-
-  // @ts-ignore
-  const pixelsPerTick = width / domain[1];
-  // @ts-ignore
-  const timeSegmentInPixels = Math.max(1, Math.floor(width / pixelsPerTick));
 
   return (
     // @ts-ignore

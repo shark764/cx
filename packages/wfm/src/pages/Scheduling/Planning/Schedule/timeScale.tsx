@@ -1,14 +1,15 @@
 import * as React from 'react';
-import {
-  useRef, useState, useEffect, useMemo,
-} from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { scaleLinear } from 'd3';
 
-const TimeScaleBox = styled.div``;
+const TimeScaleBox = styled.div`
+position: relative;
+left: 0px;
+`;
 
 const Tick = styled.span<{ xOffset: number }>`
-  position: relative;
+  position: absolute;
   left: ${(props) => props.xOffset || 0}px;
   &:after {
     content: '';
@@ -21,7 +22,7 @@ const Tick = styled.span<{ xOffset: number }>`
   }
 `;
 const TickLabel = styled.span<{ value: number }>`
-  position: relative;
+  position: absolute;
   left: ${({ value }) => (value > 9 ? '-8px' : '-4px')};
 `;
 
@@ -33,8 +34,7 @@ export const TimeScale: React.FC<any> = ({ domain, range = [0, 0] }) => {
       .domain(domain)
     // @ts-ignore
       .range([0, width]),
-    // return [scale.domain(), scale.range()];
-    [width],
+    [width, domain],
   );
 
   const ticks = useMemo(() => {
@@ -49,7 +49,8 @@ export const TimeScale: React.FC<any> = ({ domain, range = [0, 0] }) => {
     const numberOfTicksTarget = Math.max(1, Math.floor(width / pixelsPerTick));
 
     return xScale2.ticks(numberOfTicksTarget).map((value) => ({ value, xOffset: xScale(value) }));
-  }, [domain.join('-'), range.join('-'), xScale, width]);
+  }, [domain.join('-'), range.join('-'), xScale, width, domain]);
+
 
   return (
     <TimeScaleBox>
@@ -84,7 +85,7 @@ export const useDivWidth = () => {
 
       const entry = entries[0];
 
-      if (width != entry.contentRect.width) changeWidth(entry.contentRect.width);
+      if (width !== entry.contentRect.width) changeWidth(entry.contentRect.width);
     });
 
     resizeObserver.observe(element);
