@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -98,6 +98,7 @@ export function CreateNewForecastPane({ setCreateNewForecast }: { setCreateNewFo
     const buttonClass = {
         root: classes.root,
     };
+    const theme: any = useTheme();
 
     const [historicalFromDate, setHistoricalFromDate] = useState(new Date());
     const [isHistoricalFromDatePickerOpen, setIsHistoricalFromDatePickerOpen] = useState(false);
@@ -142,7 +143,7 @@ export function CreateNewForecastPane({ setCreateNewForecast }: { setCreateNewFo
                         />
                         <Divider direction="vertical" secondary size={30} />
                         <Calendar
-                            secondary
+                            fill={theme.colors.secondary}
                             size={17}
                             onClick={() => setIsHistoricalFromDatePickerOpen(true)}
                         />
@@ -161,7 +162,7 @@ export function CreateNewForecastPane({ setCreateNewForecast }: { setCreateNewFo
                         />
                         <Divider direction="vertical" secondary size={30} />
                         <Calendar
-                            secondary
+                            fill={theme.colors.secondary}
                             size={17}
                             onClick={() => setIsHistoricalToDatePickerOpen(true)}
                         />

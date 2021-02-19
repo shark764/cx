@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useQuery } from 'react-query';
 
 import { addDays, getMonday } from '@cx/utilities/date';
@@ -47,6 +47,8 @@ const LoadingMessage = styled.span`
 `;
 
 export function AgentSchedule() {
+  const theme: any = useTheme();
+
   const [calDate, setCalDate] = React.useState(new Date());
   const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
 
@@ -89,8 +91,13 @@ export function AgentSchedule() {
   return (
     <Container>
       <Toolbar>
-        <Play secondary direction="left" onClick={() => handleManuallyAddDays(-7)} title="Previous week" />
-        <Play secondary onClick={() => handleManuallyAddDays(7)} title="Next week" />
+        <Play
+          fill={theme.colors.secondary}
+          direction="left"
+          onClick={() => handleManuallyAddDays(-7)}
+          title="Previous week"
+        />
+        <Play fill={theme.colors.secondary} onClick={() => handleManuallyAddDays(7)} title="Next week" />
 
         <DatePickerContainer>
           <DatePicker
@@ -100,13 +107,13 @@ export function AgentSchedule() {
             open={datePickerIsOpen}
             onFocus={() => setDatePickerIsOpen(true)}
             onClickOutside={() => setDatePickerIsOpen(false)}
-            // isClearable
+            isClearable
             className="custom-datepicker__input"
           />
 
           <Divider direction="vertical" secondary size={30} />
 
-          <Calendar secondary onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />
+          <Calendar fill={theme.colors.secondary} onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />
         </DatePickerContainer>
       </Toolbar>
 

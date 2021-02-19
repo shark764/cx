@@ -73,7 +73,7 @@ export const useDivWidth = () => {
   const [width, changeWidth] = useState(0);
 
   useEffect(() => {
-    const element = ref.current;
+    const element: any = ref.current;
 
     if (!element) {
       return;

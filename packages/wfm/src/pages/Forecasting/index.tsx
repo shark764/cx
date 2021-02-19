@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { css } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import Select from 'react-select';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -46,7 +46,7 @@ const DatePickerContainer = styled.div`
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
-  borderColor: #80808096;
+  border-color: #80808096;
 `;
 
 const StyledCalendar = styled(Calendar)`
@@ -115,6 +115,7 @@ export function Forecasting() {
   const buttonClass = {
     root: classes.root,
   };
+  const theme: any = useTheme();
 
   const [competence, setCompetence] = React.useState('selectCompetence');
   const [viewBy, setViewBy] = React.useState('day');
@@ -166,7 +167,7 @@ export function Forecasting() {
             onChange={changeViewBy}
           />
           <StyledCalendar
-            secondary
+            fill={theme.colors.secondary}
             size={17}
             onClick={() => setIsFromDatePickerOpen(true)}
           />
@@ -180,13 +181,13 @@ export function Forecasting() {
             filterDate={filterDate}
           />
           <StyledPlay
-            secondary
+            fill={theme.colors.secondary}
             size={20}
             direction="left"
             onClick={() => handleManuallyAddDays('from', -1)}
           />
           <Play
-            secondary
+            fill={theme.colors.secondary}
             size={20}
             onClick={() => handleManuallyAddDays('from', 1)}
           />
@@ -194,7 +195,7 @@ export function Forecasting() {
             <>
               <StyledDivider direction="vertical" secondary size={30} />
               <StyledCalendar
-                secondary
+                fill={theme.colors.secondary}
                 size={17}
                 onClick={() => setIsToDatePickerOpen(true)}
               />
@@ -207,13 +208,13 @@ export function Forecasting() {
                 className="custom-datepicker__input"
               />
               <StyledPlay
-                secondary
+                fill={theme.colors.secondary}
                 size={20}
                 direction="left"
                 onClick={() => handleManuallyAddDays('to', -1)}
               />
               <Play
-                secondary
+                fill={theme.colors.secondary}
                 size={20}
                 onClick={() => handleManuallyAddDays('to', 1)}
               />

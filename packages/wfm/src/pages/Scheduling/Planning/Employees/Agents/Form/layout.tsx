@@ -24,6 +24,7 @@ const AButton = styled(Button)`
 `;
 
 const FormTableContainer = styled(TableContainer)`
+  padding: 0 0.5rem;
   .table {
     .header {
       margin-bottom: 10px;
@@ -33,9 +34,7 @@ const FormTableContainer = styled(TableContainer)`
 
 interface IFormLayout extends IForm {
   timezones: IOption[];
-  timezonesLoading: boolean;
   teams: IOption[];
-  teamsLoading: boolean;
   organizationHistoryColumns: IColumnData[];
   organizationHistoryData: ITableData[];
   organizationHistoryLoading: boolean;
@@ -44,30 +43,20 @@ export function FormLayout({
   onSubmit,
   defaultValues = {},
   timezones,
-  timezonesLoading,
   teams,
-  teamsLoading,
   organizationHistoryColumns,
   organizationHistoryData,
   organizationHistoryLoading,
   onCancel,
+  isFormSubmitting = false,
 }: IFormLayout) {
-  const { handleSubmit, control, setValue } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     defaultValues,
   });
 
   React.useEffect(() => {
-    setValue(
-      'team',
-      teams.find((team: IOption) => team.value === defaultValues.team),
-    );
-  }, [defaultValues.team, setValue, teams]);
-  React.useEffect(() => {
-    setValue(
-      'timezone',
-      timezones.find((timezone: IOption) => timezone.value === defaultValues.timezone),
-    );
-  }, [defaultValues.timezone, setValue, timezones]);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -84,7 +73,9 @@ export function FormLayout({
                 onBlur={props.onBlur}
                 selected={props.value}
                 className="input"
+                isClearable
                 calendarBtn
+                disabled={isFormSubmitting}
               />
             )}
           />
@@ -99,7 +90,9 @@ export function FormLayout({
                 onBlur={props.onBlur}
                 selected={props.value}
                 className="input"
+                isClearable
                 calendarBtn
+                disabled={isFormSubmitting}
               />
             )}
           />
@@ -110,7 +103,14 @@ export function FormLayout({
             type="select"
             control={control}
             render={({ onChange, onBlur, value }) => (
-              <Select onChange={onChange} onBlur={onBlur} value={value} options={teams} isClearable />
+              <Select
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value}
+                options={teams}
+                isClearable
+                isDisabled={isFormSubmitting}
+              />
             )}
           />
         </FormField>
@@ -137,7 +137,9 @@ export function FormLayout({
                 onBlur={props.onBlur}
                 selected={props.value}
                 className="input"
+                isClearable
                 calendarBtn
+                disabled={isFormSubmitting}
               />
             )}
           />
@@ -147,7 +149,15 @@ export function FormLayout({
             control={control}
             name="employmentEndDate"
             render={({ onChange, onBlur, value }) => (
-              <DatePicker onChange={onChange} onBlur={onBlur} selected={value} className="input" calendarBtn />
+              <DatePicker
+                onChange={onChange}
+                onBlur={onBlur}
+                selected={value}
+                className="input"
+                isClearable
+                calendarBtn
+                disabled={isFormSubmitting}
+              />
             )}
           />
         </FormField>
@@ -160,7 +170,14 @@ export function FormLayout({
             type="select"
             control={control}
             render={({ onChange, onBlur, value }) => (
-              <Select onChange={onChange} onBlur={onBlur} value={value} options={timezones} isClearable />
+              <Select
+                onChange={onChange}
+                onBlur={onBlur}
+                value={value}
+                options={timezones}
+                isClearable
+                isDisabled={isFormSubmitting}
+              />
             )}
           />
         </FormField>
@@ -168,7 +185,7 @@ export function FormLayout({
 
       <Actions>
         <AButton type="button" onClick={onCancel} label="Cancel" bgColor="white" />
-        <AButton type="submit" label="Submit" primary />
+        <AButton type="submit" label="Submit" disabled={isFormSubmitting} primary />
       </Actions>
     </form>
   );

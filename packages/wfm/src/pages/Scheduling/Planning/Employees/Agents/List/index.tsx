@@ -8,14 +8,17 @@ import { TableContainer, DataTable } from '@cx/components/DataTable';
 import { Wrapper } from '@cx/components/Styled';
 import { getAgents } from '@cx/fakedata/planningEmployeesAgents';
 import { IQuery } from '@cx/types';
-import { useFormState } from '../context';
+import { useFormState } from 'context/RowSelection';
 
 const ListWrapper = styled(Wrapper)`
   grid-column: 1;
 `;
 
 export function List() {
-  const { setFormState }: any = useFormState();
+  const {
+    selectedRow: [selected],
+    setFormState,
+  }: any = useFormState();
 
   const { data, isLoading, error }: IQuery = useQuery(
     'fetchAgents',
@@ -37,7 +40,6 @@ export function List() {
         accessor: 'name',
         disableFilters: false,
         filter: 'fuzzyText',
-        // columnWidth: 150,
       },
       { Header: 'Email', accessor: 'email' },
       {
@@ -57,7 +59,7 @@ export function List() {
       },
       { Header: 'Timezone', accessor: 'timezone' },
     ],
-    [],
+    [selected],
   );
 
   const memoData = React.useMemo(() => {

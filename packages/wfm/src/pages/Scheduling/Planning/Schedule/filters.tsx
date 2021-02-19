@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import Select from 'react-select';
 
 import { Divider } from '@cx/components/Divider';
@@ -103,6 +103,8 @@ const customStyles = {
 };
 
 export function Filters() {
+  const theme: any = useTheme();
+  
   const [value, setValue] = React.useState([null, null]);
 
   const [calDate, setCalDate] = React.useState(new Date());
@@ -131,7 +133,7 @@ export function Filters() {
           </span>
           <DatePickerContainer>
           <Calendar
-            secondary
+            fill={theme.colors.secondary}
             size={17}
             onClick={() => setDatePickerIsOpen(true)}
           />
@@ -144,13 +146,13 @@ export function Filters() {
             className="custom-datepicker__input"
           />
           <Play
-            secondary
+            fill={theme.colors.secondary}
             size={20}
             direction="left"
             onClick={() => handleManuallyAddDays(-1)}
           />
           <Play
-            secondary
+            fill={theme.colors.secondary}
             size={20}
             onClick={() => handleManuallyAddDays(1)}
           />
@@ -158,7 +160,7 @@ export function Filters() {
         </DatePickerContainer>
         <DatePickerContainer>
           <Calendar
-            secondary
+            fill={theme.colors.secondary}
             size={17}
             onClick={() => setDatePickerIsOpen(true)}
           />
@@ -171,13 +173,13 @@ export function Filters() {
             className="custom-datepicker__input"
           />
           <Play
-            secondary
+            fill={theme.colors.secondary}
             size={20}
             direction="left"
             onClick={() => handleManuallyAddDays(-1)}
           />
           <Play
-            secondary
+            fill={theme.colors.secondary}
             size={20}
             onClick={() => handleManuallyAddDays(1)}
           />

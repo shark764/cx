@@ -7,6 +7,7 @@ export const FormDataContext = React.createContext();
 export function FormDataProvider({ children }: Props) {
   const selectedRow = React.useState({});
   const open = React.useState(false);
+  const isFormSubmitting = React.useState(false);
 
   const setFormState = (data: any, isOpen: boolean) => {
     const [, setSelected] = selectedRow;
@@ -21,6 +22,7 @@ export function FormDataProvider({ children }: Props) {
         selectedRow,
         open,
         setFormState,
+        isFormSubmitting,
       }}
     >
       {children}

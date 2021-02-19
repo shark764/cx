@@ -28,6 +28,10 @@ export const TableContainer = styled.div<ITableContainer>`
     .full-cell,
     .header {
       padding: 0.2rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      overflow-wrap: break-word;
     }
     .header {
       color: gray;
