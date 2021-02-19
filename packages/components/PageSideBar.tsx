@@ -16,10 +16,14 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-
-const drawerWidth = 240;
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import SettingsIcon from '@material-ui/icons/Settings';
+import AllInboxIcon from '@material-ui/icons/AllInbox';
+import PublicIcon from '@material-ui/icons/Public';
+import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
+import PeopleIcon from '@material-ui/icons/People';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -33,8 +37,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     }),
   },
   appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -47,12 +49,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     display: 'none',
   },
   drawer: {
-    width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
   },
   drawerOpen: {
-    width: drawerWidth,
+    minWidth: '240px',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -126,6 +127,26 @@ export function PageSideBar() {
     setOpen(false);
   };
 
+  const IconMapper = (link: string) => {
+    const iconMap: {[key: string]: any} = {
+      '/agent/schedule': <CalendarTodayIcon />,
+      '/agent/availability': <AssignmentLateIcon />,
+
+      '/admin/organization': <AllInboxIcon />,
+      '/admin/activity-management': <AssignmentLateIcon />,
+      '/admin/competence-management': <AssignmentIndIcon />,
+      '/admin/day-types': <PublicIcon />,
+      '/admin/default-restriction': <DesktopAccessDisabledIcon />,
+
+      '/forecasting/settings': <SettingsIcon />,
+
+      '/planning/schedule': <CalendarTodayIcon />,
+      '/planning/employees': <PeopleIcon />,
+      '/planning/settings': <SettingsIcon />,
+    };
+    return iconMap[link];
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -177,7 +198,7 @@ export function PageSideBar() {
               }}
             >
               <ListItem button key={link.to}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon>{ IconMapper(link.to) }</ListItemIcon>
                 <ListItemText primary={link.label} />
               </ListItem>
             </Link>
