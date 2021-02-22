@@ -60,33 +60,31 @@ interface ITabs extends IThemed {
   bgColor?: string;
 }
 
-export function Tabs({ children, activeIndex = 0, ...parentRest }: ITabs) {
+export function Tabs({ children, activeIndex = 0, ...rest }: ITabs) {
   const [activeTab, setActiveTab] = React.useState(activeIndex);
 
   const handleChange = (index: number) => {
     setActiveTab(index);
   };
 
+  const content = React.useMemo(() => children[activeTab], [activeTab, children]);
+
   if (!children) {
     return <Message text="error" messageType="No tabs were added" />;
   }
-
-  const content = React.useMemo(() => children[activeTab], [activeTab]);
 
   return (
     <>
       <TabList>
         {children.map((child: React.ReactElement, index: number) => {
-          const {
-            id, label, children, ...rest
-          } = child.props;
+          const { id, label } = child.props;
+
           return (
             <TabItem
               type="button"
               active={index === activeTab}
               onClick={() => handleChange(index)}
               key={id || label}
-              {...parentRest}
               {...rest}
             >
               {label}

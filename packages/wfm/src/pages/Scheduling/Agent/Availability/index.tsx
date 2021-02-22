@@ -5,12 +5,11 @@ import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
 
 import { Wrapper } from '@cx/components/Styled';
-import { getAgentAvailability } from '@cx/fakedata/agentAvailability';
-
-const agentId = 'b47027e0-1126-11ea-953d-9bdc6d6573af';
+import { agentId, getAgentAvailability } from '@cx/fakedata/agentAvailability';
+import { IQuery } from '@cx/types';
 
 export function Availability() {
-  const { data, isLoading, error } = useQuery(
+  const { data, isLoading, error }: IQuery = useQuery(
     'fetchAgentAvailability',
     async () => getAgentAvailability(agentId)
       .then((result: any) => result.data)
@@ -48,7 +47,7 @@ export function Availability() {
   }, [isLoading, data]);
 
   if (error) {
-    return <Message text="error" messageType="error" />;
+    return <Message text={error.message} messageType="error" />;
   }
 
   return (

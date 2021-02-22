@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { DateTime } from 'luxon';
 import { Tooltip } from '@cx/components/Tooltip';
 import { IEvent } from '@cx/types/time';
+import { DayShift } from './DayShift';
 
 const Container = styled.div`
   display: flex;
@@ -19,21 +19,7 @@ interface IEvent2 {
 }
 export function Event({ event, title, ...rest }: IEvent2) {
   return (
-    <Tooltip
-      content={(
-        <div>
-          <strong>{title}</strong>
-          {' '}
-          {DateTime.fromJSDate(event.start).toLocaleString(DateTime.TIME_SIMPLE)}
-          {' '}
-          &#8213;
-          {' '}
-          {DateTime.fromJSDate(event.end).toLocaleString(DateTime.TIME_SIMPLE)}
-        </div>
-      )}
-      direction="right"
-      delay={100}
-    >
+    <Tooltip content={<DayShift event={event} title={title} {...rest} />} direction="right" delay={100}>
       <Container>
         <span>
           <strong>{event.title}</strong>

@@ -1,6 +1,7 @@
 import * as faker from 'faker';
 
 export const availability = () => ({
+  id: faker.random.uuid(),
   agent: faker.fake('{{name.lastName}}, {{name.firstName}}'),
   agreedHours: Math.floor(Math.random() * 50),
 });

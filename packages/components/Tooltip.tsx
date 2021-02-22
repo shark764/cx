@@ -31,6 +31,7 @@ const TooltipTip = styled.div<ITooltipTip>`
   line-height: 1;
   z-index: 100;
   white-space: nowrap;
+  cursor: default;
 
   &:before {
     content: ' ';
@@ -88,6 +89,11 @@ const TooltipTip = styled.div<ITooltipTip>`
       `)};
 `;
 
+const TooltipRef = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 interface ITooltip {
   children: React.ReactNode;
   content: React.ReactNode;
@@ -100,10 +106,6 @@ export function Tooltip({
 }: ITooltip) {
   let timeout: any;
   const [active, setActive] = React.useState(false);
-
-  // console.log(
-  //   'https://dev.to/vtrpldn/how-to-make-an-extremely-reusable-tooltip-component-with-react-and-nothing-else-3pnk',
-  // );
 
   const showTip = () => {
     timeout = setTimeout(() => {
@@ -147,9 +149,8 @@ export function Tooltip({
       // @ts-ignore
       tabIndex="0"
       onKeyDown={handleKeyDown}
-      {...ttProps}
     >
-      {children}
+      <TooltipRef {...ttProps}>{children}</TooltipRef>
       {active && <TooltipTip direction={direction}>{content}</TooltipTip>}
     </TooltipWrapper>
   );

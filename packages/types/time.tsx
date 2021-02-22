@@ -4,6 +4,10 @@ export interface IEvent {
   desc?: string;
   title?: string;
   style?: any;
+  agentId?: string;
+  tenantId?: string;
+  activityType?: string;
+  summary?: boolean;
 }
 
 export interface IBigCalendar {

@@ -36,9 +36,7 @@ export function Form() {
         console.error(err);
         throw err;
       }),
-    {
-      refetchInterval: 30000,
-    },
+    { refetchInterval: 30000 },
   );
   const timezonesQuery = useQuery(
     'fetchTimezones',
@@ -48,9 +46,7 @@ export function Form() {
         console.error(err);
         throw err;
       }),
-    {
-      refetchOnWindowFocus: false,
-    },
+    { refetchOnWindowFocus: false },
   );
   const teamsQuery = useQuery(
     'fetchTeams',
@@ -60,9 +56,7 @@ export function Form() {
         console.error(err);
         throw err;
       }),
-    {
-      refetchOnWindowFocus: false,
-    },
+    { refetchOnWindowFocus: false },
   );
 
   const organizationHistoryColumns = React.useMemo(
@@ -92,29 +86,17 @@ export function Form() {
     if (timezonesQuery.isLoading && !timezonesQuery.data) {
       return [];
     }
-    return timezonesQuery.data.map((tz: any) => ({
-      value: tz.id,
-      label: tz.label,
-    }));
+    return timezonesQuery.data.map((tz: any) => ({ value: tz.id, label: tz.label }));
   }, [timezonesQuery.isLoading, timezonesQuery.data]);
 
   const memoTeams = React.useMemo(() => {
     if (teamsQuery.isLoading && !teamsQuery.data) {
       return [];
     }
-    return teamsQuery.data.map((tz: any) => ({
-      value: tz.id,
-      label: tz.label,
-    }));
+    return teamsQuery.data.map((tz: any) => ({ value: tz.id, label: tz.label }));
   }, [teamsQuery.isLoading, teamsQuery.data]);
 
-  const defaultValues = React.useMemo(
-    () => ({
-      ...initialValues,
-      ...selected,
-    }),
-    [selected],
-  );
+  const defaultValues = React.useMemo(() => ({ ...initialValues, ...selected }), [selected]);
 
   const onSubmit = (data: any) => console.log('submitted', data);
 

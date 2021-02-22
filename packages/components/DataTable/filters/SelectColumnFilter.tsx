@@ -11,11 +11,11 @@ export function SelectColumnFilter({
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {
-    const options = new Set();
+    const filterOptions = new Set();
     preFilteredRows.forEach((row: any) => {
-      options.add(row.values[id]);
+      filterOptions.add(row.values[id]);
     });
-    return Array.from(options);
+    return Array.from(filterOptions);
   }, [id, preFilteredRows]);
 
   // Render a multi-select box

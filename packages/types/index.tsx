@@ -14,3 +14,10 @@ export interface IThemed {
   secondary?: boolean;
   color?: string;
 }
+
+export interface IQuery {
+  data: any;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: any | Error;
+}

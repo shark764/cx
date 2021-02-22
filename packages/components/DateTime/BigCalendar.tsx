@@ -9,7 +9,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { deepMerge } from '@cx/utilities';
 import { LuxonLocalizer } from '@cx/utilities/intl/LuxonLocalizer';
 import { IContainer } from '@cx/types';
-import { IBigCalendar, IEvent } from '@cx/types/time';
+import { IBigCalendar } from '@cx/types/time';
 
 const CalendarContainer = styled.div<IContainer>`
   margin: 0 auto;

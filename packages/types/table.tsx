@@ -1,7 +1,8 @@
+import * as React from 'react';
 import { Pagination } from '@cx/components/DataTable/Pagination';
 
 export interface IColumnData {
-  Header: string;
+  Header: string | React.ReactNode;
   accessor: string;
   Cell?: any;
   width?: number;
@@ -11,7 +12,7 @@ export interface IColumnData {
 }
 
 export interface ITableData {
-  id: number | string;
+  id?: number | string;
 }
 
 export interface IRow {
@@ -35,9 +36,10 @@ export interface ITable {
   pageSizeOptions?: Array<number>;
   loading?: boolean;
   noDataText?: string;
-  setSelectedRow?(arg: any): void;
+  onTableRowSelection?(row: any): void;
   oneRowSelectable?: boolean;
   multipleRowSelectable?: boolean;
+  onToggleAllRowsSelected?(bool?: boolean): void;
 }
 
 export interface ITableContainer {
