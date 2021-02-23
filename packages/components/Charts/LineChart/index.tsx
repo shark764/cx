@@ -10,14 +10,16 @@ import {
     XAxis,
     YAxis,
     Tooltip,
+    Legend,
+    LineChart as ReChartsLineChart,
     ResponsiveContainer,
-    LineChart as RechartLineChart,
 } from 'recharts';
 
-import ChartLegend from '../ChartLegend';
+import CustomLegend from '../ChartLegend/index';
 
 const Wrapper = styled.div`
-  margin-top: 50px
+  margin-top: 20px;
+  font-size: 12px;
 `;
 
 const StatName = styled.h2`
@@ -35,7 +37,6 @@ export interface Data {
 
 export interface DataKeys {
     key?: string;
-    lineType?: string;
     lineStroke?: string;
     yAxisId?: string;
     name?: string;
@@ -50,6 +51,7 @@ export interface ChartProps {
     chartName?: string;
     showLegend?: boolean;
     showTooltip?: boolean;
+    interval?: number;
     containerWidth?: string;
     containerHeight?: number;
 };
@@ -63,38 +65,37 @@ export function LineChart({
     chartName,
     showLegend = true,
     showTooltip = true,
-    containerWidth = '80%',
-    containerHeight = 200,
+    interval = 0,
+    containerWidth = '90%',
+    containerHeight = 300,
 }: ChartProps) {
-    interface Dotted {
-        dotted: string;
-    }
-    const lineStrokes: Dotted = { dotted: '3 4 5 2' };
+  const fillColors = ['#07487a', 'orange', 'green'];
     return (
         <Wrapper>
             {statName && <StatName>{statName}</StatName>}
             <ResponsiveContainer id={`${chartName}-responsive-container`} width={containerWidth} height={containerHeight}>
-                <RechartLineChart data={data} onClick={onClick}>
-                    <XAxis dataKey={xDataKey} />
-                    <YAxis yAxisId="left" />
-                    <YAxis yAxisId="right" orientation="right" />
+                <ReChartsLineChart data={data} onClick={onClick}>
+                    <XAxis dataKey={xDataKey} interval={interval} />
+                    <YAxis yAxisId="left" label={{ value: 'VOLUME', angle: -90, position: 'center', offset: 0 }}>
+                    </YAxis>
+                    <YAxis yAxisId="right" orientation="right" label={{ value: 'AHT', angle: -90, position: 'center', offset: 0 }} />
                     {showTooltip && (
                         <Tooltip cursor={false} formatter={(value: any) => value} />
                     )}
-                    {showLegend && <ChartLegend />}
+                    {showLegend && <Legend verticalAlign="top" height={36} content={<CustomLegend payload={dataKeys} />} />}
                     {dataKeys.map((item: any, index) => (
                         <Line
                             key={index.toString()}
                             name={item.name}
                             dataKey={item.key}
-                            type={item.lineType}
                             dot={false}
+                            type="monotone"
                             yAxisId={item.yAxisId}
+                            fill={fillColors[index]}
                             strokeDasharray={item.lineStroke && '3 4 5 2'}
-                            // lineStrokes[item.lineStroke]}
                         />
                     ))}
-                </RechartLineChart>
+                </ReChartsLineChart>
             </ResponsiveContainer>
         </Wrapper>
     );

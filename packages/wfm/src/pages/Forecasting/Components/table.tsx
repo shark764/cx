@@ -1,64 +1,122 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTable } from 'react-table';
-
-import { tableData } from '../fakeData';
+import { IThemed } from '@cx/types';
 
 const TableWrapper = styled.div`
-  width: 100%;
-  padding: 20px;
+  width: fit-content;
+  margin-top: 20px;
+  border: 1px solid #80808096;
+  border-bottom: none;
+  border-radius: 5px;
+  font-size: 12px;
 `;
 
-const TableHeader = styled.div``;
-
-const TableHeaderRow = styled.div`
+const TableHeader = styled.div`
   display: flex;
   color: grey;
-  text-align: center;
-  margin-bottom: 30px;
+  border-bottom: 1px solid #80808096;
 `;
 
-const TableHeaderCell = styled.span`
-  flex-basis: 120px;
+interface TableCellProps extends IThemed {
+    title?: any;
+    header?: any;
+    key: string;
+}
+
+const TableHeaderCell = styled.span<TableCellProps>`
+   width: 200px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   font-weight: 600;
+   padding: 5px;
+   text-align: center;
+   color: ${({ theme }) => theme.colors.primary};
+   ${({ header }) => header === 'ADJUSTMENT' && `background-color: #8ac6dd26;`}
 `;
 
 const TableBody = styled.div``;
 
 const TableBodyRow = styled.div`
   display: flex;
-  height: 25px;
+  border-bottom: 1px solid #80808096;
+`;
+
+const TableBodyCell = styled.span<TableCellProps>`
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px;
   text-align: center;
+  ${({ header }) => header === 'ADJUSTMENT' && `background-color: #8ac6dd26;`}
+  &:focus {
+    ${({ header }) => header === 'ADJUSTMENT' && `border: 1px solid grey;`}
+  }
 `;
 
-const TableBodyCell = styled.span`
-   flex-basis: 120px;
+const StyledInput = styled.input`
+   width: 100px;
+   margin: 0 auto;
+   border: none;
+   outline: none;
+   background-color: transparent;
 `;
 
-export function ForecastingTable() {
-    const data = useMemo(() => tableData, []);
+interface ForecstingTableProps {
+    tableData?: any;
+}
+
+export function ForecastingTable({ tableData }: ForecstingTableProps) {
+    
+    let data: any, setData: any;
+    [data, setData] = useState(tableData);
+    
+    useEffect(() => setData(tableData), [tableData]);
+
+    const handleInputChange = (cellInfo: any, event: any) => {
+        let newArr = [...data];
+        newArr[cellInfo.row.index][cellInfo.column.id] = event.target.value;
+        setData(newArr);
+    };
 
     const columns = useMemo(
         () => [
-            { Header: '', accessor: 'col0' },
-            { Header: '6 AM', accessor: 'col1' },
-            { Header: '7 AM', accessor: 'col2' },
-            { Header: '8 AM', accessor: 'col3' },
-            { Header: '9 AM', accessor: 'col4' },
-            { Header: '10 AM', accessor: 'col5' },
-            { Header: '11 AM', accessor: 'col6' },
-            { Header: '12 PM', accessor: 'col7', },
-            { Header: '1 PM', accessor: 'col8' },
-            { Header: '2 PM', accessor: 'col9' },
-            { Header: '3 PM', accessor: 'col10' },
-            { Header: '4 PM', accessor: 'col11' },
-            { Header: '5 PM', accessor: 'col12' },
-            { Header: '6 PM', accessor: 'col13' },
-            { Header: '7 PM', accessor: 'col14' },
-            { Header: '8 PM', accessor: 'col15' },
-            { Header: '9 PM', accessor: 'col16' },
-            { Header: '10 PM', accessor: 'col17' },
-            { Header: '11 PM', accessor: 'col18' },
-            { Header: '12 AM', accessor: 'col19' },
+            { Header: 'MONDAY JAN 11', accessor: 'col0' },
+            { Header: 'FORECASTED VOLUME', accessor: 'col1' },
+            {
+                Header: 'ADJUSTMENT',
+                Cell: (cellInfo: any) => {
+                    const val = data[cellInfo.row.index][cellInfo.column.id];
+                    return (
+                        <StyledInput
+                            name="input"
+                            type="text"
+                            onChange={(e) => handleInputChange(cellInfo, e)}
+                            value={val}
+                        />
+                    )
+                },
+                accessor: 'col2'
+            },
+            { Header: 'ADJUSTED VOLUME', accessor: 'col3' },
+            { Header: 'FORECASTED AHT', accessor: 'col4' },
+            {
+                Header: 'ADJUSTMENT',
+                Cell: (cellInfo: any) => {
+                    const val = data[cellInfo.row.index][cellInfo.column.id];
+                    return (
+                        <StyledInput
+                            name="input"
+                            type="text"
+                            onChange={(e) => handleInputChange(cellInfo, e)}
+                            value={val}
+                        />
+                    )
+                },
+                accessor: 'col5'
+            },
+            { Header: 'ADJUSTED AHT', accessor: 'col6' },
+            { Header: 'ESTIMATED MAXIMUM HOURS', accessor: 'col7', }
         ],
         []
     );
@@ -71,25 +129,26 @@ export function ForecastingTable() {
 
     return (
         <TableWrapper {...getTableProps()} className="table">
-            <TableHeader>
-                {headerGroups.map(headerGroup => (
-                    <TableHeaderRow className="tr" {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <TableHeaderCell className="th" key={column.id}>
+            {headerGroups.map((headerGroup, a) => (
+                <TableHeader className="tr" {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => {
+                        return (
+                            <TableHeaderCell className="th" key={column.id} title={column.render('Header')} header={column.Header}>
                                 {column.render('Header')}
                             </TableHeaderCell>
-                        ))}
-                    </TableHeaderRow>
-                ))}
-            </TableHeader>
-            <TableBody className="tbody">
-                {rows.map(row => {
+                        )
+                    }
+                    )}
+                </TableHeader>
+            ))}
+            <>
+                {rows.map((row) => {
                     prepareRow(row)
                     return (
-                        <TableBodyRow className="tr" {...row.getRowProps()}>
-                            {row.cells.map(cell => {
+                        <TableBodyRow className="tr"  {...row.getRowProps()}>
+                            {row.cells.map((cell, idx) => {
                                 return (
-                                    <TableBodyCell className="td" >
+                                    <TableBodyCell className="td" key={idx.toString()} title={cell.value} header={cell.column.Header}>
                                         {cell.render('Cell')}
                                     </TableBodyCell>
                                 )
@@ -97,7 +156,7 @@ export function ForecastingTable() {
                         </TableBodyRow>
                     )
                 })}
-            </TableBody>
+            </>
         </TableWrapper>
     )
 };
