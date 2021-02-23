@@ -1,5 +1,6 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import Select from 'react-select';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -7,39 +8,33 @@ import { Divider } from '@cx/components/Divider';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
 import { Calendar } from '@cx/components/Icons/Calendar';
 import { Play } from '@cx/components/Icons/Play';
-import { addDays } from '@cx/utilities/date';
+import { addDays, disableDays } from '@cx/utilities/date';
 
-import { DropdownFilter } from './Components/dropDown';
-import { RadioFilter } from './Components/radio';
-import { ForecastingTable } from './Components/table';
 import BarChart from '@cx/components/Charts/BarChart';
 import LineChart from '@cx/components/Charts/LineChart';
-import { filters, dayAdjusted } from './fakeData';
+import { ForecastingTable } from './Components/table';
+import { filters, barChart, lineChart, tableData } from './fakeData';
 
 const FiltersWrapper = styled.div`
   display: flex;
-  width: 100%;
-  margin-top: 10px;
   padding: 5px;
-  border: 1px solid #80808096;
-  border-radius: 5px;
   font-size: 12px;
+  margin-left: 50px;
 `;
 
-const ChartsWrapper = styled.div`
-  width: 100%;
-  margin-top: 10px;
-  padding: 5px;
-  border: 1px solid #80808096;
-  border-radius: 5px;
+const StyledSelect = styled(Select)`
+  display: inline-block;  
+  width: 200px;
+  height: 35px;
+  border-color: #07487a;
 `;
 
 const DatePickerContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-left: 5px;
-  margin-top: 20px;
+  flex-grow: 1;
   align-items: center;
+  justify-content: center;
   .react-datepicker__input-container .custom-datepicker__input {
     border: 0;
     padding: 2px 10px;
@@ -49,178 +44,209 @@ const DatePickerContainer = styled.div`
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
-  borderColor: hsl(0, 0%, 80%);
+  borderColor: #80808096;
+`;
+
+const StyledCalendar = styled(Calendar)`
+  margin-left: 10px;
+`;
+
+const StyledPlay = styled(Play)`
+  margin-left: 10px;
+`;
+
+const useStyles = makeStyles({
+  root: {
+    width: '160px',
+    maxWidth: '160px',
+    height: 40,
+    marginLeft: '10px',
+    fontSize: '12px',
+    textTransform: 'capitalize',
+    flexGrow: 1,
+  },
+});
+
+const HorizontalDivider = styled.div`
+  border-top: 1px solid #80808096;
+  margin: 15px 15px;
 `;
 
 const StyledDivider = styled(Divider)`
   margin: 0 15px;
 `;
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: '210px',
-    height: 38,
-    marginLeft: '10px',
-    marginTop: '15px',
-    fontSize: '12px',
-    textTransform: 'capitalize',
-    borderColor: 'hsl(0, 0%, 80%)',
+const ChartsWrapper = styled.div`
+  width: 100%;
+`;
+
+const customStyles = {
+  option: (provided: any, state: any) => ({
+    ...provided,
+    color: 'black',
+    background: 'white',
+  }),
+  singleValue: (provided: any, state: any) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = 'opacity 300ms';
+    return { ...provided, opacity, transition };
   },
-});
+};
+
+const TableWrapper = styled.div`
+  margin-top: 20px;
+  margin-left: 30px;
+  font-size: 12px;
+`;
+
+const Label = styled.span`
+   margin-right: 15px;
+`;
 
 export function Forecasting() {
-
-  const [calDate, setCalDate] = React.useState(new Date());
-  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
-  const [selectedViewDataBy, setViewDataBy] = React.useState('quarter');
-
-  const handleManuallyAddDays = (days: number) => {
-    setCalDate((currentDate) => addDays(currentDate, days));
-  };
-
-  const changeViewDataBy = (event: any) => {
-    setViewDataBy(() => event.target.value)
-  };
-
   const classes = useStyles();
-
   const buttonClass = {
     root: classes.root,
+  };
+
+  const [competence, setCompetence] = React.useState('selectCompetence');
+  const [viewBy, setViewBy] = React.useState('day');
+  const [fromDate, setFromDate] = React.useState(new Date());
+  const [toDate, setToDate] = React.useState(new Date());
+  const [isFromDatePickerOpen, setIsFromDatePickerOpen] = React.useState(false);
+  const [isToDatePickerOpen, setIsToDatePickerOpen] = React.useState(false);
+
+  const changeCompetence = ({ value }: { value: string }) => setCompetence(value);
+  const changeViewBy = ({ value }: { value: string }) => setViewBy(value);
+
+  const handleManuallyAddDays = (dateType: string, days: number) => {
+    if (dateType === 'from') {
+      setFromDate((currentDate) => addDays(currentDate, days));
+    } else {
+      setToDate((currentDate) => addDays(currentDate, days));
+    }
+  };
+  const filterDate = (date: Date) => {
+    if (viewBy === "week") {
+      return disableDays(date, 'onlyEnableMonday');
+    }
+    return true;
   };
 
   return (
     <>
       <FiltersWrapper>
-        <DropdownFilter
-          filterTitle="VIEW BY"
-          className="choose-date-range"
-          defaultValue={filters.viewBy[0]}
-          options={filters.viewBy}
-        />
-        <DatePickerContainer>
-          <Calendar
-            secondary
-            size={17}
-            onClick={() => setDatePickerIsOpen(true)}
-          />
-          <StyledDatePicker
-            selected={calDate}
-            onChange={setCalDate}
-            open={datePickerIsOpen}
-            onFocus={() => setDatePickerIsOpen(true)}
-            onClickOutside={() => setDatePickerIsOpen(false)}
-            className="custom-datepicker__input"
-          />
-          <Play
-            secondary
-            size={20}
-            direction="left"
-            onClick={() => handleManuallyAddDays(-1)}
-          />
-          <Play
-            secondary
-            size={20}
-            onClick={() => handleManuallyAddDays(1)}
-          />
-          <Divider direction="vertical" secondary size={30} />
-        </DatePickerContainer>
-        <DatePickerContainer>
-          <Calendar
-            secondary
-            size={17}
-            onClick={() => setDatePickerIsOpen(true)}
-          />
-          <StyledDatePicker
-            selected={calDate}
-            onChange={setCalDate}
-            open={datePickerIsOpen}
-            onFocus={() => setDatePickerIsOpen(true)}
-            onClickOutside={() => setDatePickerIsOpen(false)}
-            className="custom-datepicker__input"
-          />
-          <Play
-            secondary
-            size={20}
-            direction="left"
-            onClick={() => handleManuallyAddDays(-1)}
-          />
-          <Play
-            secondary
-            size={20}
-            onClick={() => handleManuallyAddDays(1)}
-          />
-        </DatePickerContainer>
-        <StyledDivider direction="vertical" secondary size={60} />
-        <DropdownFilter
-          filterTitle="COMPETENCE"
+        <StyledSelect
           className="choose-competence"
-          defaultValue={filters.competence[1]}
-          options={filters.competence}
+          classNamePrefix="select"
+          defaultValue={filters.competence[0]}
+          name="choose-competence"
+          options={filters.competence.filter(a => a.value !== competence && a.value !== 'selectCompetence')}
+          styles={customStyles}
+          onChange={changeCompetence}
         />
-        <DropdownFilter
-          filterTitle="CHANNEL"
-          className="choose-channel"
-          defaultValue={filters.channel[1]}
-          options={filters.channel}
-        />
-        <DropdownFilter
-          filterTitle="DIRECTION"
-          className="choose-direction"
-          defaultValue={filters.direction[1]}
-          options={filters.direction}
-        />
-        <StyledDivider direction="vertical" secondary size={60} />
-        <Button classes={buttonClass} variant="outlined">RUN QUICK SCENARIO</Button>
-        <Button classes={buttonClass} variant="outlined">REMOVE SCENARIO</Button>
+        <DatePickerContainer>
+          <StyledSelect
+            className="choose-date"
+            classNamePrefix="select"
+            defaultValue={filters.viewBy[0]}
+            name="choose-date"
+            options={filters.viewBy.filter(a => a.value !== viewBy)}
+            styles={customStyles}
+            onChange={changeViewBy}
+          />
+          <StyledCalendar
+            secondary
+            size={17}
+            onClick={() => setIsFromDatePickerOpen(true)}
+          />
+          <StyledDatePicker
+            selected={fromDate}
+            onChange={setFromDate}
+            open={isFromDatePickerOpen}
+            onFocus={() => setIsFromDatePickerOpen(true)}
+            onClickOutside={() => setIsFromDatePickerOpen(false)}
+            className="custom-datepicker__input"
+            filterDate={filterDate}
+          />
+          <StyledPlay
+            secondary
+            size={20}
+            direction="left"
+            onClick={() => handleManuallyAddDays('from', -1)}
+          />
+          <Play
+            secondary
+            size={20}
+            onClick={() => handleManuallyAddDays('from', 1)}
+          />
+          {viewBy === 'dateRange' && (
+            <>
+              <StyledDivider direction="vertical" secondary size={30} />
+              <StyledCalendar
+                secondary
+                size={17}
+                onClick={() => setIsToDatePickerOpen(true)}
+              />
+              <StyledDatePicker
+                selected={toDate}
+                onChange={setToDate}
+                open={isToDatePickerOpen}
+                onFocus={() => setIsToDatePickerOpen(true)}
+                onClickOutside={() => setIsToDatePickerOpen(false)}
+                className="custom-datepicker__input"
+              />
+              <StyledPlay
+                secondary
+                size={20}
+                direction="left"
+                onClick={() => handleManuallyAddDays('to', -1)}
+              />
+              <Play
+                secondary
+                size={20}
+                onClick={() => handleManuallyAddDays('to', 1)}
+              />
+            </>
+          )}
+        </DatePickerContainer>
+        <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation>CREATE FORECAST</Button>
+        <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation>DELETE FORECAST</Button>
       </FiltersWrapper>
+
+      <HorizontalDivider />
 
       <ChartsWrapper>
         <LineChart
           chartName="staffingEstimate"
-          data={dayAdjusted.lineChart.data}
-          xDataKey={dayAdjusted.lineChart.xDataKey}
-          dataKeys={dayAdjusted.lineChart.dataKeys}
+          data={lineChart[viewBy].data}
+          interval={viewBy === 'day' ? 2 : 0}
+          xDataKey={lineChart[viewBy].xDataKey}
+          dataKeys={lineChart[viewBy].dataKeys}
         />
         <BarChart
           chartName="staffingEstimate"
           statName="STAFFING ESTIMATE"
-          data={dayAdjusted.barChart.data}
-          xDataKey={dayAdjusted.barChart.xDataKey}
-          dataKeys={dayAdjusted.barChart.dataKeys}
+          data={barChart[viewBy].data}
+          interval={viewBy === 'day' ? 2 : 0}
+          stackId={viewBy === 'dateRange' ? 'a' : null}
+          xDataKey={barChart[viewBy].xDataKey}
+          dataKeys={barChart[viewBy].dataKeys}
         />
       </ChartsWrapper>
 
-      <FiltersWrapper>
-        <RadioFilter isChecked={selectedViewDataBy === 'quarter'} onChange={changeViewDataBy} value="quarter" label="QUARTERS" />
-        <RadioFilter isChecked={selectedViewDataBy === 'hours'} onChange={changeViewDataBy} value="hours" label="HOURS" />
-        <RadioFilter isChecked={selectedViewDataBy === 'day'} onChange={changeViewDataBy} value="day" label="DAY" />
-        <StyledDivider direction="vertical" secondary size={60} />
-        <DropdownFilter
-          filterTitle="COMPETENCE"
-          className="choose-competence"
-          defaultValue={filters.competence[1]}
-          options={filters.competence}
-        />
-        <DropdownFilter
-          filterTitle="CHANNEL"
+      <TableWrapper>
+        <Label>CHANNEL:</Label>
+        <StyledSelect
           className="choose-channel"
-          defaultValue={filters.channel[1]}
+          classNamePrefix="select"
+          defaultValue={filters.channel[0]}
+          name="choose-channel"
           options={filters.channel}
+          styles={customStyles}
         />
-        <DropdownFilter
-          filterTitle="DIRECTION"
-          className="choose-direction"
-          defaultValue={filters.direction[1]}
-          options={filters.direction}
-        />
-        <StyledDivider direction="vertical" secondary size={60} />
-        <RadioFilter isChecked={selectedViewDataBy === 'volume'} onChange={changeViewDataBy} value="volume" label="VOLUME" />
-        <RadioFilter isChecked={selectedViewDataBy === 'aht'} onChange={changeViewDataBy} value="aht" label="AHT" />
-      </FiltersWrapper>
-
-      <FiltersWrapper>
-        <ForecastingTable />
-      </FiltersWrapper>
+        <ForecastingTable tableData={tableData[viewBy]} />
+      </TableWrapper>
     </>
-  );
-}
+  )
+};

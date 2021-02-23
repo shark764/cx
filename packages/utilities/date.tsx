@@ -14,3 +14,12 @@ export const getMonday = (d: Date) => {
 export const isSameDay = (date1: Date, date2: Date) => date1.getDate() === date2.getDate()
   && date1.getMonth() === date2.getMonth()
   && date1.getFullYear() === date2.getFullYear();
+
+export const disableDays = (date: Date, disableDays?: string) => {
+    const day = date.getDay();
+    if (disableDays === 'disableWeekends') {
+      return day !== 0 && day !== 6;
+    } else if (disableDays === 'onlyEnableMonday') {
+      return day === 1;
+    }
+  };
