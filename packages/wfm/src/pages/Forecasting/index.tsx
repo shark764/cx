@@ -13,6 +13,8 @@ import { addDays, disableDays } from '@cx/utilities/date';
 import BarChart from '@cx/components/Charts/BarChart';
 import LineChart from '@cx/components/Charts/LineChart';
 import { ForecastingTable } from './Components/table';
+import { CreateNewForecastPane } from './createForecast';
+import { DeleteForecastPane } from './deleteForecast';
 import { filters, barChart, lineChart, tableData } from './fakeData';
 
 const FiltersWrapper = styled.div`
@@ -103,7 +105,12 @@ const Label = styled.span`
    margin-right: 15px;
 `;
 
+const ButtonsWrapper = styled.div`
+  position: relative;
+`;
+
 export function Forecasting() {
+  
   const classes = useStyles();
   const buttonClass = {
     root: classes.root,
@@ -113,6 +120,9 @@ export function Forecasting() {
   const [viewBy, setViewBy] = React.useState('day');
   const [fromDate, setFromDate] = React.useState(new Date());
   const [toDate, setToDate] = React.useState(new Date());
+  const [createNewForecast, setCreateNewForecast] = React.useState(false);
+  const [deleteForecast, setDeleteForecast] = React.useState(false)
+
   const [isFromDatePickerOpen, setIsFromDatePickerOpen] = React.useState(false);
   const [isToDatePickerOpen, setIsToDatePickerOpen] = React.useState(false);
 
@@ -210,8 +220,12 @@ export function Forecasting() {
             </>
           )}
         </DatePickerContainer>
-        <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation>CREATE FORECAST</Button>
-        <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation>DELETE FORECAST</Button>
+        <ButtonsWrapper>
+          <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation onClick={() => (!createNewForecast && !deleteForecast) && setCreateNewForecast(true)}>CREATE FORECAST</Button>
+          <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation onClick={() => (!deleteForecast && !createNewForecast) && setDeleteForecast(!deleteForecast)}>DELETE FORECAST</Button>
+          {createNewForecast && <CreateNewForecastPane setCreateNewForecast={setCreateNewForecast} />}
+          {deleteForecast && <DeleteForecastPane setDeleteForecast={setDeleteForecast} />}
+        </ButtonsWrapper>
       </FiltersWrapper>
 
       <HorizontalDivider />
