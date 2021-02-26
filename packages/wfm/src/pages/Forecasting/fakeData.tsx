@@ -610,6 +610,10 @@ export const tableData: ObjTypes = {
   ]
 };
 
-export const scenarioData = {
-  scenarios: [{ label: 'Nov V1', id: 0, value: 'nov1' }, { label: 'Sep V1', id: 1, value: 'sep1' }, { label: 'Nov V2', id: 2, value: 'nov2' }, { label: 'OCT V1', id: 3, value: 'octv1' }]
-}
+export const countries = [
+  { label: 'Select Country', id: 0, value: 'selectCountry' },
+  { label: 'item 1', id: 1, value: 'one' },
+  { label: 'item 2', id: 2, value: 'two' },
+  { label: 'item 3', id: 3, value: 'three' },
+  { label: 'item 4', id: 4, value: 'four' },
+]
