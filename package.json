@@ -7,6 +7,7 @@
   "scripts": {
     "start": "yarn workspace @cx/wfm run start",
     "build": "yarn workspace @cx/wfm run build",
+    "storybook": "cd packages/components && yarn storybook",
     "test:all": "lerna run test",
     "new-version": "lerna version --conventional-commits --yes",
     "diff": "lerna diff"
