@@ -19,3 +19,15 @@ export interface IIcon extends IContainer, IFill {
 export interface IPath extends IThemed {
   fillColor?: string;
 }
+
+export interface BasicIconProps {
+  size: number;
+  fill?: string;
+  disabled?: boolean;
+  className?: string;
+  onClick?: any;
+};
+
+export interface DirectionalIcon extends BasicIconProps {
+  direction?: 'right' | 'left';
+};

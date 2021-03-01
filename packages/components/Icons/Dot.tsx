@@ -1,30 +1,15 @@
 import * as React from 'react';
-import styled, { css } from 'styled-components';
-import { IIcon } from '@cx/types/icon';
+import styled from 'styled-components';
+import { BasicIconProps } from '@cx/types/icon';
 
-const Circle = styled.span<IIcon>`
+const Circle = styled.span<BasicIconProps>`
   height: ${({ size }) => size}px;
   width: ${({ size }) => size}px;
   border-radius: 50%;
   display: block;
-  ${({
-    color, primary, secondary, theme,
-  }) => (color
-      && css`
-        background-color: ${color};
-      `)
-    || (primary
-      && css`
-        background-color: ${theme.colors.primary};
-      `)
-    || (secondary
-      && css`
-        background-color: ${theme.colors.secondary};
-      `)};
+  background-color: ${({fill}) => fill || 'grey'};
 `;
 
-export function Dot({
-  size = 25, primary = false, secondary = false, ...rest
-}: IIcon) {
-  return <Circle size={size} primary={primary} secondary={secondary} {...rest} />;
-}
+export const Dot:React.FC<BasicIconProps> = ({ size = 25, fill }) => (
+  <Circle size={size} fill={fill}/>
+)
