@@ -1,6 +1,7 @@
 {
   "name": "cx",
   "private": true,
+  "homepage": "./",
   "workspaces": [
     "packages/*"
   ],

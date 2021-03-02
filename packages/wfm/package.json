@@ -2,6 +2,7 @@
   "name": "@cx/wfm",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@cx/components": "1.0.0",
     "@cx/fakedata": "1.0.0",
