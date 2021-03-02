@@ -9,18 +9,14 @@ export interface SimpleDialogProps {
   onClose: (value: string) => void;
 }
 
-export const UnsavedDialog: React.FC<SimpleDialogProps> = ({open, onClose}) => (
-    <Dialog  onClose={onClose} open={open}>
-      <DialogTitle>
-      You have unsaved changes, are you sure you want to continue?
-      </DialogTitle>
-      <DialogActions>
-        <Button autoFocus color="primary">
-          Cancel
-        </Button>
-        <Button color="primary">
-          Ok
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
+export const UnsavedDialog: React.FC<SimpleDialogProps> = ({ open, onClose }) => (
+  <Dialog onClose={onClose} open={open}>
+    <DialogTitle>You have unsaved changes, are you sure you want to continue?</DialogTitle>
+    <DialogActions>
+      <Button autoFocus color="primary">
+        Cancel
+      </Button>
+      <Button color="primary">Ok</Button>
+    </DialogActions>
+  </Dialog>
+);

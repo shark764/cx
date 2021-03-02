@@ -36,7 +36,9 @@ export default function InputSlider() {
 
   return (
     <div className={classes.root}>
-      <Typography id="input-slider" gutterBottom>Shrinkage</Typography>
+      <Typography id="input-slider" gutterBottom>
+        Shrinkage
+      </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
           <Slider

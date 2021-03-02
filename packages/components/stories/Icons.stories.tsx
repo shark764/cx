@@ -10,6 +10,7 @@ import { QuestionMark } from '../Icons/QuestionMark';
 import { WarningIcon } from '../Icons/WarningIcon';
 import { Next } from '../Icons/Next';
 import { FastForward } from '../Icons/FastForward';
+import { Info } from '../Icons/Info';
 
 export default {
   title: 'Example/Icons',
@@ -80,6 +81,14 @@ NextIcon.args = {
 };
 
 export const FastForwardIcon: Story<IIcon> = (args) => <FastForward {...args} />;
+NextIcon.bind({});
+NextIcon.args = {
+  size: 100,
+  fill: '#07487a',
+  disabled: false,
+};
+
+export const InfoIcon: Story<IIcon> = (args) => <Info {...args} />;
 NextIcon.bind({});
 NextIcon.args = {
   size: 100,
