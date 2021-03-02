@@ -63,3 +63,7 @@ export interface IPagination {
   previousPage(): void;
   setPageSize(arg: number): void;
 }
+
+export interface IExpander {
+  isExpanded: boolean;
+}

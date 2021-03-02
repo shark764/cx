@@ -1,90 +1,33 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { useQuery } from 'react-query';
-import { Message } from '@cx/components/Message';
-import { TableContainer, DataTable } from '@cx/components/DataTable';
 
-import { Wrapper } from '@cx/components/Styled';
-import { getAvailabilities } from '@cx/fakedata/planningEmployeesAvailabilities';
+import { FormDataProvider, useFormState } from 'context/RowSelection';
+import { Form } from './Form';
+import { List } from './List';
 
-const Container = styled.div`
+const FullWrapper = styled.div`
   display: grid;
-  grid-auto-columns: 1fr 2fr 2fr;
+  grid-auto-columns: 1fr 1fr;
   gap: 15px;
 `;
 
-const ListWrapper = styled(Wrapper)`
-  grid-column: 1;
-`;
-const TimeTableWrapper = styled(Wrapper)`
-  grid-column: 2;
-`;
-const FormWrapper = styled(Wrapper)`
-  grid-column: 3;
-`;
-
-export function Availabilities() {
-  const [open, setOpen] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-
-  const { data, isLoading, error } = useQuery(
-    'fetchAvailabilities',
-    async () => getAvailabilities()
-      .then((result: any) => result.data)
-      .catch((err: Error) => {
-        console.error(err);
-        throw err;
-      }),
-    {
-      refetchInterval: 30000,
-    },
-  );
-
-  const columns = React.useMemo(
-    () => [
-      { Header: 'Agent', accessor: 'agent' },
-      { Header: 'Agreed Hours', accessor: 'agreedHours' },
-    ],
-    [],
-  );
-
-  const memoData = React.useMemo(() => {
-    if (isLoading && !data) {
-      return [];
-    }
-    return data;
-  }, [isLoading, data]);
-
-  if (error) {
-    return <Message text="error" messageType="error" />;
-  }
+function Container() {
+  const {
+    open: [open],
+  }: any = useFormState();
 
   return (
-    <Container>
-      <button type="button" onClick={() => setOpen((isOpen: boolean) => !isOpen)}>
-        Open
-      </button>
-      <button type="button" onClick={() => setOpen2((isOpen: boolean) => !isOpen)}>
-        Open 2
-      </button>
+    <FullWrapper>
+      <List />
+      {open && <Form />}
+    </FullWrapper>
+  );
+}
 
-      <ListWrapper>
-        <TableContainer>
-          <DataTable columns={columns} data={memoData} loading={isLoading} />
-        </TableContainer>
-      </ListWrapper>
-
-      {open && (
-        <TimeTableWrapper>
-          <span>TimeTable</span>
-        </TimeTableWrapper>
-      )}
-
-      {open2 && (
-        <FormWrapper>
-          <span>Form</span>
-        </FormWrapper>
-      )}
-    </Container>
+export function Availabilities() {
+  return (
+    <FormDataProvider>
+      <Container />
+    </FormDataProvider>
   );
 }

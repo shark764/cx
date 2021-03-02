@@ -11,7 +11,7 @@ export interface IField {
 }
 
 export interface IFormField {
-  label: string;
+  label?: string;
   align?: string;
   children: React.ReactNode;
 }
@@ -34,4 +34,18 @@ export interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   secondary?: boolean;
   color?: string;
   bgColor?: string;
+}
+
+export interface IFormContext {
+  open: [boolean, (isOpen: boolean) => void];
+  setFormState: (data: any, isOpen: boolean) => void;
+  isFormSubmitting: [boolean, (arg: boolean) => void];
+  onCancel(): void;
+}
+export interface ISingleRowFormContext extends IFormContext {
+  selectedRow: [any, (row: any) => void];
+}
+
+export interface IMultipleRowFormContext extends IFormContext {
+  selectedRows: [any[], (rows: any[]) => void];
 }

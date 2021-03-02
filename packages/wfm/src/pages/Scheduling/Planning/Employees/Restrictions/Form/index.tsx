@@ -93,7 +93,7 @@ export function Form() {
     mutation.mutate({ ids, payload });
   };
 
-  const onCancel = () => setFormState([], undefined);
+  const onCancel = () => setFormState([], false);
 
   const formHeader = React.useMemo(() => {
     if (selected.length > 0) {

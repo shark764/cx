@@ -26,8 +26,22 @@ const AButton = styled(Button)`
 const FormTableContainer = styled(TableContainer)`
   padding: 0 0.5rem;
   .table {
+    border: 1px solid #80808096;
+    border-radius: 5px;
+    .row {
+      &:last-child {
+        .cell {
+          border-bottom: none;
+        }
+      }
+    }
     .header {
-      margin-bottom: 10px;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+    .cell {
+      border-bottom: 1px solid #80808096;
+      text-align: center;
     }
   }
 `;
@@ -67,12 +81,11 @@ export function FormLayout({
           <Controller
             control={control}
             name="validFrom"
-            render={(props) => (
+            render={({ onChange, onBlur, value }) => (
               <DatePicker
-                onChange={props.onChange}
-                onBlur={props.onBlur}
-                selected={props.value}
-                className="input"
+                onChange={onChange}
+                onBlur={onBlur}
+                selected={value}
                 isClearable
                 calendarBtn
                 disabled={isFormSubmitting}
@@ -84,12 +97,11 @@ export function FormLayout({
           <Controller
             control={control}
             name="validTo"
-            render={(props) => (
+            render={({ onChange, onBlur, value }) => (
               <DatePicker
-                onChange={props.onChange}
-                onBlur={props.onBlur}
-                selected={props.value}
-                className="input"
+                onChange={onChange}
+                onBlur={onBlur}
+                selected={value}
                 isClearable
                 calendarBtn
                 disabled={isFormSubmitting}
@@ -131,12 +143,11 @@ export function FormLayout({
           <Controller
             control={control}
             name="employmentDate"
-            render={(props) => (
+            render={({ onChange, onBlur, value }) => (
               <DatePicker
-                onChange={props.onChange}
-                onBlur={props.onBlur}
-                selected={props.value}
-                className="input"
+                onChange={onChange}
+                onBlur={onBlur}
+                selected={value}
                 isClearable
                 calendarBtn
                 disabled={isFormSubmitting}
@@ -153,7 +164,6 @@ export function FormLayout({
                 onChange={onChange}
                 onBlur={onBlur}
                 selected={value}
-                className="input"
                 isClearable
                 calendarBtn
                 disabled={isFormSubmitting}

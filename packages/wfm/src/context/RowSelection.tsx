@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Props } from '@cx/types';
+import { ISingleRowFormContext } from '@cx/types/form';
 
 // @ts-ignore
 export const FormDataContext = React.createContext();
@@ -16,6 +17,8 @@ export function FormDataProvider({ children }: Props) {
     setOpen(isOpen);
   };
 
+  const onCancel = () => setFormState({}, false);
+
   return (
     <FormDataContext.Provider
       value={{
@@ -23,6 +26,7 @@ export function FormDataProvider({ children }: Props) {
         open,
         setFormState,
         isFormSubmitting,
+        onCancel,
       }}
     >
       {children}
@@ -30,10 +34,11 @@ export function FormDataProvider({ children }: Props) {
   );
 }
 
-export function useFormState() {
+export function useFormState(): ISingleRowFormContext {
   const context = React.useContext(FormDataContext);
   if (context === undefined) {
     throw new Error('useFormState must be used within a FormDataProvider');
   }
+  // @ts-ignore
   return context;
 }

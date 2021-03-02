@@ -44,13 +44,11 @@ const DatePickerContainer = styled.div`
 const PlayIcon = styled(Play)`
   margin: auto;
   line-height: normal;
-  cursor: pointer;
 `;
 const CalendarIcon = styled(Calendar)`
   margin: auto;
   line-height: normal;
   margin-left: 0.5rem;
-  cursor: pointer;
 `;
 const DefaultRestrictionRow = styled.span`
   font-weight: bolder;

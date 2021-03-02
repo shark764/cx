@@ -7,8 +7,8 @@ import { TableContainer, DataTable } from '@cx/components/DataTable';
 
 import { Title, Wrapper } from '@cx/components/Styled';
 import { getAgents } from '@cx/fakedata/planningEmployeesAgents';
-import { IQuery } from '@cx/types';
 import { useFormState } from 'context/RowSelection';
+import { ISingleRowFormContext } from '@cx/types/form';
 
 const ListWrapper = styled(Wrapper)`
   grid-column: 1;
@@ -18,20 +18,9 @@ export function List() {
   const {
     selectedRow: [selected],
     setFormState,
-  }: any = useFormState();
+  }: ISingleRowFormContext = useFormState();
 
-  const { data, isLoading, error }: IQuery = useQuery(
-    'fetchAgents',
-    async () => getAgents()
-      .then((result: any) => result.data)
-      .catch((err: Error) => {
-        console.error(err);
-        throw err;
-      }),
-    {
-      refetchInterval: 30000,
-    },
-  );
+  const { data, isLoading, error } = useQuery<any, Error>('fetchAgents', getAgents);
 
   const columns = React.useMemo(
     () => [
@@ -62,12 +51,7 @@ export function List() {
     [selected],
   );
 
-  const memoData = React.useMemo(() => {
-    if (isLoading && !data) {
-      return [];
-    }
-    return data;
-  }, [isLoading, data]);
+  const memoData = React.useMemo(() => data || [], [data]);
 
   const onTableRowSelection = ({ original }: any) => {
     setFormState(original, true);
