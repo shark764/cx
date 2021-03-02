@@ -1,4 +1,5 @@
 import * as faker from 'faker';
+import { IPayload } from '@cx/types/api';
 
 export const agentInformation = (index: number) => ({
   id: faker.random.uuid(),
@@ -354,4 +355,28 @@ export const getAgentOrganizationHistory = (agentId: string) => new Promise((res
   // }
 
   return setTimeout(() => resolve({ data: agentOrganizationHistory }), 1000);
+});
+
+export const updateAgent = async ({ id, payload }: IPayload) => new Promise((resolve, reject) => {
+  const index = allAgentsInformation.findIndex((a) => a.id === id);
+
+  if (index === -1) {
+    return setTimeout(() => reject(new Error('Agent not found')), 1000);
+  }
+
+  const { validFrom, validTo, ...values } = payload;
+  const result = { ...allAgentsInformation[index], ...values };
+  allAgentsInformation[index] = result;
+
+  if (validFrom && validTo) {
+    allOrganization.push({
+      id: faker.random.uuid(),
+      agentId: id,
+      team: result.team,
+      validFrom,
+      validTo,
+    });
+  }
+
+  return setTimeout(() => resolve({ status: 200, data: result, message: 'Updated successfully' }), 2000);
 });

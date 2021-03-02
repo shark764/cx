@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { FormDataProvider, useFormState } from 'context/RowSelection';
 import { Form } from './Form';
 import { List } from './List';
-import { FormDataProvider, useFormState } from './context';
 
 const FullWrapper = styled.div`
   display: grid;

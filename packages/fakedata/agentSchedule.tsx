@@ -472,7 +472,7 @@ export const getSchedule = () => new Promise((resolve, reject) => {
  * @param {String} fromDate
  * @param {String} toDate
  */
-export const getAgentSchedule = (id: string | number, fromDate: string, toDate: string) => new Promise((resolve, reject) => {
+export const getAgentSchedule = (id: string | number, fromDate: string, toDate: string) => new Promise((resolve) => {
   const from = DateTime.fromISO(fromDate).toMillis();
   const to = DateTime.fromISO(toDate).toMillis();
 

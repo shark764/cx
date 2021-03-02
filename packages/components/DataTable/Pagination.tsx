@@ -1,10 +1,43 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { IPagination } from '@cx/types/table';
+import { TextBox } from '../Inputs/TextBox';
+import { Button } from '../Inputs/Button';
+import { Select } from '../Inputs/Select';
+import { FastForward } from '../Icons/FastForward';
+import { Next } from '../Icons/Next';
+import { Divider } from '../Divider';
 
-const Input = styled.input`
+const Button2 = styled(Button)`
+  padding: 10px 15px;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.colors['accent-3']};
+  background-color: ${({ theme }) => theme.colors['accent-1']};
+  border-color: ${({ theme }) => theme.colors['accent-1']};
+`;
+const TextBox2 = styled(TextBox)`
   width: 100px;
+  display: inline-block;
+`;
+const Select2 = styled(Select)`
+  width: auto;
+  display: inline-block;
+`;
+
+const FastForward2 = styled(FastForward)`
+  transform: rotate(180deg);
+`;
+const Next2 = styled(Next)`
+  transform: rotate(180deg);
+`;
+const Divider2 = styled(Divider)`
+  border-left: 1px solid;
+  border-color: ${({ theme }) => theme.colors.secondary};
+  border-radius: 0;
+  display: inline-block;
+  line-height: normal;
+  vertical-align: middle;
 `;
 
 export function Pagination({
@@ -19,23 +52,25 @@ export function Pagination({
   state: { pageIndex, pageSize },
   pageSizeOptions,
 }: IPagination) {
+  const theme: any = useTheme();
+
   return (
     <div className="pagination">
-      <button type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-        {'<<'}
-      </button>
+      <Button2 type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+        <FastForward2 size={10} fill={theme.colors['accent-3']} />
+      </Button2>
       {' '}
-      <button type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
-        {'<'}
-      </button>
+      <Button2 type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <Next2 size={10} fill={theme.colors['accent-3']} />
+      </Button2>
       {' '}
-      <button type="button" onClick={() => nextPage()} disabled={!canNextPage}>
-        {'>'}
-      </button>
+      <Button2 type="button" onClick={() => nextPage()} disabled={!canNextPage}>
+        <Next size={10} fill={theme.colors['accent-3']} />
+      </Button2>
       {' '}
-      <button type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-        {'>>'}
-      </button>
+      <Button2 type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <FastForward size={10} fill={theme.colors['accent-3']} />
+      </Button2>
       {' '}
       <span>
         Page
@@ -48,9 +83,11 @@ export function Pagination({
         {' '}
       </span>
       <span>
-        | Go to page:
+        <Divider2 direction="vertical" size={25} />
         {' '}
-        <Input
+        Go to page:
+        {' '}
+        <TextBox2
           type="number"
           defaultValue={pageIndex + 1}
           onChange={(e) => {
@@ -60,7 +97,7 @@ export function Pagination({
         />
       </span>
       {' '}
-      <select
+      <Select2
         name="page-size"
         title="Page size options"
         value={pageSize}
@@ -75,7 +112,7 @@ export function Pagination({
             {optPageSize}
           </option>
         ))}
-      </select>
+      </Select2>
     </div>
   );
 }

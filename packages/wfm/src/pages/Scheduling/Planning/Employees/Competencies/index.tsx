@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
@@ -28,6 +28,7 @@ const FormWrapper = styled(Wrapper)`
 `;
 
 export function Competencies() {
+  const theme: any = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const { data, isLoading, error } = useQuery(
@@ -54,19 +55,19 @@ export function Competencies() {
       {
         Header: 'Admin',
         accessor: 'admin',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} primary /> : ''),
+        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
       },
       {
         Header: 'Back Office',
         accessor: 'backOffice',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} primary /> : ''),
+        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
       },
       {
         Header: 'Team Leader',
         accessor: 'teamLeader',
         Cell: ({ row, value }: any) => {
-          const checkMark = value ? <CheckMark size={15} primary /> : null;
-          const dotMark = row.original.teamLeaderFutureChange ? <Dot size={15} primary /> : null;
+          const checkMark = value ? <CheckMark size={15} fill={theme.colors.primary} /> : null;
+          const dotMark = row.original.teamLeaderFutureChange ? <Dot size={15} fill={theme.colors.primary} /> : null;
           return (
             <TeamLeaderCell>
               {checkMark}
@@ -86,7 +87,7 @@ export function Competencies() {
         .map((k) => ({
           Header: humanizeQueue(k),
           accessor: k,
-          Cell: ({ value }: any) => (value ? <CheckMark size={15} primary /> : ''),
+          Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
         }));
 
       return [...staticColumns, ...dynamicColumns];

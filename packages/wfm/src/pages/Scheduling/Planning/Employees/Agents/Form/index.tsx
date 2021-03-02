@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { Wrapper } from '@cx/components/Styled';
 import { DateTime } from 'luxon';
-import { getAgentOrganizationHistory, getTeams, getTimezones } from '@cx/fakedata/planningEmployeesAgents';
-import { useFormState } from '../context';
+import {
+  getAgentOrganizationHistory, getTeams, getTimezones, updateAgent,
+} from '@cx/fakedata/planningEmployeesAgents';
+import { log } from '@cx/utilities';
+import { IOption } from '@cx/types/form';
+import { useFormState } from 'context/RowSelection';
 import { FormLayout } from './layout';
 
 const FormWrapper = styled(Wrapper)`
@@ -22,8 +26,9 @@ const initialValues = {
 
 export function Form() {
   const {
-    selectedRow: [selected],
+    selectedRow: [selected, setSelected],
     setFormState,
+    isFormSubmitting: [isFormSubmitting, setIsFormSubmitting],
   }: any = useFormState();
 
   const { id } = selected;
@@ -96,9 +101,59 @@ export function Form() {
     return teamsQuery.data.map((tz: any) => ({ value: tz.id, label: tz.label }));
   }, [teamsQuery.isLoading, teamsQuery.data]);
 
-  const defaultValues = React.useMemo(() => ({ ...initialValues, ...selected }), [selected]);
+  const queryClient = useQueryClient();
 
-  const onSubmit = (data: any) => console.log('submitted', data);
+  /**
+   * TODO:
+   * Probably we well need two calls, one for the form,
+   * one to add a row in organization history
+   */
+  const mutation = useMutation(updateAgent, {
+    onSuccess(response: any) {
+      log('success', response.message, response.data);
+      queryClient.invalidateQueries('fetchAgents');
+      queryClient.invalidateQueries('fetchAgentOrganizationHistory');
+
+      const updatedData = {
+        ...selected,
+        ...response.data,
+        validFrom: '',
+        validTo: '',
+      };
+      setSelected(updatedData);
+    },
+    onError(err) {
+      console.error(err);
+      throw err;
+    },
+    onSettled() {
+      setIsFormSubmitting(false);
+    },
+  });
+
+  const defaultValues = React.useMemo(
+    () => ({
+      ...initialValues,
+      ...selected,
+      team: memoTeams.find((team: IOption) => team.value === selected.team) || '',
+      timezone: memoTimezones.find((timezone: IOption) => timezone.value === selected.timezone) || '',
+    }),
+    [memoTeams, memoTimezones, selected],
+  );
+
+  const onSubmit = async (data: any) => {
+    console.log('values submitted', data);
+
+    const payload = {
+      ...data,
+      team: data.team.value,
+      timezone: data.timezone.value,
+    };
+
+    setIsFormSubmitting(true);
+
+    mutation.mutate({ id, payload });
+  };
 
   const onCancel = () => setFormState({}, undefined);
 
@@ -110,13 +165,12 @@ export function Form() {
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         timezones={memoTimezones}
-        timezonesLoading={timezonesQuery.isLoading}
         teams={memoTeams}
-        teamsLoading={teamsQuery.isLoading}
         organizationHistoryColumns={organizationHistoryColumns}
         organizationHistoryData={memoOrganizationHistory}
         organizationHistoryLoading={organizationHistoryQuery.isLoading}
         onCancel={onCancel}
+        isFormSubmitting={isFormSubmitting}
         key={defaultValues.id || 'register-new'}
       />
     </FormWrapper>

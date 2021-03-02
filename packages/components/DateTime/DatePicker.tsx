@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore
 import ReactDatePicker from 'react-datepicker';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { IDatePickerContainer } from '@cx/types/time';
@@ -80,7 +80,7 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
   }
 
   .react-datepicker__close-icon::after {
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.secondary};
   }
 
   .react-datepicker__day--keyboard-selected,
@@ -102,8 +102,8 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
   ${({ calendarBtn }) => calendarBtn
     && css`
       display: grid;
-      grid-auto-columns: auto 1px 35px;
-      gap: 2px;
+      grid-auto-columns: auto 1px 25px;
+      gap: 3px;
 
       .react-datepicker-wrapper {
         grid-column: 1;
@@ -114,9 +114,14 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
       }
     `};
 `;
+const CalendarIcon = styled(Calendar)`
+  margin: auto;
+  line-height: normal;
+`;
 
 export function DatePicker({ calendarBtn = false, ...rest }: any) {
   const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
+  const theme: any = useTheme();
 
   return (
     <DatePickerContainer calendarBtn={calendarBtn}>
@@ -132,11 +137,10 @@ export function DatePicker({ calendarBtn = false, ...rest }: any) {
         {...rest}
       />
       {calendarBtn && (
-        <Calendar
-          secondary
+        <CalendarIcon
+          fill={theme.colors.secondary}
           onClick={() => setDatePickerIsOpen(true)}
           title="Open calendar"
-          size={35}
           className="react-datepicker__calendar-icon-trigger"
         />
       )}

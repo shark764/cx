@@ -117,7 +117,7 @@ export function PageSideBar() {
     ],
   };
   const route: string = useLocation().pathname.split('/')?.[1];
-  const links = route ? linkMap[route] : [];
+  const links = route && linkMap[route] ? linkMap[route] : [];
 
   const classes = useStyles();
   const theme = useTheme();

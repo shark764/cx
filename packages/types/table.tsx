@@ -33,6 +33,8 @@ export interface ITable {
   data: ITableData[];
   showPagination?: boolean;
   PaginationComponent?: typeof Pagination;
+  pageIndex?: number;
+  pageSize?: number;
   pageSizeOptions?: Array<number>;
   loading?: boolean;
   noDataText?: string;
@@ -49,10 +51,7 @@ export interface ITableContainer {
 export interface IPagination {
   canPreviousPage: boolean;
   canNextPage: boolean;
-  state: {
-    pageIndex: number;
-    pageSize: number;
-  };
+  state: any;
   pageCount: number;
   pageOptions: Array<number>;
   pageSizeOptions: Array<number>;

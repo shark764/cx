@@ -2,6 +2,7 @@ export interface IForm {
   onSubmit(arg: any): any;
   onCancel?(): void;
   defaultValues: any;
+  isFormSubmitting?: boolean;
 }
 
 export interface IField {

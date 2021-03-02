@@ -55,13 +55,14 @@ export function DataTable({
   data,
   showPagination = false,
   PaginationComponent = Pagination,
+  pageIndex = 0,
+  pageSize = 20,
   pageSizeOptions = [5, 10, 20, 30, 40, 50, 100],
   loading = false,
   noDataText = 'No records found',
   oneRowSelectable = false,
   multipleRowSelectable = false,
   onTableRowSelection,
-  onToggleAllRowsSelected,
 }: ITable) {
   const defaultColumn = React.useMemo(
     () => ({
@@ -107,7 +108,7 @@ export function DataTable({
     // @ts-ignore
     selectedFlatRows,
     // @ts-ignore
-    state: { pageIndex, pageSize, selectedRowIds },
+    state,
     // @ts-ignore
     toggleAllRowsSelected,
     // @ts-ignore
@@ -122,7 +123,7 @@ export function DataTable({
       filterTypes,
       autoResetSelectedRows: false,
       // @ts-ignore
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex, pageSize },
     },
     useGridLayout,
     useFilters,
@@ -230,7 +231,7 @@ export function DataTable({
     previousPage,
     setPageSize,
     selectedFlatRows,
-    state: { pageIndex, pageSize, selectedRowIds },
+    state,
   };
 
   const trData = showPagination ? page : rows;

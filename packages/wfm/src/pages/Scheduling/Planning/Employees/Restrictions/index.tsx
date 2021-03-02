@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
@@ -28,6 +28,7 @@ const FormWrapper = styled(Wrapper)`
 `;
 
 export function Restrictions() {
+  const theme: any = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const { data, isLoading, error } = useQuery(
@@ -49,7 +50,7 @@ export function Restrictions() {
       {
         Header: 'Default Restriction Set',
         accessor: 'defaultSet',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} primary /> : ''),
+        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
       },
       { Header: 'Agreed Hours Per Week', accessor: 'agreedHours' },
       { Header: 'Min Hours Per Week', accessor: 'minHours' },
@@ -59,7 +60,7 @@ export function Restrictions() {
         Header: 'Max Shifts Per Week',
         accessor: 'maxShift',
         Cell: ({ row, value }: any) => {
-          const dotMark = row.original.maxShiftFutureChange ? <Dot size={15} primary /> : null;
+          const dotMark = row.original.maxShiftFutureChange ? <Dot size={15} fill={theme.colors.primary} /> : null;
           return (
             <TeamLeaderCell>
               {value}

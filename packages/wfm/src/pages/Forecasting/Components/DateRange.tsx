@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
@@ -93,6 +93,7 @@ export function DateRangeComponent({ setForecastCreateDeletePane, paneHeader, is
     const TextFieldClass = {
         root: TextFieldClasses.root,
     };
+    const theme: any = useTheme();
 
     const [fromDate, setFromDate] = useState(new Date());
     const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
@@ -109,7 +110,7 @@ export function DateRangeComponent({ setForecastCreateDeletePane, paneHeader, is
         <>
             <HeadingWrapper>
                 <PaneHeader>{paneHeader}</PaneHeader>
-                <CloseIcon size={15} closeIconType="secondary" onClick={() => setForecastCreateDeletePane(false)} />
+                <CloseIcon size={15} fill={theme.colors.secondary} onClick={() => setForecastCreateDeletePane(false)} />
             </HeadingWrapper>
             <Wrapper className="date-range-wrapper">
                 <SettingHeader>DATE RANGE</SettingHeader>
@@ -126,7 +127,7 @@ export function DateRangeComponent({ setForecastCreateDeletePane, paneHeader, is
                         />
                         <Divider direction="vertical" secondary size={30} />
                         <Calendar
-                            secondary
+                            fill={theme.colors.secondary}
                             size={17}
                             onClick={() => setIsFromDatePickerOpen(true)}
                         />
@@ -150,7 +151,7 @@ export function DateRangeComponent({ setForecastCreateDeletePane, paneHeader, is
                         />
                         <Divider direction="vertical" secondary size={30} />
                         <Calendar
-                            secondary
+                            fill={theme.colors.secondary}
                             size={17}
                             onClick={() => setIsToDatePickerOpen(true)}
                         />

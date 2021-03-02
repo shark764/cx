@@ -15,11 +15,13 @@ export const isSameDay = (date1: Date, date2: Date) => date1.getDate() === date2
   && date1.getMonth() === date2.getMonth()
   && date1.getFullYear() === date2.getFullYear();
 
-export const disableDays = (date: Date, disableDays?: string) => {
-    const day = date.getDay();
-    if (disableDays === 'disableWeekends') {
-      return day !== 0 && day !== 6;
-    } else if (disableDays === 'onlyEnableMonday') {
-      return day === 1;
-    }
-  };
+export const disableDays = (date: Date, daysToDisable?: string) => {
+  const day = date.getDay();
+  if (daysToDisable === 'disableWeekends') {
+    return day !== 0 && day !== 6;
+  }
+  if (daysToDisable === 'onlyEnableMonday') {
+    return day === 1;
+  }
+  return true;
+};
