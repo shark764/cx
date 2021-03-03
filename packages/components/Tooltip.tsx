@@ -104,7 +104,7 @@ interface ITooltip {
 export function Tooltip({
   children, content, delay = 400, direction = 'right', trigger = 'click',
 }: ITooltip) {
-  let timeout: any;
+  let timeout: NodeJS.Timeout;
   const [active, setActive] = React.useState(false);
 
   const showTip = () => {
@@ -137,7 +137,6 @@ export function Tooltip({
   };
   if (trigger === 'hover') {
     ttProps = {
-      // @ts-ignore
       onMouseEnter: showTip,
       onMouseLeave: hideTip,
     };
@@ -146,7 +145,6 @@ export function Tooltip({
   return (
     <TooltipWrapper
       role="button"
-      // @ts-ignore
       tabIndex="0"
       onKeyDown={handleKeyDown}
     >

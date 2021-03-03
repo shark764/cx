@@ -40,7 +40,7 @@ export interface Data {
 
 export interface ChartProps {
   data: Data[];
-  onClick?: Function;
+  onClick?: () => void;
   dataKeys: Array<string>;
   xDataKey?: string;
   statName?: string;
@@ -67,7 +67,7 @@ export function BarChart({
   containerWidth = '90%',
   containerHeight = 300,
 }: ChartProps) {
-  
+
   const fillColors = ['#07487a', 'orange', 'green'];
   const renderColorfulLegendText = (value: string) => {
     return <CustomLegend>{value && value.toUpperCase()}</CustomLegend>

@@ -44,8 +44,8 @@ export interface DataKeys {
 
 export interface ChartProps {
     data: Data[];
-    onClick?: Function;
-    dataKeys: Array<object>;
+    onClick?: () => void;
+    dataKeys: Array<any>;
     xDataKey?: string;
     statName?: string;
     chartName?: string;

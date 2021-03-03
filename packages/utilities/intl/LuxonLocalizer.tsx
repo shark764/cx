@@ -1,6 +1,4 @@
-// @ts-ignore
 import * as dates from 'react-big-calendar/lib/utils/dates';
-// @ts-ignore
 import { DateLocalizer } from 'react-big-calendar/lib/localizer';
 
 const dateRangeFormat = ({ start, end }: any, culture: any, local: any) => `${local.format(start, 'D', culture)} — ${local.format(end, 'D', culture)}`;

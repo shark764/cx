@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore
 import ReactDatePicker from 'react-datepicker';
 import styled, { css, useTheme } from 'styled-components';
 

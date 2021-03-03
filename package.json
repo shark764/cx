@@ -11,10 +11,34 @@
     "storybook": "cd packages/components && yarn storybook",
     "test:all": "lerna run test",
     "new-version": "lerna version --conventional-commits --yes",
-    "diff": "lerna diff"
+    "diff": "lerna diff",
+    "lint": "eslint '*/**/*.{ts,tsx}' --quiet --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint",
+      "...": "..."
+    }
   },
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-import-resolver-webpack": "^0.13.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-redux-saga": "^1.2.1",
+    "lerna": "^3.22.1",
+    "prettier": "^2.2.1",
+    "husky": "4"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }

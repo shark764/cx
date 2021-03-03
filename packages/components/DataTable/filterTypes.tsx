@@ -1,7 +1,6 @@
 import { matchSorter } from 'match-sorter';
 
 function fuzzyText(rows: any, id: any, filterValue: any) {
-  // @ts-ignore
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 }
 // Let the table remove the filter if the string is empty
