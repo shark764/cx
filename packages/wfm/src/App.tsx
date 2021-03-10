@@ -18,7 +18,7 @@ const Content = styled.section`
 export function App() {
   return (
     <>
-      <PageHeader />
+      { window.parent === window? <PageHeader /> : <></>}
 
       <PageSideBar />
 

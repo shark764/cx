@@ -32,3 +32,55 @@ export const daySegment = () => {
 const randomStartHour = () => randomUniform(0, 16)() * 3600;
 
 export const agentShedules = new Array(17).fill({}).map(() => agentSchedule());
+
+
+export const calcScheduledActivities = (startTime: number): any[] => [
+  // Basic 8 hour shift example (and 1 hour for lunch)  , 7 activites, 2 15 min breaks
+  {
+    startTime: startTime + 0,
+    endTime: startTime + 6750,
+    title: 'Agent Online 1', // title|name and color not included will need to be mapped in later
+    color: 'rgb(20, 119, 141)',
+  },
+  {
+    startTime: startTime + 6750,
+    endTime: startTime + 6750 + 900,
+    title: 'Break 1',
+    color: '#ffffff96',
+  },
+  {
+    startTime: startTime + 6750 + 900,
+    endTime: startTime + 6750 + 900 + 6750,
+    title: 'Agent Online 2',
+    color: 'rgb(20, 119, 141)',
+  },
+  {
+    startTime: startTime + 6750 + 900 + 6750,
+    endTime: startTime + 6750 + 900 + 6750 + 3600,
+    title: 'Lunch',
+    color: '#ffffff96',
+  },
+  {
+    startTime: startTime + 6750 + 900 + 6750 + 3600,
+    endTime: startTime + 6750 + 900 + 6750 + 3600 + 6750,
+    title: 'Agent Online 3',
+    color: 'rgb(20, 119, 141)',
+  },
+  {
+    startTime: startTime + 6750 + 900 + 6750 + 3600 + 6750,
+    endTime: startTime + 6750 + 900 + 6750 + 3600 + 6750 + 900,
+    title: 'Break 2',
+    color: '#ffffff96',
+  },
+  {
+    startTime: startTime + 6750 + 900 + 6750 + 3600 + 6750 + 900,
+    endTime: startTime + 6750 + 900 + 6750 + 3600 + 6750 + 900 + 6750,
+    title: 'Agent Online 4',
+    color: 'rgb(20, 119, 141)',
+  },
+];
+
+const start = Date.now() / 1000;
+
+export const scheduledActivities = calcScheduledActivities(start);
+

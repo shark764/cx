@@ -9,7 +9,9 @@
     "@storybook/addon-links": "^6.1.20",
     "@storybook/react": "^6.1.20"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@cx/utilities": "1.0.0"
+  },
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
