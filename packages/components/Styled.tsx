@@ -6,3 +6,17 @@ export const Wrapper = styled.div`
   padding: 20px;
   background: white;
 `;
+
+export const Title = styled.h4`
+  color: grey;
+  font-style: italic;
+  margin-top: 0px;
+  margin-left: 10px;
+`;
+
+export const Label = styled.span`
+  font-size: 12px;
+  color: grey;
+  vertical-align: super;
+  margin-left: 1rem;
+`;

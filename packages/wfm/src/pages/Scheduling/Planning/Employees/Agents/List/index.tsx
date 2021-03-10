@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
 
-import { Wrapper } from '@cx/components/Styled';
+import { Title, Wrapper } from '@cx/components/Styled';
 import { getAgents } from '@cx/fakedata/planningEmployeesAgents';
 import { IQuery } from '@cx/types';
 import { useFormState } from 'context/RowSelection';
@@ -79,6 +79,7 @@ export function List() {
 
   return (
     <ListWrapper>
+      <Title>Agents Information</Title>
       <TableContainer>
         <DataTable
           columns={columns}

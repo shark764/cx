@@ -143,11 +143,7 @@ export function Tooltip({
   }
 
   return (
-    <TooltipWrapper
-      role="button"
-      tabIndex="0"
-      onKeyDown={handleKeyDown}
-    >
+    <TooltipWrapper role="button" tabIndex="0" onKeyDown={handleKeyDown}>
       <TooltipRef {...ttProps}>{children}</TooltipRef>
       {active && <TooltipTip direction={direction}>{content}</TooltipTip>}
     </TooltipWrapper>

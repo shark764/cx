@@ -11,6 +11,7 @@ import { WarningIcon } from '../Icons/WarningIcon';
 import { Next } from '../Icons/Next';
 import { FastForward } from '../Icons/FastForward';
 import { Info } from '../Icons/Info';
+import { Chevron } from '../Icons/Chevron';
 
 export default {
   title: 'Example/Icons',
@@ -89,6 +90,14 @@ NextIcon.args = {
 };
 
 export const InfoIcon: Story<IIcon> = (args) => <Info {...args} />;
+NextIcon.bind({});
+NextIcon.args = {
+  size: 100,
+  fill: '#07487a',
+  disabled: false,
+};
+
+export const ChevronIcon: Story<IIcon> = (args) => <Chevron {...args} />;
 NextIcon.bind({});
 NextIcon.args = {
   size: 100,

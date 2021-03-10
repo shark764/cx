@@ -116,6 +116,7 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
 const CalendarIcon = styled(Calendar)`
   margin: auto;
   line-height: normal;
+  cursor: pointer;
 `;
 
 export function DatePicker({ calendarBtn = false, ...rest }: any) {

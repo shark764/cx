@@ -8,6 +8,12 @@ const StyledButton = styled.button<IButton>`
   border-radius: 16px;
   color: ${({ color }) => color || 'initial'};
 
+  ${({ disabled }) => disabled
+    && css`
+      cursor: not-allowed;
+      opacity: 0.5;
+    `}
+
   &:focus,
   &:hover,
   &:visited,

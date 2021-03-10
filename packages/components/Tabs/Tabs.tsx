@@ -14,7 +14,9 @@ export interface ITab extends IButton {
 }
 
 const TabList = styled(Wrapper)`
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  border: 0;
+  background-color: transparent;
 `;
 
 const TabItem = styled(Button)<ITab>`
@@ -26,7 +28,7 @@ const TabItem = styled(Button)<ITab>`
   border: none;
   outline: none;
   transition: all ease-in-out 0.2s;
-  border-radius: 8px;
+  border-radius: 4px;
 
   ${({
     active, bgColor, primary, secondary, theme,

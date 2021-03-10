@@ -46,39 +46,44 @@ const luxonLocalizer = LuxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 export interface CalendarWeekHeader {
   date: Date;
   localizer: {
-    format: (date: Date, format: string) => React.ReactNode
-  }
-};
+    format: (date: Date, format: string) => React.ReactNode;
+  };
+}
 
 export const calendarWeekHeader: React.VFC<CalendarWeekHeader> = ({ date, localizer }) => (
   <WeekHeader>
-    <span>{ localizer.format(date, 'cccc') }</span>
-    <span>{ localizer.format(date, 'dd-MMM') }</span>
+    <span>{localizer.format(date, 'cccc')}</span>
+    <span>{localizer.format(date, 'dd-MMM')}</span>
   </WeekHeader>
 );
 
 export const BigCalendar: React.VFC<IBigCalendar> = ({
-  height, width, className, components = {}, formats = {}, ...rest
+  height,
+  width,
+  className,
+  components = {},
+  formats = {},
+  ...rest
 }) => {
-
-  const calendarComponents = deepMerge({
-    week: {
-      header: calendarWeekHeader
+  const calendarComponents = deepMerge(
+    {
+      week: {
+        header: calendarWeekHeader,
+      },
     },
-  }, components);
+    components,
+  );
 
-  const calendarFormats = deepMerge({
-    weekdayFormat: 'cccc',
-  }, formats);
+  const calendarFormats = deepMerge(
+    {
+      weekdayFormat: 'cccc',
+    },
+    formats,
+  );
 
   return (
     <CalendarContainer className={className} height={height} width={width}>
-      <Calendar
-        localizer={luxonLocalizer}
-        formats={calendarFormats}
-        components={calendarComponents}
-        {...rest}
-      />
+      <Calendar localizer={luxonLocalizer} formats={calendarFormats} components={calendarComponents} {...rest} />
     </CalendarContainer>
   );
-}
+};

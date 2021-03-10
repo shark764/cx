@@ -2,13 +2,15 @@ import * as React from 'react';
 import { Pagination } from '@cx/components/DataTable/Pagination';
 
 export interface IColumnData {
+  id?: string;
   Header: string | React.ReactNode;
-  accessor: string;
+  accessor?: string | undefined;
   Cell?: any;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
   columnWidth?: number;
+  SubCell?: any;
 }
 
 export interface ITableData {

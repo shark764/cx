@@ -6,6 +6,7 @@ import {
   useTable,
   useFilters,
   useRowSelect,
+  useExpanded,
 } from 'react-table';
 import styled from 'styled-components';
 import { ITable } from '@cx/types/table';
@@ -125,12 +126,13 @@ export function DataTable({
       // @ts-ignore
       initialState: { pageIndex, pageSize },
     },
+    useExpanded,
     useGridLayout,
     useFilters,
     usePagination,
     useRowSelect,
-    (hooks) => {
-      hooks.getTableProps.push((props, _ref) => {
+    (hooks: any) => {
+      hooks.getTableProps.push((props: any, _ref: any) => {
         const { instance } = _ref;
         let gridTemplateColumns = instance.columns
           // @ts-ignore
@@ -150,7 +152,7 @@ export function DataTable({
           },
         ];
       });
-      hooks.visibleColumns.push((visibleColumns) => [
+      hooks.visibleColumns.push((visibleColumns: any) => [
         // Let's make a column for selection
         ...(multipleRowSelectable
           ? [

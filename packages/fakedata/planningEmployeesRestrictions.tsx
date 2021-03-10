@@ -18,7 +18,7 @@ export const restriction = (cond: boolean, isDefault: boolean) => ({
   maxWeekends: cond ? Math.floor(Math.random() * 11) : null,
   minWeekRest: cond ? Math.floor(Math.random() * 50) : null,
   minNightRest: cond ? Math.floor(Math.random() * 50) : null,
-  validFrom: Math.random() < 0.5 ? faker.date.past() : faker.date.recent(),
+  validFrom: isDefault ? new Date() : Math.random() < 0.5 ? faker.date.recent() : faker.date.past(),
   isDefault,
 });
 
@@ -62,7 +62,7 @@ export const updateRestriction = async ({ id, payload }: IPayload) => new Promis
   if (result.isDefault) {
     allRestrictions.forEach((r: any, idx: number) => {
       if (r.defaultSet) {
-        allRestrictions[idx] = result;
+        allRestrictions[idx] = { ...allRestrictions[idx], ...payload };
       }
     });
     message = 'Updated successfully. All restriction with default set were updated.';

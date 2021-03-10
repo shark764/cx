@@ -7,14 +7,14 @@ import { TableContainer, DataTable } from '@cx/components/DataTable';
 import { CheckMark } from '@cx/components/Icons/CheckMark';
 import { Dot } from '@cx/components/Icons/Dot';
 import { Label, Title, Wrapper } from '@cx/components/Styled';
-import { getCompetencies, humanizeQueue } from '@cx/fakedata/planningEmployeesCompetencies';
+import { getRestrictions } from '@cx/fakedata/planningEmployeesRestrictions';
 import { IQuery } from '@cx/types';
+import { Play } from '@cx/components/Icons/Play';
+import { Calendar } from '@cx/components/Icons/Calendar';
 import { DateTime } from 'luxon';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
-import { Play } from '@cx/components/Icons/Play';
 import { addDays } from '@cx/utilities/date';
-import { Calendar } from '@cx/components/Icons/Calendar';
-import { useFormState } from 'context/RowSelection';
+import { useFormState } from 'context/MultipleRowSelection';
 import { Legend } from './Legend';
 
 const TeamLeaderCell = styled.div`
@@ -52,18 +52,28 @@ const CalendarIcon = styled(Calendar)`
   margin-left: 0.5rem;
   cursor: pointer;
 `;
+const DefaultRestrictionRow = styled.span`
+  font-weight: bolder;
+  color: ${({ theme }) => theme.colors.primary};
+`;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
+/**
+ * Apply primary style to Default Restriction Set
+ */
+const formatRow = ({ row, value }: any) => (row.original.isDefault ? <DefaultRestrictionRow>{value}</DefaultRestrictionRow> : value);
+
 export function List() {
   const theme: any = useTheme();
 
   const {
-    selectedRow: [selected],
-    setFormState,
+    selectedRows: [selected],
+    onRowSelection,
+    defaultRestriction: [, setDefaultRestriction],
   }: any = useFormState();
 
   const [calDate, setCalDate] = React.useState(new Date());
@@ -74,8 +84,8 @@ export function List() {
     .toISO();
 
   const { data, isLoading, error }: IQuery = useQuery(
-    ['fetchCompetencies', fromDate],
-    async () => getCompetencies(fromDate)
+    ['fetchRestrictions', fromDate],
+    async () => getRestrictions(fromDate)
       .then((result: any) => result.data)
       .catch((err: Error) => {
         console.error(err);
@@ -86,56 +96,68 @@ export function List() {
     },
   );
 
-  const columns = React.useMemo(() => {
-    const staticColumns = [
+  const columns = React.useMemo(
+    () => [
+      { Header: 'Name', accessor: 'name', Cell: formatRow },
       {
-        Header: 'Name',
-        accessor: 'name',
-        disableFilters: false,
-        filter: 'fuzzyText',
-      },
-      {
-        Header: 'Admin',
-        accessor: 'admin',
+        Header: 'Default Restriction Set',
+        accessor: 'defaultSet',
         Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
       },
       {
-        Header: 'Back Office',
-        accessor: 'backOffice',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
+        Header: 'Agreed Hours Per Week',
+        accessor: 'agreedHours',
+        Cell: formatRow,
       },
+      { Header: 'Min Hours Per Week', accessor: 'minHours', Cell: formatRow },
+      { Header: 'Max Hours Per Week', accessor: 'maxHours', Cell: formatRow },
+      { Header: 'Min Shifts Per Week', accessor: 'minShift', Cell: formatRow },
       {
-        Header: 'Team Leader',
-        accessor: 'teamLeader',
+        Header: 'Max Shifts Per Week',
+        accessor: 'maxShift',
         Cell: ({ row, value }: any) => {
-          const checkMark = value ? <CheckMark size={15} fill={theme.colors.primary} /> : null;
-          const dotMark = row.original.teamLeaderFutureChange ? <Dot size={15} fill={theme.colors.primary} /> : null;
+          const dotMark = row.original.maxShiftFutureChange ? <Dot size={15} fill={theme.colors.primary} /> : null;
           return (
             <TeamLeaderCell>
-              {checkMark}
+              {formatRow({ row, value })}
               {dotMark}
             </TeamLeaderCell>
           );
         },
       },
-    ];
-
-    if (isLoading && !data) {
-      return staticColumns;
-    }
-    if (data.length > 0) {
-      const dynamicColumns = Object.keys(data[0])
-        .filter((k) => k.startsWith('queue-'))
-        .map((k) => ({
-          Header: humanizeQueue(k),
-          accessor: k,
-          Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
-        }));
-
-      return [...staticColumns, ...dynamicColumns];
-    }
-    return staticColumns;
-  }, [isLoading, data, selected]);
+      {
+        Header: 'Min Shift Length',
+        accessor: 'minShiftLength',
+        Cell: formatRow,
+      },
+      {
+        Header: 'Max Shift Length',
+        accessor: 'maxShiftLength',
+        Cell: formatRow,
+      },
+      {
+        Header: 'Max Consecutive Working Days',
+        accessor: 'maxWorkDays',
+        Cell: formatRow,
+      },
+      {
+        Header: 'Max Consecutive Weekends',
+        accessor: 'maxWeekends',
+        Cell: formatRow,
+      },
+      {
+        Header: 'Min Hours Week Rest',
+        accessor: 'minWeekRest',
+        Cell: formatRow,
+      },
+      {
+        Header: 'Min Hours Night Rest',
+        accessor: 'minNightRest',
+        Cell: formatRow,
+      },
+    ],
+    [selected],
+  );
 
   const memoData = React.useMemo(() => {
     if (isLoading && !data) {
@@ -144,10 +166,13 @@ export function List() {
     return data;
   }, [isLoading, data]);
 
-  const onTableRowSelection = ({ original }: any) => {
-    console.log('onTableRowSelection', original);
+  React.useEffect(() => {
+    const dfRestriction = memoData.find((item: any) => item.isDefault) || {};
+    setDefaultRestriction(dfRestriction);
+  }, [memoData, setDefaultRestriction]);
 
-    setFormState(original, true);
+  const onTableRowSelection = ({ original }: any) => {
+    onRowSelection(original);
   };
 
   const handleManuallyAddDays = (days: number) => {
@@ -161,7 +186,7 @@ export function List() {
   return (
     <ListWrapper>
       <Wrapper>
-        <Title>Competency List Filters</Title>
+        <Title>Restriction List Filters</Title>
 
         <Label>Date From</Label>
         <Toolbar>
@@ -195,7 +220,7 @@ export function List() {
 
       <Wrapper>
         <Header>
-          <Title>Competencies</Title>
+          <Title>Restrictions</Title>
           <Legend />
         </Header>
         <TableContainer>
@@ -204,8 +229,7 @@ export function List() {
             data={memoData}
             loading={isLoading}
             onTableRowSelection={onTableRowSelection}
-            oneRowSelectable
-            key={columns.length}
+            multipleRowSelectable
           />
         </TableContainer>
       </Wrapper>

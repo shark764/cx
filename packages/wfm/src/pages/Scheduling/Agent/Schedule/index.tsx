@@ -46,6 +46,17 @@ const LoadingMessage = styled.span`
   color: ${({ theme }) => theme.colors.secondary};
 `;
 
+const PlayIcon = styled(Play)`
+  margin: auto;
+  line-height: normal;
+  cursor: pointer;
+`;
+const CalendarIcon = styled(Calendar)`
+  margin: auto;
+  line-height: normal;
+  cursor: pointer;
+`;
+
 export function AgentSchedule() {
   const theme: any = useTheme();
 
@@ -91,13 +102,13 @@ export function AgentSchedule() {
   return (
     <Container>
       <Toolbar>
-        <Play
+        <PlayIcon
           fill={theme.colors.secondary}
           direction="left"
           onClick={() => handleManuallyAddDays(-7)}
           title="Previous week"
         />
-        <Play fill={theme.colors.secondary} onClick={() => handleManuallyAddDays(7)} title="Next week" />
+        <PlayIcon fill={theme.colors.secondary} onClick={() => handleManuallyAddDays(7)} title="Next week" />
 
         <DatePickerContainer>
           <DatePicker
@@ -113,7 +124,7 @@ export function AgentSchedule() {
 
           <Divider direction="vertical" secondary size={30} />
 
-          <Calendar fill={theme.colors.secondary} onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />
+          <CalendarIcon fill={theme.colors.secondary} onClick={() => setDatePickerIsOpen(true)} title="Open calendar" />
         </DatePickerContainer>
       </Toolbar>
 

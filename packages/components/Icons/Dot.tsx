@@ -10,4 +10,6 @@ const Circle = styled.span<IIcon>`
   background-color: ${({ fill }) => fill || 'grey'};
 `;
 
-export const Dot: React.FC<IIcon> = ({ size = 25, fill }) => <Circle size={size} fill={fill} />;
+export const Dot: React.FC<IIcon> = ({ size = 25, fill, className }) => (
+  <Circle size={size} fill={fill} className={className} />
+);
