@@ -13,6 +13,7 @@ module.exports = function (config, env) {
         path.resolve('../types'),
         path.resolve('../utilities'),
         path.resolve('../fakedata'),
+        path.resolve('../wfmapi'),
       ])
     )(config, env)
   )

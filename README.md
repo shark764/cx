@@ -12,6 +12,10 @@ _WFM - Scheduling + Forecasting_
 - [Node v14](https://nodejs.org/dist/latest-v14.x/docs/api/)
 - [NPM v6](https://www.npmjs.com/package/npm?activeTab=versions)
 
+## API
+For the api calls to work for now you will need to run chrome without CORs enabled
+https://alfilatov.com/posts/run-chrome-without-cors/
+
 ## Tech Stack
 
 The UI project is made using the following libraries:

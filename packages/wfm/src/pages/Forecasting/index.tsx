@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 import Select from 'react-select';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,6 +18,13 @@ import { ForecastingTable } from './Components/table';
 import { CreateNewForecastPane } from './createForecast';
 import { DeleteForecastPane } from './deleteForecast';
 import { filters, barChart, lineChart, tableData } from './fakeData';
+import { wfm } from '../../api';
+import { operations, components } from '@cx/wfmapi/forecast-schema';
+
+type HistoricalData = components["schemas"]["HistoricalDataDTO"];
+type HistoricalPathParams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["path"];
+type HistoricalQueryparams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["query"];
+type HistoricalApiError = components["schemas"]["HTTPValidationError"];
 
 const FiltersWrapper = styled.div`
   display: flex;
@@ -25,7 +34,7 @@ const FiltersWrapper = styled.div`
 `;
 
 const StyledSelect = styled(Select)`
-  display: inline-block;  
+  display: inline-block;
   width: 200px;
   height: 35px;
   border-color: #07487a;
@@ -102,7 +111,7 @@ const TableWrapper = styled.div`
 `;
 
 const Label = styled.span`
-   margin-right: 15px;
+  margin-right: 15px;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -110,22 +119,41 @@ const ButtonsWrapper = styled.div`
 `;
 
 export function Forecasting() {
-  
+
   const classes = useStyles();
   const buttonClass = {
     root: classes.root,
   };
   const theme: any = useTheme();
 
-  const [competence, setCompetence] = React.useState('selectCompetence');
-  const [viewBy, setViewBy] = React.useState('day');
-  const [fromDate, setFromDate] = React.useState(new Date());
-  const [toDate, setToDate] = React.useState(new Date());
-  const [createNewForecast, setCreateNewForecast] = React.useState(false);
-  const [deleteForecast, setDeleteForecast] = React.useState(false)
+  const historicalPathParams: HistoricalPathParams = {
+    tenant_id: '00000000-0000-0000-0000-000000000000',
+    competency_id: '00000000-0000-0000-0000-000000000000',
+  };
+  const historicalQueryParams: HistoricalQueryparams = {
+    channel: 'voice',
+    direction: 'inbound',
+    startDateTime: '2021-01-01T00:00:00Z',
+    endDateTime: '2021-01-30T00:00:00Z',
+  };
 
-  const [isFromDatePickerOpen, setIsFromDatePickerOpen] = React.useState(false);
-  const [isToDatePickerOpen, setIsToDatePickerOpen] = React.useState(false);
+  const { data, isLoading, error } = useQuery<HistoricalData, HistoricalApiError>(
+    ['historicalData', historicalPathParams, historicalQueryParams],
+    () => wfm.forecasting.api.get_tenants_tenant_competencies_competency_historical({
+      pathParams: historicalPathParams,
+      queryString: historicalQueryParams
+    })
+    );
+
+  const [competence, setCompetence] = useState('selectCompetence');
+  const [viewBy, setViewBy] = useState('day');
+  const [fromDate, setFromDate] = useState(new Date());
+  const [toDate, setToDate] = useState(new Date());
+  const [createNewForecast, setCreateNewForecast] = useState(false);
+  const [deleteForecast, setDeleteForecast] = useState(false)
+
+  const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
+  const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
 
   const changeCompetence = ({ value }: { value: string }) => setCompetence(value);
   const changeViewBy = ({ value }: { value: string }) => setViewBy(value);
