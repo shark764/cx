@@ -46,7 +46,7 @@ export const calcScheduledActivities = (startTime: number): any[] => [
     startTime: startTime + 6750,
     endTime: startTime + 6750 + 900,
     title: 'Break 1',
-    color: '#ffffff96',
+    color: 'lightgrey',
   },
   {
     startTime: startTime + 6750 + 900,
@@ -58,7 +58,7 @@ export const calcScheduledActivities = (startTime: number): any[] => [
     startTime: startTime + 6750 + 900 + 6750,
     endTime: startTime + 6750 + 900 + 6750 + 3600,
     title: 'Lunch',
-    color: '#ffffff96',
+    color: 'lightgrey',
   },
   {
     startTime: startTime + 6750 + 900 + 6750 + 3600,
@@ -70,7 +70,7 @@ export const calcScheduledActivities = (startTime: number): any[] => [
     startTime: startTime + 6750 + 900 + 6750 + 3600 + 6750,
     endTime: startTime + 6750 + 900 + 6750 + 3600 + 6750 + 900,
     title: 'Break 2',
-    color: '#ffffff96',
+    color: 'lightgrey',
   },
   {
     startTime: startTime + 6750 + 900 + 6750 + 3600 + 6750 + 900,
@@ -83,4 +83,12 @@ export const calcScheduledActivities = (startTime: number): any[] => [
 const start = Date.now() / 1000;
 
 export const scheduledActivities = calcScheduledActivities(start);
+
+export const scheduledActivitiesPlus = calcScheduledActivities(start)
+  .concat(calcScheduledActivities(start + (86400 * 1)))
+  .concat(calcScheduledActivities(start + (86400 * 2)))
+  .concat(calcScheduledActivities(start + (86400 * 3)))
+  .concat(calcScheduledActivities(start + (86400 * 4)))
+  .concat(calcScheduledActivities(start + (86400 * 5)))
+  .concat(calcScheduledActivities(start + (86400 * 6)));
 

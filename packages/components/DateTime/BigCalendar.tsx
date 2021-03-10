@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Calendar } from 'react-big-calendar';
 import { DateTime } from 'luxon';
+import { LuxonLocalizer } from '@cx/utilities/intl/LuxonLocalizer';
+
 import styled, { css } from 'styled-components';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { deepMerge } from '@cx/utilities';
-import { LuxonLocalizer } from '@cx/utilities/intl/LuxonLocalizer';
 import { IContainer } from '@cx/types';
 import { IBigCalendar } from '@cx/types/time';
 

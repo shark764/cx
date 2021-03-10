@@ -32,6 +32,8 @@ const Tick = styled.span<{ xOffset: number }>`
 const TickLabel = styled.span<{ value: number }>`
   position: absolute;
   left: ${({ value }) => (value > 9 ? '-8px' : '-4px')};
+  white-space: nowrap;
+  word-break: normal;
 `;
 
 export const TimeScale: React.FC<TimeScaleProps> = ({ domain = [0, 0], range = [0, 0], standardTime = false }) => {
@@ -56,20 +58,18 @@ export const TimeScale: React.FC<TimeScaleProps> = ({ domain = [0, 0], range = [
 
     return xScale2.ticks(numberOfTicksTarget).map((value) => ({ value: translateHourValue(value, standardTime), xOffset: xScale(value) }));
 
-  }, [domain.join('-'), range.join('-'), xScale, width, domain]);
+  }, [domain.join('-'), range.join('-'), xScale, width, domain, standardTime]);
 
 
   return (
     <TimeScaleBox>
       <div ref={ref} className="stack-context-reset">
         {ticks.map(({ value, xOffset }) => (
-          <Tick xOffset={xOffset} key={value[0]}>
+          <Tick xOffset={xOffset} key={value[0] + xOffset}  >
             <TickLabel value={value[0]}>{value[1]}</TickLabel>
           </Tick>
         ))}
       </div>
-
-      <span />
     </TimeScaleBox>
   );
 };

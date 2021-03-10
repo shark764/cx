@@ -32,7 +32,7 @@ export const ActivitySegments: React.VFC<ActivitySegmentsProps> = ({
       <ActivtySegment
         color={activitySegment.color}
         className="activitySegment"
-        key={activitySegment.title}
+        key={activitySegment.title + activitySegment.startTime}
         offset={activitySegmentOffset}
         length={activitySegmentLength}
       />
