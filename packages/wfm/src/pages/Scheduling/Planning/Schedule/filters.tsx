@@ -7,6 +7,9 @@ import { DatePicker } from '@cx/components/DateTime/DatePicker';
 import { Calendar } from '@cx/components/Icons/Calendar';
 import { Play } from '@cx/components/Icons/Play';
 import { addDays } from '@cx/utilities/date';
+import { configureTimeSpan } from '../../../../redux/thunks'
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'redux/store';
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
@@ -33,12 +36,15 @@ const BoxDiv = styled.div`
   background: white;
 `;
 
-const dateOptions = [
-  { label: 'Day', id: 23425 },
-  { label: 'Week', id: 4564576 },
-  { label: 'Month', id: 456 },
-  { label: 'Year', id: 34534 },
-  { label: 'Date Range', id: 34536 },
+interface TimeSPanOption {
+  label: 'Day' | 'Two Days' | 'Week' | 'Date Range';
+  type: 'day' | 'twoDays' | 'week' | 'range'
+};
+export const dateOptions = [
+  { label: 'Day', type: 'day' },
+  { label: 'Two Days', type: 'twoDays' },
+  { label: 'Week', type: 'week' },
+  { label: 'Date Range', type: 'range' },
 ];
 
 const timeZonesOptions = [
@@ -103,13 +109,15 @@ const customStyles = {
 };
 
 export function Filters() {
+  const dispatch = useDispatch();
   const theme: any = useTheme();
-  
-  const [value, setValue] = React.useState([null, null]);
 
   const [calDate, setCalDate] = React.useState(new Date());
   const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
-  const [selectedViewDataBy, setViewDataBy] = React.useState('quarter');
+
+  const timeSpan = useSelector(({planning}: RootState) =>
+    dateOptions.find(option => option.type === planning.timeSpan)
+  );
 
   const handleManuallyAddDays = (days: number) => {
     setCalDate((currentDate) => addDays(currentDate, days));
@@ -125,10 +133,11 @@ export function Filters() {
             <SelectTimeSpanSized
               className="choose-date-range"
               classNamePrefix="select"
-              defaultValue={dateOptions[1]}
+              value={timeSpan}
               name="choose-date-range"
               options={dateOptions}
               styles={customStyles}
+              onChange={({type}: TimeSPanOption) => dispatch(configureTimeSpan(type))}
             />
           </span>
           <DatePickerContainer>

@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { useTable, useRowSelect } from 'react-table';
 import styled from 'styled-components';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
-import { agentShedules } from '@cx/fakedata';
+import { day } from '@cx/fakedata/1day';
+import { twoday } from '@cx/fakedata/2day';
+import { week } from '@cx/fakedata/week';
 import { WorkSchedule } from '@cx/components/WorkSchedule';
 import { TimeScale } from '@cx/components/TimeScale';
 import { Legend } from './legend';
+import { RootState } from 'redux/store';
 
 function CreateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -83,9 +87,22 @@ const WarningIcon = styled(WarningRoundedIcon)<{ value: boolean }>`
   display: ${({ value }) => (value ? 'inherit' : 'none !important')};
 `;
 
+interface DomainMap {
+  [key: string]: [number, number]
+};
+
+
 export function SheduleTable() {
+  const domain = useSelector(({planning}: RootState) => planning.timeSpan );
   const columns = useMemo(
-    () => [
+    () => {
+      const convertTimeSpanToDomain: DomainMap = {
+        'day': [0,24],
+        'twoDays': [0,48],
+        'week': [0,168],
+        'range': [0,168],
+      };
+      return [
       { Header: 'Agent', accessor: 'col1' },
       { Header: 'Team', accessor: 'col2' },
       {
@@ -110,15 +127,24 @@ export function SheduleTable() {
         accessor: 'col7',
       },
       {
-        Header: <TimeScale domain={[0, 24]} />,
-        Cell: ({ value }: any) => <WorkSchedule domain={[0, 24]} segments={value} showTimeScale={false} standardTime={false} />,
+        Header: <TimeScale domain={convertTimeSpanToDomain[domain]} />,
+        Cell: ({ value }: any) => <WorkSchedule domain={convertTimeSpanToDomain[domain]} segments={value} showTimeScale={false} standardTime={false} />,
         accessor: 'col8',
       },
-    ],
-    [],
+    ]},
+    [domain],
   );
 
-  const data = useMemo(() => agentShedules.sort((a, b) => a.col8[0].startTime - b.col8[0].startTime), []);
+  const data = useMemo(() => {
+    const convertTimeSpanToSchedulesResponse: any = {
+      'day': day.data,
+      'twoDays': twoday.data,
+      'week': week.data,
+      'range': week.data,
+    };
+    return convertTimeSpanToSchedulesResponse[domain].sort((a: any, b: any) => a.col8[0].startTime - b.col8[0].startTime);
+  },
+  [domain]);
 
   const {
     getTableProps, headerGroups, rows, prepareRow,

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CX WFM",
+  "name": "CxEngage WFM",
   "icons": [
     {
       "src": "favicon.ico",
@@ -16,6 +16,13 @@
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    }
+  ],
+  "screenshots" : [
+    {
+      "src": "planning.webp",
+      "sizes": "1280x720",
+      "type": "image/webp"
     }
   ],
   "start_url": ".",
