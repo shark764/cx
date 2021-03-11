@@ -64,6 +64,7 @@ export function DataTable({
   oneRowSelectable = false,
   multipleRowSelectable = false,
   onTableRowSelection,
+  renderRowSubComponent,
 }: ITable) {
   const defaultColumn = React.useMemo(
     () => ({
@@ -259,14 +260,21 @@ export function DataTable({
             && trData.length > 0
             && trData.map((row: any) => {
               prepareRow(row);
+              const rowProps = row.getRowProps();
               return (
-                <div {...row.getRowProps()} className={`row${row.isSelected ? ' row-selected' : ''}`}>
-                  {row.cells.map((cell: any) => (
-                    <div {...cell.getCellProps()} className="cell">
-                      {cell.render('Cell')}
-                    </div>
-                  ))}
-                </div>
+                <React.Fragment key={rowProps.key}>
+                  <div
+                    {...rowProps}
+                    className={`row${row.isSelected ? ' row-selected' : ''}${row.isExpanded ? ' row-expanded' : ''}`}
+                  >
+                    {row.cells.map((cell: any) => (
+                      <div {...cell.getCellProps()} className="cell">
+                        {cell.render('Cell')}
+                      </div>
+                    ))}
+                  </div>
+                  {row.isExpanded && renderRowSubComponent && renderRowSubComponent({ row, rowProps })}
+                </React.Fragment>
               );
             }))
           || (!loading && trData.length === 0 && (

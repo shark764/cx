@@ -12,6 +12,9 @@ import { Next } from '../Icons/Next';
 import { FastForward } from '../Icons/FastForward';
 import { Info } from '../Icons/Info';
 import { Chevron } from '../Icons/Chevron';
+import { Clock } from '../Icons/Clock';
+import { Plus } from '../Icons/Plus';
+import { Remove } from '../Icons/Remove';
 
 export default {
   title: 'Example/Icons',
@@ -82,24 +85,48 @@ NextIcon.args = {
 };
 
 export const FastForwardIcon: Story<IIcon> = (args) => <FastForward {...args} />;
-NextIcon.bind({});
-NextIcon.args = {
+FastForwardIcon.bind({});
+FastForwardIcon.args = {
   size: 100,
   fill: '#07487a',
   disabled: false,
 };
 
 export const InfoIcon: Story<IIcon> = (args) => <Info {...args} />;
-NextIcon.bind({});
-NextIcon.args = {
+InfoIcon.bind({});
+InfoIcon.args = {
   size: 100,
   fill: '#07487a',
   disabled: false,
 };
 
 export const ChevronIcon: Story<IIcon> = (args) => <Chevron {...args} />;
-NextIcon.bind({});
-NextIcon.args = {
+ChevronIcon.bind({});
+ChevronIcon.args = {
+  size: 100,
+  fill: '#07487a',
+  disabled: false,
+};
+
+export const ClockIcon: Story<IIcon> = (args) => <Clock {...args} />;
+ClockIcon.bind({});
+ClockIcon.args = {
+  size: 100,
+  fill: '#07487a',
+  disabled: false,
+};
+
+export const RemoveIcon: Story<IIcon> = (args) => <Remove {...args} />;
+RemoveIcon.bind({});
+RemoveIcon.args = {
+  size: 100,
+  fill: 'red',
+  disabled: false,
+};
+
+export const PlusIcon: Story<IIcon> = (args) => <Plus {...args} />;
+PlusIcon.bind({});
+PlusIcon.args = {
   size: 100,
   fill: '#07487a',
   disabled: false,

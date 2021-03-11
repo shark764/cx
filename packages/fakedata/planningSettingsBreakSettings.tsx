@@ -1,3 +1,4 @@
+import { IPayload } from '@cx/types/api';
 import * as faker from 'faker';
 
 const shiftTimes = ['04:00', '06:00', '07:00', '08:00', '10:00', '11:00', '12:00'];
@@ -44,7 +45,7 @@ export const breakSetting = () => ({
   sunday: Math.random() < 0.5,
 });
 
-export const allBreakSettings = new Array(10).fill({}).map((_, index: number) => breakSetting());
+export const allBreakSettings = new Array(10).fill({}).map(() => breakSetting());
 
 export const getBreakSettings = () => new Promise((resolve, reject) => {
   if (!allBreakSettings) {
@@ -52,4 +53,34 @@ export const getBreakSettings = () => new Promise((resolve, reject) => {
   }
 
   return setTimeout(() => resolve({ data: allBreakSettings }), 1000);
+});
+
+export const updateBreakSettings = async ({ id, payload }: IPayload) => new Promise((resolve, reject) => {
+  const index = allBreakSettings.findIndex((a) => a.id === id);
+
+  if (index === -1) {
+    return setTimeout(() => reject(new Error('Agent not found')), 1000);
+  }
+
+  const result = {
+    ...allBreakSettings[index],
+    ...payload,
+  };
+  allBreakSettings[index] = result;
+
+  return setTimeout(() => resolve({ status: 200, data: result, message: 'Updated successfully' }), 2000);
+});
+
+export const deleteBreakSettings = async (id: string) => new Promise((resolve, reject) => {
+  const index = allBreakSettings.findIndex((a) => a.id === id);
+
+  if (index === -1) {
+    return setTimeout(() => reject(new Error('Agent not found')), 1000);
+  }
+
+  const result = allBreakSettings[index];
+
+  allBreakSettings.splice(index, 1);
+
+  return setTimeout(() => resolve({ status: 200, data: result, message: 'Element removed successfully' }), 2000);
 });

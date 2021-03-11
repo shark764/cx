@@ -2,9 +2,8 @@ import styled, { css } from 'styled-components';
 import { ITableContainer } from '@cx/types/table';
 
 export const TableContainer = styled.div<ITableContainer>`
-  padding: 1rem;
   display: block;
-  overflow: auto;
+  /* overflow: auto; */
 
   .table {
     gap: 1px;
@@ -20,6 +19,9 @@ export const TableContainer = styled.div<ITableContainer>`
     .row:hover > .cell {
       background-color: ${({ theme }) => theme.colors['accent-2']};
     }
+    .row-expanded > .cell {
+      background-color: ${({ theme }) => theme.colors['accent-1']};
+    }
     .row-selected > .cell {
       background-color: ${({ theme }) => theme.colors.secondary};
     }
@@ -28,7 +30,6 @@ export const TableContainer = styled.div<ITableContainer>`
     .full-cell,
     .header {
       padding: 0.2rem;
-      overflow: hidden;
       text-overflow: ellipsis;
       white-space: normal;
       overflow-wrap: break-word;

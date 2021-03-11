@@ -3,6 +3,7 @@ export interface IForm {
   onCancel?(): void;
   defaultValues: any;
   isFormSubmitting?: boolean;
+  isAddMode?: boolean;
 }
 
 export interface IField {

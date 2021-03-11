@@ -5,6 +5,7 @@ import styled, { css, useTheme } from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { IDatePickerContainer } from '@cx/types/time';
 import { Calendar } from '../Icons/Calendar';
+import { Clock } from '../Icons/Clock';
 
 const DatePickerContainer = styled.div<IDatePickerContainer>`
   .react-datepicker-popper {
@@ -116,12 +117,17 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
 const CalendarIcon = styled(Calendar)`
   margin: auto;
   line-height: normal;
-  cursor: pointer;
+`;
+const ClockIcon = styled(Clock)`
+  margin: auto;
+  line-height: normal;
 `;
 
-export function DatePicker({ calendarBtn = false, ...rest }: any) {
-  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
+export function DatePicker({ calendarBtn = false, ...rest }: any): React.ReactElement {
   const theme: any = useTheme();
+  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
+
+  const IconButton = rest.showTimeSelectOnly ? ClockIcon : CalendarIcon;
 
   return (
     <DatePickerContainer calendarBtn={calendarBtn}>
@@ -137,7 +143,7 @@ export function DatePicker({ calendarBtn = false, ...rest }: any) {
         {...rest}
       />
       {calendarBtn && (
-        <CalendarIcon
+        <IconButton
           fill={theme.colors.secondary}
           onClick={() => setDatePickerIsOpen(true)}
           title="Open calendar"

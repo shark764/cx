@@ -49,12 +49,10 @@ const LoadingMessage = styled.span`
 const PlayIcon = styled(Play)`
   margin: auto;
   line-height: normal;
-  cursor: pointer;
 `;
 const CalendarIcon = styled(Calendar)`
   margin: auto;
   line-height: normal;
-  cursor: pointer;
 `;
 
 export function AgentSchedule() {

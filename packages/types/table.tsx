@@ -44,6 +44,7 @@ export interface ITable {
   oneRowSelectable?: boolean;
   multipleRowSelectable?: boolean;
   onToggleAllRowsSelected?(bool?: boolean): void;
+  renderRowSubComponent?(arg?: any): any;
 }
 
 export interface ITableContainer {

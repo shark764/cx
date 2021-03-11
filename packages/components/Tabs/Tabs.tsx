@@ -13,56 +13,85 @@ export interface ITab extends IButton {
   children?: React.ReactElement;
 }
 
+const TabContainer = styled.div<{ direction?: 'horizontal' | 'vertical' }>`
+  ${({ direction }) => direction === 'vertical'
+    && css`
+      display: grid;
+      grid-auto-columns: min-content auto;
+      ${TabList} {
+        grid-column: 1;
+        ${TabItem} {
+          display: block;
+          width: 200px;
+        }
+      }
+      ${Content} {
+        grid-column: 2;
+      }
+    `};
+`;
+
 const TabList = styled(Wrapper)`
-  margin-bottom: 10px;
   border: 0;
   background-color: transparent;
+  padding: 20px 0;
 `;
 
 const TabItem = styled(Button)<ITab>`
   cursor: pointer;
   display: inline-block;
-  margin-right: 10px;
+  margin: 0 10px 10px 0;
   color: ${({ theme }) => theme.colors.text};
   background: transparent;
   border: none;
   outline: none;
   transition: all ease-in-out 0.2s;
   border-radius: 4px;
+  background-color: hsl(0, 0%, 95%);
 
   ${({
     active, bgColor, primary, secondary, theme,
-  }) => active
-    && ((bgColor
-      && css`
-        background-color: ${bgColor};
-      `)
-      || (primary
-        && css`
-          color: ${theme.colors['accent-3']};
-          background-color: ${theme.colors.primary};
-        `)
-      || (secondary
-        && css`
-          color: ${theme.colors['accent-3']};
-          background-color: ${theme.colors.secondary};
-        `))};
+  }) => (active
+    ? (bgColor
+          && css`
+            background-color: ${bgColor};
+          `)
+        || (primary
+          && css`
+            color: ${theme.colors['accent-3']};
+            background-color: ${theme.colors.primary};
+          `)
+        || (secondary
+          && css`
+            color: ${theme.colors['accent-3']};
+            background-color: ${theme.colors.secondary};
+          `)
+    : css`
+          &:hover {
+            background-color: hsl(0, 0%, 89%);
+          }
+        `)};
 
   ${({ disabled }) => disabled
     && css`
       background-color: #cccccc;
       color: #666666;
       cursor: not-allowed;
-    `}
+    `};
 `;
+
+const Content = styled.div``;
 
 interface ITabs extends IThemed {
   activeIndex?: number;
   children: React.ReactElement<any>[];
   bgColor?: string;
+  direction?: 'horizontal' | 'vertical';
 }
 
-export function Tabs({ children, activeIndex = 0, ...rest }: ITabs) {
+export function Tabs({
+  children, activeIndex = 0, direction = 'horizontal', ...rest
+}: ITabs): React.ReactElement {
   const [activeTab, setActiveTab] = React.useState(activeIndex);
 
   const handleChange = (index: number) => {
@@ -76,7 +105,7 @@ export function Tabs({ children, activeIndex = 0, ...rest }: ITabs) {
   }
 
   return (
-    <>
+    <TabContainer direction={direction}>
       <TabList>
         {children.map((child: React.ReactElement, index: number) => {
           const { id, label } = child.props;
@@ -95,8 +124,8 @@ export function Tabs({ children, activeIndex = 0, ...rest }: ITabs) {
         })}
       </TabList>
 
-      {content}
-    </>
+      <Content>{content}</Content>
+    </TabContainer>
   );
 }
 

@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    top: window.parent === window? '50px' : '0px',
+    top: window.parent === window ? '50px' : '0px',
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
-    top: window.parent === window? '50px' : '0px',
+    top: window.parent === window ? '50px' : '0px',
   },
   toolbar: {
     display: 'flex',
