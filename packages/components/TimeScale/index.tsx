@@ -16,9 +16,12 @@ position: relative;
 left: 0px;
 `;
 
-const Tick = styled.span<{ xOffset: number }>`
+const Tick = styled.span.attrs<{ xOffset: number }>(({xOffset}) => ({
+  style: {
+    left: `${xOffset || 0}px`
+  }
+}))`
   position: absolute;
-  left: ${(props) => props.xOffset || 0}px;
   &:after {
     content: '';
     display: inline-block;
@@ -29,9 +32,12 @@ const Tick = styled.span<{ xOffset: number }>`
     left: 0px;
   }
 `;
-const TickLabel = styled.span<{ value: number }>`
+const TickLabel = styled.span.attrs<{ value: number }>(({value}) => ({
+  style: {
+    left: `${value > 9 ? '-8px' : '-4px'}`
+  }
+}))`
   position: absolute;
-  left: ${({ value }) => (value > 9 ? '-8px' : '-4px')};
   white-space: nowrap;
   word-break: normal;
 `;

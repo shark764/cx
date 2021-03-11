@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
 import { agentShedules } from '@cx/fakedata';
-import { TimeBarSchedule } from './timeBarSchedule';
-import { TimeScale } from './timeScale';
+import { WorkSchedule } from '@cx/components/WorkSchedule';
+import { TimeScale } from '@cx/components/TimeScale';
 import { Legend } from './legend';
 
 function CreateUUID() {
@@ -111,14 +111,14 @@ export function SheduleTable() {
       },
       {
         Header: <TimeScale domain={[0, 24]} />,
-        Cell: ({ value }: any) => <TimeBarSchedule domain={[0, 24]} segments={value} />,
+        Cell: ({ value }: any) => <WorkSchedule domain={[0, 24]} segments={value} showTimeScale={false} standardTime={false} />,
         accessor: 'col8',
       },
     ],
     [],
   );
 
-  const data = useMemo(() => agentShedules, []);
+  const data = useMemo(() => agentShedules.sort((a, b) => a.col8[0].startTime - b.col8[0].startTime), []);
 
   const {
     getTableProps, headerGroups, rows, prepareRow,

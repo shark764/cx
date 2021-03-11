@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Story } from '@storybook/react';
 import { WorkSchedule } from '../WorkSchedule';
 import { TimeBarScheduleProps } from '../TimeBarSchedule';
-import { scheduledActivities, scheduledActivitiesPlus } from '@cx/fakedata';
+import { scheduledActivities, scheduledActivitiesPlus, starter } from '@cx/fakedata';
 
 export default {
   title: 'Example/Work Schedule',
@@ -20,7 +20,7 @@ ScheduledDay.args = {
 export const ScheduledWeek: Story<TimeBarScheduleProps> = (args) => <WorkSchedule {...args} />;
 ScheduledWeek.bind({});
 ScheduledWeek.args = {
-  segments: scheduledActivitiesPlus,
+  segments: scheduledActivitiesPlus(starter()),
   domain: [0, 24 * 7],
   showTimeScale: false,
   standardTime: false,

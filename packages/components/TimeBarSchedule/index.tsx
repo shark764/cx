@@ -9,7 +9,6 @@ export interface TimeBarScheduleProps {
   domain: [number, number];
   standardTime: boolean;
   showTimeScale: boolean;
-  domainStartTimestamp: number,
 }
 
 export interface ActivitySegment {

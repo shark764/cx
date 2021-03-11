@@ -1,38 +1,6 @@
 import * as faker from 'faker';
+import { DateTime } from 'luxon';
 import { randomUniform } from 'd3';
-
-export const agentSchedule = () => ({
-  col1: `${faker.name.firstName()} ${faker.name.lastName()}`,
-  col2: `team ${faker.finance.creditCardCVV()}`,
-  col3: 40,
-  col4: '8',
-  col5: faker.address.timeZone(),
-  col6: faker.random.boolean(),
-  col7: faker.random.boolean(),
-  col8: daySegment(),
-});
-
-// day is between 0 and 86400 seconds
-export const daySegment = () => {
-  const startShift = randomStartHour();
-  const shiftLength = 28800;
-  return {
-    shiftStartTime: startShift,
-    shiftLength,
-    breaks: [
-      {
-        name: 'lunch',
-        breakStartTime: startShift + shiftLength / 2 - 3600,
-        breakLength: 3600,
-      },
-    ],
-  };
-};
-
-const randomStartHour = () => randomUniform(0, 16)() * 3600;
-
-export const agentShedules = new Array(17).fill({}).map(() => agentSchedule());
-
 
 export const calcScheduledActivities = (startTime: number): any[] => [
   // Basic 8 hour shift example (and 1 hour for lunch)  , 7 activites, 2 15 min breaks
@@ -80,11 +48,17 @@ export const calcScheduledActivities = (startTime: number): any[] => [
   },
 ];
 
-const start = Date.now() / 1000;
+const randomizer = () => Math.trunc(randomUniform(0, 15)());
+// TODO: when analizing an activity segment we need to check if it falls outside the domain <--> and trim off that bit so it fits in the UI
 
-export const scheduledActivities = calcScheduledActivities(start);
+// @ts-ignore   first shift starts at 7 am and each subsequent shift is ahead 1 hour
+export const starter = () => (DateTime.now().startOf('day').plus((3600 * randomizer()) * 1000 ) ) / 1000;
+// @ts-ignore
+const temp = DateTime.now().startOf('day') / 1000;
 
-export const scheduledActivitiesPlus = calcScheduledActivities(start)
+export const scheduledActivities = calcScheduledActivities(starter());
+// TODO: fix this
+export const scheduledActivitiesPlus = (start) => calcScheduledActivities(start)
   .concat(calcScheduledActivities(start + (86400 * 1)))
   .concat(calcScheduledActivities(start + (86400 * 2)))
   .concat(calcScheduledActivities(start + (86400 * 3)))
@@ -92,3 +66,15 @@ export const scheduledActivitiesPlus = calcScheduledActivities(start)
   .concat(calcScheduledActivities(start + (86400 * 5)))
   .concat(calcScheduledActivities(start + (86400 * 6)));
 
+export const agentSchedule = (start2) => ({
+  col1: `${faker.name.firstName()} ${faker.name.lastName()}`,
+  col2: `team ${faker.finance.creditCardCVV()}`,
+  col3: 40,
+  col4: '8',
+  col5: faker.address.timeZone(),
+  col6: faker.random.boolean(),
+  col7: faker.random.boolean(),
+  col8: scheduledActivitiesPlus(start2),
+});
+
+export const agentShedules = new Array(100).fill({}).map(() => agentSchedule(starter()));

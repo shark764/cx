@@ -2,13 +2,16 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ActivitySegmentProps, ActivitySegmentsProps } from './index';
 
-const ActivtySegment = styled.div<ActivitySegmentProps>`
+const ActivtySegment = styled.div.attrs<ActivitySegmentProps>(({color, offset, length}) => ({
+  style: {
+    background: color,
+    left: `${offset}px`,
+    width: `${length}px`,
+  }
+}))`
   height: 20px;
-  background: ${(props) => props.color};
   position: absolute;
   top: 0px;
-  left: ${({ offset }) => `${offset}px`};
-  width: ${({ length }) => `${length}px`};
   box-sizing: border-box;
   :last-of-type {
     border-top-right-radius: 3px;
