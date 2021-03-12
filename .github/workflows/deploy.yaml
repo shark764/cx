@@ -4,11 +4,11 @@ on:
   schedule:
     - cron: '5 12 * * 0'
 jobs:
-  setup:
-    name: Set up environment
+  deploy:
+    name: Build and deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
@@ -16,29 +16,15 @@ jobs:
       - name: yarn install
         run: |
           npm i yarn -g
-  dependencies:
-    name: install yarn dependencies
-    runs-on: ubuntu-latest
-    needs: [setup]
-    steps:
+
       - name: install yarn deps
         run: |
           yarn install --frozen-lockfile
-  build:
-    name: build the app
-    runs-on: ubuntu-latest
-    needs: [dependencies]
-    steps:
+
       - name: have webpack build the app
         run: |
-          npm run build
-  deploy:
-    name: Upload to Amazon S3
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+          yarn build
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
