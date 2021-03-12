@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useTable, useRowSelect } from 'react-table';
+import { useTable, useRowSelect, useExpanded} from 'react-table';
 import styled from 'styled-components';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
@@ -12,6 +12,7 @@ import { WorkSchedule } from '@cx/components/WorkSchedule';
 import { TimeScale } from '@cx/components/TimeScale';
 import { Legend } from './legend';
 import { RootState } from 'redux/store';
+import { ExpandedRow } from './expandedRow';
 
 function CreateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -33,6 +34,10 @@ const TableRow = styled.div`
   height: 25px;
   /* checkbox | name | team | agreed hours | scheduled hours | timezone | competence | conflict | shedule  */
   grid-template-columns: 40px 150px 80px 60px 60px 150px 40px 40px auto;
+  &:hover {
+    background: #fafaaa54;
+    cursor: pointer;
+  }
 `;
 
 const TableHeaderRow = styled.div`
@@ -147,13 +152,16 @@ export function SheduleTable() {
   [domain]);
 
   const {
-    getTableProps, headerGroups, rows, prepareRow,
+    getTableProps, headerGroups, rows, prepareRow
   } = useTable(
     {
       // @ts-ignore
       columns,
       data,
+      // @ts-ignore
+      autoResetExpanded: false
     },
+    useExpanded,
     useRowSelect,
     (hooks) => {
       hooks.allColumns.push((columns) => [
@@ -202,15 +210,20 @@ export function SheduleTable() {
       <TableBody className="tbody">
         {rows.map((row) => {
           prepareRow(row);
-          return (
-            <TableRow {...row.getRowProps()} className="tr">
+          return (<>
+          {/* @ts-ignore */}
+            <TableRow {...row.getRowProps()} className="tr" onClick={() => row.toggleRowExpanded()} >
               {row.cells.map((cell) => (
                 <span className="td" key={CreateUUID()}>
                   {cell.render('Cell')}
                 </span>
               ))}
             </TableRow>
-          );
+            {/* @ts-ignore */}
+            {row.isExpanded && <div>
+              <ExpandedRow rowDetails={row} />
+            </div>}
+          </>);
         })}
       </TableBody>
     </TableWrapper>
