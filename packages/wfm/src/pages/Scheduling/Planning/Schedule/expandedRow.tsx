@@ -33,7 +33,6 @@ const DetailsSpacing = styled.div`
 
 
 export const ExpandedRow: React.FC<any> = ({rowDetails}) => {
-  console.log('im walking here', rowDetails.original.col1);
   return <ExpandedRowContainer>
   <SubComponentHeaders>
     <div>
