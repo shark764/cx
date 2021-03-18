@@ -1,5 +1,6 @@
 import * as faker from 'faker';
 import { IPayload } from '@cx/types/api';
+import { apiCall } from '@cx/utilities/api';
 
 export const agentInformation = (index: number) => ({
   id: faker.random.uuid(),
@@ -13,13 +14,15 @@ export const agentInformation = (index: number) => ({
 
 export const allAgentsInformation = new Array(25).fill({}).map((_, index: number) => agentInformation(index));
 
-export const getAgents = () => new Promise((resolve, reject) => {
+export const fetchAgents = () => new Promise((resolve, reject) => {
   if (!allAgentsInformation) {
     return setTimeout(() => reject(new Error('Agents not found')), 1000);
   }
 
   return setTimeout(() => resolve({ data: allAgentsInformation }), 1000);
 });
+
+export const getAgents = (): Promise<any> => apiCall(fetchAgents());
 
 const timezones = [
   { id: 'Pacific/Niue', label: '(GMT-11:00) Niue' },
@@ -305,7 +308,7 @@ const timezones = [
   { id: 'Pacific/Kiritimati', label: '(GMT+14:00) Kiritimati' },
 ];
 
-export const getTimezones = () => new Promise((resolve, reject) => {
+export const fetchTimezones = (): Promise<any> => new Promise((resolve, reject) => {
   if (!timezones) {
     return setTimeout(() => reject(new Error('Timezones not found')), 1000);
   }
@@ -313,18 +316,22 @@ export const getTimezones = () => new Promise((resolve, reject) => {
   return setTimeout(() => resolve({ data: timezones }), 3000);
 });
 
+export const getTimezones = (): Promise<any> => apiCall(fetchTimezones());
+
 const teams = Array.from(new Set(new Array(25).fill({}).map(() => faker.commerce.color()))).map((t) => ({
   id: t,
   label: t,
 }));
 
-export const getTeams = () => new Promise((resolve, reject) => {
+export const fetchTeams = (): Promise<any> => new Promise((resolve, reject) => {
   if (!teams) {
     return setTimeout(() => reject(new Error('Teams not found')), 1000);
   }
 
   return setTimeout(() => resolve({ data: teams }), 2000);
 });
+
+export const getTeams = (): Promise<any> => apiCall(fetchTeams());
 
 export const organization = (agentId: string) => ({
   id: faker.random.uuid(),
@@ -343,7 +350,7 @@ allAgentsInformation.forEach((agent) => {
   });
 });
 
-export const getAgentOrganizationHistory = (agentId: string) => new Promise((resolve, reject) => {
+export const fetchAgentOrganizationHistory = (agentId: string): Promise<any> => new Promise((resolve, reject) => {
   if (!allOrganization) {
     return setTimeout(() => reject(new Error('Organization history not found')), 1000);
   }
@@ -356,6 +363,14 @@ export const getAgentOrganizationHistory = (agentId: string) => new Promise((res
 
   return setTimeout(() => resolve({ data: agentOrganizationHistory }), 1000);
 });
+
+type Params = {
+  queryKey: [string, { agentId: string }];
+};
+export const getAgentOrganizationHistory = (params: Params): Promise<any> => {
+  const [, { agentId }] = params.queryKey;
+  return apiCall(fetchAgentOrganizationHistory(agentId));
+};
 
 export const updateAgent = async ({ id, payload }: IPayload) => new Promise((resolve, reject) => {
   const index = allAgentsInformation.findIndex((a) => a.id === id);

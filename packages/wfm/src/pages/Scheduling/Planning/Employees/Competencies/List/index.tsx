@@ -44,13 +44,11 @@ const DatePickerContainer = styled.div`
 const PlayIcon = styled(Play)`
   margin: auto;
   line-height: normal;
-  cursor: pointer;
 `;
 const CalendarIcon = styled(Calendar)`
   margin: auto;
   line-height: normal;
   margin-left: 0.5rem;
-  cursor: pointer;
 `;
 
 const Header = styled.div`
@@ -145,8 +143,6 @@ export function List() {
   }, [isLoading, data]);
 
   const onTableRowSelection = ({ original }: any) => {
-    console.log('onTableRowSelection', original);
-
     setFormState(original, true);
   };
 

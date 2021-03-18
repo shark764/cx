@@ -10,7 +10,7 @@ export const TableContainer = styled.div<ITableContainer>`
 
     ${({ border }) => border
       && css`
-        border: 1px solid black;
+        border: 1px solid #80808096;
       `};
 
     .row {
@@ -35,7 +35,7 @@ export const TableContainer = styled.div<ITableContainer>`
       overflow-wrap: break-word;
     }
     .header {
-      color: gray;
+      color: #808080;
       margin-bottom: 30px;
     }
     .full-cell {

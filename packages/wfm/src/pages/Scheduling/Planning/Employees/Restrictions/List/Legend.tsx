@@ -2,14 +2,7 @@ import { CheckMark } from '@cx/components/Icons/CheckMark';
 import { Dot } from '@cx/components/Icons/Dot';
 import { Label } from '@cx/components/Styled';
 import * as React from 'react';
-import styled, { useTheme } from 'styled-components';
-
-const CheckMark2 = styled(CheckMark)`
-  display: inline-block;
-`;
-const Dot2 = styled(Dot)`
-  display: inline-block;
-`;
+import { useTheme } from 'styled-components';
 
 export function Legend() {
   const theme: any = useTheme();
@@ -18,10 +11,10 @@ export function Legend() {
     <span>
       <Label>Default Set</Label>
       {' '}
-      <CheckMark2 size={15} fill={theme.colors.primary} />
+      <CheckMark size={15} fill={theme.colors.primary} />
       <Label>Future Change</Label>
       {' '}
-      <Dot2 size={15} fill={theme.colors.primary} />
+      <Dot size={15} fill={theme.colors.primary} />
     </span>
   );
 }

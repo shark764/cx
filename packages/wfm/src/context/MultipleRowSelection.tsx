@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Props } from '@cx/types';
+import { IMultipleRowFormContext } from '@cx/types/form';
 
 // @ts-ignore
 export const FormDataContext = React.createContext();
@@ -26,8 +27,9 @@ export function FormDataProvider({ children }: Props) {
     });
   };
 
+  const onCancel = () => setFormState([], false);
+
   React.useEffect(() => {
-    console.log('selectedRows.length', selectedRows.length);
     setOpen(selectedRows.length > 0);
   }, [selectedRows.length]);
 
@@ -40,6 +42,7 @@ export function FormDataProvider({ children }: Props) {
         onRowSelection,
         defaultRestriction,
         isFormSubmitting,
+        onCancel,
       }}
     >
       {children}
@@ -47,10 +50,11 @@ export function FormDataProvider({ children }: Props) {
   );
 }
 
-export function useFormState() {
+export function useFormState(): IMultipleRowFormContext {
   const context = React.useContext(FormDataContext);
   if (context === undefined) {
     throw new Error('useFormState must be used within a FormDataProvider');
   }
+  // @ts-ignore
   return context;
 }

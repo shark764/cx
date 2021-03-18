@@ -94,7 +94,7 @@ export function Form() {
     mutation.mutate({ id, payload });
   };
 
-  const onCancel = () => setFormState({}, undefined);
+  const onCancel = () => setFormState({}, false);
 
   return (
     <FormWrapper>

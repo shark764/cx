@@ -4,10 +4,10 @@ import { reducer } from './reducers';
 export interface RootState {
   main: {
     theme: any;
-  },
+  };
   planning: {
     timeSpan: string;
-  }
+  };
 }
 
 const middleware = [...getDefaultMiddleware()];

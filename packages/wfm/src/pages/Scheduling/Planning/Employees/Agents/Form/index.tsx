@@ -7,7 +7,7 @@ import {
   getAgentOrganizationHistory, getTeams, getTimezones, updateAgent,
 } from '@cx/fakedata/planningEmployeesAgents';
 import { log } from '@cx/utilities';
-import { IOption } from '@cx/types/form';
+import { IOption, ISingleRowFormContext } from '@cx/types/form';
 import { useFormState } from 'context/RowSelection';
 import { FormLayout } from './layout';
 
@@ -27,42 +27,19 @@ const initialValues = {
 export function Form() {
   const {
     selectedRow: [selected, setSelected],
-    setFormState,
     isFormSubmitting: [isFormSubmitting, setIsFormSubmitting],
-  }: any = useFormState();
+    onCancel,
+  }: ISingleRowFormContext = useFormState();
 
   const { id } = selected;
 
-  const organizationHistoryQuery = useQuery(
-    ['fetchAgentOrganizationHistory', id],
-    async () => getAgentOrganizationHistory(id)
-      .then((result: any) => result.data)
-      .catch((err: Error) => {
-        console.error(err);
-        throw err;
-      }),
+  const organizationHistoryQuery = useQuery<any, Error>(
+    ['fetchAgentOrganizationHistory', { agentId: id }],
+    getAgentOrganizationHistory,
     { refetchInterval: 30000 },
   );
-  const timezonesQuery = useQuery(
-    'fetchTimezones',
-    async () => getTimezones()
-      .then((result: any) => result.data)
-      .catch((err: Error) => {
-        console.error(err);
-        throw err;
-      }),
-    { refetchOnWindowFocus: false },
-  );
-  const teamsQuery = useQuery(
-    'fetchTeams',
-    async () => getTeams()
-      .then((result: any) => result.data)
-      .catch((err: Error) => {
-        console.error(err);
-        throw err;
-      }),
-    { refetchOnWindowFocus: false },
-  );
+  const timezonesQuery = useQuery<any, Error>('fetchTimezones', getTimezones, { refetchOnWindowFocus: false });
+  const teamsQuery = useQuery<any, Error>('fetchTeams', getTeams, { refetchOnWindowFocus: false });
 
   const organizationHistoryColumns = React.useMemo(
     () => [
@@ -80,26 +57,19 @@ export function Form() {
     ],
     [],
   );
-  const memoOrganizationHistory = React.useMemo(() => {
-    if (organizationHistoryQuery.isLoading && !organizationHistoryQuery.data) {
-      return [];
-    }
-    return organizationHistoryQuery.data;
-  }, [organizationHistoryQuery.isLoading, organizationHistoryQuery.data]);
+  const memoOrganizationHistory = React.useMemo(() => organizationHistoryQuery.data || [], [
+    organizationHistoryQuery.data,
+  ]);
 
-  const memoTimezones = React.useMemo(() => {
-    if (timezonesQuery.isLoading && !timezonesQuery.data) {
-      return [];
-    }
-    return timezonesQuery.data.map((tz: any) => ({ value: tz.id, label: tz.label }));
-  }, [timezonesQuery.isLoading, timezonesQuery.data]);
+  const memoTimezones = React.useMemo(
+    () => timezonesQuery.data?.map((timezoneItem: any) => ({ value: timezoneItem.id, label: timezoneItem.label })) || [],
+    [timezonesQuery.data],
+  );
 
-  const memoTeams = React.useMemo(() => {
-    if (teamsQuery.isLoading && !teamsQuery.data) {
-      return [];
-    }
-    return teamsQuery.data.map((tz: any) => ({ value: tz.id, label: tz.label }));
-  }, [teamsQuery.isLoading, teamsQuery.data]);
+  const memoTeams = React.useMemo(
+    () => teamsQuery.data?.map((teamItem: any) => ({ value: teamItem.id, label: teamItem.label })) || [],
+    [teamsQuery.data],
+  );
 
   const queryClient = useQueryClient();
 
@@ -141,9 +111,7 @@ export function Form() {
     [memoTeams, memoTimezones, selected],
   );
 
-  const onSubmit = async (data: any) => {
-    console.log('values submitted', data);
-
+  const onSubmit = (data: any) => {
     const payload = {
       ...data,
       team: data.team.value,
@@ -154,8 +122,6 @@ export function Form() {
 
     mutation.mutate({ id, payload });
   };
-
-  const onCancel = () => setFormState({}, undefined);
 
   return (
     <FormWrapper>

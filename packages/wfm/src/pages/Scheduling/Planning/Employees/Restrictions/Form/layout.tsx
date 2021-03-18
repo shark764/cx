@@ -68,12 +68,11 @@ export function FormLayout({
         <Controller
           control={control}
           name="validFrom"
-          render={(props) => (
+          render={({ onChange, onBlur, value }) => (
             <DatePicker
-              onChange={props.onChange}
-              onBlur={props.onBlur}
-              selected={props.value}
-              className="input"
+              onChange={onChange}
+              onBlur={onBlur}
+              selected={value}
               isClearable
               calendarBtn
               disabled={isFormSubmitting}
@@ -89,7 +88,7 @@ export function FormLayout({
           Changes apply to all with Default Restriction Set
         </Note>
       ) : (
-        <FormField label="">
+        <FormField>
           <label>
             <input type="checkbox" name="defaultSet" ref={register} disabled={isFormSubmitting} />
             Apply Default Restrictions

@@ -19,8 +19,8 @@ const Field = styled.div<IField>`
 `;
 
 export function FormField({
-  label, align = 'left', children, ...rest
-}: IFormField) {
+  label = '', align = 'left', children, ...rest
+}: IFormField): JSX.Element {
   return (
     <Field align={align}>
       <label {...rest}>{label}</label>
