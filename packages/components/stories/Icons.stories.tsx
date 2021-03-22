@@ -104,6 +104,7 @@ export const ChevronIcon: Story<IIcon> = (args) => <Chevron {...args} />;
 ChevronIcon.bind({});
 ChevronIcon.args = {
   size: 100,
+  rotate: 0,
   fill: '#07487a',
   disabled: false,
 };

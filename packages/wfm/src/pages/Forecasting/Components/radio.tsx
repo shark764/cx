@@ -9,17 +9,17 @@ const Wrapper = styled.div`
 `;
 
 interface RadioProps {
-    isChecked: boolean;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
-    value: string;
-    label?: string
+  isChecked: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  value: string;
+  label?: string;
 };
 
 export function RadioButton({ isChecked, onChange, value, label }: RadioProps) {
-    return (
-        <Wrapper>
-            <Radio checked={isChecked} onChange={onChange} value={value} color="default" size="small" />
-            {label && <label>{label}</label>}
-        </Wrapper>
-    )
+  return (
+    <Wrapper>
+      <Radio checked={isChecked} onChange={onChange} value={value} color="default" size="small" />
+      {label && <label>{label}</label>}
+    </Wrapper>
+  )
 };

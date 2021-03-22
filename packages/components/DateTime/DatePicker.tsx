@@ -1,13 +1,15 @@
 import * as React from 'react';
 import ReactDatePicker from 'react-datepicker';
-import styled, { css, useTheme } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { IDatePickerContainer } from '@cx/types/time';
 import { Calendar } from '../Icons/Calendar';
 import { Clock } from '../Icons/Clock';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 
 const DatePickerContainer = styled.div<IDatePickerContainer>`
+  position: relative;
   .react-datepicker-popper {
     z-index: 5;
   }
@@ -81,6 +83,7 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
 
   .react-datepicker__close-icon::after {
     background-color: ${({ theme }) => theme.colors.secondary};
+    display: none;
   }
 
   .react-datepicker__day--keyboard-selected,
@@ -122,15 +125,33 @@ const ClockIcon = styled(Clock)`
   margin: auto;
   line-height: normal;
 `;
+const PositionedCal = styled.span`
+  position: absolute;
+  right: 8px;
+  top: 4px;
+  opacity: 0.3;
+`;
 
 export function DatePicker({ calendarBtn = false, ...rest }: any): React.ReactElement {
-  const theme: any = useTheme();
+  const theme = {
+    colors: {
+      brand: '#07487a',
+      primary: '#07487a',
+      secondary: '#a3acbd',
+      'accent-1': '#3498db',
+      'accent-2': '#e6f5ff',
+      'accent-3': '#ffffff',
+      text: '#222222',
+      info: '#00529b',
+      success: '#4f8a10',
+      warning: '#9f6000',
+      error: '#d8000c',
+    },
+  };
   const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
 
-  const IconButton = rest.showTimeSelectOnly ? ClockIcon : CalendarIcon;
-
   return (
-    <DatePickerContainer calendarBtn={calendarBtn}>
+    <DatePickerContainer calendarBtn={calendarBtn} theme={theme} >
       <ReactDatePicker
         dateFormat="MMM dd, yyyy"
         placeholderText="MMM dd, yyyy"
@@ -142,14 +163,12 @@ export function DatePicker({ calendarBtn = false, ...rest }: any): React.ReactEl
         onClickOutside={() => setDatePickerIsOpen(false)}
         {...rest}
       />
-      {calendarBtn && (
-        <IconButton
-          fill={theme.colors.secondary}
+      <PositionedCal>
+        <CalendarTodayIcon
           onClick={() => setDatePickerIsOpen(true)}
-          title="Open calendar"
-          className="react-datepicker__calendar-icon-trigger"
         />
-      )}
+      </PositionedCal>
+
     </DatePickerContainer>
   );
 }

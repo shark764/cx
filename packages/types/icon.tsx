@@ -11,6 +11,7 @@ export interface IIcon extends IContainer {
   onClick?(event?: React.MouseEvent): void;
   title?: string;
   className?: string;
+  rotate?: number;
 }
 
 export interface IPath extends IThemed {
