@@ -150,7 +150,7 @@ export function Forecasting() {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [createNewForecast, setCreateNewForecast] = useState(false);
-  const [deleteForecast, setDeleteForecast] = useState(false)
+  const [deleteForecast, setDeleteForecast] = useState(false);
 
   const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
   const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
@@ -187,7 +187,7 @@ export function Forecasting() {
         <DatePickerContainer>
           <StyledSelect
             className="choose-date"
-            classNamePrefix="select"
+            classNamePrefix="choose-date-select"
             defaultValue={filters.viewBy[0]}
             name="choose-date"
             options={filters.viewBy.filter(a => a.value !== viewBy)}

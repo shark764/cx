@@ -181,6 +181,7 @@ export function PageSideBar() {
                 fontWeight: 'bold',
               }}
               title={link.label}
+              className={link.label.split(' ').join('') + 'Link'}
             >
               <ListItem button key={link.to}>
                 <ListItemIcon>{link.icon}</ListItemIcon>
