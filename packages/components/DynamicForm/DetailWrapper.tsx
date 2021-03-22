@@ -13,7 +13,6 @@ const TitleBar = styled.div`
   height: 0px;
   border: 1px solid #dadada;
   margin: 7px 20px;
-  /* font-weight: bold; */
 `;
 const Content = styled.div`
   Margin: 0 0 50px 0;

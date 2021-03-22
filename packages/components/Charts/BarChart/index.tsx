@@ -64,7 +64,7 @@ export function BarChart({
   showLegend = true,
   showTooltip = true,
   stackId,
-  containerWidth = '90%',
+  containerWidth = '96%',
   containerHeight = 300,
 }: ChartProps) {
 

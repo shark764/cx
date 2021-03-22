@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     height: 40,
     padding: '0 30px',
     marginLeft: '30px',
-    textTransform: 'capitalize',
+    // textTransform: 'capitalize',
   },
 });
 

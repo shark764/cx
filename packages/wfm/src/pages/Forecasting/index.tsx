@@ -3,92 +3,45 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 import Select from 'react-select';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-import { Divider } from '@cx/components/Divider';
-import { DatePicker } from '@cx/components/DateTime/DatePicker';
-import { Calendar } from '@cx/components/Icons/Calendar';
-import { Play } from '@cx/components/Icons/Play';
 import { addDays, disableDays } from '@cx/utilities/date';
+import { FormDialog } from '@cx/components/FormDialog';
+import { DynamicForm } from '@cx/components/DynamicForm';
 
 import BarChart from '@cx/components/Charts/BarChart';
 import LineChart from '@cx/components/Charts/LineChart';
 import { ForecastingTable } from './Components/table';
-import { CreateNewForecastPane } from './createForecast';
-import { DeleteForecastPane } from './deleteForecast';
 import { filters, barChart, lineChart, tableData } from './fakeData';
 import { wfm } from '../../api';
 import { operations, components } from '@cx/wfmapi/forecast-schema';
+
+import { createForecastFormDefenition } from './forecastFormDefinition';
+import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
+import { Filters } from './filters';
+
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
 
 type HistoricalData = components["schemas"]["HistoricalDataDTO"];
 type HistoricalPathParams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["path"];
 type HistoricalQueryparams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["query"];
 type HistoricalApiError = components["schemas"]["HTTPValidationError"];
 
-const FiltersWrapper = styled.div`
-  display: flex;
-  padding: 5px;
-  font-size: 12px;
-  margin-left: 50px;
+const Title = styled.h4`
+  color: grey;
+  font-style: italic;
+  margin-top: 0px;
+  margin-left: 10px;
 `;
 
 const StyledSelect = styled(Select)`
-  display: inline-block;
-  width: 200px;
+  width: 150px;
   height: 35px;
   border-color: #07487a;
 `;
 
-const DatePickerContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: center;
-  .react-datepicker__input-container .custom-datepicker__input {
-    border: 0;
-    padding: 2px 10px;
-    line-height: 28px;
-  }
-`;
-
-const StyledDatePicker = styled(DatePicker)`
-  margin-left: 5px;
-  border-color: #80808096;
-`;
-
-const StyledCalendar = styled(Calendar)`
-  margin-left: 10px;
-`;
-
-const StyledPlay = styled(Play)`
-  margin-left: 10px;
-`;
-
-const useStyles = makeStyles({
-  root: {
-    width: '160px',
-    maxWidth: '160px',
-    height: 40,
-    marginLeft: '10px',
-    fontSize: '12px',
-    textTransform: 'capitalize',
-    flexGrow: 1,
-  },
-});
-
-const HorizontalDivider = styled.div`
-  border-top: 1px solid #80808096;
-  margin: 15px 15px;
-`;
-
-const StyledDivider = styled(Divider)`
-  margin: 0 15px;
-`;
-
-const ChartsWrapper = styled.div`
-  width: 100%;
+const ForecastFilters = styled.section`
+  margin-top: 30px;
 `;
 
 const customStyles = {
@@ -104,27 +57,49 @@ const customStyles = {
   },
 };
 
-const TableWrapper = styled.div`
+const ChartsWrapper = styled.div`
+  width: 100%;
+  background: white;
+  border: 1px solid #80808096;
+  padding: 10px;
+  border-radius: 5px;
   margin-top: 20px;
-  margin-left: 30px;
-  font-size: 12px;
 `;
 
-const Label = styled.span`
-  margin-right: 15px;
+const TableWrapper = styled.div`
+  margin-top: 20px;
+  background: white;
+  border: 1px solid #80808096;
+  padding: 10px;
+  border-radius: 5px;
 `;
 
 const ButtonsWrapper = styled.div`
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: fit-content(100px) fit-content(100px);
+  float: right;
+`;
+const Actions = styled.div`
   position: relative;
+  height: 30px;
+  width: 100%;
+`;
+
+const Label = styled.span`
+  font-size: 11px;
+  color: grey;
+  vertical-align: super;
+  margin-left: 10px;
+`;
+
+const TableFilters = styled.div`
+  padding: 0 10px;
 `;
 
 export function Forecasting() {
 
-  const classes = useStyles();
-  const buttonClass = {
-    root: classes.root,
-  };
-  const theme: any = useTheme();
+  // const theme: any = useTheme();
 
   const historicalPathParams: HistoricalPathParams = {
     tenant_id: '00000000-0000-0000-0000-000000000000',
@@ -145,121 +120,83 @@ export function Forecasting() {
     })
     );
 
-  const [competence, setCompetence] = useState('selectCompetence');
+  // const [competence, setCompetence] = useState('selectCompetence');
   const [viewBy, setViewBy] = useState('day');
-  const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
+  // const [fromDate, setFromDate] = useState(new Date());
+  // const [toDate, setToDate] = useState(new Date());
   const [createNewForecast, setCreateNewForecast] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
 
-  const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
-  const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
+  // const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
+  // const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
 
-  const changeCompetence = ({ value }: { value: string }) => setCompetence(value);
-  const changeViewBy = ({ value }: { value: string }) => setViewBy(value);
+  // const changeCompetence = ({ value }: { value: string }) => setCompetence(value);
+  // const changeViewBy = ({ value }: { value: string }) => setViewBy(value);
 
-  const handleManuallyAddDays = (dateType: string, days: number) => {
-    if (dateType === 'from') {
-      setFromDate((currentDate) => addDays(currentDate, days));
-    } else {
-      setToDate((currentDate) => addDays(currentDate, days));
-    }
-  };
-  const filterDate = (date: Date) => {
-    if (viewBy === "week") {
-      return disableDays(date, 'onlyEnableMonday');
-    }
-    return true;
-  };
+  // const handleManuallyAddDays = (dateType: string, days: number) => {
+  //   if (dateType === 'from') {
+  //     setFromDate((currentDate) => addDays(currentDate, days));
+  //   } else {
+  //     setToDate((currentDate) => addDays(currentDate, days));
+  //   }
+  // };
+  // const filterDate = (date: Date) => {
+  //   if (viewBy === "week") {
+  //     return disableDays(date, 'onlyEnableMonday');
+  //   }
+  //   return true;
+  // };
 
   return (
     <>
-      <FiltersWrapper>
-        <StyledSelect
-          className="choose-competence"
-          classNamePrefix="select"
-          defaultValue={filters.competence[0]}
-          name="choose-competence"
-          options={filters.competence.filter(a => a.value !== competence && a.value !== 'selectCompetence')}
-          styles={customStyles}
-          onChange={changeCompetence}
-        />
-        <DatePickerContainer>
-          <StyledSelect
-            className="choose-date"
-            classNamePrefix="choose-date-select"
-            defaultValue={filters.viewBy[0]}
-            name="choose-date"
-            options={filters.viewBy.filter(a => a.value !== viewBy)}
-            styles={customStyles}
-            onChange={changeViewBy}
-          />
-          <StyledCalendar
-            fill={theme.colors.secondary}
-            size={17}
-            onClick={() => setIsFromDatePickerOpen(true)}
-          />
-          <StyledDatePicker
-            selected={fromDate}
-            onChange={setFromDate}
-            open={isFromDatePickerOpen}
-            onFocus={() => setIsFromDatePickerOpen(true)}
-            onClickOutside={() => setIsFromDatePickerOpen(false)}
-            className="custom-datepicker__input"
-            filterDate={filterDate}
-          />
-          <StyledPlay
-            fill={theme.colors.secondary}
-            size={20}
-            direction="left"
-            onClick={() => handleManuallyAddDays('from', -1)}
-          />
-          <Play
-            fill={theme.colors.secondary}
-            size={20}
-            onClick={() => handleManuallyAddDays('from', 1)}
-          />
-          {viewBy === 'dateRange' && (
-            <>
-              <StyledDivider direction="vertical" secondary size={30} />
-              <StyledCalendar
-                fill={theme.colors.secondary}
-                size={17}
-                onClick={() => setIsToDatePickerOpen(true)}
-              />
-              <StyledDatePicker
-                selected={toDate}
-                onChange={setToDate}
-                open={isToDatePickerOpen}
-                onFocus={() => setIsToDatePickerOpen(true)}
-                onClickOutside={() => setIsToDatePickerOpen(false)}
-                className="custom-datepicker__input"
-              />
-              <StyledPlay
-                fill={theme.colors.secondary}
-                size={20}
-                direction="left"
-                onClick={() => handleManuallyAddDays('to', -1)}
-              />
-              <Play
-                fill={theme.colors.secondary}
-                size={20}
-                onClick={() => handleManuallyAddDays('to', 1)}
-              />
-            </>
-          )}
-        </DatePickerContainer>
+      <Actions>
         <ButtonsWrapper>
-          <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation onClick={() => (!createNewForecast && !deleteForecast) && setCreateNewForecast(true)}>CREATE FORECAST</Button>
-          <Button classes={buttonClass} variant="contained" style={{ color: '#ffffff', background: '#07487a' }} disableElevation onClick={() => (!deleteForecast && !createNewForecast) && setDeleteForecast(!deleteForecast)}>DELETE FORECAST</Button>
-          {createNewForecast && <CreateNewForecastPane setCreateNewForecast={setCreateNewForecast} />}
-          {deleteForecast && <DeleteForecastPane setDeleteForecast={setDeleteForecast} />}
+          <Button
+            style={{ color: '#4c4a4a' }}
+            variant="outlined"
+            onClick={() => setDeleteForecast(true)}
+            startIcon={<DeleteIcon />}
+          >
+            Delete
+          </Button>
+          <Button
+            style={{ color: 'white', background: '#07487a' }}
+            onClick={() => setCreateNewForecast(true)}
+            variant="contained"
+            disableElevation
+            color="primary"
+            startIcon={<AddIcon />}
+          >
+            Create
+          </Button>
+          <FormDialog open={createNewForecast} title='Create forecast' close={ () => setCreateNewForecast(false)  } >
+            <DynamicForm
+              defaultValues={{}}
+              formDefenition={createForecastFormDefenition}
+              onCancel={ () => setCreateNewForecast(false) }
+              onSubmit={ (data: any) => { setCreateNewForecast(false); console.log('submission: ', data); } }
+              isFormSubmitting={false}
+            ></DynamicForm>
+          </FormDialog>
+          <FormDialog open={deleteForecast} title='Delete forecast' close={ () => setDeleteForecast(false)  } >
+            <DynamicForm
+              defaultValues={{}}
+              formDefenition={deleteForcastFormDefinition}
+              onCancel={ () => setDeleteForecast(false) }
+              onSubmit={ (data: any) => { setDeleteForecast(false); console.log('submission: ', data); } }
+              isFormSubmitting={false}
+            ></DynamicForm>
+          </FormDialog>
         </ButtonsWrapper>
-      </FiltersWrapper>
+      </Actions>
 
-      <HorizontalDivider />
+      <ForecastFilters>
+        <Filters />
+      </ForecastFilters>
+
 
       <ChartsWrapper>
+        <Title> Forecast </Title>
         <LineChart
           chartName="staffingEstimate"
           data={lineChart[viewBy].data}
@@ -269,7 +206,7 @@ export function Forecasting() {
         />
         <BarChart
           chartName="staffingEstimate"
-          statName="STAFFING ESTIMATE"
+          statName="Staffing Estimate"
           data={barChart[viewBy].data}
           interval={viewBy === 'day' ? 2 : 0}
           stackId={viewBy === 'dateRange' ? 'a' : null}
@@ -279,15 +216,20 @@ export function Forecasting() {
       </ChartsWrapper>
 
       <TableWrapper>
-        <Label>CHANNEL:</Label>
-        <StyledSelect
-          className="choose-channel"
-          classNamePrefix="select"
-          defaultValue={filters.channel[0]}
-          name="choose-channel"
-          options={filters.channel}
-          styles={customStyles}
-        />
+        <Title> Forecast table view </Title>
+        <TableFilters>
+          <span>
+            <Label>Channel</Label>
+            <StyledSelect
+              className="choose-channel"
+              classNamePrefix="select"
+              defaultValue={filters.channel[0]}
+              name="choose-channel"
+              options={filters.channel}
+              styles={customStyles}
+            />
+          </span>
+        </TableFilters>
         <ForecastingTable tableData={tableData[viewBy]} />
       </TableWrapper>
     </>

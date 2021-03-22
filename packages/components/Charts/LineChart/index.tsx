@@ -18,7 +18,7 @@ import {
 import CustomLegend from '../ChartLegend/index';
 
 const Wrapper = styled.div`
-  margin-top: 20px;
+  margin: 20px auto;
   font-size: 12px;
 `;
 
@@ -66,14 +66,14 @@ export function LineChart({
     showLegend = true,
     showTooltip = true,
     interval = 0,
-    containerWidth = '90%',
+    containerWidth = '100%',
     containerHeight = 300,
 }: ChartProps) {
   const fillColors = ['#07487a', 'orange', 'green'];
     return (
         <Wrapper>
             {statName && <StatName>{statName}</StatName>}
-            <ResponsiveContainer id={`${chartName}-responsive-container`} width={containerWidth} height={containerHeight}>
+            <ResponsiveContainer id={`${chartName}-responsive-container`} width={containerWidth} height={containerHeight} >
                 <ReChartsLineChart data={data} onClick={onClick}>
                     <XAxis dataKey={xDataKey} interval={interval} />
                     <YAxis yAxisId="left" label={{ value: 'VOLUME', angle: -90, position: 'center', offset: 0 }}>
