@@ -117,18 +117,10 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
       }
     `};
 `;
-const CalendarIcon = styled(Calendar)`
-  margin: auto;
-  line-height: normal;
-`;
-const ClockIcon = styled(Clock)`
-  margin: auto;
-  line-height: normal;
-`;
 const PositionedCal = styled.span`
   position: absolute;
-  right: 8px;
-  top: 4px;
+  right: 20px;
+  top: 5px;
   opacity: 0.3;
 `;
 

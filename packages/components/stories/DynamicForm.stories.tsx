@@ -15,7 +15,7 @@ const exampleContainer = {
   width: '500px',
 };
 
-export const createForecastFormDefenition = [
+const createForecastFormDefenition = [
   {
     sectionTitle: 'Date Range',
     collapsable: false,
@@ -100,7 +100,7 @@ export const createForecastFormDefenition = [
     ],
   }
 ];
-export const forecastFormDefaultValues = {
+const forecastFormDefaultValues = {
   smoothing: 'smoothingOff',
   startDate: Date.now(),
 };
