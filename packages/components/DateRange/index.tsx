@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Select from 'react-select';
 import { DatePicker } from '../DateTime/DatePicker';
 import Arrow from '@material-ui/icons/ArrowRightAlt';
+import { reactSelectStyles } from '../reactSelectStyles';
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
@@ -43,7 +44,7 @@ export const DateRange: React.FC<any> = () => {
   const [endDate, setEndDate] = useState();
 
 
-return <>
+return <span>
   <Label> Time Span </Label>
   <DateFields>
 
@@ -53,7 +54,8 @@ return <>
       defaultValue={dateOptions[0]}
       name="choose-date-range"
       options={dateOptions}
-      onChange={({type}) => setSelectedRange(type)}
+      onChange={({type}: {type: string}) => setSelectedRange(type)}
+      styles={reactSelectStyles}
     />
 
     <StyledDatePicker
@@ -69,4 +71,4 @@ return <>
     /></>}
 
   </DateFields>
-</>};
+</span>};
