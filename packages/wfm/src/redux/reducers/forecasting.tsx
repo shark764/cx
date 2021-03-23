@@ -5,10 +5,20 @@ const initialState = {
   endDate: '',
   competence: '',
   timezone: '',
+  historicalPathParams: {
+    tenant_id: '00000000-0000-0000-0000-000000000000',
+    competency_id: '00000000-0000-0000-0000-000000000000',
+  },
+  historicalQueryParams: {
+    channel: 'voice',
+    direction: 'inbound',
+    startDateTime: '2021-01-01T00:00:00Z', // TODO: converte these to date.now and the start / end of the date for timestamps
+    endDateTime: '2021-01-30T00:00:00Z',
+  }
 };
 
-export const planning = createSlice({
-  name: 'planning',
+export const forecasting = createSlice({
+  name: 'forecasting',
   initialState,
   reducers: {
     setStartDate: (state, action) => {

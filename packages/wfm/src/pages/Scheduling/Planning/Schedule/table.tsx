@@ -98,7 +98,7 @@ interface DomainMap {
 
 
 export function SheduleTable() {
-  const domain = useSelector(({planning}: RootState) => planning.timeSpan );
+  const domain = 'day'; //TODO: given the start and end date in state.. determine the domain?
   const columns = useMemo(
     () => {
       const convertTimeSpanToDomain: DomainMap = {

@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Select from 'react-select';
 
 import { DateRange } from '@cx/components/DateRange'
 import { reactSelectStyles } from '@cx/components/reactSelectStyles';
+import { planning } from '../../../../redux/reducers/planning';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
@@ -48,12 +50,24 @@ const timeZonesOptions = [
 
 export function Filters() {
 
+  const dispatch = useDispatch();
+  const {
+    setStartDate,
+    setEndDate,
+    setTimezone,
+    setCompetence
+  } = planning.actions;
+
+  const handleDatesChanged = (dates: any) => { dispatch(setStartDate(dates[0] || '')) };
+  const handleTimezoneChanged = (timezone: any) => { dispatch(setTimezone(timezone) )};
+  const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
+
   return (
     <BoxDiv>
       <Title> Forecasting filters </Title>
       <FilterSections>
 
-          <DateRange />
+          <DateRange combinedOnchanges={(data: any) => handleDatesChanged(data)} />
 
           <span>
             <Label> Time Zone </Label>
@@ -64,6 +78,7 @@ export function Filters() {
               name="choose_time_zone"
               options={timeZonesOptions}
               styles={reactSelectStyles}
+              onChange={ (data: any) => handleTimezoneChanged(data)}
             />
           </span>
 
@@ -76,6 +91,7 @@ export function Filters() {
               name="choose_competence"
               options={competenceOptions}
               styles={reactSelectStyles}
+              onChange={ (data: any) => handleCompetenceChanged(data)}
             />
           </span>
 

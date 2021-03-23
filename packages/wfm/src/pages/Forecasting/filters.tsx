@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Select from 'react-select';
-
+import { DateTime } from 'luxon';
 import { DateRange } from '@cx/components/DateRange'
 import { reactSelectStyles } from '@cx/components/reactSelectStyles';
+import { forecasting } from '../../redux/reducers/forecasting';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
@@ -41,12 +43,33 @@ const Label = styled.span`
 
 export function Filters() {
 
+  const dispatch = useDispatch();
+  const {
+    setStartDate,
+    setEndDate,
+    setCompetence
+  } = forecasting.actions;
+
+  const handleDatesChanged = (dates: any) => {
+
+    const formated = new Date(dates[0]).toISOString() ;
+    // TODO: the initial day should start at zero hour... instead of date.now like it currently is..
+    // easier probably when creating initial state..  start with day..  start of today to endDate end of same say..
+
+    // TODO: when use goes back to 1 day view..  make sure to convert the second date to the end of same day...
+
+    // TODO: also notice that changing days does not reset the time stamp portion :(
+    dispatch(setStartDate(formated || ''))
+
+  };
+  const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
+
   return (
     <BoxDiv>
       <Title> Forecasting filters </Title>
       <FilterSections>
 
-          <DateRange />
+          <DateRange combinedOnchanges={(data: any) => handleDatesChanged(data)} />
 
           <span>
             <Label> Competence </Label>
@@ -57,6 +80,7 @@ export function Filters() {
               name="choose_competence"
               options={competenceOptions}
               styles={reactSelectStyles}
+              onChange={ (data: any) => handleCompetenceChanged(data)}
             />
           </span>
 

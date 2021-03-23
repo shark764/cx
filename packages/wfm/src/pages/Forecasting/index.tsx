@@ -100,7 +100,7 @@ const TableFilters = styled.div`
 export function Forecasting() {
 
   // const theme: any = useTheme();
-
+  // TODO: use selector here to pull these out of state....
   const historicalPathParams: HistoricalPathParams = {
     tenant_id: '00000000-0000-0000-0000-000000000000',
     competency_id: '00000000-0000-0000-0000-000000000000',
@@ -111,6 +111,7 @@ export function Forecasting() {
     startDateTime: '2021-01-01T00:00:00Z',
     endDateTime: '2021-01-30T00:00:00Z',
   };
+  // TODO: ... move these items into the forecast state
 
   const { data, isLoading, error } = useQuery<HistoricalData, HistoricalApiError>(
     ['historicalData', historicalPathParams, historicalQueryParams],
@@ -120,32 +121,11 @@ export function Forecasting() {
     })
     );
 
-  // const [competence, setCompetence] = useState('selectCompetence');
+
   const [viewBy, setViewBy] = useState('day');
-  // const [fromDate, setFromDate] = useState(new Date());
-  // const [toDate, setToDate] = useState(new Date());
+
   const [createNewForecast, setCreateNewForecast] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
-
-  // const [isFromDatePickerOpen, setIsFromDatePickerOpen] = useState(false);
-  // const [isToDatePickerOpen, setIsToDatePickerOpen] = useState(false);
-
-  // const changeCompetence = ({ value }: { value: string }) => setCompetence(value);
-  // const changeViewBy = ({ value }: { value: string }) => setViewBy(value);
-
-  // const handleManuallyAddDays = (dateType: string, days: number) => {
-  //   if (dateType === 'from') {
-  //     setFromDate((currentDate) => addDays(currentDate, days));
-  //   } else {
-  //     setToDate((currentDate) => addDays(currentDate, days));
-  //   }
-  // };
-  // const filterDate = (date: Date) => {
-  //   if (viewBy === "week") {
-  //     return disableDays(date, 'onlyEnableMonday');
-  //   }
-  //   return true;
-  // };
 
   return (
     <>

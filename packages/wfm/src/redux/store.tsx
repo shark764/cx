@@ -6,7 +6,10 @@ export interface RootState {
     theme: any;
   };
   planning: {
-    timeSpan: string;
+    startDate: string;
+    endDate: string;
+    timezone: string;
+    competence: string;
   };
 }
 
