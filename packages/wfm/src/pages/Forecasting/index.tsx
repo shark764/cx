@@ -7,10 +7,10 @@ import Button from '@material-ui/core/Button';
 import { addDays, disableDays } from '@cx/utilities/date';
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
+import { Table } from '@cx/components/Table';
 
 import BarChart from '@cx/components/Charts/BarChart';
 import LineChart from '@cx/components/Charts/LineChart';
-import { ForecastingTable } from './Components/table';
 import { filters, barChart, lineChart, tableData } from './fakeData';
 import { wfm } from '../../api';
 import { operations, components } from '@cx/wfmapi/forecast-schema';
@@ -119,7 +119,7 @@ export function Forecasting() {
       pathParams: historicalPathParams,
       queryString: historicalQueryParams
     })
-    );
+  );
 
 
   const [viewBy, setViewBy] = useState('day');
@@ -149,21 +149,21 @@ export function Forecasting() {
           >
             Create
           </Button>
-          <FormDialog open={createNewForecast} title='Create forecast' close={ () => setCreateNewForecast(false)  } >
+          <FormDialog open={createNewForecast} title='Create forecast' close={() => setCreateNewForecast(false)} >
             <DynamicForm
               defaultValues={{}}
               formDefenition={createForecastFormDefenition}
-              onCancel={ () => setCreateNewForecast(false) }
-              onSubmit={ (data: any) => { setCreateNewForecast(false); console.log('submission: ', data); } }
+              onCancel={() => setCreateNewForecast(false)}
+              onSubmit={(data: any) => { setCreateNewForecast(false); console.log('submission: ', data); }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
-          <FormDialog open={deleteForecast} title='Delete forecast' close={ () => setDeleteForecast(false)  } >
+          <FormDialog open={deleteForecast} title='Delete forecast' close={() => setDeleteForecast(false)} >
             <DynamicForm
               defaultValues={{}}
               formDefenition={deleteForcastFormDefinition}
-              onCancel={ () => setDeleteForecast(false) }
-              onSubmit={ (data: any) => { setDeleteForecast(false); console.log('submission: ', data); } }
+              onCancel={() => setDeleteForecast(false)}
+              onSubmit={(data: any) => { setDeleteForecast(false); console.log('submission: ', data); }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -210,7 +210,11 @@ export function Forecasting() {
             />
           </span>
         </TableFilters>
-        <ForecastingTable tableData={tableData[viewBy]} />
+        <Table
+          themeVariant='forecast'
+          columnDefenitions={['col8', 'col9', 'col10', 'col11', 'col12', 'col13', 'col14', 'col15']}
+          tableData={tableData[viewBy]}
+        />
       </TableWrapper>
     </>
   )
