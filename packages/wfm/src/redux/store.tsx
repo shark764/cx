@@ -11,6 +11,20 @@ export interface RootState {
     timezone: string;
     competence: string;
   };
+  forecasting: {
+    competence: '',
+    timezone: '',
+    historicalPathParams: {
+      tenant_id: string;
+      competency_id: string;
+    },
+    historicalQueryParams: {
+      channel: string;
+      direction: string;
+      startDateTime: string;
+      endDateTime: string;
+    }
+  }
 }
 
 const middleware = [...getDefaultMiddleware()];

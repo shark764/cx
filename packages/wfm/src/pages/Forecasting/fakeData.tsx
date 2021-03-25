@@ -1,15 +1,30 @@
 // This is a sample data that is going to be used to demo the BarChart until the API is ready:
+import { historical } from './temp'
+import { DateTime } from 'luxon';
 
 export const filters = {
-  viewBy: [{ label: 'DAY VIEW', id: 0, value: 'day' }, { label: 'WEEK VIEW', id: 1, value: 'week' }, { label: 'DATE RANGE', id: 2, value: 'dateRange' }],
-  competence: [{ label: 'SELECT COMPETENCE...', id: 0, value: 'selectCompetence' }, { label: 'BOOKING', id: 1, value: 'BOOKING' }, { label: 'SUPPORT', id: 2, value: 'SUPPORT' }, { label: 'ALL', id: 3, value: 'all' }],
-  channel: [{ label: 'VOICE', id: 0, value: 'voice' }, { label: 'SMS', id: 1, value: 'sms' }, { label: 'CHAT', id: 2, value: 'chat' }],
-  direction: [{ label: 'INBOUND', id: 0, value: 'inbound' }, { label: 'OUTBOUND', id: 1, value: 'outbound' }, { label: 'ANY', id: 2, value: 'any' }],
+  viewBy: [{ label: 'Day View', id: 0, value: 'day' }, { label: 'Week View', id: 1, value: 'week' }, { label: 'Date range', id: 2, value: 'dateRange' }],
+  competence: [{ label: 'Select Competence', id: 0, value: 'selectCompetence' }, { label: 'Booking', id: 1, value: 'booking' }, { label: 'Support', id: 2, value: 'support' }, { label: 'All', id: 3, value: 'all' }],
+  channel: [{ label: 'Voice', id: 0, value: 'voice' }, { label: 'Messaging', id: 1, value: 'messaging' }, { label: 'SMS', id: 2, value: 'sms' }, { label: 'Email', id: 2, value: 'email' }, { label: 'Work Item', id: 2, value: 'workItem' }],
+  direction: [{ label: 'Inbound', id: 0, value: 'inbound' }, { label: 'Outbound', id: 1, value: 'outbound' }, { label: 'Any', id: 2, value: 'any' }],
 };
 
 interface ObjTypes {
   [key: string]: any;
 }
+
+export const historicalResposneToRechartsObject = {
+  xDataKey: 'timestamp',
+  dataKeys: [
+    { key: 'nco', lineType: 'monotone', lineStroke: 'dotted', yAxisId: 'left' },
+    { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'aht' },
+  ],
+  data: historical.series.map(({timestamp, nco, aht, abandons}) => ({
+    timestamp: DateTime.fromISO(timestamp).toLocaleString(DateTime.TIME_24_SIMPLE),
+    nco: nco,
+    aht: aht,
+  }))
+};
 
 export const lineChart: ObjTypes = {
   day: {
@@ -132,7 +147,6 @@ export const lineChart: ObjTypes = {
     ]
   }
 };
-
 export const barChart: ObjTypes = {
   day: {
     dataKeys: ['VOICE'],

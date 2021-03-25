@@ -15,6 +15,7 @@ import { Chevron } from '../Icons/Chevron';
 import { Clock } from '../Icons/Clock';
 import { Plus } from '../Icons/Plus';
 import { Remove } from '../Icons/Remove';
+import { Loading } from '../Icons/Loading';
 
 export default {
   title: 'Example/Icons',
@@ -132,3 +133,11 @@ PlusIcon.args = {
   fill: '#07487a',
   disabled: false,
 };
+
+export const LoadingIcon: Story<any> = (args) => <Loading {...args} />;
+LoadingIcon.bind({});
+LoadingIcon.args = {
+  size: 100,
+  fill: '#07487a',
+};
+

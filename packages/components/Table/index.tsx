@@ -16,7 +16,6 @@ export interface TableProps {
 };
 
 const TableWrapper = styled.div<{ themeVariant: string }>`
-  border: 1px solid #80808096;
   border-radius: 5px;
   ${({ themeVariant }) => !themeVariant && css`
     padding: 20px;
@@ -44,13 +43,14 @@ const TableRow = styled.div<{ themeVariant: string, columnBackground: string }>`
     ${({ columnBackground }) => columnBackground && `border: 1px solid grey;`}
   }
   ${({ themeVariant }) => themeVariant === 'forecast' && css`
-    border-bottom: 1px solid #80808096;
+    border-bottom: 1px solid #80808038;
   `}
 `;
 
 const TableHeaderRow = styled.div<{ themeVariant: string, columnBackground: string }>`
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color: grey;
   ${({ themeVariant }) => !themeVariant && css`
-    color: grey;
     margin-bottom: 30px;
   `}
   ${({ themeVariant }) => themeVariant === 'forecast' && css`
@@ -59,9 +59,6 @@ const TableHeaderRow = styled.div<{ themeVariant: string, columnBackground: stri
     font-weight: 600;
     padding: 5px;
     text-align: center;
-    color: ${({ theme }) => theme.colors.primary};
-    border-bottom: 1px solid #80808096;
-    ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`}
   `}
 `;
 const TableBody = styled.div<TableColumnInfo>`

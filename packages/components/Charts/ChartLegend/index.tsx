@@ -1,9 +1,5 @@
-/*
- * Copyright © 2015-2021 Serenova, LLC. All rights reserved.
- */
-
 import * as React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const Container = styled.div`
   width: 400px;
@@ -36,9 +32,9 @@ const CustomLegend = ({ payload }: any) => {
   return (
     <Container>
       {payload.map((a: any, idx: number) => (
-        <Wrapper key={idx.toString()}>
+        <Wrapper key={ idx.toString() }>
           <Label>{a.dataKey}:</Label>
-          <Line lineType={a.dataKey === 'AHT' ? 'dotted' : 'solid'} />
+          <Line lineType={a.dataKey === 'aht' ? 'solid':'dotted'} />
         </Wrapper>
       ))}
     </Container>

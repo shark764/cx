@@ -1,18 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  startDate: '',
-  endDate: '',
   competence: '',
   timezone: '',
   historicalPathParams: {
-    tenant_id: '00000000-0000-0000-0000-000000000000',
-    competency_id: '00000000-0000-0000-0000-000000000000',
+    // stagepool1 tenant on staging
+    tenant_id: 'd676b68b-2f1c-498c-b6b3-db7e3a3e5708',
+    competency_id: '64e27f30-7dd9-11e7-9441-d379301ec11d'
   },
   historicalQueryParams: {
     channel: 'voice',
     direction: 'inbound',
-    startDateTime: '2021-01-01T00:00:00Z', // TODO: converte these to date.now and the start / end of the date for timestamps
+    startDateTime: '2021-01-01T00:00:00Z',
     endDateTime: '2021-01-30T00:00:00Z',
   }
 };
@@ -21,12 +20,7 @@ export const forecasting = createSlice({
   name: 'forecasting',
   initialState,
   reducers: {
-    setStartDate: (state, action) => {
-      state.startDate = action.payload;
-    },
-    setEndDate: (state, action) => {
-      state.endDate = action.payload;
-    },
+
     setCompetence: (state, action) => {
       state.competence = action.payload;
     },

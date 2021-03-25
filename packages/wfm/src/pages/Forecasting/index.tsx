@@ -1,23 +1,26 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 import { useQuery } from 'react-query';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import Select from 'react-select';
 import Button from '@material-ui/core/Button';
-import { addDays, disableDays } from '@cx/utilities/date';
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
 import { Table } from '@cx/components/Table';
+import { DateTime } from 'luxon';
 
-import BarChart from '@cx/components/Charts/BarChart';
-import LineChart from '@cx/components/Charts/LineChart';
-import { filters, barChart, lineChart, tableData } from './fakeData';
+import { BarChart } from '@cx/components/Charts/BarChart';
+import { LineChart } from '@cx/components/Charts/LineChart';
+import { filters, barChart, tableData } from './fakeData';
 import { wfm } from '../../api';
 import { operations, components } from '@cx/wfmapi/forecast-schema';
 
 import { createForecastFormDefenition } from './forecastFormDefinition';
 import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
 import { Filters } from './filters';
+import { Loading } from '@cx/components/Icons/Loading';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
@@ -97,23 +100,19 @@ const TableFilters = styled.div`
   padding: 0 10px;
 `;
 
+const LoadingWrapper = styled.div`
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export function Forecasting() {
 
-  // const theme: any = useTheme();
-  // TODO: use selector here to pull these out of state....
-  const historicalPathParams: HistoricalPathParams = {
-    tenant_id: '00000000-0000-0000-0000-000000000000',
-    competency_id: '00000000-0000-0000-0000-000000000000',
-  };
-  const historicalQueryParams: HistoricalQueryparams = {
-    channel: 'voice',
-    direction: 'inbound',
-    startDateTime: '2021-01-01T00:00:00Z',
-    endDateTime: '2021-01-30T00:00:00Z',
-  };
-  // TODO: ... move these items into the forecast state
+  const historicalPathParams = useSelector((state: RootState) => state.forecasting.historicalPathParams);
+  const historicalQueryParams = useSelector((state: RootState) => state.forecasting.historicalQueryParams);
 
-  const { data, isLoading, error } = useQuery<HistoricalData, HistoricalApiError>(
+  const { data, isLoading, error } = useQuery<any, any>(
     ['historicalData', historicalPathParams, historicalQueryParams],
     () => wfm.forecasting.api.get_tenants_tenant_competencies_competency_historical({
       pathParams: historicalPathParams,
@@ -121,6 +120,19 @@ export function Forecasting() {
     })
   );
 
+  const memoData = useMemo(() => data?.data?.series?.map(({timestamp, nco, aht, abandons}: any) => ({
+    timestamp: DateTime.fromISO(timestamp).toLocaleString(DateTime.TIME_24_SIMPLE),
+    nco: nco,
+    aht: aht,
+  })) || [], [data]);
+
+  const linechartData = {
+    xDataKey: 'timestamp',
+    dataKeys: [
+      { key: 'nco', lineType: 'monotone', lineStroke: 'dotted', yAxisId: 'left' },
+      { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'aht' },
+    ],
+  };
 
   const [viewBy, setViewBy] = useState('day');
 
@@ -176,14 +188,18 @@ export function Forecasting() {
 
 
       <ChartsWrapper>
-        <Title> Forecast </Title>
-        <LineChart
-          chartName="staffingEstimate"
-          data={lineChart[viewBy].data}
-          interval={viewBy === 'day' ? 2 : 0}
-          xDataKey={lineChart[viewBy].xDataKey}
-          dataKeys={lineChart[viewBy].dataKeys}
-        />
+        <Title> Forecasted Interaction Volume </Title>
+        {isLoading ?
+          <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
+          <LineChart
+            chartName="forecast"
+            data={memoData}
+            interval={viewBy === 'day' ? 2 : 0}
+            xDataKey={linechartData.xDataKey}
+            dataKeys={linechartData.dataKeys}
+          />
+      }
+        <Title> Staffing Estimate Per Channel </Title>
         <BarChart
           chartName="staffingEstimate"
           statName="Staffing Estimate"
@@ -210,11 +226,13 @@ export function Forecasting() {
             />
           </span>
         </TableFilters>
-        <Table
-          themeVariant='forecast'
-          columnDefenitions={['col8', 'col9', 'col10', 'col11', 'col12', 'col13', 'col14', 'col15']}
-          tableData={tableData[viewBy]}
-        />
+        <div style={{marginTop: '40px'}}>
+          <Table
+            themeVariant='forecast'
+            columnDefenitions={['col8', 'col9', 'col10', 'col11', 'col12', 'col13', 'col14', 'col15']}
+            tableData={tableData[viewBy]}
+          />
+        </div>
       </TableWrapper>
     </>
   )

@@ -35,10 +35,10 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 const links = [
-  { label: 'PLANNING', to: '/planning' },
-  { label: 'FORECASTING', to: '/forecasting' },
-  { label: 'AGENT', to: '/agent' },
-  { label: 'ADMIN', to: '/admin' },
+  { label: 'Planning', to: '/planning' },
+  { label: 'Forecasting', to: '/forecasting' },
+  { label: 'Agent', to: '/agent' },
+  { label: 'Admin', to: '/admin' },
 ];
 
 export function PageHeader() {

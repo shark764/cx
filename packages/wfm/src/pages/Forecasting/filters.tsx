@@ -45,22 +45,11 @@ export function Filters() {
 
   const dispatch = useDispatch();
   const {
-    setStartDate,
-    setEndDate,
     setCompetence
   } = forecasting.actions;
 
   const handleDatesChanged = (dates: any) => {
-
     const formated = new Date(dates[0]).toISOString() ;
-    // TODO: the initial day should start at zero hour... instead of date.now like it currently is..
-    // easier probably when creating initial state..  start with day..  start of today to endDate end of same say..
-
-    // TODO: when use goes back to 1 day view..  make sure to convert the second date to the end of same day...
-
-    // TODO: also notice that changing days does not reset the time stamp portion :(
-    dispatch(setStartDate(formated || ''))
-
   };
   const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
 
