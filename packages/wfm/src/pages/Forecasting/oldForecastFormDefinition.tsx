@@ -1,23 +1,26 @@
-import * as React from 'react';
-import { useState } from 'react';
-import { Story } from '@storybook/react';
-import { FormDialog } from '../FormDialog';
-import { DynamicForm } from '../DynamicForm';
-
-const exampleContainer = {
-  border: '1px solid lightgrey',
-  borderRadius: '5px',
-  margin: '50px',
-  display: 'inline-block',
-  padding: '50px',
-  width: '500px',
-};
-
-const createForecastFormDefenition = [
+export const createForecastFormDefenition = [
   {
-    sectionTitle: 'Date Range',
+    sectionTitle: 'Details',
     collapsable: false,
     fields: [
+      {
+        label: 'Name',
+        name: 'name',
+        type: 'textInput',
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Scenario Type',
+        name: 'scenarioType',
+        type: 'textInput',
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Description',
+        name: 'description',
+        type: 'textboxInput',
+        constraints: [{required: true}],
+      },
       {
         label: 'Start Date',
         name: 'startDate',
@@ -98,24 +101,3 @@ const createForecastFormDefenition = [
     ],
   }
 ];
-
-export default {
-  title: 'Example/Form Dialog',
-};
-
-export const SimpleFormDialog: Story<any> = (args) => {
-
-  const [ open, setOpen ] = useState(false);
-
-  return (<>
-  <button onClick={() => setOpen(!open)} > Toggle Dialog </button>
-  <FormDialog open={open} title='Create forecast scenario' close={ () => setOpen(false)  } >
-    <DynamicForm
-      defaultValues={{}}
-      formDefenition={createForecastFormDefenition}
-      onCancel={ () => setOpen(false) }
-      onSubmit={ (data) => { setOpen(false); console.log('submission: ', data); } }
-      isFormSubmitting={false}
-    ></DynamicForm>
-  </FormDialog></>)
-};

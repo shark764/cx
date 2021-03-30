@@ -102,6 +102,10 @@ const DatePickerContainer = styled.div<IDatePickerContainer>`
     color: ${({ theme }) => theme.colors['accent-2']};
   }
 
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+
   ${({ calendarBtn }) => calendarBtn
     && css`
       display: grid;
@@ -124,7 +128,7 @@ const PositionedCal = styled.span`
   opacity: 0.3;
 `;
 
-export function DatePicker({ calendarBtn = false, ...rest }: any): React.ReactElement {
+export function DatePicker({ calendarBtn = false, placeholder, ...rest }: any): React.ReactElement {
   const theme = {
     colors: {
       brand: '#07487a',
@@ -146,7 +150,7 @@ export function DatePicker({ calendarBtn = false, ...rest }: any): React.ReactEl
     <DatePickerContainer calendarBtn={calendarBtn} theme={theme} >
       <ReactDatePicker
         dateFormat="MMM dd, yyyy"
-        placeholderText="MMM dd, yyyy"
+        placeholderText={placeholder || 'MMM dd, yyyy'}
         todayButton="Today"
         shouldCloseOnSelect={false}
         closeOnScroll

@@ -1,30 +1,36 @@
 import * as React from 'react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import Select from 'react-select';
+
 import Button from '@material-ui/core/Button';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
 import { Table } from '@cx/components/Table';
-import { DateTime } from 'luxon';
-
 import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
-import { filters, barChart, tableData } from './fakeData';
-import { wfm } from '../../api';
-import { operations, components } from '@cx/wfmapi/forecast-schema';
-
-import { createForecastFormDefenition } from './forecastFormDefinition';
-import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
-import { Filters } from './filters';
 import { Loading } from '@cx/components/Icons/Loading';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+import { DateTime } from 'luxon';
+import { createForecastApi, deleteForecastApi, createNewTimelineApi } from '../../redux/thunks';
 
+import { filters, barChart, tableData } from './fakeData';
+import { wfm } from '../../api';
+import { createForecastFormDefenition } from './forecastFormDefinition';
+import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
+import { createTimelineFormDefenition } from './newTimelineFormDefenition';
+import { Filters } from './filters';
+
+import { operations, components } from '@cx/wfmapi/forecast-schema';
 type HistoricalData = components["schemas"]["HistoricalDataDTO"];
 type HistoricalPathParams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["path"];
 type HistoricalQueryparams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["query"];
@@ -36,17 +42,14 @@ const Title = styled.h4`
   margin-top: 0px;
   margin-left: 10px;
 `;
-
 const StyledSelect = styled(Select)`
   width: 150px;
   height: 35px;
   border-color: #07487a;
 `;
-
 const ForecastFilters = styled.section`
   margin-top: 30px;
 `;
-
 const customStyles = {
   option: (provided: any, state: any) => ({
     ...provided,
@@ -59,7 +62,6 @@ const customStyles = {
     return { ...provided, opacity, transition };
   },
 };
-
 const ChartsWrapper = styled.div`
   width: 100%;
   background: white;
@@ -68,7 +70,6 @@ const ChartsWrapper = styled.div`
   border-radius: 5px;
   margin-top: 20px;
 `;
-
 const TableWrapper = styled.div`
   margin-top: 20px;
   background: white;
@@ -76,11 +77,10 @@ const TableWrapper = styled.div`
   padding: 10px;
   border-radius: 5px;
 `;
-
 const ButtonsWrapper = styled.div`
   display: grid;
   grid-gap: 15px;
-  grid-template-columns: fit-content(100px) fit-content(100px);
+  grid-template-columns: fit-content(100px) fit-content(200px);
   float: right;
 `;
 const Actions = styled.div`
@@ -88,18 +88,15 @@ const Actions = styled.div`
   height: 30px;
   width: 100%;
 `;
-
 const Label = styled.span`
   font-size: 11px;
   color: grey;
   vertical-align: super;
   margin-left: 10px;
 `;
-
 const TableFilters = styled.div`
   padding: 0 10px;
 `;
-
 const LoadingWrapper = styled.div`
   height: 300px;
   display: flex;
@@ -120,6 +117,56 @@ export function Forecasting() {
     })
   );
 
+  /**
+   * we will need timelines to be able to get the list of competencies from planning api when its ready TODO:
+   */
+  const { data: timelines, isLoading: timelinesLoading, error: timelinesError, refetch } = useQuery<any, any>(
+    ['timelinesData', historicalPathParams],
+    () => wfm.forecasting.api.get_all_tenants_tenant_forecasttimelines({
+      pathParams: { tenant_id: historicalPathParams.tenant_id },
+    })
+  );
+  const { data: timeline, isLoading: timelineLoading, error: timelineError, refetch: refetchTimeline } = useQuery<any, any>(
+    ['timelineData', historicalPathParams],
+    () => wfm.forecasting.api.get_timeline_tenants_tenant_forecasttimelines_forecast_timeline({
+      pathParams: { tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: timelines.data[0].id },
+    }),
+    {
+      refetchOnWindowFocus: false,
+      enabled: false
+    }
+  );
+
+  const { data: scenarios, isLoading: scenariosLoading, error: scenariosError, refetch: scenariosRefetch } = useQuery<any, any>(
+    ['scenariosData', historicalPathParams],
+    () => wfm.forecasting.api.get_timeline_scenarios_tenants_tenant_forecasttimelines_forecast_timeline_scenarios({
+      pathParams: { tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: timelines.data[0].id },
+    }),
+    {
+      refetchOnWindowFocus: false,
+      enabled: false
+    }
+  );
+
+  const { data: deleteHistorical, isLoading: deleteHistoricalLoading, error: deleteHistoricalError, refetch: refetchHistorical } = useQuery<any, any>(
+    ['scenariosData', historicalPathParams],
+    () => wfm.forecasting.api.delete_tenants_tenant_competencies_competency_historical({
+      pathParams: { tenant_id: historicalPathParams.tenant_id, competency_id: '' },
+    }),
+    {
+      refetchOnWindowFocus: false,
+      enabled: false
+    }
+  );
+
+  useEffect(() => {
+    if (timelines?.data.length > 0) {
+      scenariosRefetch();
+      refetchTimeline();
+    };
+  }, [timelines, scenariosRefetch]);
+
+
   const memoData = useMemo(() => data?.data?.series?.map(({timestamp, nco, aht, abandons}: any) => ({
     timestamp: DateTime.fromISO(timestamp).toLocaleString(DateTime.TIME_24_SIMPLE),
     nco: nco,
@@ -137,11 +184,57 @@ export function Forecasting() {
   const [viewBy, setViewBy] = useState('day');
 
   const [createNewForecast, setCreateNewForecast] = useState(false);
+  const [createNewTimeline, setCreateNewTimeline] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
+
+  const defaultForecastFormValues = {
+    algorithm: 'prophet',
+    includeDayCurve: true,
+    metrics: [ 'nco', 'aht', 'abandons'],
+    algorithmOptions: [],
+    scenarioType: 'temporary',
+  };
 
   return (
     <>
       <Actions>
+        {timelines && (timelines.data.length === 0) &&
+          <Button
+            style={{ color: '#4c4a4a' }}
+            onClick={() => setCreateNewTimeline(true)}
+            variant="outlined"
+            color="primary"
+            startIcon={<ScheduleIcon />}
+          >
+            Create Timeline
+          </Button>
+        }
+        {timelines && (timelines.data.length > 0) &&
+          <Autocomplete
+            id="choose_timeline"
+            options={timelines.data.map(({name, id, description}: any) => ({label: name, id: id}))}
+            getOptionLabel={(option: any) => option.label}
+            size="small"
+            disabled
+            style={{ width: 200, display: 'inline-block' }}
+            renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
+            // TODO: format the options pre render
+            defaultValue={timelines.data.map(({name, id, description}: any) => ({label: name, id: id}))[0]}
+          />
+        }
+        {scenarios && (scenarios.data.length > 0) &&
+          <Autocomplete
+            id="choose_timeline"
+            options={scenarios.data.map(({name, id, description}: any) => ({label: name, id: id}))}
+            getOptionLabel={(option: any) => option.label}
+            size="small"
+            disabled
+            style={{ width: 200, display: 'inline-block', marginLeft: '20px' }}
+            renderInput={(params: any) => <TextField {...params} label="Scenarios" variant="outlined" />}
+            // TODO: format the options pre render
+            defaultValue={scenarios.data.map(({name, id, description}: any) => ({label: name, id: id}))[0]}
+          />
+        }
         <ButtonsWrapper>
           <Button
             style={{ color: '#4c4a4a' }}
@@ -159,14 +252,23 @@ export function Forecasting() {
             color="primary"
             startIcon={<AddIcon />}
           >
-            Create
+            Create Scenario
           </Button>
-          <FormDialog open={createNewForecast} title='Create forecast' close={() => setCreateNewForecast(false)} >
+          <FormDialog open={createNewTimeline} title='Create New Timeline' close={() => setCreateNewTimeline(false)} >
             <DynamicForm
               defaultValues={{}}
+              formDefenition={createTimelineFormDefenition}
+              onCancel={() => setCreateNewTimeline(false)}
+              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, historicalPathParams.tenant_id, refetch ) }}
+              isFormSubmitting={false}
+            ></DynamicForm>
+          </FormDialog>
+          <FormDialog open={createNewForecast} title='Create Forecast Scenario' close={() => setCreateNewForecast(false)} >
+            <DynamicForm
+              defaultValues={defaultForecastFormValues}
               formDefenition={createForecastFormDefenition}
               onCancel={() => setCreateNewForecast(false)}
-              onSubmit={(data: any) => { setCreateNewForecast(false); console.log('submission: ', data); }}
+              onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, historicalPathParams.tenant_id, timelines.data[0].id) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -175,7 +277,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={deleteForcastFormDefinition}
               onCancel={() => setDeleteForecast(false)}
-              onSubmit={(data: any) => { setDeleteForecast(false); console.log('submission: ', data); }}
+              onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastApi(data) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>

@@ -1,8 +1,27 @@
 export const createForecastFormDefenition = [
   {
-    sectionTitle: 'Date Range',
+    sectionTitle: 'Details',
     collapsable: false,
     fields: [
+      {
+        label: 'Name',
+        name: 'name',
+        type: 'textInput',
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Scenario Type',
+        name: 'scenarioType',
+        type: 'textInput',
+        hidden: true,
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Description',
+        name: 'description',
+        type: 'textboxInput',
+        constraints: [{required: true}],
+      },
       {
         label: 'Start Date',
         name: 'startDate',
@@ -18,68 +37,60 @@ export const createForecastFormDefenition = [
     ],
   },
   {
-    sectionTitle: 'Historical Date Range',
+    sectionTitle: 'Historical Date Ranges',
     collapsable: false,
     fields: [
       {
-        label: 'Day',
-        name: 'day',
-        type: 'radioToggle',
-        choices: [{label: 'All Historical', value: 'historical'}, {label: 'Set Range', value: 'range'}],
+        label: 'Day value ranges',
+        name: 'dayValueDateRanges',
+        type: 'dateRanges',
         constraints: [{required: true}],
       },
       {
-        label: 'Intraday',
-        name: 'intraday',
-        type: 'radioToggle',
-        choices: [{label: 'All Historical', value: 'historical'}, {label: 'Set Range', value: 'range'}],
-        constraints: [{required: true}],
-      },
-      {
-        label: 'Start Date',
-        name: 'startDate',
-        type: 'date',
-        constraints: [{required: true}],
-      },
-      {
-        label: 'End Date',
-        name: 'endDate',
-        type: 'date',
+        label: 'Day curve range',
+        name: 'dayCurveDateRange',
+        type: 'dateRange',
         constraints: [{required: true}],
       },
     ],
   },
   {
-    sectionTitle: 'Day Settings',
+    sectionTitle: 'Options',
     collapsable: false,
     fields: [
       {
-        label: 'Trend',
-        name: 'trend',
-        type: 'radioToggle',
-        choices: [{label: 'Linear', value: 'linear'}, {label: 'Logistical', value: 'logistical'}],
+        label: 'Day curve',
+        name: 'includeDayCurve',
+        type: 'boolean',
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Series',
+        name: 'series',
+        type: 'series',
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Algorithm',
+        name: 'algorithm',
+        type: 'textInput',
+        hidden: true,
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Metrics',
+        name: 'metrics',
+        type: 'multiselect',
+        choices: [{label: 'NCO', value: 'nco'}, {label: 'AHT', value: 'aht'}, {label: 'Abandons', value: 'abandons'}],
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Algorithm Options',
+        name: 'algorithmOptions',
+        type: 'textInput',
+        hidden: true,
         constraints: [{required: true}],
       },
     ],
   },
-  {
-    sectionTitle: 'Intraday Settings',
-    collapsable: false,
-    fields: [
-      {
-        label: 'Historical Weight',
-        name: 'historicalWeight',
-        type: 'radioToggle',
-        choices: [{label: 'Even', value: 'even'}, {label: 'Exponential', value: 'exponential'}],
-        constraints: [{required: true}],
-      },
-      {
-        label: 'Smoothing',
-        name: 'smoothing',
-        type: 'radioToggle',
-        choices: [{label: 'Off', value: 'smoothingOff'}, {label: 'On', value: 'smoothingOn'}],
-        constraints: [{required: true}],
-      },
-    ],
-  }
 ];

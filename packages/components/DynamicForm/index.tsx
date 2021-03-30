@@ -5,6 +5,14 @@ import {DetailWrapper} from './DetailWrapper';
 import { DateInput } from './DateInput';
 import { FieldContainer } from './FieldContainer';
 import { RadioToggle, RadioButton } from './RadioField';
+import { TextInput } from './TextInput';
+import { TextboxInput } from './TextboxInput';
+import { DateRanges } from './DateRanges';
+import { SeriesInput } from './SeriesInput';
+import { DateRange } from './DateRange';
+import { BooleanInput } from './BooleanInput';
+import { MultiSelectInput } from './MultiSelect';
+import { MultiSelectObjectInput } from './MultiSelectObjects';
 import Button from '@material-ui/core/Button';
 
 const Wrapper = styled.div`
@@ -16,12 +24,21 @@ const FormActions = styled.div`
   grid-template-columns: 1fr 1fr;
   margin-top: 10px;
   grid-gap: 30px;
+  padding: 10px;
 `;
 
 const fieldComponents = {
   date: DateInput,
   radio: RadioButton,
   radioToggle: RadioToggle,
+  textInput: TextInput,
+  textboxInput: TextboxInput,
+  dateRanges: DateRanges,
+  series: SeriesInput,
+  dateRange: DateRange,
+  boolean: BooleanInput,
+  multiselect: MultiSelectInput,
+  multiselectObject: MultiSelectObjectInput,
 };
 
 interface DynamicFormBuilder {
@@ -54,9 +71,9 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           open={collapsableDefaultOpen}
         >
 
-          {fields.map(({label, name, type, constraints, choices}) =>
-          <FieldContainer label={label} key={label} >
-            { fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || ''}) }
+          {fields.map(({label, name, type, constraints, choices, hidden}) =>
+          <FieldContainer label={label} key={label} hidden={hidden} >
+            { fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null}) }
           </FieldContainer>)}
 
         </DetailWrapper>)}

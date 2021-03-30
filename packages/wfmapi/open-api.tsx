@@ -35,9 +35,9 @@ export class OpenApi {
       // @ts-ignore
       get: ({ path, qs }) => axios({ headers: this.headers, method: 'GET', url: this.url(path) + this.parseQueryString(qs) }, this.parse),
       // @ts-ignore
-      put: ({ path, body }) => axios({ headers: this.headers, method: 'PUT', url: this.url(path), body, json: true }, this.parse),
+      put: ({ path, body }) => axios({ headers: this.headers, method: 'PUT', url: this.url(path), data: body, json: true }, this.parse),
       // @ts-ignore
-      post: ({ path, body }) => axios({ headers: this.headers, method: 'POST', url: this.url(path), body, json: true }, this.parse),
+      post: ({ path, body }) => axios({ headers: this.headers, method: 'POST', url: this.url(path), data: body, json: true }, this.parse),
       // @ts-ignore
       delete: ({ path }) => axios({ headers: this.headers, method: 'DELETE', url: this.url(path) }, this.parse),
     },
@@ -64,7 +64,7 @@ export class OpenApi {
     return withoutSpaces.toLowerCase();
   }
 
-  parseQueryString(queryString: any): string {
+  parseQueryString(queryString: any = {}): string {
     const qs = Object.keys(queryString).map((key) => `${key}=${queryString[key]}`).join('&');
     return `?${qs}`;
   }
@@ -87,7 +87,7 @@ export class OpenApi {
     return ({ pathParams, queryString, body }: ApiParams) =>
       this.apiMethods[action]({
         path: this.pathWithParamsTransposed(path, pathParams),
-        body: body,
+        body: JSON.stringify(body),
         qs: queryString,
       });
   }
