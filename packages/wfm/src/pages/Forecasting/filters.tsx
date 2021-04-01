@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 import styled from 'styled-components';
 import Select from 'react-select';
+import { DateRange } from '@cx/components/DateRange';
 import { DateTime } from 'luxon';
-import { DateRange } from '@cx/components/DateRange'
 import { reactSelectStyles } from '@cx/components/reactSelectStyles';
 import { forecasting } from '../../redux/reducers/forecasting';
+import { parseDateToISODate, convertJSDateToUTC } from '@cx/utilities/date';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
@@ -43,13 +45,20 @@ const Label = styled.span`
 
 export function Filters() {
 
+  const forecastingStartDate = useSelector((state: RootState) => state.forecasting.historicalQueryParams.startDateTime);
+  const startOfStartDate = DateTime.fromISO(forecastingStartDate, { setZone: true }).startOf('day').toISO();
+  const formattedStartDate = convertJSDateToUTC(new Date(startOfStartDate));
+
   const dispatch = useDispatch();
   const {
-    setCompetence
+    setCompetence,
+    setStartDate,
+    setEndDate
   } = forecasting.actions;
 
   const handleDatesChanged = (dates: any) => {
-    const formated = new Date(dates[0]).toISOString() ;
+    dispatch(setStartDate(parseDateToISODate(dates[0], 'startOfDay') || ''));
+    dispatch(setEndDate(parseDateToISODate(dates[1], 'endOfDay') || ''));
   };
   const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
 
@@ -58,20 +67,20 @@ export function Filters() {
       <Title> Forecasting filters </Title>
       <FilterSections>
 
-          <DateRange combinedOnchanges={(data: any) => handleDatesChanged(data)} />
+        <DateRange startDateTime={formattedStartDate} combinedOnchanges={(data: any) => handleDatesChanged(data)} />
 
-          <span>
-            <Label> Competence </Label>
-            <SelectSized
-              className="choose_competence"
-              classNamePrefix="select"
-              defaultValue={competenceOptions[0]}
-              name="choose_competence"
-              options={competenceOptions}
-              styles={reactSelectStyles}
-              onChange={ (data: any) => handleCompetenceChanged(data)}
-            />
-          </span>
+        <span>
+          <Label> Competence </Label>
+          <SelectSized
+            className="choose_competence"
+            classNamePrefix="select"
+            defaultValue={competenceOptions[0]}
+            name="choose_competence"
+            options={competenceOptions}
+            styles={reactSelectStyles}
+            onChange={(data: any) => handleCompetenceChanged(data)}
+          />
+        </span>
 
       </FilterSections>
     </BoxDiv>

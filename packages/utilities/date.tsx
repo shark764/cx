@@ -1,8 +1,20 @@
+import { DateTime } from 'luxon';
+
 export const addDays = (date: Date, days: number) => {
   const res = new Date(Number(date));
   res.setDate(res.getDate() + days);
   return res;
 };
+
+export const parseDateToISODate = (date: Date, startEndOfDay?: 'startOfDay' | 'endOfDay'): string => {
+  return startEndOfDay === 'startOfDay' ?
+    DateTime.fromJSDate(date).toUTC().startOf('day').toISO() :
+    DateTime.fromJSDate(date).toUTC().endOf('day').toISO();
+}
+
+export const convertJSDateToUTC = (date: Date): Date => {
+  return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+}
 
 export const getMonday = (d: Date) => {
   const d2 = new Date(d);

@@ -4,8 +4,6 @@ import styled, { css } from 'styled-components';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { IDatePickerContainer } from '@cx/types/time';
-import { Calendar } from '../Icons/Calendar';
-import { Clock } from '../Icons/Clock';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 
 const DatePickerContainer = styled.div<IDatePickerContainer>`
@@ -128,7 +126,7 @@ const PositionedCal = styled.span`
   opacity: 0.3;
 `;
 
-export function DatePicker({ calendarBtn = false, placeholder, ...rest }: any): React.ReactElement {
+export function DatePicker({ calendarBtn = false, placeholder, disabled, minDate, ...rest }: any): React.ReactElement {
   const theme = {
     colors: {
       brand: '#07487a',
@@ -147,7 +145,7 @@ export function DatePicker({ calendarBtn = false, placeholder, ...rest }: any): 
   const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
 
   return (
-    <DatePickerContainer calendarBtn={calendarBtn} theme={theme} >
+    <DatePickerContainer calendarBtn={calendarBtn} theme={theme}>
       <ReactDatePicker
         dateFormat="MMM dd, yyyy"
         placeholderText={placeholder || 'MMM dd, yyyy'}
@@ -157,13 +155,15 @@ export function DatePicker({ calendarBtn = false, placeholder, ...rest }: any): 
         open={datePickerIsOpen}
         onFocus={() => setDatePickerIsOpen(true)}
         onClickOutside={() => setDatePickerIsOpen(false)}
+        disabled={disabled}
+        minDate={minDate}
         {...rest}
       />
-      <PositionedCal>
+      {!disabled && <PositionedCal>
         <CalendarTodayIcon
           onClick={() => setDatePickerIsOpen(true)}
         />
-      </PositionedCal>
+      </PositionedCal>}
 
     </DatePickerContainer>
   );

@@ -11,7 +11,7 @@ const initialState = {
   historicalQueryParams: {
     channel: 'voice',
     direction: 'inbound',
-    startDateTime: '2021-01-01T00:00:00Z',
+    startDateTime: '2021-01-01T14:00:00Z',
     endDateTime: '2021-01-30T00:00:00Z',
   }
 };
@@ -20,7 +20,12 @@ export const forecasting = createSlice({
   name: 'forecasting',
   initialState,
   reducers: {
-
+    setStartDate: (state, action) => {
+      state.historicalQueryParams.startDateTime = action.payload;
+    },
+    setEndDate: (state, action) => {
+      state.historicalQueryParams.endDateTime = action.payload;
+    },
     setCompetence: (state, action) => {
       state.competence = action.payload;
     },

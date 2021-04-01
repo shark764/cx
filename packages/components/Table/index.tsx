@@ -109,7 +109,8 @@ export const Table: React.VFC<TableProps> = ({
               <TableRow
                 themeVariant={themeVariant} {...row.getRowProps()}
                 columnBackground={cell.column.columnBackground}
-                onClick={() => row.toggleRowExpanded()} key={CreateUUID()}
+                onClick={() => row.toggleRowExpanded()}
+                key={CreateUUID()}
               >
                 {cell.render('Cell')}
               </TableRow>

@@ -167,7 +167,7 @@ export function Forecasting() {
   }, [timelines, scenariosRefetch]);
 
 
-  const memoData = useMemo(() => data?.data?.series?.map(({timestamp, nco, aht, abandons}: any) => ({
+  const memoData = useMemo(() => data?.data?.series?.map(({ timestamp, nco, aht, abandons }: any) => ({
     timestamp: DateTime.fromISO(timestamp).toLocaleString(DateTime.TIME_24_SIMPLE),
     nco: nco,
     aht: aht,
@@ -190,7 +190,7 @@ export function Forecasting() {
   const defaultForecastFormValues = {
     algorithm: 'prophet',
     includeDayCurve: true,
-    metrics: [ 'nco', 'aht', 'abandons'],
+    metrics: ['nco', 'aht', 'abandons'],
     algorithmOptions: [],
     scenarioType: 'temporary',
   };
@@ -212,27 +212,27 @@ export function Forecasting() {
         {timelines && (timelines.data.length > 0) &&
           <Autocomplete
             id="choose_timeline"
-            options={timelines.data.map(({name, id, description}: any) => ({label: name, id: id}))}
+            options={timelines.data.map(({ name, id, description }: any) => ({ label: name, id: id }))}
             getOptionLabel={(option: any) => option.label}
             size="small"
             disabled
             style={{ width: 200, display: 'inline-block' }}
             renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
             // TODO: format the options pre render
-            defaultValue={timelines.data.map(({name, id, description}: any) => ({label: name, id: id}))[0]}
+            defaultValue={timelines.data.map(({ name, id, description }: any) => ({ label: name, id: id }))[0]}
           />
         }
         {scenarios && (scenarios.data.length > 0) &&
           <Autocomplete
             id="choose_timeline"
-            options={scenarios.data.map(({name, id, description}: any) => ({label: name, id: id}))}
+            options={scenarios.data.map(({ name, id, description }: any) => ({ label: name, id: id }))}
             getOptionLabel={(option: any) => option.label}
             size="small"
             disabled
             style={{ width: 200, display: 'inline-block', marginLeft: '20px' }}
             renderInput={(params: any) => <TextField {...params} label="Scenarios" variant="outlined" />}
             // TODO: format the options pre render
-            defaultValue={scenarios.data.map(({name, id, description}: any) => ({label: name, id: id}))[0]}
+            defaultValue={scenarios.data.map(({ name, id, description }: any) => ({ label: name, id: id }))[0]}
           />
         }
         <ButtonsWrapper>
@@ -259,7 +259,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={createTimelineFormDefenition}
               onCancel={() => setCreateNewTimeline(false)}
-              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, historicalPathParams.tenant_id, refetch ) }}
+              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, historicalPathParams.tenant_id, refetch) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -300,7 +300,7 @@ export function Forecasting() {
             xDataKey={linechartData.xDataKey}
             dataKeys={linechartData.dataKeys}
           />
-      }
+        }
         <Title> Staffing Estimate Per Channel </Title>
         <BarChart
           chartName="staffingEstimate"
@@ -328,7 +328,7 @@ export function Forecasting() {
             />
           </span>
         </TableFilters>
-        <div style={{marginTop: '40px'}}>
+        <div style={{ marginTop: '40px' }}>
           <Table
             themeVariant='forecast'
             columnDefenitions={['col8', 'col9', 'col10', 'col11', 'col12', 'col13', 'col14', 'col15']}
