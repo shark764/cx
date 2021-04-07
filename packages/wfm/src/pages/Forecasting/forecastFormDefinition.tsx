@@ -1,12 +1,13 @@
 export const createForecastFormDefenition = [
   {
-    sectionTitle: 'Details',
+    sectionTitle: 'Forecast Range',
     collapsable: false,
     fields: [
       {
         label: 'Name',
         name: 'name',
         type: 'textInput',
+        hidden: true,
         constraints: [{required: true}],
       },
       {
@@ -20,18 +21,14 @@ export const createForecastFormDefenition = [
         label: 'Description',
         name: 'description',
         type: 'textboxInput',
+        hidden: true,
         constraints: [{required: true}],
       },
       {
-        label: 'Start Date',
-        name: 'startDate',
-        type: 'date',
-        constraints: [{required: true}],
-      },
-      {
-        label: 'End Date',
-        name: 'endDate',
-        type: 'date',
+        label: '',
+        name: 'forecastRange',
+        type: 'evenWeeks',
+        multiValue: false,
         constraints: [{required: true}],
       },
     ],
@@ -41,15 +38,34 @@ export const createForecastFormDefenition = [
     collapsable: false,
     fields: [
       {
-        label: 'Day value ranges',
+        label: 'Day',
         name: 'dayValueDateRanges',
-        type: 'dateRanges',
+        type: 'evenWeeks',
+        multiValue: true,
         constraints: [{required: true}],
       },
       {
-        label: 'Day curve range',
+        label: 'Intraday',
         name: 'dayCurveDateRange',
-        type: 'dateRange',
+        // type: ['', 'dateRange'],
+        toggles: [{label: 'All Historical', value: 'historical'}, {label: 'Set Range', value: 'range'}],
+        toggleFields: [
+          {
+            label: 'historical',
+            name: 'dayCurveDateRange',
+            type: 'boolean',
+            hidden: false,
+            constraints: [{required: true}],
+          },
+          {
+            label: 'range',
+            name: 'dayCurveDateRange',
+            type: 'dateRange',
+            hidden: false,
+            constraints: [{required: true}],
+          },
+        ],
+        toggleable: true,
         constraints: [{required: true}],
       },
     ],
@@ -62,10 +78,11 @@ export const createForecastFormDefenition = [
         label: 'Day curve',
         name: 'includeDayCurve',
         type: 'boolean',
+        hidden: true,
         constraints: [{required: true}],
       },
       {
-        label: 'Series',
+        label: 'Series (Pull from competencies when available)',
         name: 'series',
         type: 'series',
         constraints: [{required: true}],
@@ -81,6 +98,7 @@ export const createForecastFormDefenition = [
         label: 'Metrics',
         name: 'metrics',
         type: 'multiselect',
+        hidden: true,
         choices: [{label: 'NCO', value: 'nco'}, {label: 'AHT', value: 'aht'}, {label: 'Abandons', value: 'abandons'}],
         constraints: [{required: true}],
       },
@@ -93,4 +111,46 @@ export const createForecastFormDefenition = [
       },
     ],
   },
+  {
+    sectionTitle: 'Day Settings',
+    collapsable: false,
+    fields: [
+      {
+        label: 'Smoothing',
+        name: 'active_filter',
+        type: 'boolean',
+        constraints: [{required: true}],
+      },
+    ]
+  },
+  {
+    sectionTitle: 'Intraday Settings',
+    collapsable: false,
+    fields: [
+
+    ]
+  },
 ];
+
+// //     "algorithmOptions": [
+//   {
+//     "option": "activate_filter",  smoothing
+//     "value": true
+// },
+// {
+//     "option": "distribution_weight",
+//     "value": "exponential"
+// },
+// {
+//     "option": "country_holidays",  https://github.com/dr-prodigy/python-holidays
+//     "value": "US"
+// },
+// {
+//     "option": "span",
+//     "value": 8
+// },
+// {
+//     "option": "growth",
+//     "value": "{\"method\":\"linear\",\"floor\":20,\"cap\":\"40\"}"
+// }
+// ]

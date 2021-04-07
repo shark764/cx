@@ -1679,6 +1679,28 @@
           {
             "required": false,
             "schema": {
+              "title": "Startdate",
+              "type": "string",
+              "format": "date",
+              "default": "0001-01-01"
+            },
+            "name": "startDate",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Enddate",
+              "type": "string",
+              "format": "date",
+              "default": "9999-12-31"
+            },
+            "name": "endDate",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
               "title": "X-Cx-Auth-Tenant",
               "type": "string"
             },
@@ -2317,6 +2339,71 @@
           }
         }
       }
+    },
+    "/tenants/{tenant_id}/forecasttimelines/{timeline_id}/series/query": {
+      "post": {
+        "summary": "Timeline Series Queries",
+        "description": "Retrieve the data series for a timeline.",
+        "operationId": "timeline_series_queries_tenants__tenant_id__forecasttimelines__timeline_id__series_query_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Timeline Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "timeline_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForecastTimelineSeriesQueryDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Timeline Series Queries Tenants  Tenant Id  Forecasttimelines  Timeline Id  Series Query Post",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ForecastTimelineSeriesDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2865,6 +2952,144 @@
         },
         "description": "Represent dto model for forecast timeline scenarios."
       },
+      "ForecastTimelineSeriesDTO": {
+        "title": "ForecastTimelineSeriesDTO",
+        "required": [
+          "competency",
+          "channel",
+          "direction",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "competency": {
+            "title": "Competency",
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/DirectionType"
+          },
+          "data": {
+            "title": "Data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastTimelineSeriesDataDTO"
+            }
+          }
+        },
+        "description": "A list of forecasted (and possibly) adjusted data for a timeline."
+      },
+      "ForecastTimelineSeriesDataDTO": {
+        "title": "ForecastTimelineSeriesDataDTO",
+        "required": [
+          "type",
+          "series"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "series": {
+            "title": "Series",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastTimelineSeriesDataSeriesDTO"
+            }
+          }
+        },
+        "description": "Defines the type of data series that provided."
+      },
+      "ForecastTimelineSeriesDataSeriesDTO": {
+        "title": "ForecastTimelineSeriesDataSeriesDTO",
+        "required": [
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time"
+          },
+          "nco": {
+            "title": "Nco",
+            "type": "integer"
+          },
+          "aht": {
+            "title": "Aht",
+            "type": "integer"
+          },
+          "abandons": {
+            "title": "Abandons",
+            "type": "integer"
+          }
+        },
+        "description": "The actual data series part of a timeline series."
+      },
+      "ForecastTimelineSeriesQueryDTO": {
+        "title": "ForecastTimelineSeriesQueryDTO",
+        "required": [
+          "startDate",
+          "endDate",
+          "interval",
+          "competencyIds",
+          "channels",
+          "directions"
+        ],
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "title": "Startdate",
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string",
+            "format": "date"
+          },
+          "interval": {
+            "$ref": "#/components/schemas/IntervalType"
+          },
+          "competencyIds": {
+            "title": "Competencyids",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChannelType"
+            }
+          },
+          "directions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DirectionType"
+            }
+          },
+          "includeAdjustments": {
+            "title": "Includeadjustments",
+            "type": "boolean",
+            "default": true
+          },
+          "includeForecast": {
+            "title": "Includeforecast",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "description": "Query input for getting timeline data series."
+      },
       "ForecastValueType": {
         "title": "ForecastValueType",
         "enum": [
@@ -2941,6 +3166,7 @@
         "enum": [
           "nco",
           "aht",
+          "tot",
           "abandons"
         ],
         "type": "string",

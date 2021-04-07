@@ -64,11 +64,11 @@ export const SeriesInput: React.VFC<Props> = ({control, name, isFormSubmitting, 
     name={name}
     defaultValue={defaultValue}
     render={({ onChange }) => (
-      <Series onChange={onChange} />
+      <Series onChange={onChange} name={name} />
     )}
   />;
 
-const Series = ({onChange}: any) => {
+const Series = ({onChange, name}: any) => {
 
 
   const [series, setseries] = useState<any>([{competency: null, channel: null, direction: null}]);
@@ -105,18 +105,21 @@ const Series = ({onChange}: any) => {
             <MiniDate>
               <span>Competence</span>
               <Input
+                className={name + '_competency'}
                 onChange={({target}: any) => { update('competency', target.value, index) }}
               />
             </MiniDate>
             <MiniDate>
               <span>Channel</span>
               <Input
+                className={name + '_channel'}
                 onChange={({target}: any) => { update('channel', target.value, index) }}
               />
             </MiniDate>
             <MiniDate>
               <span>Direction</span>
               <Input
+                className={name + '_direction'}
                 onChange={({target}: any) => { update('direction', target.value, index) }}
               />
             </MiniDate>

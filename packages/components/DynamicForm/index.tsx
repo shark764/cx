@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import {DetailWrapper} from './DetailWrapper';
 import { DateInput } from './DateInput';
 import { FieldContainer } from './FieldContainer';
-import { RadioToggle, RadioButton } from './RadioField';
+import { RadioToggle, RadioButton, ContrtolledToggles } from './RadioField';
 import { TextInput } from './TextInput';
 import { TextboxInput } from './TextboxInput';
 import { DateRanges } from './DateRanges';
@@ -13,6 +14,8 @@ import { DateRange } from './DateRange';
 import { BooleanInput } from './BooleanInput';
 import { MultiSelectInput } from './MultiSelect';
 import { MultiSelectObjectInput } from './MultiSelectObjects';
+import { WeekMultiplier } from './WeekMultiplier';
+import { EvenWeeks } from './EvenWeeks';
 import Button from '@material-ui/core/Button';
 
 const Wrapper = styled.div`
@@ -39,6 +42,8 @@ const fieldComponents = {
   boolean: BooleanInput,
   multiselect: MultiSelectInput,
   multiselectObject: MultiSelectObjectInput,
+  weekMultiplier: WeekMultiplier,
+  evenWeeks: EvenWeeks,
 };
 
 interface DynamicFormBuilder {
@@ -55,10 +60,17 @@ interface DynamicFormBuilder {
 };
 
 export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValues, formDefenition}) => {
-
+  const [ toggledFields, setToggledFields ] = useState({}); //TODO:  figure out toggled fields from the provided defaultValues? or have a nerw one called default fields
   const { handleSubmit, control,  register } = useForm({ defaultValues });
 
   const invalidSubmission = (data) => { console.log(data) };
+
+  const getToggledField = (name: string, fields: any[]) => {
+
+    console.log('um', name, fields, toggledFields)
+    const possibleField = fields.find(f => f.label === name)?.type;
+    return possibleField ? fieldComponents[possibleField] : () => <span />
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit, invalidSubmission)}>
@@ -71,9 +83,23 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           open={collapsableDefaultOpen}
         >
 
-          {fields.map(({label, name, type, constraints, choices, hidden}) =>
+          {fields.map(({label, name, type, constraints, choices, hidden, multiValue, toggleable, toggles, toggleFields}) =>
           <FieldContainer label={label} key={label} hidden={hidden} >
-            { fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null}) }
+
+            {toggleable ?
+              // RadioToggle({control, isFormSubmitting, choices: toggles, name, defaultValue: toggles[0].value})
+              <>
+                <ContrtolledToggles choices={toggles} value={toggledFields[name]} onChange={({target: { value }}) => {
+                  // console.log('hiya', value)  }
+                  setToggledFields({...toggledFields, [name]: value})
+                }} />
+                { getToggledField(toggledFields[name], toggleFields)({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null, multiValue}) }
+              </>
+              :
+              fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null, multiValue})
+            }
+
+            {/* { fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null, multiValue}) } */}
           </FieldContainer>)}
 
         </DetailWrapper>)}
@@ -83,6 +109,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           style={{ color: '#4c4a4a' }}
           variant="outlined"
           onClick={onCancel}
+          className="dynamicFormSave"
         >
           Cancel
         </Button>
@@ -92,6 +119,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           disableElevation
           color="primary"
           type="submit"
+          className="dynamicFormCancel"
         >
           Save
         </Button>

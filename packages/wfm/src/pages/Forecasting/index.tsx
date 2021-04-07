@@ -20,6 +20,8 @@ import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
 
+import { CreateUUID } from '@cx/utilities/uuid';
+
 import { DateTime } from 'luxon';
 import { createForecastApi, deleteForecastApi, createNewTimelineApi } from '../../redux/thunks';
 
@@ -109,13 +111,14 @@ export function Forecasting() {
   const historicalPathParams = useSelector((state: RootState) => state.forecasting.historicalPathParams);
   const historicalQueryParams = useSelector((state: RootState) => state.forecasting.historicalQueryParams);
 
-  const { data, isLoading, error } = useQuery<any, any>(
-    ['historicalData', historicalPathParams, historicalQueryParams],
-    () => wfm.forecasting.api.get_tenants_tenant_competencies_competency_historical({
-      pathParams: historicalPathParams,
-      queryString: historicalQueryParams
-    })
-  );
+  // const { data, isLoading, error } = useQuery<any, any>(
+  //   ['historicalData', historicalPathParams, historicalQueryParams],
+  //   () => wfm.forecasting.api.get_tenants_tenant_competencies_competency_historical({
+  //     pathParams: historicalPathParams,
+  //     queryString: historicalQueryParams
+  //   })
+  // );
+
 
   /**
    * we will need timelines to be able to get the list of competencies from planning api when its ready TODO:
@@ -124,6 +127,45 @@ export function Forecasting() {
     ['timelinesData', historicalPathParams],
     () => wfm.forecasting.api.get_all_tenants_tenant_forecasttimelines({
       pathParams: { tenant_id: historicalPathParams.tenant_id },
+    })
+  );
+  const { data, isLoading, error } = useQuery<any, any>(
+    ['historicalData', historicalPathParams, historicalQueryParams, timelines],
+    () => wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
+      pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: timelines.data[0].id },
+      // queryString: historicalQueryParams
+      body: {
+        startDate: '2021-01-01', // .... to come from filter data in state
+        endDate: '2021-01-30',
+        interval: 'day',
+        // "quarter-hour",
+        // "hour",
+        // "day",
+        // "week",
+        // "month",
+        // "year"  ...interval Types  TODO: maybe make a smart assumption based on start and endDate?
+        competencyIds: [
+          '67b17db0-7dd9-11e7-9441-d379301ec11d',
+          '4ec2baa0-36d5-11ea-b230-ac4e4c12c38d',
+          '66c3e960-7dd9-11e7-9441-d379301ec11d',
+          'a724e630-07c0-11ea-b0cf-fc8bc1552f59',
+          '68c00780-7dd9-11e7-9441-d379301ec11d',
+          '65d62e00-7dd9-11e7-9441-d379301ec11d',
+          'ca7bf9b0-07bc-11ea-9bbb-c49f4396742b',
+          '64e27f30-7dd9-11e7-9441-d379301ec11d',
+        ],
+        channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
+        // directions: ['inbound', 'outbound'],
+        directions: ['inbound'],
+
+        // ^^ required
+        includeAdjustments: true,
+        includeForecast: true,
+      }
+    },
+    {
+      refetchOnWindowFocus: false,
+      // enabled: false
     })
   );
   const { data: timeline, isLoading: timelineLoading, error: timelineError, refetch: refetchTimeline } = useQuery<any, any>(
@@ -187,10 +229,13 @@ export function Forecasting() {
   const [createNewTimeline, setCreateNewTimeline] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
 
+  const uniqueFormName = CreateUUID();
   const defaultForecastFormValues = {
+    name: uniqueFormName,
+    description: uniqueFormName,
     algorithm: 'prophet',
     includeDayCurve: true,
-    metrics: ['nco', 'aht', 'abandons'],
+    metrics: ['nco', 'aht'],
     algorithmOptions: [],
     scenarioType: 'temporary',
   };
@@ -245,6 +290,7 @@ export function Forecasting() {
             Delete
           </Button>
           <Button
+            className="createForecast"
             style={{ color: 'white', background: '#07487a' }}
             onClick={() => setCreateNewForecast(true)}
             variant="contained"
@@ -252,7 +298,7 @@ export function Forecasting() {
             color="primary"
             startIcon={<AddIcon />}
           >
-            Create Scenario
+            Create Forecast
           </Button>
           <FormDialog open={createNewTimeline} title='Create New Timeline' close={() => setCreateNewTimeline(false)} >
             <DynamicForm

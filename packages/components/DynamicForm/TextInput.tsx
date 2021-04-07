@@ -28,6 +28,8 @@ export const TextInput: React.VFC<Props> = ({control, name, isFormSubmitting, de
     defaultValue={defaultValue}
     render={({ onChange, onBlur, value }) => (
       <Input
+        value={value}
+        className={name}
         onChange={onChange}
         onBlur={onBlur}
         disabled={isFormSubmitting}

@@ -9,7 +9,7 @@ const Field = styled.div`
   font-family: Arial;
   align-items: ceneter;
 `;
-const Label = styled.label`
+const Label = styled.div`
   align-self: center;
 `;
 
@@ -23,7 +23,7 @@ export const FieldContainer: React.VFC<Props> = ({ label = '', hidden, children 
   return (
     <Field hidden={hidden} >
       {/* Error message will go here */}
-      <Label> { label } </Label>
+      <Label > { label } </Label>
       <span> { children } </span>
     </Field>
   );

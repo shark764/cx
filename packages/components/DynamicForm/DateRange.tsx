@@ -32,11 +32,11 @@ export const DateRange: React.VFC<Props> = ({control, name, isFormSubmitting, de
     name={name}
     defaultValue={defaultValue}
     render={({ onChange }) => (
-      <DatePickers onChange={onChange} />
+      <DatePickers onChange={onChange} name={name} />
     )}
   />;
 
-const DatePickers = ({onChange}: any) => {
+const DatePickers = ({onChange, name}: any) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -50,6 +50,7 @@ const DatePickers = ({onChange}: any) => {
         <MiniDate>
           <span>Start Date</span>
           <DatePicker
+            className={name + 'startDate'}
             selected={startDate}
             onChange={(date: any) => { setStartDate(date) }}
           />
@@ -57,6 +58,7 @@ const DatePickers = ({onChange}: any) => {
         <MiniDate>
           <span>End Date</span>
           <DatePicker
+            className={name + 'endDate'}
             selected={endDate}
             onChange={(date: any) => { setEndDate(date) }}
           />

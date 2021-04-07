@@ -9,3 +9,5 @@ module.exports = {
   verbose: true,
   testTimeout: 300000
 };
+
+jest.setTimeout(300000);

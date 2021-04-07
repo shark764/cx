@@ -14,7 +14,7 @@
     "diff": "lerna diff",
     "lint": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
     "e2e": "cd packages/puppeteer && jest",
-    "e2e:single": "cd packages/puppeteer && jest --watch -t 'Navigation'"
+    "e2e:single": "cd packages/puppeteer && jest -t 'zzz'"
   },
   "husky": {
     "hooks": {

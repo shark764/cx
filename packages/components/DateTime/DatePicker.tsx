@@ -142,27 +142,19 @@ export function DatePicker({ calendarBtn = false, placeholder, disabled, minDate
       error: '#d8000c',
     },
   };
-  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
 
   return (
     <DatePickerContainer calendarBtn={calendarBtn} theme={theme}>
       <ReactDatePicker
-        dateFormat="MMM dd, yyyy"
-        placeholderText={placeholder || 'MMM dd, yyyy'}
+        dateFormat="yyyy-MM-dd"
         todayButton="Today"
-        shouldCloseOnSelect={false}
+        shouldCloseOnSelect={true}
         closeOnScroll
-        open={datePickerIsOpen}
-        onFocus={() => setDatePickerIsOpen(true)}
-        onClickOutside={() => setDatePickerIsOpen(false)}
         disabled={disabled}
-        minDate={minDate}
         {...rest}
       />
       {!disabled && <PositionedCal>
-        <CalendarTodayIcon
-          onClick={() => setDatePickerIsOpen(true)}
-        />
+        <CalendarTodayIcon />
       </PositionedCal>}
 
     </DatePickerContainer>

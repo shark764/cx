@@ -25,15 +25,11 @@ export const competence = (timeSpan: string) => (dispatch: any) => {
   dispatch(setCompetence(timeSpan));
 };
 
-
 export const createForecastApi = async (formData: any, tenant_id: string, forecast_timeline_id: string) => {
+  console.log('form data',formData)
+};
 
-  // TODO: automate this example in puppeteer
-  // start feb 1-2
-  //  day valu jan 20-26
-  // day curev  jan 20 -26
-
-  // detail: "There are no any historical day curve values for triplet: competency: 64e27f30-7dd9-11e7-9441-d379301ec11d, channel: voice, direction: inbound
+export const createForecastApiz = async (formData: any, tenant_id: string, forecast_timeline_id: string) => {
 
     const { name, description, startDate, endDate, scenarioType, ...scenarioConfig } = formData;
 

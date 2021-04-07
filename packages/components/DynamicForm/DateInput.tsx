@@ -20,13 +20,14 @@ export const DateInput: React.VFC<Props> = ({control, name, isFormSubmitting, de
     defaultValue={defaultValue}
     render={({ onChange, onBlur, value }) => (
       <Date
+        name={name}
         onChange={onChange}
         isFormSubmitting={isFormSubmitting}
       />
     )}
   />;
 
-  const Date = ({onChange, isFormSubmitting}: any) => {
+  const Date = ({onChange, isFormSubmitting, name}: any) => {
     const [date, setDate] = useState(null);
 
     useEffect(() => {
@@ -35,6 +36,7 @@ export const DateInput: React.VFC<Props> = ({control, name, isFormSubmitting, de
 
     return (
       <DatePicker
+        className={name}
         onChange={setDate}
         selected={date}
         isClearable

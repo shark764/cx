@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-export const addDays = (date: Date, days: number) => {
+export const addDays = (date: Date | null, days: number): Date => {
   const res = new Date(Number(date));
   res.setDate(res.getDate() + days);
   return res;

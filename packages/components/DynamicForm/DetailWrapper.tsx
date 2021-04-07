@@ -29,7 +29,7 @@ export const DetailWrapper: React.VFC<Props> = ({title, children, open = true, c
   const [ isOpen, setOpen ] = useState(open);
 
     return <>
-        <Wrapper onClick={() => setOpen(!isOpen) }>
+        <Wrapper onClick={() => collapsable && setOpen(!isOpen) }>
           <span>{ title }</span>
           <TitleBar />
           {collapsable && <Chevron

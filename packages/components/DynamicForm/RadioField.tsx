@@ -16,7 +16,7 @@ const RadioToggles = styled(RadioGroup)`
 
 interface Props {
   value?: string;
-  label: string;
+  label?: string;
   control?: Control;
   onChange?: () => void;
   checked?: boolean;
@@ -56,3 +56,16 @@ export const RadioToggle: React.VFC<Props> = ({control, choices = [], name, defa
         </RadioToggles>
     )}
   />;
+
+  export const ContrtolledToggles: React.VFC<Props> = ({onChange, choices = [], value}) =>
+      <RadioToggles value={value} onChange={onChange} row >
+        {choices.map((choice) =>
+          <FormControlLabel
+            value={choice.value}
+            control={<Radio />}
+            label={choice.label}
+            key={choice.value}
+            labelPlacement="start"
+          />
+          )}
+        </RadioToggles>
