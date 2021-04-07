@@ -1,8 +1,11 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from './redux/store';
+import styled, { css } from 'styled-components';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
 import { Navigation } from './navigation';
+import { useDivWidth } from '@cx/utilities/CustomHooks/useDivWidth';
 import './App.css';
 
 const Main = styled.main`
@@ -10,12 +13,27 @@ const Main = styled.main`
   overflow: auto;
 `;
 
-const Content = styled.section`
-  padding: 24px;
-  margin-left: 100px;
+const Content = styled.section<{ isMobile: boolean }>`
+  ${({ isMobile }) => isMobile ?
+    css`
+      margin-left: 56px;
+    ` :
+    css`
+      padding: 24px;
+      margin-left: 100px;
+    `
+  }
 `;
 
 export function App() {
+  const displaySize = useSelector((state: RootState) => state.main.displaySize);
+  const [ref, width] = useDivWidth();
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    width < displaySize ? setIsMobile(true) : setIsMobile(false);
+  }, [width, displaySize]);
+
   return (
     <>
       {window.parent === window ? <PageHeader /> : <></>}
@@ -23,7 +41,7 @@ export function App() {
       <PageSideBar />
 
       <Main>
-        <Content>
+        <Content ref={ref} isMobile={isMobile}>
           <Navigation />
         </Content>
       </Main>

@@ -20,6 +20,8 @@ export interface IBigCalendar {
   components?: any;
   formats?: any;
   defaultView?: string;
+  onView: any;
+  view: any;
   views?: any;
   toolbar?: boolean;
   min?: Date;

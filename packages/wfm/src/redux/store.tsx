@@ -4,6 +4,7 @@ import { reducer } from './reducers';
 export interface RootState {
   main: {
     theme: any;
+    displaySize: number;
   };
   planning: {
     startDate: string;

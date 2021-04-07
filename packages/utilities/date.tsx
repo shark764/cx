@@ -6,6 +6,12 @@ export const addDays = (date: Date | null, days: number): Date => {
   return res;
 };
 
+export const removeDays = (date: Date | null, days: number): Date => {
+  const res = new Date(Number(date));
+  res.setDate(res.getDate() - days);
+  return res;
+};
+
 export const parseDateToISODate = (date: Date, startEndOfDay?: 'startOfDay' | 'endOfDay'): string => {
   return startEndOfDay === 'startOfDay' ?
     DateTime.fromJSDate(date).toUTC().startOf('day').toISO() :
@@ -16,18 +22,18 @@ export const convertJSDateToUTC = (date: Date): Date => {
   return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
 }
 
-export const getMonday = (d: Date) => {
+export const getMonday = (d: Date): Date => {
   const d2 = new Date(d);
   const day = d2.getDay();
   const diff = d2.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
   return new Date(d2.setDate(diff));
 };
 
-export const isSameDay = (date1: Date, date2: Date) => date1.getDate() === date2.getDate()
+export const isSameDay = (date1: Date, date2: Date): boolean => date1.getDate() === date2.getDate()
   && date1.getMonth() === date2.getMonth()
   && date1.getFullYear() === date2.getFullYear();
 
-export const disableDays = (date: Date, daysToDisable?: string) => {
+export const disableDays = (date: Date, daysToDisable?: string): boolean => {
   const day = date.getDay();
   if (daysToDisable === 'disableWeekends') {
     return day !== 0 && day !== 6;

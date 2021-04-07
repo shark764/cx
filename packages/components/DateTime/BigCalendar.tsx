@@ -20,6 +20,15 @@ const CalendarContainer = styled.div<IContainer>`
       width: ${width};
     `};
 
+  .rbc-day-slot .rbc-events-container {
+    width: 100%;
+  }
+
+  .rbc-timeslot-group {
+    min-height: 22px;
+    line-height: 21px;
+  }
+
   .rbc-time-view .rbc-row.rbc-time-header-cell {
     min-height: 40px;
   }
@@ -62,10 +71,13 @@ export const BigCalendar: React.VFC<IBigCalendar> = ({
   height,
   width,
   className,
+  view,
+  onView,
   components = {},
   formats = {},
   ...rest
 }) => {
+
   const calendarComponents = deepMerge(
     {
       week: {
@@ -84,7 +96,14 @@ export const BigCalendar: React.VFC<IBigCalendar> = ({
 
   return (
     <CalendarContainer className={className} height={height} width={width}>
-      <Calendar localizer={luxonLocalizer} formats={calendarFormats} components={calendarComponents} {...rest} />
+      <Calendar
+        localizer={luxonLocalizer}
+        formats={calendarFormats}
+        components={calendarComponents}
+        view={view}
+        onView={onView}
+        {...rest}
+      />
     </CalendarContainer>
   );
 };

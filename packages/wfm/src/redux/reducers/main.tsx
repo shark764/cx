@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   theme: null,
+  displaySize: 720
 };
 
 export const main = createSlice({
@@ -10,6 +11,6 @@ export const main = createSlice({
   reducers: {
     setTheme: (state, action) => {
       state.theme = action.payload;
-    },
+    }
   },
 });
