@@ -5,6 +5,7 @@ export interface RootState {
   main: {
     theme: any;
     displaySize: number;
+    competencies: any[];
   };
   planning: {
     startDate: string;

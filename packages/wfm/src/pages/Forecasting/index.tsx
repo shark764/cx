@@ -23,7 +23,7 @@ import { Loading } from '@cx/components/Icons/Loading';
 import { CreateUUID } from '@cx/utilities/uuid';
 
 import { DateTime } from 'luxon';
-import { createForecastApi, deleteForecastApi, createNewTimelineApi } from '../../redux/thunks';
+import { createForecastApi, deleteForecastScenario, createNewTimelineApi } from '../../redux/thunks';
 
 import { filters, barChart, tableData } from './fakeData';
 import { wfm } from '../../api';
@@ -131,12 +131,12 @@ export function Forecasting() {
   );
   const { data, isLoading, error } = useQuery<any, any>(
     ['historicalData', historicalPathParams, historicalQueryParams, timelines],
-    () => wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
-      pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: timelines.data[0].id },
+    () => timelines?.data?.[0]?.id && wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
+      pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: timelines?.data?.[0].id },
       // queryString: historicalQueryParams
       body: {
-        startDate: '2021-01-01', // .... to come from filter data in state
-        endDate: '2021-01-30',
+        startDate: '2021-05-01', // .... to come from filter data in state..  for now lets try to see forecast data for May!
+        endDate: '2021-05-29',
         interval: 'day',
         // "quarter-hour",
         // "hour",
@@ -144,15 +144,10 @@ export function Forecasting() {
         // "week",
         // "month",
         // "year"  ...interval Types  TODO: maybe make a smart assumption based on start and endDate?
-        competencyIds: [
-          '67b17db0-7dd9-11e7-9441-d379301ec11d',
-          '4ec2baa0-36d5-11ea-b230-ac4e4c12c38d',
-          '66c3e960-7dd9-11e7-9441-d379301ec11d',
-          'a724e630-07c0-11ea-b0cf-fc8bc1552f59',
-          '68c00780-7dd9-11e7-9441-d379301ec11d',
-          '65d62e00-7dd9-11e7-9441-d379301ec11d',
-          'ca7bf9b0-07bc-11ea-9bbb-c49f4396742b',
-          '64e27f30-7dd9-11e7-9441-d379301ec11d',
+        competencyIds: [ // pull these from main state instead
+          '64e27f30-7dd9-11e7-9441-d379301ec11d', // temp_mock2
+          '65d62e00-7dd9-11e7-9441-d379301ec11d', // temp_mock
+          '66c3e960-7dd9-11e7-9441-d379301ec11d', // temp_mock3
         ],
         channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
         // directions: ['inbound', 'outbound'],
@@ -168,16 +163,16 @@ export function Forecasting() {
       // enabled: false
     })
   );
-  const { data: timeline, isLoading: timelineLoading, error: timelineError, refetch: refetchTimeline } = useQuery<any, any>(
-    ['timelineData', historicalPathParams],
-    () => wfm.forecasting.api.get_timeline_tenants_tenant_forecasttimelines_forecast_timeline({
-      pathParams: { tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: timelines.data[0].id },
-    }),
-    {
-      refetchOnWindowFocus: false,
-      enabled: false
-    }
-  );
+  // const { data: timeline, isLoading: timelineLoading, error: timelineError, refetch: refetchTimeline } = useQuery<any, any>(
+  //   ['timelineData', historicalPathParams],
+  //   () => wfm.forecasting.api.get_timeline_tenants_tenant_forecasttimelines_forecast_timeline({
+  //     pathParams: { tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: timelines.data[0].id },
+  //   }),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     enabled: false
+  //   }
+  // );
 
   const { data: scenarios, isLoading: scenariosLoading, error: scenariosError, refetch: scenariosRefetch } = useQuery<any, any>(
     ['scenariosData', historicalPathParams],
@@ -204,7 +199,7 @@ export function Forecasting() {
   useEffect(() => {
     if (timelines?.data.length > 0) {
       scenariosRefetch();
-      refetchTimeline();
+      // refetchTimeline();
     };
   }, [timelines, scenariosRefetch]);
 
@@ -214,6 +209,16 @@ export function Forecasting() {
     nco: nco,
     aht: aht,
   })) || [], [data]);
+
+  const memoTimelineOptions = useMemo(() => timelines?.data?.map(({ description, id, name }: any) => ({
+    label: name,
+    id: id,
+  })) || [], [timelines]);
+
+  const memoScenariosOptions = useMemo(() => scenarios?.data?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
+    label: `${startDate} - ${endDate}`,
+    id: forecastScenarioId,
+  })) || [], [scenarios]);
 
   const linechartData = {
     xDataKey: 'timestamp',
@@ -235,8 +240,16 @@ export function Forecasting() {
     description: uniqueFormName,
     algorithm: 'prophet',
     includeDayCurve: true,
-    metrics: ['nco', 'aht'],
-    algorithmOptions: [],
+    // TODO: tot notsupported just yet
+    metrics: ['nco'],
+    // metrics: ['nco', 'tot'],
+    algorithmOptions: [
+      {option: 'include_history', value: false},
+      {option: 'activate_filter', value: false}, // save default si supposedly true,  but causes issues for now setting to false
+      {option: 'distribution_weight', value: 'exponential'},
+      {option: 'country_holidays', value: 'US'},
+      {option: 'growth', value: '{"method":"linear","floor":20,"cap":"40"}'},
+    ],
     scenarioType: 'temporary',
   };
 
@@ -257,27 +270,25 @@ export function Forecasting() {
         {timelines && (timelines.data.length > 0) &&
           <Autocomplete
             id="choose_timeline"
-            options={timelines.data.map(({ name, id, description }: any) => ({ label: name, id: id }))}
+            options={ memoTimelineOptions }
             getOptionLabel={(option: any) => option.label}
             size="small"
-            disabled
+            // disabled
             style={{ width: 200, display: 'inline-block' }}
             renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
-            // TODO: format the options pre render
-            defaultValue={timelines.data.map(({ name, id, description }: any) => ({ label: name, id: id }))[0]}
+            defaultValue={ memoTimelineOptions[0] }
           />
         }
         {scenarios && (scenarios.data.length > 0) &&
           <Autocomplete
-            id="choose_timeline"
-            options={scenarios.data.map(({ name, id, description }: any) => ({ label: name, id: id }))}
+            id="choose_scenario"
+            options={ memoScenariosOptions }
             getOptionLabel={(option: any) => option.label}
             size="small"
-            disabled
             style={{ width: 200, display: 'inline-block', marginLeft: '20px' }}
             renderInput={(params: any) => <TextField {...params} label="Scenarios" variant="outlined" />}
             // TODO: format the options pre render
-            defaultValue={scenarios.data.map(({ name, id, description }: any) => ({ label: name, id: id }))[0]}
+            defaultValue={ memoScenariosOptions[0] }
           />
         }
         <ButtonsWrapper>
@@ -323,7 +334,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={deleteForcastFormDefinition}
               onCancel={() => setDeleteForecast(false)}
-              onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastApi(data) }}
+              onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastScenario(data) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>

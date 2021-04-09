@@ -17,37 +17,40 @@ const BoxDiv = styled.div`
   background: white;
 `;
 
-const competenceOptions = [{ label: 'Booking', id: 23425 }];
 
 const FilterSections = styled.div`
   display: flex;
   justify-content: space-between;
-`;
+  `;
 
 const SelectSized = styled(Select)`
   width: 250px;
   margin: 0px 10px;
-`;
+  `;
 
 const Title = styled.h4`
   color: grey;
   font-style: italic;
   margin-top: 0px;
   margin-left: 10px;
-`;
+  `;
 
 const Label = styled.span`
   font-size: 11px;
   color: grey;
   vertical-align: super;
   margin-left: 10px;
-`;
+  `;
 
 export function Filters() {
 
   const forecastingStartDate = useSelector((state: RootState) => state.forecasting.historicalQueryParams.startDateTime);
   const startOfStartDate = DateTime.fromISO(forecastingStartDate, { setZone: true }).startOf('day').toISO();
   const formattedStartDate = convertJSDateToUTC(new Date(startOfStartDate));
+
+  const competenceOptions = useSelector((state: RootState) =>
+    state.main.competencies.map(({id, name, type}) => ({label: name, id}))
+  );
 
   const dispatch = useDispatch();
   const {

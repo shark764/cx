@@ -1,19 +1,26 @@
 import { OpenApi } from './open-api';
 import forecast from './forecast.json';
+import planning from './planning.json';
 
 const protocol = 'http';
-const hostOverride = 'us-east-1-staging-wfm-cx-forecast.cxengagelabs.net';
 const basePathOverride = '';
 
-const specificationWithOverrides = (spec: any) => ({
+const specificationWithOverridesForecast = (spec: any) => ({
   ...spec,
   protocol: protocol,
-  host: hostOverride,
+  host: 'us-east-1-staging-wfm-cx-forecast.cxengagelabs.net',
+  basePath: basePathOverride,
+});
+
+const specificationWithOverridesPlanning = (spec: any) => ({
+  ...spec,
+  protocol: protocol,
+  host: 'us-east-1-staging-wfm-cx-planning.cxengagelabs.net',
   basePath: basePathOverride,
 });
 
 export const WFMAPI = (authToken: string) => ({
-  // planning: new OpenApi(specificationWithOverrides(planning), authToken),
+  planning: new OpenApi(specificationWithOverridesPlanning(planning), authToken),
   // agents: new OpenApi(specificationWithOverrides(agents), authToken),
-  forecasting: new OpenApi(specificationWithOverrides(forecast), authToken),
+  forecasting: new OpenApi(specificationWithOverridesForecast(forecast), authToken),
 });

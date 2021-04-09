@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useMemo, Fragment } from 'react';
 import { useTable, useRowSelect, useExpanded } from 'react-table';
 import styled, { css } from 'styled-components';
 import { defineColumns, defineGridTemplateColumns } from './columnDefenitions';
@@ -91,7 +91,7 @@ export const Table: React.VFC<TableProps> = ({
   return (
     <TableWrapper {...getTableProps()} themeVariant={themeVariant}>
       <TableBody columnTemplate={gridTemplateColumns}>
-        {headerGroups.map((headerGroup) => (<>
+        {headerGroups.map((headerGroup) => (<Fragment key={CreateUUID()} >
           {headerGroup.headers.map((column) =>
             <TableHeaderRow
               themeVariant={themeVariant}
@@ -100,11 +100,11 @@ export const Table: React.VFC<TableProps> = ({
             >
               {column.render('Header', { key: column.id })}
             </TableHeaderRow>)}
-        </>))}
+        </Fragment>))}
 
         {rows.map((row) => {
           prepareRow(row);
-          return (<>
+          return (<Fragment key={CreateUUID()} >
             {row.cells.map((cell) => (
               <TableRow
                 themeVariant={themeVariant} {...row.getRowProps()}
@@ -116,7 +116,7 @@ export const Table: React.VFC<TableProps> = ({
               </TableRow>
             ))}
 
-          </>);
+          </Fragment>);
           // {row.isExpanded && <div style={{width: '100%'}}>
           //   HERYYYYYY
           // </div>}

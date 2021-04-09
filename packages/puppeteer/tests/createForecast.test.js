@@ -33,27 +33,42 @@ describe('Forecasting', () => {
     //     await expect(page.title()).resolves.toMatch('Workforce Management');
     //     await page.waitForTimeout(50000);
     //   });
-    await page.type('.name', 'Test Forecast', {delay: 0});
-    await page.type('.description', 'Test Forecast', {delay: 0});
 
-    await page.type('.startDate', 'Feb 01, 2021', {delay: 0});
-    await page.type('.endDate', 'Feb 02, 2021', {delay: 0});
+    const clickLots = (total, selector) => {
+      new Array(total)
+        .fill(selector)
+        .forEach(async (selector) => {
+          await page.click(selector);
+        })
+    }
 
-    await page.type('.dayValueDateRangesstartDate0', 'Jan 20, 2021', {delay: 0});
-    await page.type('.dayValueDateRangesendDate0', 'Jan 26, 2021', {delay: 0});
+    // Start with a forecast range in the future
+    await page.type('.forecastRangestartDate', '2021-05-01');
+    await page.keyboard.press('Enter');
+    clickLots(3, '.forecastRange-increment');
 
-    await page.type('.dayCurveDateRangestartDate', 'Jan 20, 2021', {delay: 0});
-    await page.type('.dayCurveDateRangeendDate', 'Jan 26, 2021', {delay: 0});
 
-    await page.type('.series_competency', '64e27f30-7dd9-11e7-9441-d379301ec11d', {delay: 0});
-    await page.type('.series_channel', 'voice', {delay: 0});
-    await page.type('.series_direction', 'inbound', {delay: 0});
+    // Choose the range you want to look at historically
+    // In this example lets take all data fromthe past year only
+    await page.type('.dayValueDateRangesstartDate', '2020-01-01');
+    await page.keyboard.press('Enter');
+    clickLots(51, '.dayValueDateRanges-increment');
+
+
+    await page.click('.Range-range');
+
+    // set the day curve range, for this we'll choose the month of may
+    await page.type('.dayCurveDateRangestartDate', '2020-05-01');
+    await page.keyboard.press('Enter');
+    await page.type('.dayCurveDateRangeendDate', '2020-05-31');
+    await page.keyboard.press('Enter');
+
+
+    // For now we've hard coded some series date when the form submits
 
     // await page.click('.dynamicFormSave');
-    await page.click('.dynamicFormCancel');
+    // await page.click('.dynamicFormCancel');
 
-
-    await expect(page.title()).resolves.toMatch('Workforce Management');
     await page.waitForTimeout(300000);
   });
 

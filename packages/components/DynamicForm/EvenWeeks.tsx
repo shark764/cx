@@ -135,10 +135,12 @@ const DatePickers = ({onChange, name, multiValue}: any) => {
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
   };
-
+// TODO: make it so startDate can only be mondays, for at least the historical range
   const updateTotalWeeks = (index: number, totalWeeks: number): void => {
     const { startDate } = dateRanges[index];
-    const newRange = { startDate, endDate: addDays(startDate, totalWeeks * 7), totalWeeks };
+    // TODO: the calculation is not very efficient?
+    // the minus 1 is to make the range inclusive and not exclusive
+    const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1 ), totalWeeks };
     const newArray = [...dateRanges];
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
@@ -172,8 +174,8 @@ const DatePickers = ({onChange, name, multiValue}: any) => {
                 onChange={onChange}
               />
                 <IncrementControls>
-                  <Decrement onClick={() => updateTotalWeeks(index, totalWeeks - 1)}  fontSize="small" />
-                  <Increment onClick={() => updateTotalWeeks(index, totalWeeks + 1)} fontSize="small" />
+                  <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1)}  fontSize="small" />
+                  <Increment className={name + '-increment'} onClick={() => updateTotalWeeks(index, totalWeeks + 1)} fontSize="small" />
                 </IncrementControls>
             </span>
           </MiniMultiplier>

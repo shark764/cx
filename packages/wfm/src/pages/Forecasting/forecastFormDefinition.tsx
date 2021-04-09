@@ -60,7 +60,7 @@ export const createForecastFormDefenition = [
           {
             label: 'range',
             name: 'dayCurveDateRange',
-            type: 'dateRange',
+            type: 'evenWeeks',
             hidden: false,
             constraints: [{required: true}],
           },
@@ -115,12 +115,12 @@ export const createForecastFormDefenition = [
     sectionTitle: 'Day Settings',
     collapsable: false,
     fields: [
-      {
-        label: 'Smoothing',
-        name: 'active_filter',
-        type: 'boolean',
-        constraints: [{required: true}],
-      },
+      // {
+      //   label: 'Smoothing',
+      //   name: 'active_filter',
+      //   type: 'boolean',
+      //   constraints: [{required: true}],
+      // },
     ]
   },
   {

@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './redux/store';
 import styled, { css } from 'styled-components';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
 import { Navigation } from './navigation';
 import { useDivWidth } from '@cx/utilities/CustomHooks/useDivWidth';
+import { fetchTenantCompetencies } from './redux/thunks';
 import './App.css';
 
 const Main = styled.main`
@@ -29,10 +30,16 @@ export function App() {
   const displaySize = useSelector((state: RootState) => state.main.displaySize);
   const [ref, width] = useDivWidth();
   const [isMobile, setIsMobile] = React.useState(false);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     width < displaySize ? setIsMobile(true) : setIsMobile(false);
   }, [width, displaySize]);
+
+
+  React.useEffect(() => {
+    dispatch(fetchTenantCompetencies());
+  }, [dispatch]);
 
   return (
     <>

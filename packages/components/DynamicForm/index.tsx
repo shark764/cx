@@ -109,7 +109,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           style={{ color: '#4c4a4a' }}
           variant="outlined"
           onClick={onCancel}
-          className="dynamicFormSave"
+          className="dynamicFormCancel"
         >
           Cancel
         </Button>
@@ -119,7 +119,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           disableElevation
           color="primary"
           type="submit"
-          className="dynamicFormCancel"
+          className="dynamicFormSave"
         >
           Save
         </Button>

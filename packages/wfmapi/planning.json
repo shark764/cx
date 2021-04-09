@@ -1,824 +1,52 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.2",
   "info": {
-    "version": "0.0.1",
-    "title": "CxWFM Schedule Api",
-    "description": "This api covers working with schedules in CxWFM.\n"
+    "title": "FastAPI",
+    "version": "0.1.0"
   },
-  "tags": [
-    {
-      "name": "Plans",
-      "description": "A plan is a collection of schedules. A contact center can have multiple plans for different purposes\nsuch as testing scenarios, doing preliminary planning, one plan will be set as the official plan and\nthis plan can be published to agents. A plan is not restricted to a date range but should be viewed\nas a (possibly) continuous set of schedules.\n"
-    },
-    {
-      "name": "Schedule Period",
-      "description": "A schedule period defines the period that is used scheduling within an organization. The schedule period allows the scheduling process to work around a common period within which schedules can be organized and moved between plans. The start- and end-date of the schedule period is related to the agent's own timezone and not strictly to the tenant's timezone. The actual time range of the schedule period is therefore dependent on the agents that are scheduled within it."
-    },
-    {
-      "name": "Schedules",
-      "description": "A schedule is a finite set of shifts limited by a date range. The schedule can but does not have to be\nassigned to an agent.\n"
-    },
-    {
-      "name": "Shifts",
-      "description": "A shift is a day's worth of work for an agent and consists of one or more activities that an agent is\nscheduled for during that day. A shift can stretch into the next day.\n"
-    },
-    {
-      "name": "Activities",
-      "description": "An activity is information about what an agent is scheduled to do.\n"
-    },
-    {
-      "name": "Optimization",
-      "description": "Optimization is the process of generating a schedule that is optimal to a set of agents and a forecast\nof expected workload.\n"
-    }
-  ],
   "paths": {
-    "/tenants/{tenantId}/plans": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        }
-      ],
+    "/tenants/{tenant_id}/agents/{agent_id}": {
       "get": {
-        "tags": [
-          "Plans"
-        ],
-        "summary": "Retrieve plans",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plan"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Plans"
-        ],
-        "summary": "Add a new plan",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlan"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plan"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Plans"
-        ],
-        "summary": "Retrieve a single plan",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plan"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Plans"
-        ],
-        "summary": "Update a single plan",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlan"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plan"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Plans"
-        ],
-        "summary": "Delete a plan",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/scheduleperiods": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Schedule Period"
-        ],
-        "summary": "Retrieve all schedule periods.",
-        "responses": {
-          "200": {
-            "description": "Succcess",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SchedulePeriod"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Schedule Period"
-        ],
-        "summary": "Add a new schedule period",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSchedulePeriod"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Succcess",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SchedulePeriod"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure. Possible reasons are:\n  * The date-range overlaps with another SchedulePeriod.\n  * The name is not unique.\n"
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/scheduleperiods/{schedulePeriodId}": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathSchedulePeriodId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Schedule Period"
-        ],
-        "summary": "Retrieve a single Schedule periods.",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SchedulePeriod"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Schedule Period"
-        ],
-        "summary": "Update a single schedule period.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSchedulePeriod"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SchedulePeriod"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure, see `POST` for details."
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Schedule Period"
-        ],
-        "summary": "Delete a schedule period.",
-        "description": "A schedule period can only be removed if there are no schedules associated with it.\n",
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Possible reasons:\n  * There are schedules associated to the schedule period.\n"
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}/schedules": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Retrieve all schedules for a plan",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Schedule"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Add a new set of schedules",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/NewSchedule"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Schedule"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure, possible reasons:\n  * Missing or invalid `schedulePeriodId`\n"
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}/schedules/query": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        }
-      ],
-      "post": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Query for schedules",
-        "description": "Returns all schedules that covers the period that is provided in the query (if any).\n",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ScheduleQuery"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Schedule"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}/schedules/copy": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        }
-      ],
-      "post": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Copy schedules from other plan.",
-        "description": "Copies the provided schedules from the source plan to this plan (target). Agents that have schedules in the\ntarget plan will have those overwritten unless the schedules are marked as locked. Schedules can only be copied\nfrom within the same schedule period.\n",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ScheduleCopy"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Failure. Possible error conditions:\n  * There are overlapping shifts with the previous or following schedule period in the target plan.\n\nIf a failure occurs, no schedules are copied.\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}/schedules/{scheduleId}": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        },
-        {
-          "$ref": "#/components/parameters/pathScheduleId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Retrieve a single schedule",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Schedule"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Update a single schedule",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSchedule"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Schedule"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure, see `POST`.\n"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Schedules"
-        ],
-        "summary": "Delete a schedule",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}/schedules/{scheduleId}/shifts": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        },
-        {
-          "$ref": "#/components/parameters/pathScheduleId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Shifts"
-        ],
-        "summary": "Retrieve all shifts for a schedule",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Shift"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Shifts"
-        ],
-        "summary": "Add a new set of shifts to a schedule.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/NewShift"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Shift"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenants/{tenantId}/plans/{planId}/schedules/{scheduleId}/shifts/{shiftId}": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        },
-        {
-          "$ref": "#/components/parameters/pathScheduleId"
-        },
-        {
-          "$ref": "#/components/parameters/pathShiftId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Shifts"
-        ],
-        "summary": "Retrieve a single shift",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Shift"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Shifts"
-        ],
-        "summary": "Update a single shift",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewShift"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Shift"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Shifts"
-        ],
-        "summary": "Delete a single shift",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/tenant/{tenantId}/activities": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Activities"
-        ],
-        "summary": "Retrieve all activity types",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Activity"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Activities"
-        ],
-        "summary": "Create a new activity type",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewActivity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Succcess",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Activity"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenant/{tenantId}/activities/{activityId}": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathActivityId"
-        }
-      ],
-      "get": {
-        "tags": [
-          "Activities"
-        ],
-        "summary": "Retrieve a single activity",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Activity"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Activities"
-        ],
-        "summary": "Update a single activity",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Activity"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Activity"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Activities"
-        ],
-        "summary": "Delete a single activity",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/tenant/{tenantId}/plans/{planId}/optimizations": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        }
-      ],
-      "get": {
+        "summary": "Get Agent",
+        "description": "Retrieve a single agent.",
+        "operationId": "get_agent_tenants__tenant_id__agents__agent_id__get",
         "parameters": [
           {
-            "in": "query",
-            "name": "status",
+            "required": true,
             "schema": {
-              "$ref": "#/components/schemas/OptimizationStatus"
-            }
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
           }
         ],
-        "tags": [
-          "Optimization"
-        ],
-        "summary": "Retrieve all optimization runs.",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Optimization"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Optimization"
-        ],
-        "summary": "Create a new optimization",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewOptimization"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Optimization"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -826,30 +54,144 @@
         }
       }
     },
-    "/tenant/{tenantId}/plans/{planId}/optimizations/{optimizationId}": {
-      "parameters": [
-        {
-          "$ref": "#/components/parameters/pathTenantId"
-        },
-        {
-          "$ref": "#/components/parameters/pathPlanId"
-        },
-        {
-          "$ref": "#/components/parameters/pathOptimizationId"
-        }
-      ],
+    "/tenants/{tenant_id}/agents": {
       "get": {
-        "tags": [
-          "Optimization"
+        "summary": "Get Agents",
+        "description": "Retrieve a single agent.",
+        "operationId": "get_agents_tenants__tenant_id__agents_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
         ],
-        "summary": "Retrieve a single optimization run.",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Optimization"
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/address": {
+      "get": {
+        "summary": "Get Address",
+        "description": "Retrieve an agent's address.",
+        "operationId": "get_address_tenants__tenant_id__agents__agent_id__address_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put Address",
+        "description": "Add or update an agent's address.",
+        "operationId": "put_address_tenants__tenant_id__agents__agent_id__address_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -857,18 +199,3214 @@
         }
       },
       "delete": {
-        "tags": [
-          "Optimization"
+        "summary": "Delete Address",
+        "description": "Delete an agent's address.",
+        "operationId": "delete_address_tenants__tenant_id__agents__agent_id__address_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
         ],
-        "summary": "Cancel a single optimization run.",
-        "description": "Deleting an optimization will not remove the entity itself or the resulting schedules. The optimization run\nwill continue to run to end but the result will not be used in the schedules.\n",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Optimization"
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/employment": {
+      "get": {
+        "summary": "Get Employment",
+        "description": "Retrieve an agent's employment.",
+        "operationId": "get_employment_tenants__tenant_id__agents__agent_id__employment_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put Employment",
+        "description": "Add or update an agent's employment.",
+        "operationId": "put_employment_tenants__tenant_id__agents__agent_id__employment_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmploymentDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Employment",
+        "description": "Delete an agent's employment.",
+        "operationId": "delete_employment_tenants__tenant_id__agents__agent_id__employment_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/availability": {
+      "get": {
+        "summary": "Get All Availabilities",
+        "description": "Retrieve an agents availability patterns.",
+        "operationId": "get_all_availabilities_tenants__tenant_id__agents__agent_id__availability_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post Availability",
+        "description": "Add an availability pattern to an agent.",
+        "operationId": "post_availability_tenants__tenant_id__agents__agent_id__availability_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentAvailabilityPatternDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/availability/{id}": {
+      "get": {
+        "summary": "Get Availability",
+        "description": "Retrieve a specific agents availability pattern.",
+        "operationId": "get_availability_tenants__tenant_id__agents__agent_id__availability__id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Availability",
+        "description": "Delete a specific agent availability pattern for an agent.",
+        "operationId": "delete_availability_tenants__tenant_id__agents__agent_id__availability__id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/restrictions": {
+      "get": {
+        "summary": "Get Assigned Restriction Sets",
+        "description": "Get all restriction sets assigned to an agent.",
+        "operationId": "get_assigned_restriction_sets_tenants__tenant_id__agents__agent_id__restrictions_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Assigned Restriction Sets Tenants  Tenant Id  Agents  Agent Id  Restrictions Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignedRestrictionSetDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post Restriction Set",
+        "description": "Assign a restriction set to an agent.",
+        "operationId": "post_restriction_set_tenants__tenant_id__agents__agent_id__restrictions_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAssignedRestrictionSetDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedRestrictionSetDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/restrictions/{assigned_restriction_set_id}": {
+      "get": {
+        "summary": "Get Assigned Restriction Set",
+        "description": "Get all restriction sets assigned to an agent.",
+        "operationId": "get_assigned_restriction_set_tenants__tenant_id__agents__agent_id__restrictions__assigned_restriction_set_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Assigned Restriction Set Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "assigned_restriction_set_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedRestrictionSetDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Assigned Restriction Set",
+        "description": "Remove an assigned restriction set.",
+        "operationId": "delete_assigned_restriction_set_tenants__tenant_id__agents__agent_id__restrictions__assigned_restriction_set_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Assigned Restriction Set Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "assigned_restriction_set_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch Assigned Restriction Set",
+        "description": "Get all restriction sets assigned to an agent.",
+        "operationId": "patch_assigned_restriction_set_tenants__tenant_id__agents__agent_id__restrictions__assigned_restriction_set_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Assigned Restriction Set Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "assigned_restriction_set_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignedRestrictionSetPatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignedRestrictionSetDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/agents/{agent_id}/competencies": {
+      "get": {
+        "summary": "Get Competencies",
+        "description": "Get all competencies associated with an agent.",
+        "operationId": "get_competencies_tenants__tenant_id__agents__agent_id__competencies_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "agent_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Competencies Tenants  Tenant Id  Agents  Agent Id  Competencies Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompetencyDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/availabilitypatterns/{availability_id}": {
+      "get": {
+        "summary": "Get Availability",
+        "description": "Retrieve a single availability.",
+        "operationId": "get_availability_tenants__tenant_id__availabilitypatterns__availability_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Availability Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "availability_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/availabilitypatterns": {
+      "get": {
+        "summary": "Get Availabilities",
+        "description": "Retrieve all availabilities of one tenant.",
+        "operationId": "get_availabilities_tenants__tenant_id__availabilitypatterns_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/availabilitypatterns/{availability_pattern_id}": {
+      "put": {
+        "summary": "Put Availability Pattern",
+        "description": "Update an availability pattern.",
+        "operationId": "put_availability_pattern_tenants__tenant_id__availabilitypatterns__availability_pattern_id__put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Availability Pattern Id"
+            },
+            "name": "availability_pattern_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailabilityPatternDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Availability Pattern",
+        "description": "Delete an availability pattern.",
+        "operationId": "delete_availability_pattern_tenants__tenant_id__availabilitypatterns__availability_pattern_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Availability Pattern Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "availability_pattern_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve a all plans in a tenant.",
+        "operationId": "get_all_tenants__tenant_id__plans_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Includedeleted",
+              "type": "boolean"
+            },
+            "name": "includeDeleted",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Plans Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Add a new plan.",
+        "operationId": "post_tenants__tenant_id__plans_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Retrieve a single plan.",
+        "operationId": "get_tenants__tenant_id__plans__plan_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete",
+        "description": "Delete a plan.",
+        "operationId": "delete_tenants__tenant_id__plans__plan_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update a plan.",
+        "operationId": "patch_tenants__tenant_id__plans__plan_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanPatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/activities": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve all activities.",
+        "operationId": "get_all_tenants__tenant_id__activities_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Activities Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Add a new activity.",
+        "operationId": "post_tenants__tenant_id__activities_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/activities/{activity_id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Get a single activity.",
+        "operationId": "get_tenants__tenant_id__activities__activity_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Activity Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "activity_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update a single activity.",
+        "operationId": "patch_tenants__tenant_id__activities__activity_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Activity Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "activity_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityPatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/schedules/query": {
+      "post": {
+        "summary": "Query",
+        "description": "Query schedules.",
+        "operationId": "query_tenants__tenant_id__plans__plan_id__schedules_query_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Includedeleted",
+              "type": "boolean"
+            },
+            "name": "includeDeleted",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleQueryDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Query Tenants  Tenant Id  Plans  Plan Id  Schedules Query Post",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/schedules": {
+      "get": {
+        "summary": "Get All",
+        "description": "Get all schedules for a plan.",
+        "operationId": "get_all_tenants__tenant_id__plans__plan_id__schedules_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Includedeleted",
+              "type": "boolean"
+            },
+            "name": "includeDeleted",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Plans  Plan Id  Schedules Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Add a new schedule.",
+        "operationId": "post_tenants__tenant_id__plans__plan_id__schedules_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Schedule Dtos",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ScheduleDTO"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Tenants  Tenant Id  Plans  Plan Id  Schedules Post",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Get a single schedule.",
+        "operationId": "get_tenants__tenant_id__plans__plan_id__schedules__schedule_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete",
+        "description": "Soft delete a schedule.",
+        "operationId": "delete_tenants__tenant_id__plans__plan_id__schedules__schedule_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update a single schedule.",
+        "operationId": "patch_tenants__tenant_id__plans__plan_id__schedules__schedule_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulePatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve all shifts in a schedule.",
+        "operationId": "get_all_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Includedeleted",
+              "type": "boolean"
+            },
+            "name": "includeDeleted",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Plans  Plan Id  Schedules  Schedule Id  Shifts Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShiftDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Handle creation of new shifts.",
+        "operationId": "post_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Shift Dtos",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShiftDTO"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Tenants  Tenant Id  Plans  Plan Id  Schedules  Schedule Id  Shifts Post",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ShiftDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts/{shift_id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Retrieve a single shift.",
+        "operationId": "get_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts__shift_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Shift Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "shift_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShiftDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete",
+        "description": "Soft delete a shift.",
+        "operationId": "delete_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts__shift_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Shift Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "shift_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update a single shift.",
+        "operationId": "patch_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts__shift_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Schedule Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "schedule_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Shift Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "shift_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShiftPatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShiftDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/restrictions/breaksettings": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve all break settings for a tenant.",
+        "operationId": "get_all_tenants__tenant_id__restrictions_breaksettings_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Restrictions Breaksettings Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BreakSettingsDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Add a new break setting to a tenant.",
+        "operationId": "post_tenants__tenant_id__restrictions_breaksettings_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BreakSettingsDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreakSettingsDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/restrictions/breaksettings/{breaksetting_id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Retrieve a single break setting.",
+        "operationId": "get_tenants__tenant_id__restrictions_breaksettings__breaksetting_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Breaksetting Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "breaksetting_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreakSettingsDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete",
+        "description": "Delete a single break setting.",
+        "operationId": "delete_tenants__tenant_id__restrictions_breaksettings__breaksetting_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Breaksetting Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "breaksetting_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update single breaksetting.",
+        "operationId": "patch_tenants__tenant_id__restrictions_breaksettings__breaksetting_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Breaksetting Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "breaksetting_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BreakSettingsUpdateDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BreakSettingsDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Get Status",
+        "description": "Handle healthcheck.",
+        "operationId": "get_status_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/restrictionsets": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve all Restriction sets.",
+        "operationId": "get_all_tenants__tenant_id__restrictionsets_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Restrictionsets Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RestrictionSetDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Add new restriction set.",
+        "operationId": "post_tenants__tenant_id__restrictionsets_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRestrictionSetDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestrictionSetDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/restrictionsets/{restriction_set_id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Retrieve a single restriction set.",
+        "operationId": "get_tenants__tenant_id__restrictionsets__restriction_set_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Restriction Set Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "restriction_set_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestrictionSetDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete",
+        "description": "Delete a single restriction set.",
+        "operationId": "delete_tenants__tenant_id__restrictionsets__restriction_set_id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Restriction Set Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "restriction_set_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update a single restriction set.",
+        "operationId": "patch_tenants__tenant_id__restrictionsets__restriction_set_id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Restriction Set Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "restriction_set_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestrictionSetPatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestrictionSetDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/scheduleperiods": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve all schedule periods.",
+        "operationId": "get_all_tenants__tenant_id__scheduleperiods_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Scheduleperiods Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchedulePeriodDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Post",
+        "description": "Add a new schedule period.",
+        "operationId": "post_tenants__tenant_id__scheduleperiods_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulePeriodDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriodDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/scheduleperiods/{id}": {
+      "get": {
+        "summary": "Get",
+        "description": "Retrieve a single schedule period.",
+        "operationId": "get_tenants__tenant_id__scheduleperiods__id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriodDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete",
+        "description": "Delete a single schedule period.",
+        "operationId": "delete_tenants__tenant_id__scheduleperiods__id__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Patch",
+        "description": "Update an existing schedule period.",
+        "operationId": "patch_tenants__tenant_id__scheduleperiods__id__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulePeriodPatchDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePeriodDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/optimization": {
+      "get": {
+        "summary": "Get Optimization",
+        "description": "Get current optimization.",
+        "operationId": "get_optimization_tenants__tenant_id__plans__plan_id__optimization_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptimizationDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put Optimization",
+        "description": "Update current optimization.",
+        "operationId": "put_optimization_tenants__tenant_id__plans__plan_id__optimization_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOptimizationDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptimizationDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Optimization",
+        "description": "Delete current optimization.",
+        "operationId": "delete_optimization_tenants__tenant_id__plans__plan_id__optimization_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptimizationDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/competencies": {
+      "get": {
+        "summary": "Get All",
+        "description": "Retrieve all competencies for a tenant.",
+        "operationId": "get_all_tenants__tenant_id__competencies_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get All Tenants  Tenant Id  Competencies Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompetencyDTO"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/competencies/{competency_id}/agents": {
+      "get": {
+        "summary": "Get Agent",
+        "description": "Retrieve all agents associated with a competency.",
+        "operationId": "get_agent_tenants__tenant_id__competencies__competency_id__agents_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Competency Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "competency_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -879,274 +3417,502 @@
   },
   "components": {
     "schemas": {
-      "Schedule": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityId"
-          },
-          {
-            "$ref": "#/components/schemas/ScheduleBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "shifts": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Shift"
-                }
-              }
-            }
-          }
-        ]
+      "ActivityCategory": {
+        "title": "ActivityCategory",
+        "enum": [
+          "work",
+          "operator_work",
+          "break",
+          "absence",
+          "vacation"
+        ],
+        "type": "string",
+        "description": "An enumeration."
       },
-      "ScheduleBase": {
+      "ActivityDTO": {
+        "title": "ActivityDTO",
+        "required": [
+          "name",
+          "paid",
+          "category"
+        ],
+        "type": "object",
         "properties": {
-          "locked": {
-            "type": "boolean",
-            "default": false
-          },
-          "deleted": {
-            "type": "boolean",
-            "default": false
-          },
-          "agentId": {
+          "id": {
+            "title": "Id",
             "type": "string",
             "format": "uuid"
           },
-          "schedulePeriodId": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "paid": {
+            "title": "Paid",
+            "type": "boolean"
+          },
+          "category": {
+            "$ref": "#/components/schemas/ActivityCategory"
+          },
+          "disabled": {
+            "title": "Disabled",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "description": "Represent the DTO-model for an activity."
+      },
+      "ActivityPatchDTO": {
+        "title": "ActivityPatchDTO",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "paid": {
+            "title": "Paid",
+            "type": "boolean"
+          },
+          "category": {
+            "$ref": "#/components/schemas/ActivityCategory"
+          },
+          "disabled": {
+            "title": "Disabled",
+            "type": "boolean"
+          }
+        },
+        "description": "Represents the DTO-model for patching an activity."
+      },
+      "AddressDTO": {
+        "title": "AddressDTO",
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "title": "Addressline1",
+            "type": "string"
+          },
+          "addressLine2": {
+            "title": "Addressline2",
+            "type": "string"
+          },
+          "addressLine3": {
+            "title": "Addressline3",
+            "type": "string"
+          },
+          "city": {
+            "title": "City",
+            "type": "string"
+          },
+          "postCode": {
+            "title": "Postcode",
+            "type": "string"
+          },
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "description": "DTO representing an agent's address."
+      },
+      "AgentAvailabilityPatternDTO": {
+        "title": "AgentAvailabilityPatternDTO",
+        "required": [
+          "availabilityPatternId"
+        ],
+        "type": "object",
+        "properties": {
+          "availabilityPatternId": {
+            "title": "Availabilitypatternid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDate": {
+            "title": "Startdate",
+            "type": "string"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string"
+          }
+        },
+        "description": "Links an agent to an availability."
+      },
+      "AssignedRestrictionSetDTO": {
+        "title": "AssignedRestrictionSetDTO",
+        "required": [
+          "startDate",
+          "endDate",
+          "restrictionSetId",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "title": "Startdate",
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string",
+            "format": "date"
+          },
+          "restrictionSetId": {
+            "title": "Restrictionsetid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "title": "Id",
             "type": "string",
             "format": "uuid"
           }
         },
-        "required": [
-          "schedulePeriodId"
-        ]
+        "description": "Assigned restriction set dto for responses."
       },
-      "NewSchedule": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/ScheduleBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "shifts": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/NewShift"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "ScheduleQuery": {
+      "AssignedRestrictionSetPatchDTO": {
+        "title": "AssignedRestrictionSetPatchDTO",
+        "type": "object",
         "properties": {
           "startDate": {
+            "title": "Startdate",
             "type": "string",
             "format": "date"
           },
           "endDate": {
+            "title": "Enddate",
             "type": "string",
             "format": "date"
           },
-          "agentIds": {
+          "restrictionSetId": {
+            "title": "Restrictionsetid",
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": "Assigned restriction set dto for updates."
+      },
+      "AvailabilityElementDTO": {
+        "title": "AvailabilityElementDTO",
+        "required": [
+          "intervalType",
+          "dayNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "intervalType": {
+            "title": "Intervaltype",
+            "pattern": "^(available|unavailable)$",
+            "type": "string",
+            "description": "Allowed values are 'available' or 'unavailable'"
+          },
+          "dayNumber": {
+            "title": "Daynumber",
+            "exclusiveMaximum": 7.0,
+            "exclusiveMinimum": -1.0,
+            "type": "integer"
+          },
+          "weekNumber": {
+            "title": "Weeknumber",
+            "type": "integer",
+            "default": 1
+          },
+          "startTime": {
+            "title": "Starttime",
+            "type": "string"
+          },
+          "endTime": {
+            "title": "Endtime",
+            "type": "string"
+          }
+        },
+        "description": "Represents DTO-model for availabiliy elements."
+      },
+      "AvailabilityPatternDTO": {
+        "title": "AvailabilityPatternDTO",
+        "required": [
+          "name",
+          "elements"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "elements": {
+            "title": "Elements",
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "uuid"
+              "$ref": "#/components/schemas/AvailabilityElementDTO"
+            }
+          }
+        },
+        "description": "Represents DTO model for an AvailabilityPattern."
+      },
+      "BreakDTO": {
+        "title": "BreakDTO",
+        "required": [
+          "paid",
+          "length",
+          "intervalStart",
+          "intervalEnd"
+        ],
+        "type": "object",
+        "properties": {
+          "paid": {
+            "title": "Paid",
+            "type": "boolean"
+          },
+          "length": {
+            "title": "Length",
+            "type": "integer"
+          },
+          "intervalStart": {
+            "title": "Intervalstart",
+            "type": "integer"
+          },
+          "intervalEnd": {
+            "title": "Intervalend",
+            "type": "integer"
+          }
+        },
+        "description": "Represents the DTO-model for a break."
+      },
+      "BreakSettingsDTO": {
+        "title": "BreakSettingsDTO",
+        "required": [
+          "shiftLengthMin",
+          "shiftLengthMax",
+          "shiftStartMin",
+          "shiftStartMax",
+          "timeBetweenBreaksMin",
+          "dayTypes",
+          "breaks"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "shiftLengthMin": {
+            "title": "Shiftlengthmin",
+            "type": "integer"
+          },
+          "shiftLengthMax": {
+            "title": "Shiftlengthmax",
+            "type": "integer"
+          },
+          "shiftStartMin": {
+            "title": "Shiftstartmin",
+            "type": "string"
+          },
+          "shiftStartMax": {
+            "title": "Shiftstartmax",
+            "type": "string"
+          },
+          "timeBetweenBreaksMin": {
+            "title": "Timebetweenbreaksmin",
+            "type": "integer"
+          },
+          "dayTypes": {
+            "title": "Daytypes",
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7
+            }
+          },
+          "breaks": {
+            "title": "Breaks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BreakDTO"
+            }
+          }
+        },
+        "description": "Represents the DTO-model for a break settings."
+      },
+      "BreakSettingsUpdateDTO": {
+        "title": "BreakSettingsUpdateDTO",
+        "type": "object",
+        "properties": {
+          "shiftLengthMin": {
+            "title": "Shiftlengthmin",
+            "type": "integer"
+          },
+          "shiftLengthMax": {
+            "title": "Shiftlengthmax",
+            "type": "integer"
+          },
+          "shiftStartMin": {
+            "title": "Shiftstartmin",
+            "type": "string"
+          },
+          "shiftStartMax": {
+            "title": "Shiftstartmax",
+            "type": "string"
+          },
+          "timeBetweenBreaksMin": {
+            "title": "Timebetweenbreaksmin",
+            "type": "integer"
+          },
+          "dayTypes": {
+            "title": "Daytypes",
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7
+            }
+          },
+          "breaks": {
+            "title": "Breaks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BreakDTO"
+            }
+          }
+        },
+        "description": "DTO-model for breaksettings updates."
+      },
+      "CompetencyDTO": {
+        "title": "CompetencyDTO",
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/CompetencyType"
+          }
+        },
+        "description": "A DTO model used to return the dto object."
+      },
+      "CompetencyType": {
+        "title": "CompetencyType",
+        "enum": [
+          "manual",
+          "queue"
+        ],
+        "description": "Type of competency."
+      },
+      "EmploymentDTO": {
+        "title": "EmploymentDTO",
+        "type": "object",
+        "properties": {
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "format": "date"
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "format": "date"
+          },
+          "hourlySalary": {
+            "title": "Hourlysalary",
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          }
+        },
+        "description": "DTO for employment."
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
             }
           }
         }
       },
-      "ScheduleCopy": {
-        "properties": {
-          "schedulePeriod": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "sourcePlan": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "schedules": {
-            "description": "Either a list of the schedules that should be copied or the value `synchronize`. If `synchronize` is used\nthen a complete synchronization is being done meaning that all schedules in the target-plan will be removed\nbefore the new schedules are copied.\n",
-            "oneOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "synchronize"
-                ]
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
-            ]
-          }
-        }
+      "JobStatus": {
+        "title": "JobStatus",
+        "enum": [
+          "pending",
+          "running",
+          "success",
+          "failed"
+        ],
+        "type": "string",
+        "description": "Status for jobs."
       },
-      "NewPlan": {
+      "NewAssignedRestrictionSetDTO": {
+        "title": "NewAssignedRestrictionSetDTO",
+        "required": [
+          "startDate",
+          "endDate",
+          "restrictionSetId"
+        ],
+        "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
-          "deleted": {
-            "type": "boolean"
-          },
-          "official": {
-            "type": "boolean"
-          }
-        }
-      },
-      "Plan": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityId"
-          },
-          {
-            "$ref": "#/components/schemas/NewPlan"
-          }
-        ]
-      },
-      "NewSchedulePeriod": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
           "startDate": {
+            "title": "Startdate",
             "type": "string",
             "format": "date"
           },
           "endDate": {
+            "title": "Enddate",
             "type": "string",
             "format": "date"
-          }
-        }
-      },
-      "SchedulePeriod": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityId"
           },
-          {
-            "$ref": "#/components/schemas/NewSchedulePeriod"
-          }
-        ]
-      },
-      "NewShift": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "locked": {
-                "type": "boolean"
-              },
-              "date": {
-                "type": "string",
-                "format": "date"
-              },
-              "activities": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ScheduledActivity"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "Shift": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityId"
-          },
-          {
-            "$ref": "#/components/schemas/NewShift"
-          }
-        ]
-      },
-      "ScheduledActivity": {
-        "allOf": [
-          {
-            "type": "object",
-            "properties": {
-              "activityId": {
-                "type": "string",
-                "format": "uuid"
-              },
-              "startTime": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "endTime": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          }
-        ]
-      },
-      "NewActivity": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "paid": {
-            "type": "boolean"
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "work",
-              "break",
-              "meeting",
-              "training",
-              "absence"
-            ]
-          }
-        }
-      },
-      "Activity": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityId"
-          },
-          {
-            "$ref": "#/components/schemas/NewActivity"
-          }
-        ]
-      },
-      "EntityId": {
-        "properties": {
-          "id": {
-            "description": "The id of an entity",
+          "restrictionSetId": {
+            "title": "Restrictionsetid",
             "type": "string",
             "format": "uuid"
           }
-        }
+        },
+        "description": "Assigned restriction set dto for requests."
       },
-      "NewOptimization": {
+      "NewOptimizationDTO": {
+        "title": "NewOptimizationDTO",
+        "required": [
+          "schedulePeriodId",
+          "agents",
+          "competencies"
+        ],
+        "type": "object",
         "properties": {
-          "periodStart": {
+          "schedulePeriodId": {
+            "title": "Scheduleperiodid",
             "type": "string",
-            "format": "date"
-          },
-          "periodEnd": {
-            "type": "string",
-            "format": "date"
-          },
-          "timezone": {
-            "type": "string"
+            "format": "uuid"
           },
           "agents": {
+            "title": "Agents",
             "type": "array",
             "items": {
               "type": "string",
@@ -1154,136 +3920,656 @@
             }
           },
           "competencies": {
+            "title": "Competencies",
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid"
             }
           }
-        }
+        },
+        "description": "Class used to create a new optimization."
       },
-      "Optimization": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/EntityId"
+      "NewRestrictionSetDTO": {
+        "title": "NewRestrictionSetDTO",
+        "required": [
+          "name",
+          "description",
+          "default",
+          "agreedWeeklyHours",
+          "minHoursWeek",
+          "maxHoursWeek",
+          "agreedDaysPerWeek",
+          "minDaysPerWeek",
+          "maxDaysPerWeek",
+          "minShiftLengthHours",
+          "maxShiftLengthHours",
+          "maxConsecutiveWorkDays",
+          "minHoursNightRest",
+          "maxConsecutiveWeekends"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "maxLength": 50,
+            "type": "string"
           },
-          {
-            "$ref": "#/components/schemas/NewOptimization"
+          "description": {
+            "title": "Description",
+            "maxLength": 100,
+            "type": "string"
           },
-          {
-            "type": "object",
-            "properties": {
-              "startDateTime": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "completedDateTime": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "status": {
-                "$ref": "#/components/schemas/OptimizationStatus"
-              }
+          "default": {
+            "title": "Default",
+            "type": "boolean"
+          },
+          "agreedWeeklyHours": {
+            "title": "Agreedweeklyhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "minHoursWeek": {
+            "title": "Minhoursweek",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxHoursWeek": {
+            "title": "Maxhoursweek",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "agreedDaysPerWeek": {
+            "title": "Agreeddaysperweek",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "minDaysPerWeek": {
+            "title": "Mindaysperweek",
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxDaysPerWeek": {
+            "title": "Maxdaysperweek",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "minShiftLengthHours": {
+            "title": "Minshiftlengthhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxShiftLengthHours": {
+            "title": "Maxshiftlengthhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxConsecutiveWorkDays": {
+            "title": "Maxconsecutiveworkdays",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "minHoursNightRest": {
+            "title": "Minhoursnightrest",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxConsecutiveWeekends": {
+            "title": "Maxconsecutiveweekends",
+            "exclusiveMinimum": 0.0,
+            "type": "integer"
+          }
+        },
+        "description": "Restriction set dto for requests."
+      },
+      "OptimizationDTO": {
+        "title": "OptimizationDTO",
+        "required": [
+          "schedulePeriodId",
+          "agents",
+          "competencies",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "schedulePeriodId": {
+            "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "agents": {
+            "title": "Agents",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "competencies": {
+            "title": "Competencies",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "created": {
+            "title": "Created",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated": {
+            "title": "Updated",
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          }
+        },
+        "description": "The response class for optimizations."
+      },
+      "PlanDTO": {
+        "title": "PlanDTO",
+        "required": [
+          "name",
+          "official"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "official": {
+            "title": "Official",
+            "type": "boolean"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "description": "Represents the DTO-model for a planning period."
+      },
+      "PlanPatchDTO": {
+        "title": "PlanPatchDTO",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "official": {
+            "title": "Official",
+            "type": "boolean"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          }
+        },
+        "description": "Represents the data model that is used for PATCH-operations."
+      },
+      "RestrictionSetDTO": {
+        "title": "RestrictionSetDTO",
+        "required": [
+          "name",
+          "description",
+          "default",
+          "agreedWeeklyHours",
+          "minHoursWeek",
+          "maxHoursWeek",
+          "agreedDaysPerWeek",
+          "minDaysPerWeek",
+          "maxDaysPerWeek",
+          "minShiftLengthHours",
+          "maxShiftLengthHours",
+          "maxConsecutiveWorkDays",
+          "minHoursNightRest",
+          "maxConsecutiveWeekends",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "maxLength": 50,
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "maxLength": 100,
+            "type": "string"
+          },
+          "default": {
+            "title": "Default",
+            "type": "boolean"
+          },
+          "agreedWeeklyHours": {
+            "title": "Agreedweeklyhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "minHoursWeek": {
+            "title": "Minhoursweek",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxHoursWeek": {
+            "title": "Maxhoursweek",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "agreedDaysPerWeek": {
+            "title": "Agreeddaysperweek",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "minDaysPerWeek": {
+            "title": "Mindaysperweek",
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxDaysPerWeek": {
+            "title": "Maxdaysperweek",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "minShiftLengthHours": {
+            "title": "Minshiftlengthhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxShiftLengthHours": {
+            "title": "Maxshiftlengthhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxConsecutiveWorkDays": {
+            "title": "Maxconsecutiveworkdays",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "minHoursNightRest": {
+            "title": "Minhoursnightrest",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxConsecutiveWeekends": {
+            "title": "Maxconsecutiveweekends",
+            "exclusiveMinimum": 0.0,
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": "Restriction set dto for responses."
+      },
+      "RestrictionSetPatchDTO": {
+        "title": "RestrictionSetPatchDTO",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "maxLength": 50,
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "maxLength": 100,
+            "type": "string"
+          },
+          "default": {
+            "title": "Default",
+            "type": "boolean"
+          },
+          "agreedWeeklyHours": {
+            "title": "Agreedweeklyhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "minHoursWeek": {
+            "title": "Minhoursweek",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxHoursWeek": {
+            "title": "Maxhoursweek",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "agreedDaysPerWeek": {
+            "title": "Agreeddaysperweek",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "minDaysPerWeek": {
+            "title": "Mindaysperweek",
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxDaysPerWeek": {
+            "title": "Maxdaysperweek",
+            "maximum": 7.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "minShiftLengthHours": {
+            "title": "Minshiftlengthhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxShiftLengthHours": {
+            "title": "Maxshiftlengthhours",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxConsecutiveWorkDays": {
+            "title": "Maxconsecutiveworkdays",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "minHoursNightRest": {
+            "title": "Minhoursnightrest",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "maxConsecutiveWeekends": {
+            "title": "Maxconsecutiveweekends",
+            "exclusiveMinimum": 0.0,
+            "type": "integer"
+          }
+        },
+        "description": "Restriction set dto for updates."
+      },
+      "ScheduleDTO": {
+        "title": "ScheduleDTO",
+        "required": [
+          "schedulePeriodId",
+          "locked",
+          "deleted",
+          "shifts"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "agentId": {
+            "title": "Agentid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedulePeriodId": {
+            "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "shifts": {
+            "title": "Shifts",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShiftDTO"
             }
           }
-        ]
+        },
+        "description": "Represents the DTO-model for a schedule."
       },
-      "OptimizationStatus": {
-        "type": "string",
-        "enum": [
-          "running",
-          "cancelled",
-          "completed"
-        ]
-      },
-      "ErrorResponse": {
+      "SchedulePatchDTO": {
+        "title": "SchedulePatchDTO",
+        "type": "object",
         "properties": {
-          "reason": {
+          "agentId": {
+            "title": "Agentid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedulePeriodId": {
+            "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "shifts": {
+            "title": "Shifts",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShiftDTO"
+            }
+          }
+        },
+        "description": "DTO-model for schedule updates."
+      },
+      "SchedulePeriodDTO": {
+        "title": "SchedulePeriodDTO",
+        "required": [
+          "name",
+          "startDate",
+          "endDate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "startDate": {
+            "title": "Startdate",
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "description": "DTO-model for SchedulePeriod."
+      },
+      "SchedulePeriodPatchDTO": {
+        "title": "SchedulePeriodPatchDTO",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "startDate": {
+            "title": "Startdate",
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "description": "DTO-model for patching a SchedulePeriod."
+      },
+      "ScheduleQueryDTO": {
+        "title": "ScheduleQueryDTO",
+        "type": "object",
+        "properties": {
+          "agentIds": {
+            "title": "Agentids",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "schedulePeriodIds": {
+            "title": "Scheduleperiodids",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "description": "Query-dto."
+      },
+      "ScheduledActivityDTO": {
+        "title": "ScheduledActivityDTO",
+        "required": [
+          "activityId",
+          "startTime",
+          "endTime"
+        ],
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "title": "Activityid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "startTime": {
+            "title": "Starttime",
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "title": "Endtime",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Represent an activity scheduled within a shift."
+      },
+      "ShiftDTO": {
+        "title": "ShiftDTO",
+        "required": [
+          "locked",
+          "activities"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean",
+            "default": false
+          },
+          "activities": {
+            "title": "Activities",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScheduledActivityDTO"
+            }
+          },
+          "startTime": {
+            "title": "Starttime",
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "title": "Endtime",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Represents the DTO-model for a shift."
+      },
+      "ShiftPatchDTO": {
+        "title": "ShiftPatchDTO",
+        "type": "object",
+        "properties": {
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "activities": {
+            "title": "Activities",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScheduledActivityDTO"
+            }
+          }
+        },
+        "description": "DTO-model for shift-updates."
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
             "type": "string"
           }
-        }
-      }
-    },
-    "parameters": {
-      "startParam": {
-        "in": "query",
-        "name": "startDateTime",
-        "description": "The start datetime for the request (inclusive).",
-        "schema": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "endParam": {
-        "in": "query",
-        "name": "endDateTime",
-        "description": "The end datetime for the request (exclusive).",
-        "schema": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "pathTenantId": {
-        "in": "path",
-        "name": "tenantId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      },
-      "pathPlanId": {
-        "in": "path",
-        "name": "planId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      },
-      "pathScheduleId": {
-        "in": "path",
-        "name": "scheduleId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      },
-      "pathShiftId": {
-        "in": "path",
-        "name": "shiftId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      },
-      "pathActivityId": {
-        "in": "path",
-        "name": "activityId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      },
-      "pathOptimizationId": {
-        "in": "path",
-        "name": "optimizationId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      },
-      "pathSchedulePeriodId": {
-        "in": "path",
-        "name": "schedulePeriodId",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
         }
       }
     }
