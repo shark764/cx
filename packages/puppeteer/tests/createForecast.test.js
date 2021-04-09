@@ -43,30 +43,30 @@ describe('Forecasting', () => {
     }
 
     // Start with a forecast range in the future
-    await page.type('.forecastRangestartDate', '2021-05-01');
+    // Needs to start on a monday and end on sunday!
+    await page.type('.forecastRangestartDate', '2021-05-03');
     await page.keyboard.press('Enter');
     clickLots(3, '.forecastRange-increment');
 
 
     // Choose the range you want to look at historically
-    // In this example lets take all data fromthe past year only
+    // In this example lets take all data fromthe past year until now
     await page.type('.dayValueDateRangesstartDate', '2020-01-01');
     await page.keyboard.press('Enter');
-    clickLots(51, '.dayValueDateRanges-increment');
+    clickLots(54, '.dayValueDateRanges-increment');
 
 
     await page.click('.Range-range');
 
     // set the day curve range, for this we'll choose the month of may
-    await page.type('.dayCurveDateRangestartDate', '2020-05-01');
+    await page.type('.dayCurveDateRangestartDate', '2021-03-08');
     await page.keyboard.press('Enter');
-    await page.type('.dayCurveDateRangeendDate', '2020-05-31');
-    await page.keyboard.press('Enter');
+    clickLots(3, '.dayCurveDateRange-increment');
 
 
     // For now we've hard coded some series date when the form submits
 
-    // await page.click('.dynamicFormSave');
+    await page.click('.dynamicFormSave');
     // await page.click('.dynamicFormCancel');
 
     await page.waitForTimeout(300000);
