@@ -1,8 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { DateTime } from 'luxon';
 
+const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
+const today = formatDate(new Date());
 const initialState = {
-  startDate: '',
-  endDate: '',
+  startDate: today,
+  endDate: today,
   competence: '',
   timezone: '',
 };

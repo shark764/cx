@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../redux/store';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -50,6 +51,9 @@ const timeZonesOptions = [
 
 export function Filters() {
 
+  const start = useSelector((state: RootState) => state.planning.startDate);
+  const end = useSelector((state: RootState) => state.planning.endDate);
+
   const dispatch = useDispatch();
   const {
     setStartDate,
@@ -67,7 +71,11 @@ export function Filters() {
       <Title> Forecasting filters </Title>
       <FilterSections>
 
-          <DateRange combinedOnchanges={(data: any) => handleDatesChanged(data)} />
+          <DateRange
+            startDateTime={start}
+            endDateTime={end}
+            combinedOnchanges={(data: any) => handleDatesChanged(data)}
+          />
 
           <span>
             <Label> Time Zone </Label>
