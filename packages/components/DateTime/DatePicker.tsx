@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import styled, { css } from 'styled-components';
 
@@ -127,6 +128,7 @@ const PositionedCal = styled.span`
 `;
 
 export function DatePicker({ calendarBtn = false, placeholder, disabled, minDate, ...rest }: any): React.ReactElement {
+  const [open, setOpen] = useState(false);
   const theme = {
     colors: {
       brand: '#07487a',
@@ -151,10 +153,13 @@ export function DatePicker({ calendarBtn = false, placeholder, disabled, minDate
         shouldCloseOnSelect={true}
         closeOnScroll
         disabled={disabled}
+        onSelect={() => setOpen(false)}
+        open={open}
+
         {...rest}
       />
       {!disabled && <PositionedCal>
-        <CalendarTodayIcon />
+        <CalendarTodayIcon onClick={ () => setOpen(!open) } />
       </PositionedCal>}
 
     </DatePickerContainer>

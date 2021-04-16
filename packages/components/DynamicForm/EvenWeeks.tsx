@@ -171,7 +171,7 @@ const DatePickers = ({onChange, name, multiValue}: any) => {
                 value={totalWeeks}
                 type="number"
                 className={name}
-                onChange={onChange}
+                onChange={(e:any) => updateTotalWeeks(index, e.target.value)}
               />
                 <IncrementControls>
                   <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1)}  fontSize="small" />

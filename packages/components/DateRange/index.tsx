@@ -50,28 +50,39 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
 
   const rangeMap = {
     0: 'day',
-    1: 'day',
-    2: 'twoDays',
-    7: 'week',
+    1: 'twoDays',
+    6: 'week',
   };
+  // @ts-ignore
   const selectedRange = rangeMap[days] || 'range';
 
-
-
-  // useEffect(() => {
-  //   combinedOnchanges([startDate, endDate]);
-  // }, [startDate, endDate]);
-
-  // useEffect(() => {
-  //   if (selectedRange === 'twoDays' || selectedRange === 'week') {
-  //     const daysToAdd = selectedRange === 'twoDays' ? 1 : 6;
-  //     setEndDate(addDays(startDate, daysToAdd));
-  //   } else {
-  //     setEndDate(addDays(startDate, 0));
-  //   }
-  // }, [selectedRange]);
   const changeRange = (rangeType: string) => {
-    console.log('set new range', rangeType);
+
+    const changeKey = `${selectedRange}-${rangeType}`;
+
+    const descisionMatrix = {
+      'day-day': () => { return },
+      'day-twoDays': () => combinedOnchanges([null, addDays(end, 1)]),
+      'day-week': () => combinedOnchanges([null, addDays(end, 6)]),
+      'day-range': () => combinedOnchanges([null, addDays(end, 13)]),
+
+      'twoDays-day': () => combinedOnchanges([null, addDays(start, 0)]),
+      'twoDays-twoDays': () => { return },
+      'twoDays-week': () => combinedOnchanges([null, addDays(end, 5)]),
+      'twoDays-range': () => combinedOnchanges([null, addDays(end, 5)]),
+
+      'week-day': () => combinedOnchanges([null, addDays(start, 0)]),
+      'week-twoDays': () => combinedOnchanges([null, addDays(start, 1)]),
+      'week-week': () => { return },
+      'week-range': () => combinedOnchanges([null, addDays(end, 7)]),
+
+      'range-day': () => combinedOnchanges([null, addDays(start, 0)]),
+      'range-twoDays': () => combinedOnchanges([null, addDays(start, 1)]),
+      'range-week': () => combinedOnchanges([null, addDays(start, 6)]),
+      'range-range': () => { return },
+    };
+    // @ts-ignore
+    descisionMatrix[changeKey]();
   }
 
   const handleDates = (e: Date, dateType: 'startDate' | 'endDate') => {
@@ -80,27 +91,6 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
     } else {
       combinedOnchanges([null, e]);
     }
-    // const daysToAdd = (days: number): void => {
-    //   setStartDate(e);
-    //   setEndDate(addDays(e, days));
-    // };
-    // const dateMap = {
-    //   day: () => daysToAdd(0),
-    //   twoDays: () => daysToAdd(1),
-    //   week: () => daysToAdd(6),
-    // };
-    // if (selectedRange !== 'range') {
-    //   dateMap[selectedRange](e);
-    // } else {
-    //   if (dateType === 'startDate') {
-    //     setStartDate(e);
-    //     if (e > endDate) {
-    //       setEndDate(e);
-    //     }
-    //   } else if (dateType === 'endDate') {
-    //     setEndDate(e);
-    //   }
-    // }
   }
 
   const dateRangeVal = dateOptions.find(({type}) => type === selectedRange );
