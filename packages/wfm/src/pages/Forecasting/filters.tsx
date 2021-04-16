@@ -45,8 +45,9 @@ const Label = styled.span`
 export function Filters() {
 
   const forecastingStartDate = useSelector((state: RootState) => state.forecasting.historicalQueryParams.startDateTime);
-  const startOfStartDate = DateTime.fromISO(forecastingStartDate, { setZone: true }).startOf('day').toISO();
-  const formattedStartDate = convertJSDateToUTC(new Date(startOfStartDate));
+  const forecastingEndDate = useSelector((state: RootState) => state.forecasting.historicalQueryParams.endDateTime);
+
+  const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
 
   const competenceOptions = useSelector((state: RootState) =>
     state.main.competencies.map(({id, name, type}) => ({label: name, id}))
@@ -59,29 +60,39 @@ export function Filters() {
     setEndDate
   } = forecasting.actions;
 
-  const handleDatesChanged = (dates: any) => {
-    dispatch(setStartDate(parseDateToISODate(dates[0], 'startOfDay') || ''));
-    dispatch(setEndDate(parseDateToISODate(dates[1], 'endOfDay') || ''));
+  const handleDatesChanged = (dates: [Date, Date]) => {
+    const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
+    if (dates[0]) {
+      dispatch(setStartDate(formatDate(dates[0])));
+    }
+    if (dates[1]) {
+      dispatch(setEndDate(formatDate(dates[1])));
+    }
   };
   const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
+
+  const defaultValue = competenceOptions.find(({id}) => id === selectedCompetence)
 
   return (
     <BoxDiv>
       <Title> Forecasting filters </Title>
       <FilterSections>
 
-        <DateRange startDateTime={formattedStartDate} combinedOnchanges={(data: any) => handleDatesChanged(data)} />
+        <DateRange
+          startDateTime={forecastingStartDate}
+          endDateTime={forecastingEndDate}
+          combinedOnchanges={(data: any) => handleDatesChanged(data)}
+        />
 
         <span>
           <Label> Competence </Label>
           <SelectSized
             className="choose_competence"
             classNamePrefix="select"
-            defaultValue={competenceOptions[0]}
-            name="choose_competence"
+            value={defaultValue}
             options={competenceOptions}
             styles={reactSelectStyles}
-            onChange={(data: any) => handleCompetenceChanged(data)}
+            onChange={(data: any) => handleCompetenceChanged(data.id)}
           />
         </span>
 

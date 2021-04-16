@@ -16,6 +16,7 @@ import { MultiSelectInput } from './MultiSelect';
 import { MultiSelectObjectInput } from './MultiSelectObjects';
 import { WeekMultiplier } from './WeekMultiplier';
 import { EvenWeeks } from './EvenWeeks';
+import { TypeaheadInput } from './Typeahead';
 import Button from '@material-ui/core/Button';
 
 const Wrapper = styled.div`
@@ -29,7 +30,7 @@ const FormActions = styled.div`
   grid-gap: 30px;
   padding: 10px;
 `;
-
+const EmptyComponent = () => <span/>;
 const fieldComponents = {
   date: DateInput,
   radio: RadioButton,
@@ -44,8 +45,9 @@ const fieldComponents = {
   multiselectObject: MultiSelectObjectInput,
   weekMultiplier: WeekMultiplier,
   evenWeeks: EvenWeeks,
+  typeahead: TypeaheadInput,
+  none: EmptyComponent,
 };
-
 interface DynamicFormBuilder {
   sectionTitle: string;
   collapsable: boolean;

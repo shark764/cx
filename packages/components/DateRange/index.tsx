@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 import { DatePicker } from '../DateTime/DatePicker';
 import Arrow from '@material-ui/icons/ArrowRightAlt';
 import { reactSelectStyles } from '../reactSelectStyles';
 import { addDays } from '@cx/utilities/date';
+import { DateTime } from 'luxon';
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
@@ -39,47 +39,71 @@ const DateFields = styled.span`
 `;
 
 export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedOnchanges }) => {
-  const [selectedRange, setSelectedRange] = useState('day');
-  const [startDate, setStartDate] = useState(startDateTime);
-  const [endDate, setEndDate] = useState(endDateTime ? endDateTime : startDate);
 
-  useEffect(() => {
-    combinedOnchanges([startDate, endDate]);
-  }, [startDate, endDate]);
+  const start = DateTime.fromISO(startDateTime);
+  const startInJS = start.toJSDate();
+  const end = DateTime.fromISO(endDateTime);
+  const endInJS = end.toJSDate();
 
-  useEffect(() => {
-    if (selectedRange === 'twoDays' || selectedRange === 'week') {
-      const daysToAdd = selectedRange === 'twoDays' ? 1 : 6;
-      setEndDate(addDays(startDate, daysToAdd));
-    } else {
-      setEndDate(addDays(startDate, 0));
-    }
-  }, [selectedRange]);
+  const diffInDays = end.diff(start, 'days');
+  const { days } = diffInDays.toObject();
 
-  const handleDates = (e: Date, dateType: 'startDate' | 'endDate') => {
-    const daysToAdd = (days: number): void => {
-      setStartDate(e);
-      setEndDate(addDays(e, days));
-    };
-    const dateMap = {
-      day: () => daysToAdd(0),
-      twoDays: () => daysToAdd(1),
-      week: () => daysToAdd(6),
-    };
-    if (selectedRange !== 'range') {
-      dateMap[selectedRange](e);
-    } else {
-      if (dateType === 'startDate') {
-        setStartDate(e);
-        if (e > endDate) {
-          setEndDate(e);
-        }
-      } else if (dateType === 'endDate') {
-        setEndDate(e);
-      }
-    }
+  const rangeMap = {
+    0: 'day',
+    1: 'day',
+    2: 'twoDays',
+    7: 'week',
+  };
+  const selectedRange = rangeMap[days] || 'range';
+
+
+
+  // useEffect(() => {
+  //   combinedOnchanges([startDate, endDate]);
+  // }, [startDate, endDate]);
+
+  // useEffect(() => {
+  //   if (selectedRange === 'twoDays' || selectedRange === 'week') {
+  //     const daysToAdd = selectedRange === 'twoDays' ? 1 : 6;
+  //     setEndDate(addDays(startDate, daysToAdd));
+  //   } else {
+  //     setEndDate(addDays(startDate, 0));
+  //   }
+  // }, [selectedRange]);
+  const changeRange = (rangeType: string) => {
+    console.log('set new range', rangeType);
   }
 
+  const handleDates = (e: Date, dateType: 'startDate' | 'endDate') => {
+    if (dateType === 'startDate') {
+      combinedOnchanges([e, null]);
+    } else {
+      combinedOnchanges([null, e]);
+    }
+    // const daysToAdd = (days: number): void => {
+    //   setStartDate(e);
+    //   setEndDate(addDays(e, days));
+    // };
+    // const dateMap = {
+    //   day: () => daysToAdd(0),
+    //   twoDays: () => daysToAdd(1),
+    //   week: () => daysToAdd(6),
+    // };
+    // if (selectedRange !== 'range') {
+    //   dateMap[selectedRange](e);
+    // } else {
+    //   if (dateType === 'startDate') {
+    //     setStartDate(e);
+    //     if (e > endDate) {
+    //       setEndDate(e);
+    //     }
+    //   } else if (dateType === 'endDate') {
+    //     setEndDate(e);
+    //   }
+    // }
+  }
+
+  const dateRangeVal = dateOptions.find(({type}) => type === selectedRange );
   return <span>
     <Label> Time Span </Label>
     <DateFields>
@@ -87,15 +111,14 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
       <SelectTimeSpanSized
         className="choose-date-range"
         classNamePrefix="select"
-        defaultValue={dateOptions[0]}
-        name="choose-date-range"
+        value={dateRangeVal}
         options={dateOptions}
-        onChange={({ type }: { type: string }) => setSelectedRange(type)}
+        onChange={({ type }: { type: string }) => changeRange(type)}
         styles={reactSelectStyles}
       />
 
       <StyledDatePicker
-        selected={startDate}
+        selected={startInJS}
         onChange={(e: Date) => handleDates(e, 'startDate')}
       />
 
@@ -103,10 +126,9 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
         <>
           <Arrow style={{ color: 'grey', transform: 'scale(1.5)', margin: '0 auto' }} />
           <StyledDatePicker
-            selected={endDate}
+            selected={endInJS}
             onChange={(e: Date) => handleDates(e, 'endDate')}
             disabled={selectedRange === 'twoDays' || selectedRange === 'week'}
-            minDate={selectedRange === 'range' ? startDate : undefined}
           />
         </>
       }

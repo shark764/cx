@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { DateTime } from 'luxon';
+
+const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
+const today = formatDate(new Date());
 
 const initialState = {
   competence: '',
+  scenarios: [],
   timezone: '',
   historicalPathParams: {
     // stagepool1 tenant on staging
@@ -11,9 +16,9 @@ const initialState = {
   historicalQueryParams: {
     channel: 'voice',
     direction: 'inbound',
-    startDateTime: '2021-01-01T14:00:00Z',
-    endDateTime: '2021-01-30T00:00:00Z',
-  }
+    startDateTime: today,
+    endDateTime: today,
+  },
 };
 
 export const forecasting = createSlice({
@@ -28,6 +33,9 @@ export const forecasting = createSlice({
     },
     setCompetence: (state, action) => {
       state.competence = action.payload;
+    },
+    setScenarios: (state, action) => {
+      state.scenarios = action.payload;
     },
     setTimezone: (state, action) => {
       state.timezone = action.payload;

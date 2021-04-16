@@ -1,8 +1,8 @@
 import { fetchTheme } from '@cx/fakedata/theme';
 import { main } from './reducers/main';
 import { planning } from './reducers/planning';
+import { forecasting } from './reducers/forecasting';
 import { wfm } from '../api';
-import { isConstructorDeclaration } from 'typescript';
 
 const {
   setTimezone,
@@ -12,6 +12,10 @@ const {
   setTheme,
   setCompetencies,
 } = main.actions;
+const {
+  setCompetence: setForecastingDefaultCompetence,
+  setScenarios
+} = forecasting.actions;
 
 export function loadTheme() {
   return async (dispatch: any) => {
@@ -27,8 +31,21 @@ export const fetchTenantCompetencies = () => {
     const { data } = await wfm.planning.api.get_all_tenants_tenant_competencies({
       pathParams: { tenant_id },
     });
-
+    // Set all global known competencies
     dispatch(setCompetencies(data));
+    // Set the default selected competence for forecasting filters
+    const defaultCompetence = data.find( ({name}: any) => name === 'temp_mock2' )?.id;
+    dispatch(setForecastingDefaultCompetence(defaultCompetence));
+  };
+}
+
+export const fetchForecastScenarios = (selectedTimeline: any) => {
+  return async (dispatch: any, getState: any) => {
+    const { forecasting: { historicalPathParams: { tenant_id } } } = getState();
+    const { data } = await wfm.forecasting.api.get_timeline_scenarios_tenants_tenant_forecasttimelines_forecast_timeline_scenarios({
+      pathParams: { tenant_id: tenant_id, forecast_timeline_id: selectedTimeline.id },
+    });
+    dispatch(setScenarios(data));
   };
 }
 
@@ -112,15 +129,10 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
 
 };
 
-export const deleteForecastScenario = async (formData: any) => {
-  console.log('Form data', formData);
-  // TODO: make this work yo
-  const tenant_id = 'd676b68b-2f1c-498c-b6b3-db7e3a3e5708';
-  const forecast_timeline_id = '1974e4dc-3d1e-4dd7-a7c2-16b6c75ce8a7';
-  const scenario_id = '411672ae-0e4b-4271-9e1c-04bdc84ed69e';
+export const deleteForecastScenario = async (formData: any, tenant_id: string, forecast_timeline_id: string) => {
   await wfm.forecasting.api.delete_forecast_timeline_scenario_tenants_tenant_forecasttimelines_forecast_timeline_scenarios({
     pathParams: { tenant_id, forecast_timeline_id },
-    queryString: { forecastScenarioId: scenario_id }
+    queryString: { ...formData }
   });
 };
 
