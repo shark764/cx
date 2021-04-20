@@ -57,8 +57,13 @@ export const RadioToggle: React.VFC<Props> = ({control, choices = [], name, defa
     )}
   />;
 
-  export const ContrtolledToggles: React.VFC<Props> = ({onChange, choices = [], value}) =>
-      <RadioToggles value={value} onChange={onChange} row >
+  export const ContrtolledToggles: React.VFC<Props> = ({onChange, choices = [], value, defaultValue}) =>
+      <RadioToggles
+        value={value}
+        onChange={onChange}
+        defaultValue={defaultValue}
+        row
+      >
         {choices.map(({value, label}) =>
           <FormControlLabel
             value={value}

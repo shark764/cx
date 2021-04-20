@@ -227,12 +227,13 @@ export function Forecasting() {
     metrics: ['nco', 'tot', 'abandons'],
     algorithmOptions: [
       {option: 'include_history', value: false},
-      {option: 'activate_filter', value: false},                              // save default si supposedly true,  but causes issues for now setting to false
-      {option: 'distribution_weight', value: 'exponential'},
       {option: 'country_holidays', value: 'US'},
-      {option: 'growth', value: '{"method":"linear","floor":20,"cap":"40"}'},
     ],
     scenarioType: 'temporary',
+    // AlgorithmOptions fields
+    // the above algorithm options are hidden the below correspond to form fields
+    active_filter: false,
+    distribution_weight: 'exponential',
   };
 
   const showSpecificSenarioRange = (start: string, end: string) => {

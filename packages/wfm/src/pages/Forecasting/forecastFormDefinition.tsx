@@ -41,16 +41,17 @@ export const createForecastFormDefenition = [
         label: 'Day',
         name: 'dayValueDateRanges',
         toggles: [{label: 'All Historical', value: 'historical'}, {label: 'Set Range', value: 'range'}],
+        defaultToggled: 'historical',
         toggleFields: [
           {
             label: 'historical',
-            name: 'dayCurveDateRange',
+            name: 'dayValueDateRanges',
             type: 'none',
             constraints: [{required: true}],
           },
           {
             label: 'range',
-            name: 'dayCurveDateRange',
+            name: 'dayValueDateRanges',
             type: 'evenWeeks',
             constraints: [{required: true}],
           },
@@ -68,8 +69,9 @@ export const createForecastFormDefenition = [
     ],
   },
   {
-    sectionTitle: 'Options',
+    sectionTitle: 'Algorithm Options',
     collapsable: false,
+    hidden: true,
     fields: [
       {
         label: 'Day curve',
@@ -78,12 +80,13 @@ export const createForecastFormDefenition = [
         hidden: true,
         constraints: [{required: true}],
       },
-      {
-        label: 'Series (Pull from competencies when available)',
-        name: 'series',
-        type: 'series',
-        constraints: [{required: true}],
-      },
+      // {  // This is getting set from existing competencies right now
+      // but in the future may come from from user selection
+      //   label: 'Series',
+      //   name: 'series',
+      //   type: 'series',
+      //   constraints: [{required: true}],
+      // },
       {
         label: 'Algorithm',
         name: 'algorithm',
@@ -112,42 +115,58 @@ export const createForecastFormDefenition = [
     sectionTitle: 'Day Settings',
     collapsable: false,
     fields: [
-      // {
-      //   label: 'Smoothing',
-      //   name: 'active_filter',
-      //   type: 'boolean',
-      //   constraints: [{required: true}],
-      // },
+      {
+        label: 'Trend',
+        name: 'growth',
+        toggles: [
+          {
+            label: 'Linear',
+            value: 'linear',
+            hidden: true,
+          },
+          {
+            label: 'Logistical',
+            value: 'logistical'
+          }
+        ],
+        defaultToggled: 'linear',
+        hiddenToggleField: 'linear',
+        toggleFields: [
+          {
+            label: 'linear',
+            name: 'growth',
+            type: 'floorAndCap',
+            constraints: [{required: true}],
+          },
+          {
+            label: 'logistical',
+            name: 'growth',
+            type: 'floorAndCap',
+            constraints: [{required: true}],
+          },
+        ],
+        toggleable: true,
+        constraints: [{required: true}],
+      },
     ]
   },
   {
     sectionTitle: 'Intraday Settings',
     collapsable: false,
     fields: [
-
+      {
+        label: 'Historical Weight',
+        name: 'distribution_weight',
+        type: 'radioToggle',
+        choices: [{label: 'Even', value: 'even'}, {label: 'Exponential', value: 'exponential'}],
+        constraints: [{required: true}],
+      },
+      {
+        label: 'Smoothing',
+        name: 'active_filter',
+        type: 'boolean',
+        constraints: [{required: true}],
+      },
     ]
   },
 ];
-
-// //     "algorithmOptions": [
-//   {
-//     "option": "activate_filter",  smoothing
-//     "value": true
-// },
-// {
-//     "option": "distribution_weight",
-//     "value": "exponential"
-// },
-// {
-//     "option": "country_holidays",  https://github.com/dr-prodigy/python-holidays
-//     "value": "US"
-// },
-// {
-//     "option": "span",
-//     "value": 8
-// },
-// {
-//     "option": "growth",
-//     "value": "{\"method\":\"linear\",\"floor\":20,\"cap\":\"40\"}"
-// }
-// ]

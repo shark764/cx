@@ -17,6 +17,7 @@ import { MultiSelectObjectInput } from './MultiSelectObjects';
 import { WeekMultiplier } from './WeekMultiplier';
 import { EvenWeeks } from './EvenWeeks';
 import { TypeaheadInput } from './Typeahead';
+import { FloorAndCap } from './FloorAndCap';
 import Button from '@material-ui/core/Button';
 
 const Wrapper = styled.div`
@@ -46,10 +47,12 @@ const fieldComponents = {
   weekMultiplier: WeekMultiplier,
   evenWeeks: EvenWeeks,
   typeahead: TypeaheadInput,
+  floorAndCap: FloorAndCap,
   none: EmptyComponent,
 };
 interface DynamicFormBuilder {
   sectionTitle: string;
+  hidden?: boolean;
   collapsable: boolean;
   collapsableDefaultOpen?: boolean;
   fields: {
@@ -58,18 +61,30 @@ interface DynamicFormBuilder {
     type: string;
     choices?: any;
     constraints: any;
+    defaultToggled?: string;
+    hiddenToggleField? : string;
   }[]
 };
 
 export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValues, formDefenition}) => {
-  const [ toggledFields, setToggledFields ] = useState({}); //TODO:  figure out toggled fields from the provided defaultValues? or have a nerw one called default fields
+
+  const findDefaultedToggles = (toggleFields: any, defaultToggled: any) => {
+    if (!toggleFields || !defaultToggled) { return {}; }
+    const {name, label} = toggleFields.find(({label}: any) => label === defaultToggled);
+    return { [name]: label };
+  };
+
+  const defaultToggledFields = formDefenition.reduce((acc: any, {fields}: any) =>
+    ({ ...acc, ...fields.reduce((acc2:any, {toggleFields, defaultToggled}: any) => ({...acc2, ...findDefaultedToggles(toggleFields, defaultToggled) }), {})})
+  , {});
+
+  const [ toggledFields, setToggledFields ] = useState(defaultToggledFields);
+
   const { handleSubmit, control,  register } = useForm({ defaultValues });
 
   const invalidSubmission = (data) => { console.log(data) };
 
   const getToggledField = (name: string, fields: any[]) => {
-
-    console.log('um', name, fields, toggledFields)
     const possibleField = fields.find(f => f.label === name)?.type;
     return possibleField ? fieldComponents[possibleField] : () => <span />
   };
@@ -77,31 +92,42 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
   return (
     <form onSubmit={handleSubmit(onSubmit, invalidSubmission)}>
       <Wrapper>
-        {formDefenition.map(({sectionTitle, collapsable, fields, collapsableDefaultOpen}) =>
+        {formDefenition.map(({sectionTitle, collapsable, fields, collapsableDefaultOpen, hidden}) =>
         <DetailWrapper
           title={sectionTitle}
           collapsable={collapsable}
           key={sectionTitle}
           open={collapsableDefaultOpen}
+          hidden={hidden}
         >
 
-          {fields.map(({label, name, type, constraints, choices, hidden, multiValue, toggleable, toggles, toggleFields}) =>
+          {fields.map(({label, name, type, constraints, choices, hidden, multiValue, toggleable, toggles, toggleFields, defaultToggled, hiddenToggleField}) =>
           <FieldContainer label={label} key={label} hidden={hidden} >
-
             {toggleable ?
-              // RadioToggle({control, isFormSubmitting, choices: toggles, name, defaultValue: toggles[0].value})
               <>
-                <ContrtolledToggles choices={toggles} value={toggledFields[name]} onChange={({target: { value }}) => {
-                  // console.log('hiya', value)  }
-                  setToggledFields({...toggledFields, [name]: value})
-                }} />
-                { getToggledField(toggledFields[name], toggleFields)({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null, multiValue}) }
+                <ContrtolledToggles
+                  choices={toggles}
+                  defaultValue={defaultToggled}
+                  onChange={({target: { value }}) => {
+                    setToggledFields({...toggledFields, [name]: value})
+                  }}
+                />
+                { getToggledField(toggledFields[name] || defaultToggled , toggleFields)({
+                    control,
+                    register,
+                    isFormSubmitting,
+                    choices,
+                    name,
+                    multiValue,
+                    defaultValue: defaultValues[name] || null,
+                    optionName: toggledFields[name],
+                    hidden: !!toggles.find(({value, hidden}) => value === toggledFields[name] && hidden)
+                  })
+                }
               </>
               :
-              fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null, multiValue})
+              fieldComponents[type]({control, register, isFormSubmitting, choices, name, multiValue, defaultValue: defaultValues[name] || null})
             }
-
-            {/* { fieldComponents[type]({control, register, isFormSubmitting, choices, name, defaultValue: defaultValues[name] || null, multiValue}) } */}
           </FieldContainer>)}
 
         </DetailWrapper>)}

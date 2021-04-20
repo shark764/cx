@@ -5,7 +5,7 @@ import { Chevron } from '../Icons/Chevron';
 
 const Wrapper = styled.div`
   font-family: Arial;
-  display: grid;
+  display: ${({hidden}) => hidden? 'none' : 'grid'};
   grid-template-columns: fit-content(150px) 1fr fit-content(30px);
   margin-bottom: 30px;
 `;
@@ -23,13 +23,14 @@ interface Props {
   children: React.ReactNode;
   open: boolean;
   collapsable: boolean;
+  hidden: boolean;
 };
 
-export const DetailWrapper: React.VFC<Props> = ({title, children, open = true, collapsable = true}) => {
+export const DetailWrapper: React.VFC<Props> = ({title, children, open = true, collapsable = true, hidden = false}) => {
   const [ isOpen, setOpen ] = useState(open);
 
     return <>
-        <Wrapper onClick={() => collapsable && setOpen(!isOpen) }>
+        <Wrapper hidden={hidden} onClick={() => collapsable && setOpen(!isOpen) }>
           <span>{ title }</span>
           <TitleBar />
           {collapsable && <Chevron
@@ -40,6 +41,6 @@ export const DetailWrapper: React.VFC<Props> = ({title, children, open = true, c
         <Content>
           { isOpen && children }
         </Content>
-      </>
+      </>;
 
 }

@@ -59,8 +59,27 @@ export const competence = (timeSpan: string) => (dispatch: any) => {
 
 export const createForecastApi = async (formData: any, tenant_id: string, forecast_timeline_id: string) => {
 
-    const { name, description, forecastRange, scenarioType, ...scenarioConfig } = formData;
+    const {
+      name,
+      description,
+      forecastRange,
+      scenarioType,
+
+      distribution_weight,
+      active_filter,
+      growth,
+      algorithmOptions,
+      ...scenarioConfig
+    } = formData;
     const { startDate, endDate } = forecastRange[0];
+
+    const formattedAlgorithmOptions = [
+      ...algorithmOptions,
+      {option: 'distribution_weight', value: distribution_weight},
+      {option: 'active_filter', value: active_filter},
+      {option: 'growth', value: JSON.stringify(growth)},
+    ];
+    console.log('form data', formData, formattedAlgorithmOptions );
 
     const allChannels = [
       'voice',
@@ -69,7 +88,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       // 'email',
       // 'work_item'
     ];
-    const currentCompetencies = [
+    const currentCompetencies = [ // TODO: pull from state instead...
       '64e27f30-7dd9-11e7-9441-d379301ec11d', // temp_mock2
       // '65d62e00-7dd9-11e7-9441-d379301ec11d', // temp_mock
       // '66c3e960-7dd9-11e7-9441-d379301ec11d', // temp_mock3
@@ -92,11 +111,15 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
 
     /**
      * Then update the forecasts scenarios settings
-     * TODO: don't include day curve date range when day curve was not provided, or the toggle to select no was chosen?
      */
     await wfm.forecasting.api.put_params_tenants_tenant_forecastscenarios_forecast_scenario_params({
       pathParams: { tenant_id, forecast_scenario_id },
-      body: {...scenarioConfig, series, dayCurveDateRange: scenarioConfig.dayCurveDateRange[0] },
+      body: {
+        ...scenarioConfig,
+        series,
+        dayCurveDateRange: scenarioConfig.dayCurveDateRange[0],
+        algorithmOptions: formattedAlgorithmOptions,
+      },
     });
 
 
