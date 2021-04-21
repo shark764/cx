@@ -163,7 +163,7 @@ export const createForecastFormDefenition = [
       },
       {
         label: 'Smoothing',
-        name: 'active_filter',
+        name: 'activate_filter',
         type: 'boolean',
         constraints: [{required: true}],
       },

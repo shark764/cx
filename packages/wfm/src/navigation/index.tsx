@@ -20,6 +20,8 @@ import { CompetenceManagement } from '../pages/Scheduling/Admin/CompetenceManage
 import { DayTypes } from '../pages/Scheduling/Admin/DayTypes';
 import { DefaultRestriction } from '../pages/Scheduling/Admin/DefaultRestriction';
 
+import { Dev } from '../pages/Dev';
+
 import { NoMatch } from './NoMatch';
 
 export function Navigation() {
@@ -80,6 +82,11 @@ export function Navigation() {
       </Route>
       <Route path="/admin/default-restriction">
         <DefaultRestriction />
+      </Route>
+
+      {/* Dev */}
+      <Route path="/qwertyqwerty">
+        <Dev />
       </Route>
 
       <Route path="*">

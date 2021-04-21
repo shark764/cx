@@ -127,38 +127,66 @@ export function Forecasting() {
   const allScenarios = useSelector((state: RootState) => state.forecasting.scenarios);
   const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
 
+  const intervalType = useMemo(() => { // TODO: move this to a more universal place instead of here and date range component, a redux selector maybe
+    const {startDateTime, endDateTime} = historicalQueryParams;
+    const start = DateTime.fromISO(startDateTime);
+    const end = DateTime.fromISO(endDateTime);
+
+    const diffInDays = end.diff(start, 'days');
+    const { days } = diffInDays.toObject();
+
+    const rangeMap = {
+      0: 'day',
+      1: 'twoDays',
+      6: 'week',
+    };
+    const intervalMap = {
+      day: 'quarter-hour',
+      twoDays: 'hour',
+      week: 'day'
+    };
+    // @ts-ignore
+    console.log('woop', intervalMap[rangeMap[days]])
+    // @ts-ignore
+    return intervalMap[rangeMap[days]] || 'day';
+  }, [historicalQueryParams])
+
   const { data: timelines, isLoading: timelinesLoading, error: timelinesError, refetch } = useQuery<any, any>(
     ['timelinesData', historicalPathParams],
     () => wfm.forecasting.api.get_all_tenants_tenant_forecasttimelines({
       pathParams: { tenant_id: historicalPathParams.tenant_id },
-    })
+    }),
+    {
+      refetchOnWindowFocus: false
+    }
   );
 
-  useEffect(() => { // set initial default timeline
+  useEffect(() => { // TODO: set initial default timeline as notebook_temp but remove later
     if (timelines?.data) {
       setSelectedTimeline( timelines.data.find(({name}:any) => name === 'notebook_temp') );
     }
   }, [timelines]);
 
   const { data, isLoading, error } = useQuery<any, any>(
-    ['historicalData', historicalPathParams, historicalQueryParams, selectedTimeline],
-    () => selectedTimeline && wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
+    ['historicalData', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence],
+    () => selectedTimeline && selectedCompetence && wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
       pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: selectedTimeline.id},
       // queryString: historicalQueryParams
       body: {
         startDate: historicalQueryParams.startDateTime,
         endDate: historicalQueryParams.endDateTime,
-        interval:
-        // "quarter-hour",
-        // "hour",
-        "day",
-        // "week",
+        interval: intervalType,
+        // "week", // these options are in the api code but are not accepted yet
         // "month",
         // "year",
-        competencyIds: [ // TODO: pull these from main state instead?
-          '64e27f30-7dd9-11e7-9441-d379301ec11d', // temp_mock2 supposedly has the most data? It's the Voice queue in stagepool1
-          // '65d62e00-7dd9-11e7-9441-d379301ec11d', // temp_mock
-          // '66c3e960-7dd9-11e7-9441-d379301ec11d', // temp_mock3
+
+        /**
+         * TODO: right now we are selecting only one competency which the user has selected and is in state
+         * however the api can support mulitple as an array but testing would need to be done to see what is more
+         * efficient..   getting all competencies or just the one your interested in?
+         */
+        competencyIds: [
+          selectedCompetence
         ],
         channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
         // directions: ['inbound', 'outbound'],
@@ -168,11 +196,11 @@ export function Forecasting() {
         includeAdjustments: true,
         includeForecast: true,
       }
-    },
+    }),
     {
       refetchOnWindowFocus: false,
       // enabled: false
-    })
+    }
   );
 
   React.useEffect(() => {
@@ -232,7 +260,7 @@ export function Forecasting() {
     scenarioType: 'temporary',
     // AlgorithmOptions fields
     // the above algorithm options are hidden the below correspond to form fields
-    active_filter: false,
+    activate_filter: false,
     distribution_weight: 'exponential',
   };
 

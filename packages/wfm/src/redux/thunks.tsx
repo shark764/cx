@@ -3,6 +3,7 @@ import { main } from './reducers/main';
 import { planning } from './reducers/planning';
 import { forecasting } from './reducers/forecasting';
 import { wfm } from '../api';
+import { store } from '../redux/store';
 
 const {
   setTimezone,
@@ -34,7 +35,8 @@ export const fetchTenantCompetencies = () => {
     // Set all global known competencies
     dispatch(setCompetencies(data));
     // Set the default selected competence for forecasting filters
-    const defaultCompetence = data.find( ({name}: any) => name === 'temp_mock2' )?.id;
+    // for now we can just choose the first one in the list
+    const defaultCompetence = data[0]?.id;
     dispatch(setForecastingDefaultCompetence(defaultCompetence));
   };
 }
@@ -66,7 +68,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       scenarioType,
 
       distribution_weight,
-      active_filter,
+      activate_filter,
       growth,
       algorithmOptions,
       ...scenarioConfig
@@ -76,10 +78,9 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     const formattedAlgorithmOptions = [
       ...algorithmOptions,
       {option: 'distribution_weight', value: distribution_weight},
-      {option: 'active_filter', value: active_filter},
+      {option: 'activate_filter', value: Boolean(activate_filter)},
       {option: 'growth', value: JSON.stringify(growth)},
     ];
-    console.log('form data', formData, formattedAlgorithmOptions );
 
     const allChannels = [
       'voice',
@@ -88,10 +89,9 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       // 'email',
       // 'work_item'
     ];
-    const currentCompetencies = [ // TODO: pull from state instead...
-      '64e27f30-7dd9-11e7-9441-d379301ec11d', // temp_mock2
-      // '65d62e00-7dd9-11e7-9441-d379301ec11d', // temp_mock
-      // '66c3e960-7dd9-11e7-9441-d379301ec11d', // temp_mock3
+    const currentCompetencies = [
+      // Currently this is the users selected competence
+      store.getState()?.forecasting?.competence
     ];
     const series = currentCompetencies.flatMap((competency) => {
       return allChannels.map((channelType) => ({
