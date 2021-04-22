@@ -35,7 +35,6 @@ export interface ChartProps {
   chartName?: string;
   showLegend?: boolean;
   showTooltip?: boolean;
-  interval?: number;
   containerWidth?: string;
   containerHeight?: number;
 };
@@ -64,7 +63,7 @@ export const LineChart: React.VFC<ChartProps> = ({
           data={data}
           onClick={onClick}
         >
-          <XAxis dataKey={xDataKey} interval={0} dy={10} />
+          <XAxis dataKey={xDataKey} dy={10} />
           <YAxis
             yAxisId="left"
             label={{ value: 'NCO _ _ _ _', angle: -90, position: 'center', dx: -15 }}

@@ -141,12 +141,11 @@ export function Forecasting() {
       6: 'week',
     };
     const intervalMap = {
-      day: 'quarter-hour',
+      day: 'hour', // less than a day should be quarter-hour, probably in a future feature where the user can zoom in more on the timeline
       twoDays: 'hour',
       week: 'day'
     };
-    // @ts-ignore
-    console.log('woop', intervalMap[rangeMap[days]])
+
     // @ts-ignore
     return intervalMap[rangeMap[days]] || 'day';
   }, [historicalQueryParams])
@@ -208,17 +207,25 @@ export function Forecasting() {
     dispatch(fetchForecastScenarios(selectedTimeline));
   }, [dispatch, selectedTimeline]);
 
+  const chooseXaxisLabel = (timestamp: string, intervalType: 'day' | 'hour') => {
+    if (intervalType === 'hour') {
+      return DateTime.fromISO(timestamp).toLocaleString({ hour: '2-digit' });
+    } else {
+      return DateTime.fromISO(timestamp).toLocaleString(DateTime.DATE_MED);
+    }
+  };
+
   const memoData = useMemo(() =>
     data
     ?.data
-    ?.find(({competency}: any) => competency === '64e27f30-7dd9-11e7-9441-d379301ec11d')
+    ?.find(({competency}: any) => competency === selectedCompetence)
     ?.data
     ?.[0]
     ?.series.map(({ timestamp, nco, aht, abandons }: any) => ({
-      timestamp: DateTime.fromISO(timestamp).toLocaleString(DateTime.DATE_MED),
+      timestamp: chooseXaxisLabel(timestamp, intervalType),
       nco: nco,
       aht: aht,
-    })) || [], [data]);
+    })) || [], [data, intervalType, selectedCompetence]);
 
   const memoTimelineOptions = useMemo(() => timelines?.data?.map(({ description, id, name }: any) => ({
     label: name,
@@ -373,9 +380,9 @@ export function Forecasting() {
           <LineChart
             chartName="forecast"
             data={memoData}
-            interval={viewBy === 'day' ? 2 : 0}
             xDataKey={linechartData.xDataKey}
             dataKeys={linechartData.dataKeys}
+            // intervalType={intervalType}
           />
         }
         <Title> Staffing Estimate Per Channel </Title>
@@ -383,7 +390,6 @@ export function Forecasting() {
           chartName="staffingEstimate"
           statName="Staffing Estimate"
           data={barChart[viewBy].data}
-          interval={viewBy === 'day' ? 2 : 0}
           stackId={viewBy === 'dateRange' ? 'a' : null}
           xDataKey={barChart[viewBy].xDataKey}
           dataKeys={barChart[viewBy].dataKeys}
