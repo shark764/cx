@@ -15,7 +15,8 @@ const {
 } = main.actions;
 const {
   setCompetence: setForecastingDefaultCompetence,
-  setScenarios
+  setScenarios,
+  setScenarioInProgress,
 } = forecasting.actions;
 
 export function loadTheme() {
@@ -110,6 +111,11 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     });
 
     /**
+     * Save the scenario id in state so we can track its completion status
+     */
+    store.dispatch(setScenarioInProgress({ startDate, endDate, forecast_scenario_id }));
+
+    /**
      * Then update the forecasts scenarios settings
      */
     await wfm.forecasting.api.put_params_tenants_tenant_forecastscenarios_forecast_scenario_params({
@@ -141,13 +147,6 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
         startDate,
         endDate,
       }
-    });
-
-    /**
-     * Validate the status of the forecast
-     */
-    await wfm.forecasting.api.get_all_tenants_tenant_forecastscenarios_scenario_series({
-      pathParams: { tenant_id, scenario_id: forecast_scenario_id },
     });
 
 };

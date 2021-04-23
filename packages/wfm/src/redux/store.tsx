@@ -14,9 +14,10 @@ export interface RootState {
     competence: string;
   };
   forecasting: {
-    competence: '',
+    competence: string;
     scenarios: any[];
-    timezone: '',
+    scenarioInProgress: {startDate: string, endDate: string, forecast_scenario_id: string};
+    timezone: string;
     historicalPathParams: {
       tenant_id: string;
       competency_id: string;

@@ -16,9 +16,10 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
 import { Table } from '@cx/components/Table';
-import { BarChart } from '@cx/components/Charts/BarChart';
+// import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
+import { Insights } from '@cx/components/Icons/Insights';
 
 import { CreateUUID } from '@cx/utilities/uuid';
 
@@ -35,6 +36,7 @@ import { wfm } from '../../api';
 import { createForecastFormDefenition } from './forecastFormDefinition';
 import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
 import { createTimelineFormDefenition } from './newTimelineFormDefenition';
+import { InProgress } from './inProgress';
 import { Filters } from './filters';
 
 import { forecasting } from '../../redux/reducers/forecasting';
@@ -101,6 +103,11 @@ const Actions = styled.div`
   height: 30px;
   width: 100%;
 `;
+const ProgressIcon = styled.span`
+  position: absolute;
+  margin-left: 20px;
+  top: -4px;
+`;
 const Label = styled.span`
   font-size: 11px;
   color: grey;
@@ -160,7 +167,7 @@ export function Forecasting() {
     }
   );
 
-  useEffect(() => { // TODO: set initial default timeline as notebook_temp but remove later
+  useEffect(() => { // TODO: set initial default timeline as notebook_temp but remove later, change it so if there is only 1 timeline show that
     if (timelines?.data) {
       setSelectedTimeline( timelines.data.find(({name}:any) => name === 'notebook_temp') );
     }
@@ -318,6 +325,9 @@ export function Forecasting() {
             onChange={(e, {startDate, endDate}: any) => showSpecificSenarioRange(startDate, endDate)}
           />
         }
+        <ProgressIcon>
+          <InProgress selectedTimeline={selectedTimeline} />
+        </ProgressIcon>
         <ButtonsWrapper>
           <Button
             style={{ color: '#4c4a4a' }}
@@ -385,7 +395,8 @@ export function Forecasting() {
             // intervalType={intervalType}
           />
         }
-        <Title> Staffing Estimate Per Channel </Title>
+        {/* TODO: api is not ready for staffing estimates just yet */}
+        {/* <Title> Staffing Estimate Per Channel </Title>
         <BarChart
           chartName="staffingEstimate"
           statName="Staffing Estimate"
@@ -393,7 +404,7 @@ export function Forecasting() {
           stackId={viewBy === 'dateRange' ? 'a' : null}
           xDataKey={barChart[viewBy].xDataKey}
           dataKeys={barChart[viewBy].dataKeys}
-        />
+        /> */}
       </ChartsWrapper>
 
       <TableWrapper>

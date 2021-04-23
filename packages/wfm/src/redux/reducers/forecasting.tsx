@@ -11,13 +11,17 @@ const initialState = {
   historicalPathParams: {
     // stagepool1 tenant on staging
     tenant_id: 'd676b68b-2f1c-498c-b6b3-db7e3a3e5708',
-    competency_id: '64e27f30-7dd9-11e7-9441-d379301ec11d'
   },
   historicalQueryParams: {
     channel: 'voice',
     direction: 'inbound',
     startDateTime: today,
     endDateTime: today,
+  },
+  scenarioInProgress: {
+    startDate: '',
+    endDate: '',
+    forecast_scenario_id: ''
   },
 };
 
@@ -39,6 +43,9 @@ export const forecasting = createSlice({
     },
     setTimezone: (state, action) => {
       state.timezone = action.payload;
+    },
+    setScenarioInProgress: (state, action) => {
+      state.scenarioInProgress = action.payload;
     },
   },
 });

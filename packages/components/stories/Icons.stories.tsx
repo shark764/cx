@@ -16,6 +16,8 @@ import { Clock } from '../Icons/Clock';
 import { Plus } from '../Icons/Plus';
 import { Remove } from '../Icons/Remove';
 import { Loading } from '../Icons/Loading';
+import { Ellipsis } from '../Icons/Ellipsis';
+import { Insights } from '../Icons/Insights';
 
 export default {
   title: 'Example/Icons',
@@ -139,5 +141,36 @@ LoadingIcon.bind({});
 LoadingIcon.args = {
   size: 100,
   fill: '#07487a',
+};
+
+export const EllipsisAnimated: Story<any> = (args) => <Ellipsis {...args} />;
+EllipsisAnimated.bind({});
+EllipsisAnimated.args = {
+  width: 100,
+  fill: '#07487a',
+  animated: true,
+};
+export const EllipsisStatic: Story<any> = (args) => <Ellipsis {...args} />;
+EllipsisStatic.bind({});
+EllipsisStatic.args = {
+  width: 30,
+  fill: 'grey',
+  animated: false,
+};
+
+export const InsightsAnimated: Story<any> = (args) => <Insights {...args} />;
+InsightsAnimated.bind({});
+InsightsAnimated.args = {
+  width: 100,
+  fill: 'rgb(241, 113, 0)',
+  animated: true
+};
+
+export const InsightsStatic: Story<any> = (args) => <Insights {...args} />;
+InsightsStatic.bind({});
+InsightsStatic.args = {
+  width: 100,
+  fill: 'rgb(25, 161, 26)',
+  animated: false
 };
 
