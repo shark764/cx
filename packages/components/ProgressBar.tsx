@@ -9,7 +9,6 @@ const Container = styled.div`
 const Wrapper = styled.div`
   height: 20px;
   background-color: #e0e0de;
-  background-color: ${({ theme }) => theme.colors.secondary};
   border-radius: 50px;
 `;
 interface IFiller extends IThemed {
@@ -19,25 +18,10 @@ interface IFiller extends IThemed {
 const Filler = styled.div<IFiller>`
   height: 100%;
   width: ${({ completed }) => completed}%;
-  background-color: ${({ theme }) => theme.colors.brand};
+
   transition: width 1s ease-in-out;
   border-radius: inherit;
   text-align: right;
-
-  ${({
-    bgColor, primary, secondary, theme,
-  }) => (bgColor
-      && css`
-        background-color: ${bgColor};
-      `)
-    || (primary
-      && css`
-        background-color: ${theme.colors.primary};
-      `)
-    || (secondary
-      && css`
-        background-color: ${theme.colors.secondary};
-      `)};
 `;
 const Caption = styled.span`
   font-size: 18px;

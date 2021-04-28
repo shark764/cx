@@ -6,7 +6,7 @@ interface IContent {
   messageType: string;
 }
 const Content = styled.span<IContent>`
-  color: ${({ messageType, theme }) => theme.colors[messageType]};
+
 `;
 
 interface IMessage {

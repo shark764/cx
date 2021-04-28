@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Controller, Control } from 'react-hook-form';
 import { DatePicker } from '../DateTime/DatePicker';
 import { DateTime } from 'luxon';
+import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
@@ -68,7 +69,7 @@ const MiniMultiplier = styled.span`
 `;
 const IncrementControls = styled.span`
   position: absolute;
-  right: 5px;
+  right: 24px;
   top: 10px;
   width: 90px;
   display: flex;
@@ -76,14 +77,14 @@ const IncrementControls = styled.span`
   justify-content: space-evenly;
 `;
 
-const Input = styled.input`
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  border-radius: 4px;
-  border: 1px solid hsl(0,0%,80%);
-  padding: 10px 15px;
-  outline: none;
+const Input = styled(TextField)`
+  width: 170px;
+  .MuiInputBase-input {
+    padding: 11px 14px;
+  }
+  .MuiOutlinedInput-adornedEnd {
+    padding-right: 0px;
+  }
 `;
 
 const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
@@ -171,6 +172,7 @@ const DatePickers = ({onChange, name, multiValue}: any) => {
                 value={totalWeeks}
                 type="number"
                 className={name}
+                variant="outlined"
                 onChange={(e:any) => updateTotalWeeks(index, e.target.value)}
               />
                 <IncrementControls>

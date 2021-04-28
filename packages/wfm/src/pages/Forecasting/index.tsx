@@ -339,7 +339,7 @@ export function Forecasting() {
           </Button>
           <Button
             className="createForecast"
-            style={{ color: 'white', background: '#07487a' }}
+            // style={{ color: 'white', background: '#07487a' }}
             onClick={() => setCreateNewForecast(true)}
             variant="contained"
             disableElevation

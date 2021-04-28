@@ -11,7 +11,7 @@ const Box = styled.div`
 const Location = styled.span`
   font-size: 28px;
   font-weight: bold;
-  color: ${(props) => props.theme.colors.secondary};
+  color: white;
 `;
 
 export function NoMatch() {

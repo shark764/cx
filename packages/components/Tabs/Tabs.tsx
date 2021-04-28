@@ -41,36 +41,13 @@ const TabItem = styled(Button)<ITab>`
   cursor: pointer;
   display: inline-block;
   margin: 0 10px 10px 0;
-  color: ${({ theme }) => theme.colors.text};
+
   background: transparent;
   border: none;
   outline: none;
   transition: all ease-in-out 0.2s;
   border-radius: 4px;
   background-color: hsl(0, 0%, 95%);
-
-  ${({
-    active, bgColor, primary, secondary, theme,
-  }) => (active
-    ? (bgColor
-          && css`
-            background-color: ${bgColor};
-          `)
-        || (primary
-          && css`
-            color: ${theme.colors['accent-3']};
-            background-color: ${theme.colors.primary};
-          `)
-        || (secondary
-          && css`
-            color: ${theme.colors['accent-3']};
-            background-color: ${theme.colors.secondary};
-          `)
-    : css`
-          &:hover {
-            background-color: hsl(0, 0%, 89%);
-          }
-        `)};
 
   ${({ disabled }) => disabled
     && css`

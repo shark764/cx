@@ -14,7 +14,7 @@ interface ITooltipTip {
 }
 const TooltipTip = styled.div<ITooltipTip>`
   --tooltip-text-color: black;
-  --tooltip-background-color: ${({ theme }) => theme.colors['accent-3']};
+
   --tooltip-margin: 30px;
   --tooltip-arrow-size: 6px;
 

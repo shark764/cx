@@ -2,11 +2,10 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import styled from 'styled-components';
-import Select from 'react-select';
 import { DateRange } from '@cx/components/DateRange';
 import { DateTime } from 'luxon';
-import { reactSelectStyles } from '@cx/components/reactSelectStyles';
 import { forecasting } from '../../redux/reducers/forecasting';
+import { Selector } from '@cx/components/Inputs/Selector';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
@@ -16,30 +15,17 @@ const BoxDiv = styled.div`
   background: white;
 `;
 
-
 const FilterSections = styled.div`
   display: flex;
   justify-content: space-between;
-  `;
-
-const SelectSized = styled(Select)`
-  width: 250px;
-  margin: 0px 10px;
-  `;
+`;
 
 const Title = styled.h4`
   color: grey;
   font-style: italic;
   margin-top: 0px;
   margin-left: 10px;
-  `;
-
-const Label = styled.span`
-  font-size: 11px;
-  color: grey;
-  vertical-align: super;
-  margin-left: 10px;
-  `;
+`;
 
 export function Filters() {
 
@@ -70,7 +56,7 @@ export function Filters() {
   };
   const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
 
-  const defaultValue = competenceOptions.find(({id}) => id === selectedCompetence)
+  const defaultValue = competenceOptions.find(({id}) => id === selectedCompetence)?.id || '';
 
   return (
     <BoxDiv>
@@ -84,14 +70,13 @@ export function Filters() {
         />
 
         <span>
-          <Label> Competence </Label>
-          <SelectSized
-            className="choose_competence"
-            classNamePrefix="select"
+          <Selector
+            // label="Competence"
             value={defaultValue}
-            options={competenceOptions}
-            styles={reactSelectStyles}
             onChange={(data: any) => handleCompetenceChanged(data.id)}
+            options={competenceOptions}
+            // @ts-ignore
+            style={{width: '200px'}}
           />
         </span>
 

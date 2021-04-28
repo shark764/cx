@@ -48,7 +48,7 @@ export function List() {
         id: 'expander',
         Cell: ({ row }: any) => (
           <span {...row.getToggleRowExpandedProps()}>
-            <Chevron2 size={15} fill={theme.colors.primary} isExpanded={row.isExpanded} />
+            <Chevron2 size={15} isExpanded={row.isExpanded} />
           </span>
         ),
         SubCell: () => null,

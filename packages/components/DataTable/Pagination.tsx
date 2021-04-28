@@ -12,9 +12,7 @@ import { Divider } from '../Divider';
 const Button2 = styled(Button)`
   padding: 10px 15px;
   border-radius: 4px;
-  color: ${({ theme }) => theme.colors['accent-3']};
-  background-color: ${({ theme }) => theme.colors['accent-1']};
-  border-color: ${({ theme }) => theme.colors['accent-1']};
+
 `;
 const TextBox2 = styled(TextBox)`
   width: 100px;
@@ -33,7 +31,6 @@ const Next2 = styled(Next)`
 `;
 const Divider2 = styled(Divider)`
   border-left: 1px solid;
-  border-color: ${({ theme }) => theme.colors.secondary};
   border-radius: 0;
   display: inline-block;
   line-height: normal;
@@ -57,19 +54,19 @@ export function Pagination({
   return (
     <div className="pagination">
       <Button2 type="button" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-        <FastForward2 size={10} fill={theme.colors['accent-3']} />
+        <FastForward2 size={10} fill={'green'} />
       </Button2>
       {' '}
       <Button2 type="button" onClick={() => previousPage()} disabled={!canPreviousPage}>
-        <Next2 size={10} fill={theme.colors['accent-3']} />
+        <Next2 size={10} fill={'green'} />
       </Button2>
       {' '}
       <Button2 type="button" onClick={() => nextPage()} disabled={!canNextPage}>
-        <Next size={10} fill={theme.colors['accent-3']} />
+        <Next size={10} fill={'green'} />
       </Button2>
       {' '}
       <Button2 type="button" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-        <FastForward size={10} fill={theme.colors['accent-3']} />
+        <FastForward size={10} fill={'green'} />
       </Button2>
       {' '}
       <span>

@@ -19,7 +19,6 @@ const TrText = styled.span`
   display: block;
   text-align: center;
   margin: 5px;
-  color: ${({ theme }) => theme.colors.secondary};
 `;
 
 const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }: any, ref: any) => {

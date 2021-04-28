@@ -27,7 +27,7 @@ const spinAnimation = keyframes`
 const Spinner = styled.div<ISpinner>`
   --spinner-color: ${({
     primary, secondary, color, theme,
-  }) => (primary && theme.colors.primary) || (secondary && theme.colors.secondary) || (color && color) || 'black'};
+  }) => (color && color) || 'black'};
   --spinner-size: ${({ weight }) => weight}px;
 
   display: block;

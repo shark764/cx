@@ -4,7 +4,6 @@ export const reactSelectStyles = {
     color: 'black',
     background: 'white',
   }),
-
   singleValue: (provided: any, state: any) => {
     const opacity = state.isDisabled ? 0.5 : 1;
     const transition = 'opacity 300ms';

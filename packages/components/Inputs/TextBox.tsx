@@ -11,7 +11,6 @@ export const TextBox = styled.input`
 
   &:focus {
     border-radius: 4px;
-    box-shadow: 0 0 5px ${({ theme }) => theme.colors['accent-1']};
-    border: 1px solid ${({ theme }) => theme.colors['accent-1']};
+
   }
 `;

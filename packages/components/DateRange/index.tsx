@@ -1,41 +1,34 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import Select from 'react-select';
 import { DatePicker } from '../DateTime/DatePicker';
 import Arrow from '@material-ui/icons/ArrowRightAlt';
-import { reactSelectStyles } from '../reactSelectStyles';
 import { addDays } from '@cx/utilities/date';
 import { DateTime } from 'luxon';
+import { Selector } from '../Inputs/Selector';
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
 `;
 
 export const dateOptions = [
-  { label: 'Day', type: 'day' },
-  { label: 'Two Days', type: 'twoDays' },
-  { label: 'Week', type: 'week' },
-  { label: 'Date Range', type: 'range' },
+  { label: 'Day', id: 'day' },
+  { label: 'Two Days', id: 'twoDays' },
+  { label: 'Week', id: 'week' },
+  { label: 'Date Range', id: 'range' },
 ];
 
-const SelectTimeSpanSized = styled(Select)`
-  width: 140px;
-  display: inline-block;
-  margin: 0px 10px;
-`;
-
-const Label = styled.span`
-  font-size: 11px;
-  color: grey;
-  vertical-align: super;
-  margin-left: 10px;
+const StyledArrow = styled(Arrow)`
+  color: rgba(128, 128, 128, 0.66);
+  transform: scale(1.5);
+  margin-left: 15px;
+  position: relative;
+  top: 0px;
 `;
 
 const DateFields = styled.span`
   display: grid;
   align-items: center;
-  grid-template-columns: 200px 200px 50px 200px;
-  height: 50px;
+  grid-template-columns: 200px 170px 50px 170px;
 `;
 
 export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedOnchanges }) => {
@@ -93,18 +86,21 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
     }
   }
 
-  const dateRangeVal = dateOptions.find(({type}) => type === selectedRange );
-  return <span>
-    <Label> Time Span </Label>
-    <DateFields>
+  const dateRangeVal = dateOptions.find(({id}) => id === selectedRange )?.id || '';
 
-      <SelectTimeSpanSized
-        className="choose-date-range"
-        classNamePrefix="select"
+  const timeSpanChange = ({target: {value}}: React.ChangeEvent<{ value: string }>) =>
+    changeRange(value);
+
+  return <>
+
+    <DateFields>
+      <Selector
+        // label="Time Span"
         value={dateRangeVal}
         options={dateOptions}
-        onChange={({ type }: { type: string }) => changeRange(type)}
-        styles={reactSelectStyles}
+        onChange={timeSpanChange}
+        // @ts-ignore
+        style={{width: '135px'}}
       />
 
       <StyledDatePicker
@@ -114,7 +110,7 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
 
       {selectedRange !== 'day' &&
         <>
-          <Arrow style={{ color: 'grey', transform: 'scale(1.5)', margin: '0 auto' }} />
+          <StyledArrow />
           <StyledDatePicker
             selected={endInJS}
             onChange={(e: Date) => handleDates(e, 'endDate')}
@@ -124,5 +120,5 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
       }
 
     </DateFields>
-  </span>
+  </>
 };

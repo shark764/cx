@@ -18,22 +18,6 @@ export function log(type: string, msg: string, ...args: any[]) {
   }
 }
 
-export const theme = {
-  colors: {
-    brand: '#07487a',
-    primary: '#07487a',
-    secondary: '#a3acbd',
-    'accent-1': '#3498db',
-    'accent-2': '#e6f5ff',
-    'accent-3': '#ffffff',
-    text: '#222222',
-    info: '#00529b',
-    success: '#4f8a10',
-    warning: '#9f6000',
-    error: '#d8000c',
-  },
-};
-
 export const hexToRgba = (hex: any, alpha = 1) => {
   const [r, g, b] = hex.match(/\w\w/g).map((x: string) => parseInt(x, 16));
   return `rgba(${r},${g},${b},${alpha})`;

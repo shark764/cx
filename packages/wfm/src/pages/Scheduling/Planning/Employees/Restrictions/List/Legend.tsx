@@ -11,10 +11,10 @@ export function Legend() {
     <span>
       <Label>Default Set</Label>
       {' '}
-      <CheckMark size={15} fill={theme.colors.primary} />
+      <CheckMark size={15} />
       <Label>Future Change</Label>
       {' '}
-      <Dot size={15} fill={theme.colors.primary} />
+      <Dot size={15} />
     </span>
   );
 }

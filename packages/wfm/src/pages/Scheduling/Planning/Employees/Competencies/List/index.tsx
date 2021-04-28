@@ -95,19 +95,19 @@ export function List() {
       {
         Header: 'Admin',
         accessor: 'admin',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
+        Cell: ({ value }: any) => (value ? <CheckMark size={15} /> : ''),
       },
       {
         Header: 'Back Office',
         accessor: 'backOffice',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
+        Cell: ({ value }: any) => (value ? <CheckMark size={15} /> : ''),
       },
       {
         Header: 'Team Leader',
         accessor: 'teamLeader',
         Cell: ({ row, value }: any) => {
-          const checkMark = value ? <CheckMark size={15} fill={theme.colors.primary} /> : null;
-          const dotMark = row.original.teamLeaderFutureChange ? <Dot size={15} fill={theme.colors.primary} /> : null;
+          const checkMark = value ? <CheckMark size={15} /> : null;
+          const dotMark = row.original.teamLeaderFutureChange ? <Dot size={15} /> : null;
           return (
             <TeamLeaderCell>
               {checkMark}
@@ -127,7 +127,7 @@ export function List() {
         .map((k) => ({
           Header: humanizeQueue(k),
           accessor: k,
-          Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
+          Cell: ({ value }: any) => (value ? <CheckMark size={15} /> : ''),
         }));
 
       return [...staticColumns, ...dynamicColumns];
@@ -161,31 +161,10 @@ export function List() {
 
         <Label>Date From</Label>
         <Toolbar>
-          <DatePickerContainer>
-            <DatePicker
-              selected={calDate}
-              onChange={setCalDate}
-              // locale="en-US"
-              open={datePickerIsOpen}
-              onFocus={() => setDatePickerIsOpen(true)}
-              onClickOutside={() => setDatePickerIsOpen(false)}
-              isClearable
-            />
-
-            <CalendarIcon
-              fill={theme.colors.secondary}
-              onClick={() => setDatePickerIsOpen(true)}
-              title="Open calendar"
-            />
-          </DatePickerContainer>
-
-          <PlayIcon
-            fill={theme.colors.secondary}
-            direction="left"
-            onClick={() => handleManuallyAddDays(-1)}
-            title="Previous day"
+          <DatePicker
+            selected={calDate}
+            onChange={setCalDate}
           />
-          <PlayIcon fill={theme.colors.secondary} onClick={() => handleManuallyAddDays(1)} title="Next day" />
         </Toolbar>
       </Wrapper>
 

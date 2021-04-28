@@ -21,7 +21,7 @@ const TrText = styled.span`
   display: block;
   text-align: center;
   margin: 5px;
-  color: ${({ theme }) => theme.colors.secondary};
+
 `;
 const EditButton = styled(Button)`
   padding: 6px 18px;

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Controller, Control } from 'react-hook-form';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
+import TextField from '@material-ui/core/TextField';
 
 interface Props {
   control: Control;
@@ -16,7 +17,7 @@ interface Props {
 
 const IncrementControls = styled.span`
   position: absolute;
-  right: 5px;
+  right: 24px;
   top: 10px;
   width: 90px;
   display: flex;
@@ -24,14 +25,14 @@ const IncrementControls = styled.span`
   justify-content: space-evenly;
 `;
 
-const Input = styled.input`
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  border-radius: 4px;
-  border: 1px solid hsl(0,0%,80%);
-  padding: 10px 15px;
-  outline: none;
+const Input = styled(TextField)`
+  width: 170px;
+  .MuiInputBase-input {
+    padding: 11px 14px;
+  }
+  .MuiOutlinedInput-adornedEnd {
+    padding-right: 0px;
+  }
 `;
 
 const Grid = styled.span`
@@ -86,6 +87,7 @@ const Inputs = ({onChange, name, optionName, hidden}: any) => {
             <Input
               value={cap}
               type="number"
+              variant="outlined"
               className={name}
               onChange={({target: { value }}: any) => { setCap(parseInt(value)) }}
             />
@@ -101,6 +103,7 @@ const Inputs = ({onChange, name, optionName, hidden}: any) => {
             <Input
               value={floor}
               type="number"
+              variant="outlined"
               className={name}
               onChange={({target: { value }}: any) => { setFloor(parseInt(value)) }}
             />

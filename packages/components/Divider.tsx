@@ -14,21 +14,6 @@ export const VerticalDivider = styled.div<IDivider>`
   height: ${({ size }) => size}px;
   margin: 0 8px;
   line-height: 28px;
-
-  ${({
-    color, primary, secondary, theme,
-  }) => (color
-      && css`
-        border-color: ${color};
-      `)
-    || (primary
-      && css`
-        border-color: ${theme.colors.primary};
-      `)
-    || (secondary
-      && css`
-        border-color: ${theme.colors.secondary};
-      `)};
 `;
 
 export const HorizontalDivider = styled.hr<IDivider>`
@@ -37,21 +22,6 @@ export const HorizontalDivider = styled.hr<IDivider>`
   width: ${({ size }) => size}px;
   height: 0;
   margin: 10px 15px;
-
-  ${({
-    color, primary, secondary, theme,
-  }) => (color
-      && css`
-        border-color: ${color};
-      `)
-    || (primary
-      && css`
-        border-color: ${theme.colors.primary};
-      `)
-    || (secondary
-      && css`
-        border-color: ${theme.colors.secondary};
-      `)};
 `;
 
 export function Divider({ direction = 'vertical', ...rest }: IDivider) {

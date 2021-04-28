@@ -38,10 +38,10 @@ const CalendarContainer = styled.div<IContainer>`
   }
 
   .rbc-today {
-    background-color: ${({ theme }) => theme.colors['accent-2']};
+
   }
   .rbc-event {
-    background-color: ${({ theme }) => theme.colors.primary};
+
   }
 `;
 

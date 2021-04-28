@@ -21,26 +21,6 @@ const StyledButton = styled.button<IButton>`
   &:active {
     outline: 0;
   }
-
-  ${({
-    bgColor, primary, secondary, theme,
-  }) => (bgColor
-      && css`
-        background-color: ${bgColor};
-        border-color: ${bgColor};
-      `)
-    || (primary
-      && css`
-        color: ${theme.colors['accent-3']};
-        background-color: ${theme.colors.primary};
-        border-color: ${theme.colors.primary};
-      `)
-    || (secondary
-      && css`
-        color: ${theme.colors['accent-3']};
-        background-color: ${theme.colors.secondary};
-        border-color: ${theme.colors.secondary};
-      `)};
 `;
 
 interface IButton2 extends IButton {

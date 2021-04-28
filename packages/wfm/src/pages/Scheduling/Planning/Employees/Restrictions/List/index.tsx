@@ -52,7 +52,7 @@ const CalendarIcon = styled(Calendar)`
 `;
 const DefaultRestrictionRow = styled.span`
   font-weight: bolder;
-  color: ${({ theme }) => theme.colors.primary};
+
 `;
 
 const Header = styled.div`
@@ -100,7 +100,7 @@ export function List() {
       {
         Header: 'Default Restriction Set',
         accessor: 'defaultSet',
-        Cell: ({ value }: any) => (value ? <CheckMark size={15} fill={theme.colors.primary} /> : ''),
+        Cell: ({ value }: any) => (value ? <CheckMark size={15} /> : ''),
       },
       {
         Header: 'Agreed Hours Per Week',
@@ -114,7 +114,7 @@ export function List() {
         Header: 'Max Shifts Per Week',
         accessor: 'maxShift',
         Cell: ({ row, value }: any) => {
-          const dotMark = row.original.maxShiftFutureChange ? <Dot size={15} fill={theme.colors.primary} /> : null;
+          const dotMark = row.original.maxShiftFutureChange ? <Dot size={15} /> : null;
           return (
             <TeamLeaderCell>
               {formatRow({ row, value })}
@@ -192,27 +192,8 @@ export function List() {
             <DatePicker
               selected={calDate}
               onChange={setCalDate}
-              // locale="en-US"
-              open={datePickerIsOpen}
-              onFocus={() => setDatePickerIsOpen(true)}
-              onClickOutside={() => setDatePickerIsOpen(false)}
-              isClearable
-            />
-
-            <CalendarIcon
-              fill={theme.colors.secondary}
-              onClick={() => setDatePickerIsOpen(true)}
-              title="Open calendar"
             />
           </DatePickerContainer>
-
-          <PlayIcon
-            fill={theme.colors.secondary}
-            direction="left"
-            onClick={() => handleManuallyAddDays(-1)}
-            title="Previous day"
-          />
-          <PlayIcon fill={theme.colors.secondary} onClick={() => handleManuallyAddDays(1)} title="Next day" />
         </Toolbar>
       </Wrapper>
 

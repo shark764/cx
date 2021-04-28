@@ -42,7 +42,6 @@ const LoadingMessage = styled.span`
   display: block;
   text-align: center;
   margin: 5px;
-  color: ${({ theme }) => theme.colors.secondary};
 `;
 
 export function AgentSchedule() {
@@ -125,11 +124,11 @@ export function AgentSchedule() {
             selected={calDate}
             onChange={setCalDate}
             // locale="en-US"
-            open={datePickerIsOpen}
-            onFocus={() => setDatePickerIsOpen(true)}
-            onClickOutside={() => setDatePickerIsOpen(false)}
-            isClearable
-            className="custom-datepicker__input"
+            // open={datePickerIsOpen}
+            // onFocus={() => setDatePickerIsOpen(true)}
+            // onClickOutside={() => setDatePickerIsOpen(false)}
+            // isClearable
+            // className="custom-datepicker__input"
           />
         </DatePickerContainer>
       </Toolbar>
@@ -178,7 +177,12 @@ export function AgentSchedule() {
       ) : (
         <>
           <LoadingMessage>Loading...</LoadingMessage>
-          <LoadSpinner spinnerType="simple" size={25} weight={4} secondary />
+          <LoadSpinner
+            spinnerType="simple"
+            size={25}
+            weight={4}
+            secondary
+          />
         </>
       )}
     </Container>

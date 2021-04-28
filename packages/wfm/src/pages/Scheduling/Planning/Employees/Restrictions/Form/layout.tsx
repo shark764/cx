@@ -71,11 +71,7 @@ export function FormLayout({
           render={({ onChange, onBlur, value }) => (
             <DatePicker
               onChange={onChange}
-              onBlur={onBlur}
               selected={value}
-              isClearable
-              calendarBtn
-              disabled={isFormSubmitting}
             />
           )}
         />
@@ -83,7 +79,7 @@ export function FormLayout({
 
       {defaultValues.isDefault ? (
         <Note>
-          <Info2 fill={theme.colors['accent-1']} />
+          <Info2  />
           {' '}
           Changes apply to all with Default Restriction Set
         </Note>
@@ -98,7 +94,7 @@ export function FormLayout({
 
       {defaultSetApplied && !defaultValues.isDefault && (
         <Note>
-          <Info2 fill={theme.colors['accent-1']} />
+          <Info2  />
           {' '}
           Default Restriction Set applied, all fields are read only
         </Note>

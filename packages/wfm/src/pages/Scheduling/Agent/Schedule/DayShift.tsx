@@ -22,10 +22,10 @@ const LoadingMessage = styled.span`
   display: block;
   text-align: center;
   margin: 5px;
-  color: ${({ theme }) => theme.colors.secondary};
+
 `;
 const EventTitle = styled.h4`
-  color: ${({ theme }) => theme.colors.secondary};
+
 `;
 
 interface IEvent2 {

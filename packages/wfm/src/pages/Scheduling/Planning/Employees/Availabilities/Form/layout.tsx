@@ -165,11 +165,7 @@ export function FormLayout({
             render={({ onChange, onBlur, value }) => (
               <DatePicker
                 onChange={onChange}
-                onBlur={onBlur}
                 selected={value}
-                isClearable
-                calendarBtn
-                disabled={isFormSubmitting}
               />
             )}
           />
@@ -181,11 +177,7 @@ export function FormLayout({
             render={({ onChange, onBlur, value }) => (
               <DatePicker
                 onChange={onChange}
-                onBlur={onBlur}
                 selected={value}
-                isClearable
-                calendarBtn
-                disabled={isFormSubmitting}
               />
             )}
           />
@@ -256,11 +248,7 @@ export function FormLayout({
                 render={({ onChange, onBlur, value }) => (
                   <DatePicker
                     onChange={onChange}
-                    onBlur={onBlur}
                     selected={value}
-                    isClearable
-                    calendarBtn
-                    disabled={isFormSubmitting}
                   />
                 )}
               />
@@ -272,11 +260,7 @@ export function FormLayout({
                 render={({ onChange, onBlur, value }) => (
                   <DatePicker
                     onChange={onChange}
-                    onBlur={onBlur}
                     selected={value}
-                    isClearable
-                    calendarBtn
-                    disabled={isFormSubmitting}
                   />
                 )}
               />
