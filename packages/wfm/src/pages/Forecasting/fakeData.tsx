@@ -1,7 +1,4 @@
 // This is a sample data that is going to be used to demo the BarChart until the API is ready:
-import { historical } from './temp'
-import { DateTime } from 'luxon';
-
 export const filters = {
   viewBy: [{ label: 'Day View', id: 0, value: 'day' }, { label: 'Week View', id: 1, value: 'week' }, { label: 'Date range', id: 2, value: 'dateRange' }],
   competence: [{ label: 'Select Competence', id: 0, value: 'selectCompetence' }, { label: 'Booking', id: 1, value: 'booking' }, { label: 'Support', id: 2, value: 'support' }, { label: 'All', id: 3, value: 'all' }],
@@ -12,19 +9,6 @@ export const filters = {
 interface ObjTypes {
   [key: string]: any;
 }
-
-export const historicalResposneToRechartsObject = {
-  xDataKey: 'timestamp',
-  dataKeys: [
-    { key: 'nco', lineType: 'monotone', lineStroke: 'dotted', yAxisId: 'left' },
-    { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'aht' },
-  ],
-  data: historical.series.map(({timestamp, nco, aht, abandons}) => ({
-    timestamp: DateTime.fromISO(timestamp).toLocaleString(DateTime.TIME_24_SIMPLE),
-    nco: nco,
-    aht: aht,
-  }))
-};
 
 export const lineChart: ObjTypes = {
   day: {

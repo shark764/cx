@@ -57,17 +57,17 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
       'day-day': () => { return },
       'day-twoDays': () => combinedOnchanges([null, addDays(end, 1)]),
       'day-week': () => combinedOnchanges([null, addDays(end, 6)]),
-      'day-range': () => combinedOnchanges([null, addDays(end, 13)]),
+      'day-range': () => combinedOnchanges([null, addDays(end, 14)]),
 
       'twoDays-day': () => combinedOnchanges([null, addDays(start, 0)]),
       'twoDays-twoDays': () => { return },
       'twoDays-week': () => combinedOnchanges([null, addDays(end, 5)]),
-      'twoDays-range': () => combinedOnchanges([null, addDays(end, 5)]),
+      'twoDays-range': () => combinedOnchanges([null, addDays(end, 13)]),
 
       'week-day': () => combinedOnchanges([null, addDays(start, 0)]),
       'week-twoDays': () => combinedOnchanges([null, addDays(start, 1)]),
       'week-week': () => { return },
-      'week-range': () => combinedOnchanges([null, addDays(end, 7)]),
+      'week-range': () => combinedOnchanges([null, addDays(end, 8)]),
 
       'range-day': () => combinedOnchanges([null, addDays(start, 0)]),
       'range-twoDays': () => combinedOnchanges([null, addDays(start, 1)]),
