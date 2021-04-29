@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import {
   Line,
@@ -37,6 +38,7 @@ export interface ChartProps {
   showTooltip?: boolean;
   containerWidth?: string;
   containerHeight?: number;
+  intervalLength?: string;
 };
 
 export const LineChart: React.VFC<ChartProps> = ({
@@ -49,8 +51,28 @@ export const LineChart: React.VFC<ChartProps> = ({
   showTooltip = true,
   containerWidth = '100%',
   containerHeight = 300,
+  intervalLength
 }) => {
   const fillColors = ['#07487a', 'orange', 'green'];
+
+  const interval = useMemo(() => {
+    if (intervalLength === 'week') {
+      return 24;
+    } else if (intervalLength === 'twoDays') {
+      return 4;
+    } else {
+      return 0;
+    }
+  }, [intervalLength]);
+
+  const yDomain = useMemo(() => {
+    if (intervalLength === 'range') {
+      return ['auto', 'auto'];
+    } else {
+      return [0, 'auto'];
+    }
+  }, [intervalLength]);
+
   return (
     <Wrapper>
       {statName && <StatName>{statName}</StatName>}
@@ -63,15 +85,17 @@ export const LineChart: React.VFC<ChartProps> = ({
           data={data}
           onClick={onClick}
         >
-          <XAxis dataKey={xDataKey} dy={10} />
+          <XAxis dataKey={xDataKey} interval={interval} dy={10} />
           <YAxis
             yAxisId="left"
-            label={{ value: 'NCO _ _ _ _', angle: -90, position: 'center', dx: -15 }}
+            label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15 }}
+            domain={yDomain}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: 'AHT ______', angle: -90, position: 'center', dx: 15 }}
+            label={{ value: 'AHT _ _ _ _', angle: -90, position: 'center', dx: 15 }}
+            domain={yDomain}
           />
           {showTooltip && (
             <Tooltip
@@ -79,7 +103,7 @@ export const LineChart: React.VFC<ChartProps> = ({
               formatter={(value: any) => value}
             />
           )}
-          {dataKeys.map((item: any, index) => (
+          {dataKeys.map((item: DataKeys, index) => (
             <Line
               key={index.toString()}
               name={item.name}

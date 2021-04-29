@@ -42,10 +42,12 @@ import { Filters } from './filters';
 import { forecasting } from '../../redux/reducers/forecasting';
 
 import { operations, components } from '@cx/wfmapi/forecast-schema';
+import { useMemoLineChartData } from './forecastingHooks';
 const {
   setStartDate,
   setEndDate
 } = forecasting.actions;
+
 type HistoricalData = components["schemas"]["HistoricalDataDTO"];
 type HistoricalPathParams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["path"];
 type HistoricalQueryparams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["query"];
@@ -134,7 +136,7 @@ export function Forecasting() {
   const allScenarios = useSelector((state: RootState) => state.forecasting.scenarios);
   const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
 
-  const intervalType = useMemo(() => { // TODO: move this to a more universal place instead of here and date range component, a redux selector maybe
+  const [intervalType, intervalLength] = useMemo(() => { // TODO: move this to a more universal place instead of here and date range component, a redux selector maybe
     const {startDateTime, endDateTime} = historicalQueryParams;
     const start = DateTime.fromISO(startDateTime);
     const end = DateTime.fromISO(endDateTime);
@@ -150,11 +152,11 @@ export function Forecasting() {
     const intervalMap = {
       day: 'hour', // less than a day should be quarter-hour, probably in a future feature where the user can zoom in more on the timeline
       twoDays: 'hour',
-      week: 'day'
+      week: 'hour'
     };
 
     // @ts-ignore
-    return intervalMap[rangeMap[days]] || 'day';
+    return [intervalMap[rangeMap[days]] || 'day', rangeMap[days] || 'range'];
   }, [historicalQueryParams])
 
   const { data: timelines, isLoading: timelinesLoading, error: timelinesError, refetch } = useQuery<any, any>(
@@ -167,9 +169,9 @@ export function Forecasting() {
     }
   );
 
-  useEffect(() => { // TODO: set initial default timeline as notebook_temp but remove later, change it so if there is only 1 timeline show that
+  useEffect(() => { // TODO: set initial default timeline as Nick's but remove later, change it so if there is only 1 timeline show that
     if (timelines?.data) {
-      setSelectedTimeline( timelines.data.find(({name}:any) => name === 'notebook_temp') );
+      setSelectedTimeline( timelines.data.find(({name}:any) => name === `Nick's`) );
     }
   }, [timelines]);
 
@@ -214,25 +216,7 @@ export function Forecasting() {
     dispatch(fetchForecastScenarios(selectedTimeline));
   }, [dispatch, selectedTimeline]);
 
-  const chooseXaxisLabel = (timestamp: string, intervalType: 'day' | 'hour') => {
-    if (intervalType === 'hour') {
-      return DateTime.fromISO(timestamp).toLocaleString({ hour: '2-digit' });
-    } else {
-      return DateTime.fromISO(timestamp).toLocaleString(DateTime.DATE_MED);
-    }
-  };
-
-  const memoData = useMemo(() =>
-    data
-    ?.data
-    ?.find(({competency}: any) => competency === selectedCompetence)
-    ?.data
-    ?.[0]
-    ?.series.map(({ timestamp, nco, aht, abandons }: any) => ({
-      timestamp: chooseXaxisLabel(timestamp, intervalType),
-      nco: nco,
-      aht: aht,
-    })) || [], [data, intervalType, selectedCompetence]);
+  const memoData = useMemoLineChartData(data, intervalLength, selectedCompetence);
 
   const memoTimelineOptions = useMemo(() => timelines?.data?.map(({ description, id, name }: any) => ({
     label: name,
@@ -249,8 +233,8 @@ export function Forecasting() {
   const linechartData = {
     xDataKey: 'timestamp',
     dataKeys: [
-      { key: 'nco', lineType: 'monotone', lineStroke: 'dotted', yAxisId: 'left' },
-      { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'aht' },
+      { key: 'nco', lineType: 'monotone', yAxisId: 'left' },
+      { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'aht', lineStroke: 'dotted' },
     ],
   };
 
@@ -310,7 +294,7 @@ export function Forecasting() {
             onChange={(event: any, newValue: string | null) => {
               setSelectedTimeline(newValue);
             }}
-            defaultValue={memoTimelineOptions.find(({label}: any) => label === 'notebook_temp')}
+            defaultValue={memoTimelineOptions.find(({label}: any) => label === `Nick's`)}
           />
         }
         {allScenarios && (allScenarios.length > 0) &&
@@ -389,6 +373,7 @@ export function Forecasting() {
           <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
           <LineChart
             chartName="forecast"
+            intervalLength={intervalLength}
             data={memoData}
             xDataKey={linechartData.xDataKey}
             dataKeys={linechartData.dataKeys}
