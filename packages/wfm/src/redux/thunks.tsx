@@ -4,6 +4,7 @@ import { planning } from './reducers/planning';
 import { forecasting } from './reducers/forecasting';
 import { wfm } from '../api';
 import { store } from '../redux/store';
+import { pastTwoYears } from '@cx/utilities/DateTime';
 
 const {
   setTimezone,
@@ -101,6 +102,14 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
         direction: 'inbound',
       }))
     });
+
+    /**
+     * dayValueDateRanges doesn't show up in the form object when All Historical is chosen
+     * If all historical is chosen default "All historical" to the past 2 years
+     */
+    if (!formData.dayValueDateRanges) {
+      scenarioConfig.dayValueDateRanges = [pastTwoYears()];
+    }
 
     /**
     * First make a new forecast scenario and grab scenario ID off that for the next step

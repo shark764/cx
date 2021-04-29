@@ -148,7 +148,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           type="submit"
           className="dynamicFormSave"
         >
-          Save
+          Submit
         </Button>
       </FormActions>
 

@@ -52,7 +52,7 @@ const Typeahead = ({onChange, defaultValue, choices}: any) => {
       size="small"
       getOptionSelected={(option, value) => option.id === value.id}
       style={{ width: 275, display: 'inline-block', marginLeft: '20px' }}
-      renderInput={(params: any) => <TextField {...params} label="Scenarios" variant="outlined" />}
+      renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
       onChange={(e, option: any) => onChange(option.id) && setSelected(option)}
     />
   )

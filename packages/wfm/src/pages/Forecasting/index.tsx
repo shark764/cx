@@ -305,7 +305,7 @@ export function Forecasting() {
             size="small"
             getOptionSelected={(option, value) => option.id === value.id}
             style={{ width: 275, display: 'inline-block', marginLeft: '20px' }}
-            renderInput={(params: any) => <TextField {...params} label="Scenarios" variant="outlined" />}
+            renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
             onChange={(e, {startDate, endDate}: any) => showSpecificSenarioRange(startDate, endDate)}
           />
         }
