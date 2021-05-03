@@ -9,7 +9,6 @@ const StyledKeyboardDatePicker = styled(KeyboardDatePicker)`
     /* @ts-ignore */
     ({width}) => width
   };
-  height: 40px;
   margin-top: 0px !important;
   margin-bottom: 0px !important;
   .MuiInputBase-input {
@@ -25,9 +24,11 @@ interface DatePickerProps {
   onChange?: any;
   selected?: Date;
   width?: string;
+  error?: boolean;
+  helperText?: string;
 };
 
-export const DatePicker: React.VFC<DatePickerProps> = ({ label, disabled = false, onChange, selected, width = '170px' }) => {
+export const DatePicker: React.VFC<DatePickerProps> = ({ label, disabled = false, onChange, selected, width = '170px', error, helperText }) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <StyledKeyboardDatePicker
@@ -46,6 +47,8 @@ export const DatePicker: React.VFC<DatePickerProps> = ({ label, disabled = false
           'aria-label': 'change date',
         }}
         disabled={disabled}
+        error={error}
+        helperText={helperText}
       />
     </MuiPickersUtilsProvider>
   );

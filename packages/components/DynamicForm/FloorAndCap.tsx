@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Controller, Control } from 'react-hook-form';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -8,10 +8,10 @@ import TextField from '@material-ui/core/TextField';
 
 interface Props {
   control: Control;
-  isFormSubmitting: boolean;
-  defaultValue: unknown;
   name: string;
-  optionName: string;
+  constraints: any;
+  errors: any;
+  clearErrors: any;
   hidden: boolean;
 };
 
@@ -55,62 +55,88 @@ const Increment = styled(AddIcon)`
   cursor: pointer;
 `;
 
-export const FloorAndCap: React.VFC<Props> = ({control, name, isFormSubmitting, defaultValue, optionName, hidden}) =>
-  <Controller
-    control={control}
-    name={name}
-    defaultValue={defaultValue}
-    render={({ onChange }) => (
-      <Inputs
-        onChange={onChange}
-        name={name}
-        optionName={optionName}
-        hidden={hidden}
-      />
-    )}
-  />;
-
-const Inputs = ({onChange, name, optionName, hidden}: any) => {
+export const FloorAndCap: React.VFC<Props> = ({ control, name, constraints, errors, clearErrors, hidden }) => {
   const [floor, setFloor] = useState(20);
   const [cap, setCap] = useState(40);
 
-  useEffect(() => {
-    onChange({ floor, cap, method: optionName })
-  }, [floor, cap]);
-
   return (
     <Container hidden={hidden} >
-      <div style={{margin: '20px 0', width: '100%'}}>
+      <div style={{ margin: '20px 0', width: '100%' }}>
         <Grid>
           <span>Cap</span>
-          <span style={{position: 'relative'}}>
-            <Input
-              value={cap}
-              type="number"
-              variant="outlined"
-              className={name}
-              onChange={({target: { value }}: any) => { setCap(parseInt(value)) }}
+          <span style={{ position: 'relative' }}>
+            <Controller
+              control={control}
+              name={`${name}.cap`}
+              defaultValue={40}
+              rules={{
+                validate: {
+                  required: (value) => !!value || constraints[name]?.cap?.required,
+                  min: (value) => (value > 0 ) || constraints[name]?.cap?.min,
+                  lowerThanFloor: (value) => (value >= floor) || constraints[name]?.cap?.lowerThanFloor,
+                }
+              }}
+              render={({ onChange }) => (
+                <Input
+                  error={ errors?.[name]?.cap }
+                  helperText={errors[name]?.cap?.message}
+                  value={cap}
+                  type="number"
+                  variant="outlined"
+                  className={`${name}-cap`}
+                  onChange={({ target: { value } }: any) => {
+                    onChange(value);
+                    setCap(parseInt(value));
+                    if(value > floor && errors[name]?.floor?.type === 'higherThanCap') {
+                      clearErrors(`${name}.floor`);
+                    }
+                  }}
+                />
+              )}
             />
-              <IncrementControls>
-                <Decrement className={name + '-decrement'} onClick={() => { setCap(cap - 1) }}  fontSize="small" />
-                <Increment className={name + '-increment'} onClick={() => { setCap(cap + 1) }} fontSize="small" />
-              </IncrementControls>
+            <IncrementControls>
+              <Decrement className={name + '-decrement'} onClick={() => { setCap(cap - 1) }} fontSize="small" />
+              <Increment className={name + '-increment'} onClick={() => { setCap(cap + 1) }} fontSize="small" />
+            </IncrementControls>
           </span>
         </Grid>
+
         <Grid>
           <span>Floor</span>
-          <span style={{position: 'relative'}}>
-            <Input
-              value={floor}
-              type="number"
-              variant="outlined"
-              className={name}
-              onChange={({target: { value }}: any) => { setFloor(parseInt(value)) }}
+          <span style={{ position: 'relative' }}>
+            <Controller
+              control={control}
+              name={`${name}.floor`}
+              defaultValue={20}
+              rules={{
+                validate: {
+                  required: (value) => !!value || constraints[name]?.floor?.required,
+                  min: (value) => (value > 0 ) || constraints[name]?.floor?.min,
+                  higherThanCap: (value) => (value <= cap) ||  constraints[name]?.floor?.higherThanCap,
+                }
+              }}
+              render={({ onChange }) => (
+                <Input
+                  error={ errors?.[name]?.floor }
+                  helperText={errors[name]?.floor?.message}
+                  value={floor}
+                  type="number"
+                  variant="outlined"
+                  className={`${name}-floor`}
+                  onChange={({ target: { value } }: any) => {
+                    onChange(value);
+                    setFloor(parseInt(value));
+                    if(value < cap && errors[name]?.cap?.type === 'lowerThanFloor') {
+                      clearErrors(`${name}.cap`);
+                    }
+                  }}
+                />
+              )}
             />
-              <IncrementControls>
-                <Decrement className={name + '-decrement'} onClick={() => { setFloor(floor - 1) }}  fontSize="small" />
-                <Increment className={name + '-increment'} onClick={() => { setFloor(floor + 1) }} fontSize="small" />
-              </IncrementControls>
+            <IncrementControls>
+              <Decrement className={name + '-decrement'} onClick={() => { setFloor(floor - 1) }} fontSize="small" />
+              <Increment className={name + '-increment'} onClick={() => { setFloor(floor + 1) }} fontSize="small" />
+            </IncrementControls>
           </span>
         </Grid>
       </div>

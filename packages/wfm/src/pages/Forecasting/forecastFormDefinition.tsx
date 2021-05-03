@@ -8,29 +8,32 @@ export const createForecastFormDefenition = [
         name: 'name',
         type: 'textInput',
         hidden: true,
-        constraints: [{required: true}],
       },
       {
         label: 'Scenario Type',
         name: 'scenarioType',
         type: 'textInput',
         hidden: true,
-        constraints: [{required: true}],
       },
       {
         label: 'Description',
         name: 'description',
         type: 'textboxInput',
         hidden: true,
-        constraints: [{required: true}],
       },
       {
         label: '',
         name: 'forecastRange',
         type: 'evenWeeks',
         multiValue: false,
-        constraints: [{required: true}],
-      },
+        constraints: {
+          forecastRange: {
+            startDate: { required: 'From Date is required.', isMonday: 'Start date should start on a monday.' },
+            weeks: { required: 'No.of weeks is required.' },
+            endDate: { required: 'To Date is required.' }
+          },
+        }
+      }
     ],
   },
   {
@@ -40,31 +43,41 @@ export const createForecastFormDefenition = [
       {
         label: 'Day',
         name: 'dayValueDateRanges',
-        toggles: [{label: 'All Historical', value: 'historical'}, {label: 'Set Range', value: 'range'}],
+        toggles: [{ label: 'All Historical', value: 'historical' }, { label: 'Set Range', value: 'range' }],
         defaultToggled: 'historical',
         toggleFields: [
           {
             label: 'historical',
             name: 'dayValueDateRanges',
             type: 'none',
-            constraints: [{required: true}],
           },
           {
             label: 'range',
             name: 'dayValueDateRanges',
             type: 'evenWeeks',
-            constraints: [{required: true}],
+            constraints: {
+              dayValueDateRanges: {
+                startDate: { required: 'From Date is required.'},
+                weeks: { required: 'No.of weeks is required.' },
+                endDate: { required: 'To Date is required.' }
+              },
+            }
           },
         ],
         multiValue: true,
         toggleable: true,
-        constraints: [{required: true}],
       },
       {
         label: 'Intraday',
-        name: 'dayCurveDateRange',
+        name: 'dayCurveDateRanges',
         type: 'evenWeeks',
-        constraints: [{required: true}],
+        constraints: {
+          dayCurveDateRanges: {
+            startDate: { required: 'From Date is required.' },
+            weeks: { required: 'No.of weeks is required.' },
+            endDate: { required: 'To Date is required.' }
+          },
+        }
       },
     ],
   },
@@ -78,36 +91,31 @@ export const createForecastFormDefenition = [
         name: 'includeDayCurve',
         type: 'boolean',
         hidden: true,
-        constraints: [{required: true}],
       },
-      // {  // This is getting set from existing competencies right now
+      // { // This is getting set from existing competencies right now
       // but in the future may come from from user selection
-      //   label: 'Series',
-      //   name: 'series',
-      //   type: 'series',
-      //   constraints: [{required: true}],
+      // label: 'Series',
+      // name: 'series',
+      // type: 'series',
       // },
       {
         label: 'Algorithm',
         name: 'algorithm',
         type: 'textInput',
         hidden: true,
-        constraints: [{required: true}],
       },
       {
         label: 'Metrics',
         name: 'metrics',
         type: 'multiselect',
         hidden: true,
-        choices: [{label: 'NCO', value: 'nco'}, {label: 'TOT', value: 'tot'}, {label: 'Abandons', value: 'abandons'}],
-        constraints: [{required: true}],
+        choices: [{ label: 'NCO', value: 'nco' }, { label: 'TOT', value: 'tot' }, { label: 'Abandons', value: 'abandons' }],
       },
       {
         label: 'Algorithm Options',
         name: 'algorithmOptions',
         type: 'textInput',
         hidden: true,
-        constraints: [{required: true}],
       },
     ],
   },
@@ -136,17 +144,29 @@ export const createForecastFormDefenition = [
             label: 'linear',
             name: 'growth',
             type: 'floorAndCap',
-            constraints: [{required: true}],
+            constraints: {}
           },
           {
             label: 'logistical',
             name: 'growth',
             type: 'floorAndCap',
-            constraints: [{required: true}],
+            constraints: {
+              growth: {
+                cap: {
+                  required: 'Cap is required',
+                  min: 'Cap must be higher than zero',
+                  lowerThanFloor: 'Cap must be greater than floor',
+                },
+                floor: {
+                  required: 'Floor is required',
+                  min: 'Floor must be higher than zero',
+                  higherThanCap: 'Floor must be lower than cap',
+                },
+              },
+            }
           },
         ],
         toggleable: true,
-        constraints: [{required: true}],
       },
     ]
   },
@@ -158,14 +178,12 @@ export const createForecastFormDefenition = [
         label: 'Historical Weight',
         name: 'distribution_weight',
         type: 'radioToggle',
-        choices: [{label: 'Even', value: 'even'}, {label: 'Exponential', value: 'exponential'}],
-        constraints: [{required: true}],
+        choices: [{ label: 'Even', value: 'even' }, { label: 'Exponential', value: 'exponential' }],
       },
       {
         label: 'Smoothing',
         name: 'activate_filter',
         type: 'boolean',
-        constraints: [{required: true}],
       },
     ]
   },

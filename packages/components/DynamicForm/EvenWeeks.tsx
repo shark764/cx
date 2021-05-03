@@ -14,10 +14,11 @@ import { addDays } from '@cx/utilities/date';
 
 interface Props {
   control: Control;
-  isFormSubmitting: boolean;
   defaultValue: unknown;
   name: string;
   multiValue: boolean;
+  errors: any;
+  constraints: any;
 };
 
 const MiniDate = styled.span`
@@ -94,7 +95,7 @@ const displayToDate = (endDate) => {
   return DateTime.fromJSDate(endDate).isValid ? result : 'Choose a start date';
 };
 
-export const EvenWeeks: React.VFC<Props> = ({control, name, isFormSubmitting, defaultValue, multiValue}) =>
+export const EvenWeeks: React.VFC<Props> = ({ control, name, errors, constraints, defaultValue, multiValue }) =>
   <Controller
     control={control}
     name={name}
@@ -104,6 +105,9 @@ export const EvenWeeks: React.VFC<Props> = ({control, name, isFormSubmitting, de
         onChange={onChange}
         name={name}
         multiValue={multiValue}
+        control={control}
+        errors={errors}
+        constraints={constraints}
       />
     )}
   />;
@@ -114,8 +118,8 @@ interface EvenWeeks {
   totalWeeks: number;
 };
 
-const DatePickers = ({onChange, name, multiValue}: any) => {
-  const newEntry = {startDate: null, endDate: null, totalWeeks: 1};
+const DatePickers = ({ onChange, name, control, errors, constraints, multiValue }: any) => {
+  const newEntry = { startDate: null, endDate: null, totalWeeks: 1 };
   const [dateRanges, setDateRanges] = useState<EvenWeeks[]>([newEntry]);
 
   const add = (index: number) => {
@@ -136,61 +140,98 @@ const DatePickers = ({onChange, name, multiValue}: any) => {
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
   };
-// TODO: make it so startDate can only be mondays, for at least the historical range
+
   const updateTotalWeeks = (index: number, totalWeeks: number): void => {
     const { startDate } = dateRanges[index];
-    // TODO: the calculation is not very efficient?
     // the minus 1 is to make the range inclusive and not exclusive
-    const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1 ), totalWeeks };
+    const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1), totalWeeks };
     const newArray = [...dateRanges];
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
   };
 
   useEffect(() => {
-    onChange(dateRanges.map(({startDate, endDate}) => ({ startDate: formatDate(startDate), endDate: formatDate(endDate) })))
+    onChange(dateRanges.map(({ startDate, endDate }) => ({ startDate: formatDate(startDate), endDate: formatDate(endDate) })))
   }, [dateRanges]);
 
   return (
     <span>
 
-      {dateRanges.map(({startDate, endDate, totalWeeks}, index: number) => {
+      {dateRanges.map(({ startDate, endDate, totalWeeks }, index: number) => {
         return <RangeContainer key={index}>
-        <div style={{margin: '20px 0', width: '100%'}}>
-          <MiniDate>
-            <span>From</span>
-            <DatePicker
-              className={name + 'startDate'}
-              selected={startDate}
-              onChange={(date: Date) => updateStartDate(index, date) }
-            />
-          </MiniDate>
-          <MiniMultiplier>
-            <span>Weeks</span>
-            <span>
-              <Input
-                value={totalWeeks}
-                type="number"
-                className={name}
-                variant="outlined"
-                onChange={(e:any) => updateTotalWeeks(index, e.target.value)}
+          <div style={{ margin: '20px 0', width: '100%' }}>
+            <MiniDate>
+              <span>From</span>
+              <Controller
+                control={control}
+                name={`${name}.startDate`}
+                className={name + '-startDate'}
+                defaultValue={''}
+                rules={{
+                  validate: {
+                    required: (value) => !!value || constraints[name]?.startDate?.required,
+                    isMonday: (value) => {
+                      const weeks = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                      return weeks[new Date(value).getDay()] !== 'mon' ? constraints[name]?.startDate?.isMonday : !!value;
+                    }
+                  }
+                }}
+                render={({ onChange }) => (
+                  <DatePicker
+                    error={ errors[name]?.startDate }
+                    helperText={errors?.[name]?.startDate?.message}
+                    selected={startDate}
+                    onChange={(date: Date) => {
+                      onChange(date);
+                      updateStartDate(index, date)
+                    }}
+                  />
+                )}
               />
+            </MiniDate>
+            <MiniMultiplier>
+              <span>Weeks</span>
+              <span>
+                <Controller
+                  control={control}
+                  name={`${name}.weeks`}
+                  defaultValue={1}
+                  rules={{
+                    validate: {
+                      required: (value) => !!value || constraints[name]?.weeks?.required,
+                    }
+                  }}
+                  render={({ onChange }) => (
+                    <Input
+                      error={ errors[name]?.weeks }
+                      helperText={errors?.[name]?.weeks?.message}
+                      value={totalWeeks}
+                      type="number"
+                      className={`${name}-weeks`}
+                      variant="outlined"
+                      onChange={({ target: { value } }: any) => {
+                        onChange(value);
+                        updateTotalWeeks(index, value)
+                      }}
+                    />
+                  )}
+                />
                 <IncrementControls>
-                  <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1)}  fontSize="small" />
+                  <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1)} fontSize="small" />
                   <Increment className={name + '-increment'} onClick={() => updateTotalWeeks(index, totalWeeks + 1)} fontSize="small" />
                 </IncrementControls>
-            </span>
-          </MiniMultiplier>
-          <MiniDate style={{height: '37px'}}>
-            <span>To</span>
-            { displayToDate(endDate) }
-          </MiniDate>
-        </div>
-        { multiValue && <Controls >
-          <Trashcan onClick={() => remove(index)}  fontSize="small" />
-          <PositionedPlus onClick={() => add(index)} size={15} />
-        </Controls>}
-      </RangeContainer>
+              </span>
+            </MiniMultiplier>
+            <MiniDate style={{ height: '37px' }}>
+              <span>To</span>
+              {displayToDate(endDate)}
+            </MiniDate>
+          </div>
+          {multiValue && <Controls >
+            <Trashcan onClick={() => remove(index)} fontSize="small" />
+            <PositionedPlus onClick={() => add(index)} size={15} />
+          </Controls>}
+        </RangeContainer>
       })}
     </span>
   );

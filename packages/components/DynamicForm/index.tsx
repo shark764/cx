@@ -80,17 +80,17 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
 
   const [ toggledFields, setToggledFields ] = useState(defaultToggledFields);
 
-  const { handleSubmit, control,  register } = useForm({ defaultValues });
-
-  const invalidSubmission = (data) => { console.log(data) };
+  const { handleSubmit, control,  register, errors, clearErrors } = useForm({ defaultValues: defaultValues, criteriaMode: "all" });
 
   const getToggledField = (name: string, fields: any[]) => {
     const possibleField = fields.find(f => f.label === name)?.type;
     return possibleField ? fieldComponents[possibleField] : () => <span />
   };
 
+  const toggleFieldsConstraints = (name: string, fields: any[])=> fields.find(f=> f.label === name)?.constraints;
+
   return (
-    <form onSubmit={handleSubmit(onSubmit, invalidSubmission)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
         {formDefenition.map(({sectionTitle, collapsable, fields, collapsableDefaultOpen, hidden}) =>
         <DetailWrapper
@@ -119,14 +119,17 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
                     choices,
                     name,
                     multiValue,
+                    errors,
+                    clearErrors,
                     defaultValue: defaultValues[name] || null,
                     optionName: toggledFields[name],
+                    constraints: toggleFieldsConstraints(toggledFields[name], toggleFields),
                     hidden: !!toggles.find(({value, hidden}) => value === toggledFields[name] && hidden)
                   })
                 }
               </>
               :
-              fieldComponents[type]({control, register, isFormSubmitting, choices, name, multiValue, defaultValue: defaultValues[name] || null})
+              fieldComponents[type]({control, register, isFormSubmitting, choices, name, multiValue, errors, clearErrors, constraints, defaultValue: defaultValues[name] || null})
             }
           </FieldContainer>)}
 

@@ -3,7 +3,7 @@ import { RootState } from '../../redux/store';
 
 export const useScenariosFromState = () => {
   return useSelector((state: RootState) => state.forecasting.scenarios).map(
-    ({startDate, endDate, forecastScenarioId}) => ({
+    ({ startDate, endDate, forecastScenarioId }) => ({
       label: `${startDate} - ${endDate}`,
       startDate,
       endDate,
@@ -22,8 +22,12 @@ export const deleteForcastFormDefinition = [
         name: 'forecastScenarioId',
         type: 'typeahead',
         choices: useScenariosFromState,
-        constraints: [{required: true}],
-      },
+        constraints: {
+          forecastScenarioId: {
+            required: 'Please select a forecast range.',
+          },
+        },
+      }
     ]
   }
 ];
