@@ -58,3 +58,7 @@ export function groupBy(array: any, key: string) {
     return groups;
   }, {});
 }
+
+export function inIframe(): boolean {
+  return !(window === window.parent);
+}

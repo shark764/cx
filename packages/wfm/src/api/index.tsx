@@ -1,5 +1,5 @@
-import { WFMAPI } from '@cx/wfmapi';
+import { CXAPI } from '@cx/cxapi';
 
 // Will need to grab an auth token at some point, maybe localstorage ot some other place
 // along with other global config items.  like tenant ect
-export const wfm = WFMAPI('auth token goes here');
+export const wfm = CXAPI('auth token goes here');

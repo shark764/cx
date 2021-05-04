@@ -19,7 +19,7 @@ const specificationWithOverridesPlanning = (spec: any) => ({
   basePath: basePathOverride,
 });
 
-export const WFMAPI = (authToken: string) => ({
+export const CXAPI = (authToken: string) => ({
   planning: new OpenApi(specificationWithOverridesPlanning(planning), authToken),
   // agents: new OpenApi(specificationWithOverrides(agents), authToken),
   forecasting: new OpenApi(specificationWithOverridesForecast(forecast), authToken),
