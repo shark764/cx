@@ -90,6 +90,7 @@ export const BigCalendar: React.VFC<IBigCalendar> = ({
   const calendarFormats = deepMerge(
     {
       weekdayFormat: 'cccc',
+      dayFormat: 'cccc',
     },
     formats,
   );

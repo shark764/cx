@@ -35,7 +35,7 @@ export function Filters() {
   const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
 
   const competenceOptions = useSelector((state: RootState) =>
-    state.main.competencies.map(({id, name, type}) => ({label: name, id}))
+    state.main.competencies.map(({ id, name, type }) => ({ label: name, id }))
   );
 
   const dispatch = useDispatch();
@@ -54,9 +54,8 @@ export function Filters() {
       dispatch(setEndDate(formatDate(dates[1])));
     }
   };
-  const handleCompetenceChanged = (competence: any) => { dispatch(setCompetence(competence)) };
 
-  const defaultValue = competenceOptions.find(({id}) => id === selectedCompetence)?.id || '';
+  const handleCompetenceChanged = (competenceId: any) => { dispatch(setCompetence(competenceId)) };
 
   return (
     <BoxDiv>
@@ -71,12 +70,12 @@ export function Filters() {
 
         <span>
           <Selector
-            // label="Competence"
-            value={defaultValue}
-            onChange={(data: any) => handleCompetenceChanged(data.id)}
+            // label="Competence" TODO: make label for competence and time span.. looks better
+            value={selectedCompetence}
+            onChange={({target: { value }}: any, e: any) => handleCompetenceChanged(value)}
             options={competenceOptions}
             // @ts-ignore
-            style={{width: '200px'}}
+            style={{ width: '200px' }}
           />
         </span>
 

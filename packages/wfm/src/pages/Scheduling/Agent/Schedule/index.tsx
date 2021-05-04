@@ -172,7 +172,7 @@ export function AgentSchedule() {
             }}
           />
 
-          <Footer date={calDate} events={events} />
+          <Footer date={calDate} events={events} calendarView={calendarView} />
         </div>
       ) : (
         <>

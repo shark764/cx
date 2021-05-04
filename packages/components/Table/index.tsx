@@ -13,6 +13,7 @@ export interface TableProps {
   tableData: any[];
   columnDefenitions: string[];
   themeVariant: string;
+  viewMode?: string;
 };
 
 const TableWrapper = styled.div<{ themeVariant: string }>`
@@ -61,6 +62,7 @@ const TableHeaderRow = styled.div<{ themeVariant: string, columnBackground: stri
     text-align: center;
   `}
 `;
+
 const TableBody = styled.div<TableColumnInfo>`
   display: grid;
   grid-template-columns: ${({ columnTemplate }) => columnTemplate} ;
@@ -69,7 +71,8 @@ const TableBody = styled.div<TableColumnInfo>`
 export const Table: React.VFC<TableProps> = ({
   tableData,
   columnDefenitions = ['col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7'],
-  themeVariant
+  themeVariant,
+  viewMode,
 }) => {
   const gridTemplateColumns = defineGridTemplateColumns(columnDefenitions);
   const data = useMemo(() => tableData || [], [tableData]);
@@ -90,15 +93,18 @@ export const Table: React.VFC<TableProps> = ({
   );
   return (
     <TableWrapper {...getTableProps()} themeVariant={themeVariant}>
-      <TableBody columnTemplate={gridTemplateColumns}>
-        {headerGroups.map((headerGroup) => (<Fragment key={CreateUUID()} >
+      <TableBody columnTemplate={gridTemplateColumns} >
+        {headerGroups.map((headerGroup) => (<Fragment key={CreateUUID()}>
           {headerGroup.headers.map((column) =>
             <TableHeaderRow
               themeVariant={themeVariant}
               columnBackground={column.columnBackground}
               key={column.id}
             >
-              {column.render('Header', { key: column.id })}
+              {column.render('Header', {
+                key: column.id,
+                viewMode: viewMode
+              })}
             </TableHeaderRow>)}
         </Fragment>))}
 
@@ -112,7 +118,9 @@ export const Table: React.VFC<TableProps> = ({
                 onClick={() => row.toggleRowExpanded()}
                 key={CreateUUID()}
               >
-                {cell.render('Cell')}
+                {cell.render('Cell', {
+                  viewMode: viewMode
+                })}
               </TableRow>
             ))}
 

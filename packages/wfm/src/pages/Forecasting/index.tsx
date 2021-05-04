@@ -19,11 +19,10 @@ import { Table } from '@cx/components/Table';
 // import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
-import { Insights } from '@cx/components/Icons/Insights';
+import { selectedRangeFn } from '@cx/utilities/date';
 
-import { CreateUUID } from '@cx/utilities/uuid';
+import { defaultForecastFormValues } from './forecastFormDefaultValues';
 
-import { DateTime } from 'luxon';
 import {
   createForecastApi,
   deleteForecastScenario,
@@ -31,8 +30,9 @@ import {
   fetchForecastScenarios
 } from '../../redux/thunks';
 
-import { filters, barChart, tableData } from './fakeData';
+import { filters } from './fakeData';
 import { wfm } from '../../api';
+import { useTimelines } from './forecastApiQuerys';
 import { createForecastFormDefenition } from './forecastFormDefinition';
 import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
 import { createTimelineFormDefenition } from './newTimelineFormDefenition';
@@ -127,67 +127,50 @@ const LoadingWrapper = styled.div`
 `;
 
 export function Forecasting() {
+  // Global State
   const dispatch = useDispatch();
-
-  const [ selectedTimeline, setSelectedTimeline ] = useState<any>();
-
   const historicalPathParams = useSelector((state: RootState) => state.forecasting.historicalPathParams);
   const historicalQueryParams = useSelector((state: RootState) => state.forecasting.historicalQueryParams);
   const allScenarios = useSelector((state: RootState) => state.forecasting.scenarios);
   const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
 
-  const [intervalType, intervalLength] = useMemo(() => { // TODO: move this to a more universal place instead of here and date range component, a redux selector maybe
-    const {startDateTime, endDateTime} = historicalQueryParams;
-    const start = DateTime.fromISO(startDateTime);
-    const end = DateTime.fromISO(endDateTime);
+  // Local State
+  const [selectedTimeline, setSelectedTimeline] = useState<any>();
+  const [selectedScenario, setSelectedScenario] = useState<any>();
+  const [createNewForecast, setCreateNewForecast] = useState(false);
+  const [createNewTimeline, setCreateNewTimeline] = useState(false);
+  const [deleteForecast, setDeleteForecast] = useState(false);
+  // const [adjustments, setAdjustments] = useState<any>([]);
+  // const [adjustment, setAdjustment] = useState<any>({});
+  // const [tableData, setTableData] = useState([]);
 
-    const diffInDays = end.diff(start, 'days');
-    const { days } = diffInDays.toObject();
+  const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
-    const rangeMap = {
-      0: 'day',
-      1: 'twoDays',
-      6: 'week',
-    };
-    const intervalMap = {
-      day: 'hour', // less than a day should be quarter-hour, probably in a future feature where the user can zoom in more on the timeline
+  const viewBy = {
+      day: 'hour',
       twoDays: 'hour',
-      week: 'hour'
-    };
+      week: 'day', //'week' = Disallowed interval?
+      range: 'day'
+    }[intervalLength] || 'day';
 
-    // @ts-ignore
-    return [intervalMap[rangeMap[days]] || 'day', rangeMap[days] || 'range'];
-  }, [historicalQueryParams])
 
-  const { data: timelines, isLoading: timelinesLoading, error: timelinesError, refetch } = useQuery<any, any>(
-    ['timelinesData', historicalPathParams],
-    () => wfm.forecasting.api.get_all_tenants_tenant_forecasttimelines({
-      pathParams: { tenant_id: historicalPathParams.tenant_id },
-    }),
-    {
-      refetchOnWindowFocus: false
-    }
-  );
+  // React Queries
+  const {
+    data: timelines,
+    isLoading: timelinesLoading,
+    error: timelinesError
+  } = useTimelines(historicalPathParams);
 
-  useEffect(() => { // TODO: set initial default timeline as Nick's but remove later, change it so if there is only 1 timeline show that
-    if (timelines?.data) {
-      setSelectedTimeline( timelines.data.find(({name}:any) => name === `Nick's`) );
-    }
-  }, [timelines]);
 
+  // TODO: move this to the queries file
   const { data, isLoading, error } = useQuery<any, any>(
-    ['historicalData', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence],
+    ['historicalData', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
     () => selectedTimeline && selectedCompetence && wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
       pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: selectedTimeline.id},
-      // queryString: historicalQueryParams
       body: {
         startDate: historicalQueryParams.startDateTime,
         endDate: historicalQueryParams.endDateTime,
-        interval: intervalType,
-        // "week", // these options are in the api code but are not accepted yet
-        // "month",
-        // "year",
-
+        interval: viewBy,
         /**
          * TODO: right now we are selecting only one competency which the user has selected and is in state
          * however the api can support mulitple as an array but testing would need to be done to see what is more
@@ -197,10 +180,7 @@ export function Forecasting() {
           selectedCompetence
         ],
         channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
-        // directions: ['inbound', 'outbound'],
         directions: ['inbound'],
-
-        // ^^ required
         includeAdjustments: true,
         includeForecast: true,
       }
@@ -211,18 +191,114 @@ export function Forecasting() {
     }
   );
 
-  React.useEffect(() => {
-    if (!selectedTimeline) { return; }
-    dispatch(fetchForecastScenarios(selectedTimeline));
-  }, [dispatch, selectedTimeline]);
 
-  const memoData = useMemoLineChartData(data, intervalLength, selectedCompetence);
 
-  const memoTimelineOptions = useMemo(() => timelines?.data?.map(({ description, id, name }: any) => ({
-    label: name,
-    id: id,
-  })) || [], [timelines]);
+  const memoData = useMemoLineChartData(data, viewBy, selectedCompetence);
 
+  // adjustments CRUD
+  // const { data: newAdjustment } = useQuery<any, any>(
+  //   ['newAdjustment', adjustment],
+  //   () => {
+  //     const { adjustmentOperation, adjustmentId, timestamp, value } = adjustment;
+  //     let adjustmentStartDate = DateTime.fromISO(timestamp), adjustmentEndDate;
+  //     if (intervalType === 'quarter-hour') { //Interval = day
+  //       adjustmentEndDate = adjustmentStartDate.plus({ minutes: 14, seconds: 59 });
+  //     } else if (intervalType === 'hour') {  //Interval = twoDays
+  //       adjustmentEndDate = adjustmentStartDate.plus({ minutes: 59, seconds: 59 });
+  //     } else {  //Interval = week || dateRange
+  //       adjustmentEndDate = adjustmentStartDate.plus({ hours: 23, minutes: 59, seconds: 59 });
+  //     }
+  //     if (adjustmentOperation === 'post' && value !== '') {
+  //       return wfm.forecasting.api.post_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
+  //         pathParams: {
+  //           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
+  //         },
+  //         body: {
+  //           startDateTime: adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
+  //           endDateTime: adjustmentEndDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
+  //           intervalLength: intervalType,
+  //           competency: selectedCompetence,
+  //           channel: 'voice',
+  //           direction: 'inbound',
+  //           numberOfIntervals: 1,
+  //           type: 'percentage',
+  //           value: value
+  //         }
+  //       })
+  //     } else if (adjustmentOperation === 'update') {
+  //       return wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({
+  //         pathParams: {
+  //           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
+  //         },
+  //         body: {
+  //           startDateTime: adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
+  //           endDateTime: adjustmentEndDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
+  //           intervalLength: intervalType,
+  //           competency: selectedCompetence,
+  //           channel: 'voice',
+  //           direction: 'inbound',
+  //           numberOfIntervals: 1,
+  //           type: 'percentage',
+  //           value: value
+  //         }
+  //       });
+  //     } else if (adjustmentOperation === 'delete' && adjustmentId) {
+  //       return wfm.forecasting.api.delete_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment({
+  //         pathParams: {
+  //           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
+  //         }
+  //       });
+  //     }
+  //   },
+  //   {
+  //     refetchOnWindowFocus: true
+  //   }
+  // );
+
+  // GET adjustments
+  // const { data: allAdjustments } = useQuery<any, any>(
+  //   ['adjustmentsData', historicalPathParams, selectedTimeline, selectedCompetence, viewBy, tableData],
+  //   () => {
+  //     const allAdjustmentStartDate = DateTime.fromISO(historicalQueryParams.startDateTime)
+  //       .startOf('day').toISO({ includeOffset: intervalType !== 'quarter-hour' ? true : false });
+  //     const allAdjustmentEndDate = DateTime.fromISO(historicalQueryParams.endDateTime)
+  //       .endOf('day').toISO({ includeOffset: intervalType !== 'quarter-hour' ? true : false });
+  //     return wfm.forecasting.api.get_all_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
+  //       pathParams: {
+  //         tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
+  //       },
+  //       queryString: {
+  //         interval: intervalType,
+  //         channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
+  //         directions: ['inbound'],
+  //         startDateTime: allAdjustmentStartDate,
+  //         endDateTime: allAdjustmentEndDate
+  //       }
+  //     })
+  //   },
+  //   {
+  //     refetchOnWindowFocus: true
+  //   }
+  // ) || [];
+
+  // useEffect(() => {
+  //   if (allAdjustments?.data) {
+  //    // setAdjustments(allAdjustments.data.find(({ name }: any) => name === 'notebook_temp' || "Ruben's"));
+  //   }
+  // }, [allAdjustments]);
+
+  // const memoAdjustments = useMemo(() =>
+  //   allAdjustments
+  //     ?.data
+  //     ?.filter(({ competency }: any) => competency === selectedCompetence)
+  //     .map(({ startDateTime, id, value }: any) => ({
+  //       startDateTime: startDateTime,
+  //       id: id,
+  //       adjustment: value
+  //     })) || [], [allAdjustments, selectedCompetence]);
+
+
+      // TODO: should instead be stored in state this way
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
     label: `${startDate} - ${endDate}`,
     startDate,
@@ -230,6 +306,8 @@ export function Forecasting() {
     id: forecastScenarioId,
   })) || [], [allScenarios]);
 
+
+  // TODO: maybe rename this to lineCHartConfig or something instead
   const linechartData = {
     xDataKey: 'timestamp',
     dataKeys: [
@@ -238,39 +316,46 @@ export function Forecasting() {
     ],
   };
 
-  const [viewBy, setViewBy] = useState('day');
-
-  const [createNewForecast, setCreateNewForecast] = useState(false);
-  const [createNewTimeline, setCreateNewTimeline] = useState(false);
-  const [deleteForecast, setDeleteForecast] = useState(false);
-
-  const uniqueFormName = CreateUUID();
-  const defaultForecastFormValues = {
-    name: uniqueFormName,
-    description: uniqueFormName,
-    algorithm: 'prophet',
-    includeDayCurve: true,
-    metrics: ['nco', 'tot', 'abandons'],
-    algorithmOptions: [
-      {option: 'include_history', value: false},
-      {option: 'country_holidays', value: 'US'},
-    ],
-    scenarioType: 'temporary',
-    // AlgorithmOptions fields
-    // the above algorithm options are hidden the below correspond to form fields
-    activate_filter: false,
-    distribution_weight: 'exponential',
-  };
 
   const showSpecificSenarioRange = (start: string, end: string) => {
-    dispatch( setStartDate( start ) );
-    dispatch( setEndDate( end ) );
+    dispatch(setStartDate(start));
+    dispatch(setEndDate(end));
   };
 
-  return (
-    <>
+  /** Set a default timeline */
+  useEffect(() => {
+    if (timelines) {
+      setSelectedTimeline(timelines.data[0]);
+    }
+  }, [timelines]);
+  /** New timeline, reset scenario selections */
+  useEffect(() => {
+    if (selectedTimeline) {
+      setSelectedScenario(null);
+      dispatch(fetchForecastScenarios(selectedTimeline));
+    }
+  }, [dispatch, selectedTimeline]);
+
+    // useEffect(() => {
+  //   let tableData;
+  //   if (memoAdjustments.length > 0) {
+  //     tableData = memoData.map((dataRow: any) => {
+  //       const recordFound = memoAdjustments.find((memoAdjustment: any) => DateTime.fromISO(memoAdjustment.startDateTime).toMillis() === DateTime.fromISO(dataRow.timestamp).toMillis());
+  //       if (recordFound) {
+  //         dataRow.adjustment = recordFound.adjustment;
+  //         dataRow.adjustmentId = recordFound.id;
+  //       }
+  //       return dataRow;
+  //     });
+  //     setTableData(tableData);
+  //   } else {
+  //     setTableData(memoData);
+  //   }
+  // }, [viewBy, memoData, memoAdjustments]);
+
+  return (<>
       <Actions>
-        {timelines && (timelines.data.length === 0) &&
+        {(timelines?.data.length === 0) &&
           <Button
             style={{ color: '#4c4a4a' }}
             onClick={() => setCreateNewTimeline(true)}
@@ -281,32 +366,36 @@ export function Forecasting() {
             Create Timeline
           </Button>
         }
-        {timelines && (timelines.data.length > 0) &&
+        {(timelines?.data.length > 0) && selectedTimeline &&
           <Autocomplete
             id="choose_timeline"
-            options={ memoTimelineOptions }
-            getOptionLabel={({label}: any) => label || '' }
+            options={timelines.data}
+            getOptionLabel={({ label }: any) => label}
             size="small"
             getOptionSelected={(option, value) => option.id === value.id}
             style={{ width: 200, display: 'inline-block' }}
             renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
             value={selectedTimeline}
-            onChange={(event: any, newValue: string | null) => {
-              setSelectedTimeline(newValue);
-            }}
-            defaultValue={memoTimelineOptions.find(({label}: any) => label === `Nick's`)}
+            autoSelect
+            onChange={(event: any, newValue: string | null) => setSelectedTimeline(newValue) }
           />
         }
-        {allScenarios && (allScenarios.length > 0) &&
+        {(allScenarios?.length > 0) &&
           <Autocomplete
             id="choose_scenario"
-            options={ memoScenariosOptions }
+            options={memoScenariosOptions}
             getOptionLabel={(option: any) => option.label}
             size="small"
             getOptionSelected={(option, value) => option.id === value.id}
             style={{ width: 275, display: 'inline-block', marginLeft: '20px' }}
-            renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
-            onChange={(e, {startDate, endDate}: any) => showSpecificSenarioRange(startDate, endDate)}
+            renderInput={(params: any) => <TextField {...params} label="Forecasted Range" variant="outlined" />}
+            value={selectedScenario}
+            autoSelect
+            onChange={(e, scenario: any) => {
+                showSpecificSenarioRange(scenario.startDate, scenario.endDate);
+                setSelectedScenario(scenario);
+              }
+            }
           />
         }
         <ProgressIcon>
@@ -323,7 +412,6 @@ export function Forecasting() {
           </Button>
           <Button
             className="createForecast"
-            // style={{ color: 'white', background: '#07487a' }}
             onClick={() => setCreateNewForecast(true)}
             variant="contained"
             disableElevation
@@ -337,7 +425,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={createTimelineFormDefenition}
               onCancel={() => setCreateNewTimeline(false)}
-              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, historicalPathParams.tenant_id, refetch) }}
+              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, historicalPathParams.tenant_id, 'refetch') }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -377,7 +465,7 @@ export function Forecasting() {
             data={memoData}
             xDataKey={linechartData.xDataKey}
             dataKeys={linechartData.dataKeys}
-            // intervalType={intervalType}
+          // intervalType={intervalType}
           />
         }
         {/* TODO: api is not ready for staffing estimates just yet */}
@@ -400,21 +488,23 @@ export function Forecasting() {
             <StyledSelect
               className="choose-channel"
               classNamePrefix="select"
-              defaultValue={filters.channel[0]}
+              value={filters.channel[0]}
               name="choose-channel"
               options={filters.channel}
               styles={customStyles}
+              onChange={ () => {} }
             />
           </span>
         </TableFilters>
         <div style={{ marginTop: '40px' }}>
           <Table
             themeVariant='forecast'
-            columnDefenitions={['col8', 'col9', 'col10', 'col11', 'col12', 'col13', 'col14', 'col15']}
-            tableData={tableData[viewBy]}
+            columnDefenitions={['col16', 'col17', 'col18', 'col19', 'col20', 'col21', 'col22']}
+            // tableData={tableData}
+            tableData={[]}
+            viewMode={viewBy}
           />
         </div>
       </TableWrapper>
-    </>
-  )
+    </>)
 };

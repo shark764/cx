@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { DateTime } from 'luxon';
 
-type IntervalLength = 'day' | 'twoDays' | 'week';
-
-const chooseXaxisLabel = (timestamp: string, intervalLength: IntervalLength) => {
+const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
   if (intervalLength === 'day' || intervalLength === 'twoDays' ) {
     return DateTime.fromISO(timestamp).toLocaleString({ hour: '2-digit' });
   } else {
@@ -11,7 +9,7 @@ const chooseXaxisLabel = (timestamp: string, intervalLength: IntervalLength) => 
   }
 };
 
-export const useMemoLineChartData = (data: any, intervalLength: IntervalLength, selectedCompetence: string) => useMemo(() =>
+export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() =>
   data
   ?.data
   ?.find(({competency}: any) => competency === selectedCompetence)

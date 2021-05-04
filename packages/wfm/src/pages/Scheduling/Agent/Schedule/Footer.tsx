@@ -39,10 +39,12 @@ const RtableCell = styled.div<IRtableCell>`
 interface IFooter {
   date: Date;
   events: IEvent[];
+  calendarView: string;
 }
 
-export function Footer({ date, events }: IFooter) {
+export function Footer({ date, events, calendarView }: IFooter) {
   const now = new Date(date);
+  const dayOfWeek = now.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();
   const monday = getMonday(now);
   const hours = [
     { day: 'monday', add: 0 },
@@ -71,18 +73,22 @@ export function Footer({ date, events }: IFooter) {
     };
   });
 
+  const dailyHours = hours.filter((hour) => hour.day === dayOfWeek);
+
   return (
     <CalFooter>
       <Rtable>
         <RtableCell header>Hours</RtableCell>
-        {hours.map((h) => (
-          <RtableCell key={`day-${h.day}`}>{h.hour}</RtableCell>
-        ))}
+        {calendarView === 'day' ?
+          <RtableCell key={`day-${dailyHours[0].day}`} strong>{dailyHours[0].hour}</RtableCell>
+          : hours.map((h) => (
+            <RtableCell key={`day-${h.day}`}>{h.hour}</RtableCell>
+          ))}
       </Rtable>
-      <Rtable>
+      {calendarView !== 'day' && <Rtable>
         <RtableCell header>Total</RtableCell>
         <RtableCell strong>{hours.reduce((total, h) => total + h.hour, 0)}</RtableCell>
-      </Rtable>
+      </Rtable>}
     </CalFooter>
   );
 }

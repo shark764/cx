@@ -43,3 +43,57 @@ export const disableDays = (date: Date, daysToDisable?: string): boolean => {
   }
   return true;
 };
+
+export const getDiffInDaysFn = (startDateTime: string, endDateTime: string): any => {
+  const start = DateTime.fromISO(startDateTime);
+  const end = DateTime.fromISO(endDateTime);
+  const diffInDays = end.diff(start, 'days').toObject();
+  const { days } = diffInDays;
+  return days;
+}
+
+export const selectedRangeFn = ( startDateTime: string, endDateTime: string): string => {
+  const diffDays = getDiffInDaysFn(startDateTime, endDateTime);
+  const rangeMap:{[key: number]: string} = {
+    0: 'day',
+    1: 'twoDays',
+    6: 'week',
+  };
+  return rangeMap[diffDays] || 'range';
+}
+
+export const changeRangeFn = (startDateTime: string, endDateTime: string, rangeId: string, dateType?: string): string => {
+
+  const start = DateTime.fromISO(startDateTime).toJSDate();
+  const end = DateTime.fromISO(endDateTime).toJSDate();
+  const diffDays = getDiffInDaysFn(startDateTime, endDateTime);
+  const changeKey = dateType ? rangeId : `${selectedRangeFn(startDateTime, endDateTime)}-${rangeId}`;
+  const descisionMatrix: {[key: string]: any} = {
+    'day': () => [addDays(start, 0), addDays(start, 0)],
+    'twoDays': () => [addDays(start, 0), addDays(start, 1)],
+    'week': () => [addDays(start, 0), addDays(start, 6)],
+    'range': () => [addDays(start, 0), addDays(start, diffDays)],
+
+    'day-day': () => [null, addDays(end, 0)],
+    'day-twoDays': () => [null, addDays(end, 1)],
+    'day-week': () => [null, addDays(end, 6)],
+    'day-range': () => [null, addDays(end, 14)],
+
+    'twoDays-day': () => [null, addDays(start, 0)],
+    'twoDays-twoDays': () => [null, addDays(start, 1)],
+    'twoDays-week': () => [null, addDays(end, 5)],
+    'twoDays-range': () => [null, addDays(end, 13)],
+
+    'week-day': () => [null, addDays(start, 0)],
+    'week-twoDays': () => [null, addDays(start, 1)],
+    'week-week': () => [null, addDays(start, 6)],
+    'week-range': () => [null, addDays(end, 8)],
+
+    'range-day': () => [null, addDays(start, 0)],
+    'range-twoDays': () => [null, addDays(start, 1)],
+    'range-week': () => [null, addDays(start, 6)],
+    'range-range': () => [null, addDays(start, diffDays)]
+  };
+
+  return descisionMatrix[changeKey]();
+}

@@ -178,7 +178,7 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue 
                 }}
                 render={({ onChange }) => (
                   <DatePicker
-                    error={ errors[name]?.startDate }
+                    error={ Boolean(errors[name]?.startDate) }
                     helperText={errors?.[name]?.startDate?.message}
                     selected={startDate}
                     onChange={(date: Date) => {
@@ -203,7 +203,7 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue 
                   }}
                   render={({ onChange }) => (
                     <Input
-                      error={ errors[name]?.weeks }
+                      error={ Boolean(errors[name]?.weeks) }
                       helperText={errors?.[name]?.weeks?.message}
                       value={totalWeeks}
                       type="number"

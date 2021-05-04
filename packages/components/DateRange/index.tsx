@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { DatePicker } from '../DateTime/DatePicker';
 import Arrow from '@material-ui/icons/ArrowRightAlt';
-import { addDays } from '@cx/utilities/date';
+import { selectedRangeFn, changeRangeFn } from '@cx/utilities/date';
 import { DateTime } from 'luxon';
 import { Selector } from '../Inputs/Selector';
 
@@ -31,65 +31,36 @@ const DateFields = styled.span`
   grid-template-columns: 200px 170px 50px 170px;
 `;
 
-export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedOnchanges }) => {
+interface DateRangeProps {
+  startDateTime: string;
+  endDateTime: string;
+  combinedOnchanges: (dates: any) => any;
+};
+
+export const DateRange: React.FC<DateRangeProps> = ({ startDateTime, endDateTime, combinedOnchanges }) => {
 
   const start = DateTime.fromISO(startDateTime);
   const startInJS = start.toJSDate();
   const end = DateTime.fromISO(endDateTime);
   const endInJS = end.toJSDate();
-
-  const diffInDays = end.diff(start, 'days');
-  const { days } = diffInDays.toObject();
-
-  const rangeMap = {
-    0: 'day',
-    1: 'twoDays',
-    6: 'week',
-  };
-  // @ts-ignore
-  const selectedRange = rangeMap[days] || 'range';
-
-  const changeRange = (rangeType: string) => {
-
-    const changeKey = `${selectedRange}-${rangeType}`;
-
-    const descisionMatrix = {
-      'day-day': () => { return },
-      'day-twoDays': () => combinedOnchanges([null, addDays(end, 1)]),
-      'day-week': () => combinedOnchanges([null, addDays(end, 6)]),
-      'day-range': () => combinedOnchanges([null, addDays(end, 14)]),
-
-      'twoDays-day': () => combinedOnchanges([null, addDays(start, 0)]),
-      'twoDays-twoDays': () => { return },
-      'twoDays-week': () => combinedOnchanges([null, addDays(end, 5)]),
-      'twoDays-range': () => combinedOnchanges([null, addDays(end, 13)]),
-
-      'week-day': () => combinedOnchanges([null, addDays(start, 0)]),
-      'week-twoDays': () => combinedOnchanges([null, addDays(start, 1)]),
-      'week-week': () => { return },
-      'week-range': () => combinedOnchanges([null, addDays(end, 8)]),
-
-      'range-day': () => combinedOnchanges([null, addDays(start, 0)]),
-      'range-twoDays': () => combinedOnchanges([null, addDays(start, 1)]),
-      'range-week': () => combinedOnchanges([null, addDays(start, 6)]),
-      'range-range': () => { return },
-    };
-    // @ts-ignore
-    descisionMatrix[changeKey]();
-  }
+  const selectedRange = selectedRangeFn(startDateTime, endDateTime);
+  const dateRangeVal = dateOptions.find(({ id }) => id === selectedRange)?.id || '';
 
   const handleDates = (e: Date, dateType: 'startDate' | 'endDate') => {
+    const selectedDate = DateTime.fromJSDate(e).toString();
+
     if (dateType === 'startDate') {
-      combinedOnchanges([e, null]);
+      combinedOnchanges(changeRangeFn(selectedDate, endDateTime, selectedRange, dateType));
     } else {
-      combinedOnchanges([null, e]);
+      combinedOnchanges(changeRangeFn(startDateTime, selectedDate, selectedRange, dateType));
     }
+
   }
 
-  const dateRangeVal = dateOptions.find(({id}) => id === selectedRange )?.id || '';
-
-  const timeSpanChange = ({target: {value}}: React.ChangeEvent<{ value: string }>) =>
-    changeRange(value);
+  const timeSpanChange = ({ target: { value } }: React.ChangeEvent<{ value: string }>) => {
+    const combinedDates = changeRangeFn(startDateTime, endDateTime, value);
+    combinedOnchanges(combinedDates);
+  }
 
   return <>
 
@@ -100,7 +71,7 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
         options={dateOptions}
         onChange={timeSpanChange}
         // @ts-ignore
-        style={{width: '135px'}}
+        style={{ width: '135px' }}
       />
 
       <StyledDatePicker
@@ -112,9 +83,10 @@ export const DateRange: React.FC<any> = ({ startDateTime, endDateTime, combinedO
         <>
           <StyledArrow />
           <StyledDatePicker
-            selected={endInJS}
+            selected={startInJS >= endInJS ? startInJS : endInJS}
             onChange={(e: Date) => handleDates(e, 'endDate')}
             disabled={selectedRange === 'twoDays' || selectedRange === 'week'}
+            minDate={selectedRange === 'range' ? startInJS : undefined}
           />
         </>
       }

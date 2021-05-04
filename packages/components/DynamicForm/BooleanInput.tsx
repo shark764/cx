@@ -16,7 +16,6 @@ export const BooleanInput: React.VFC<Props> = ({control, name, isFormSubmitting,
     defaultValue={defaultValue}
     render={({ onChange, onBlur, value }) => (
       <Checkbox
-        checked={ value}
         onChange={() => onChange(!value)}
         inputProps={{ 'aria-label': 'primary checkbox' }}
       />

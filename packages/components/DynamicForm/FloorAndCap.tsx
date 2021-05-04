@@ -78,7 +78,7 @@ export const FloorAndCap: React.VFC<Props> = ({ control, name, constraints, erro
               }}
               render={({ onChange }) => (
                 <Input
-                  error={ errors?.[name]?.cap }
+                  error={ Boolean(errors?.[name]?.cap) }
                   helperText={errors[name]?.cap?.message}
                   value={cap}
                   type="number"
@@ -117,7 +117,7 @@ export const FloorAndCap: React.VFC<Props> = ({ control, name, constraints, erro
               }}
               render={({ onChange }) => (
                 <Input
-                  error={ errors?.[name]?.floor }
+                  error={ Boolean(errors?.[name]?.floor) }
                   helperText={errors[name]?.floor?.message}
                   value={floor}
                   type="number"
