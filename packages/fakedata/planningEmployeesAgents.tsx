@@ -364,13 +364,7 @@ export const fetchAgentOrganizationHistory = (agentId: string): Promise<any> => 
   return setTimeout(() => resolve({ data: agentOrganizationHistory }), 1000);
 });
 
-type Params = {
-  queryKey: [string, { agentId: string }];
-};
-export const getAgentOrganizationHistory = (params: Params): Promise<any> => {
-  const [, { agentId }] = params.queryKey;
-  return apiCall(fetchAgentOrganizationHistory(agentId));
-};
+export const getAgentOrganizationHistory = (agentId: any): Promise<any> => apiCall(fetchAgentOrganizationHistory(agentId));
 
 export const updateAgent = async ({ id, payload }: IPayload) => new Promise((resolve, reject) => {
   const index = allAgentsInformation.findIndex((a) => a.id === id);

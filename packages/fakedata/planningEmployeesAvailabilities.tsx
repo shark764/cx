@@ -105,13 +105,7 @@ export const fetchAgentAvailabilityTimeTable = (agentId: string): Promise<any> =
   return setTimeout(() => resolve({ data: agentAvailabilityTimeTable }), 1000);
 });
 
-type Params = {
-  queryKey: [string, { agentId: string }];
-};
-export const getAgentAvailabilityTimeTable = (params: Params): Promise<any> => {
-  const [, { agentId }] = params.queryKey;
-  return apiCall(fetchAgentAvailabilityTimeTable(agentId));
-};
+export const getAgentAvailabilityTimeTable = (agentId): Promise<any> => apiCall(fetchAgentAvailabilityTimeTable(agentId));
 
 export const updateAvailability = async ({ id, payload }: IPayload) => new Promise((resolve, reject) => {
   const index = allAvailabilities.findIndex((a) => a.id === id);

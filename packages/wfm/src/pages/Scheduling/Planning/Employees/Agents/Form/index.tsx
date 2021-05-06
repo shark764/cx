@@ -3,9 +3,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components';
 import { Wrapper } from '@cx/components/Styled';
 import { DateTime } from 'luxon';
-import {
-  getAgentOrganizationHistory, getTeams, getTimezones, updateAgent,
-} from '@cx/fakedata/planningEmployeesAgents';
+import { getAgentOrganizationHistory, getTeams, getTimezones, updateAgent } from '@cx/fakedata/planningEmployeesAgents';
 import { log } from '@cx/utilities';
 import { IOption, ISingleRowFormContext } from '@cx/types/form';
 import { useFormState } from 'context/RowSelection';
@@ -35,7 +33,7 @@ export function Form() {
 
   const organizationHistoryQuery = useQuery<any, Error>(
     ['fetchAgentOrganizationHistory', { agentId: id }],
-    getAgentOrganizationHistory,
+    () => getAgentOrganizationHistory(id),
     { refetchInterval: 30000 },
   );
   const timezonesQuery = useQuery<any, Error>('fetchTimezones', getTimezones, { refetchOnWindowFocus: false });

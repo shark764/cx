@@ -125,7 +125,7 @@ export function TimeTable({ row }: any) {
 
   const { data, isLoading, error } = useQuery<any, Error>(
     ['fetchAgentAvailabilityTimeTable', { agentId }],
-    getAgentAvailabilityTimeTable,
+    () => getAgentAvailabilityTimeTable(agentId),
     { refetchInterval: 30000 },
   );
 

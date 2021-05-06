@@ -41,7 +41,7 @@ import { Filters } from './filters';
 
 import { forecasting } from '../../redux/reducers/forecasting';
 
-import { operations, components } from '@cx/wfmapi/forecast-schema';
+import { operations, components } from '@cx/cxapi/forecast-schema';
 import { useMemoLineChartData } from './forecastingHooks';
 const {
   setStartDate,
