@@ -4,6 +4,16 @@ import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { useBrandingTheme } from 'queries/generalQueries';
 
+export interface ThemeStyle {
+  styles: {
+    navbar: string;
+    navbarText: string;
+    primaryColor: string;
+    accentColor: string;
+    accentHoverColor: string;
+  };
+}
+
 const defaultTheme = {
   navbar: '#07487a',
   navbarText: '#ffffff',

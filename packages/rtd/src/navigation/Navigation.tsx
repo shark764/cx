@@ -54,7 +54,7 @@ export function Navigation() {
       </Route>
 
       {/* Custom Dashboards */}
-      <Route exact path={['/custom', '/custom/overview-dashboard']}>
+      <Route exact path={['/custom', '/custom/:id']}>
         <CustomDashboards />
       </Route>
 

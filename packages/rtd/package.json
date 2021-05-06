@@ -18,10 +18,10 @@
   },
   "dependencies": {
     "@cx/components": "1.0.0",
+    "@cx/cxapi": "1.0.0",
     "@cx/fakedata": "1.0.0",
     "@cx/types": "1.0.0",
-    "@cx/utilities": "1.0.0",
-    "@cx/cxapi": "1.0.0"
+    "@cx/utilities": "1.0.0"
   },
   "eslintConfig": {
     "extends": [
