@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 
 const stagePool1Competencies = {
   "Voice": "d54d8a00-34d0-11e7-b248-062913f854c1",
-  // "Email": "67b17db0-7dd9-11e7-9441-d379301ec11d",
+  "Email": "d28ae790-34d0-11e7-b248-062913f854c1",
   // "Sms": "65d62e00-7dd9-11e7-9441-d379301ec11d",
   // "Messaging": "68c00780-7dd9-11e7-9441-d379301ec11d",
 };
@@ -70,7 +70,7 @@ export const Dev = () => {
   } = useQuery<any, any>(
     ['historicalData'],
     () => wfm.forecasting.api.post_tenants_tenant_id_competencies_competency_id_historical({
-      pathParams: { tenant_id: 'd44f4620-34cb-11e7-b248-062913f854c1', competency_id: stagePool1Competencies['Voice'] },
+      pathParams: { tenant_id: 'd44f4620-34cb-11e7-b248-062913f854c1', competency_id: stagePool1Competencies['Email'] },
       body: {
         channel: "voice",
         direction: "inbound",

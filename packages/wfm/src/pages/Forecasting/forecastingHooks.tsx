@@ -13,9 +13,8 @@ export const useMemoLineChartData = (data: any, intervalLength: string, selected
   data
   ?.data
   ?.find(({competency}: any) => competency === selectedCompetence)
-  ?.data
-  ?.[0]
-  ?.series.map(({ timestamp, nco, aht, abandons }: any) => ({
+  ?.forecast
+  .map(({ timestamp, nco, aht, abandons }: any) => ({
     timestamp: chooseXaxisLabel(timestamp, intervalLength),
     nco: nco,
     aht: aht,
@@ -26,9 +25,8 @@ export const useMemoTableData = (data: any, intervalLength: string, selectedComp
   data
   ?.data
   ?.find(({competency}: any) => competency === selectedCompetence)
-  ?.data
-  ?.[0]
-  ?.series.map(({ timestamp, nco, aht, abandons }: any) => ({
+  ?.adjusted
+  .map(({ timestamp, nco, aht, abandons }: any) => ({
     timestamp: chooseXaxisLabel(timestamp, intervalLength),
     nco: nco,
     aht: aht,

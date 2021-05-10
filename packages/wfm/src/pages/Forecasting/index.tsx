@@ -45,7 +45,7 @@ import { forecasting } from '../../redux/reducers/forecasting';
 import {
   useMemoLineChartData,
   useMemoTimelineAdjustments,
-  // useMemoTableData
+  useMemoTableData
 } from './forecastingHooks';
 
 import {
@@ -180,7 +180,7 @@ export function Forecasting() {
     // error: timelineQueryError
   } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
   const timelineQueryData = useMemoLineChartData(timelineQuery, viewBy, selectedCompetence);
-  // const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence);
+  const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence);
 
   const {
     data: timelineAdjustments,
@@ -422,36 +422,7 @@ export function Forecasting() {
           <Table
             themeVariant='forecast'
             columnDefenitions={['timestamp', 'nco', 'adjustment2', 'anco', 'aht', 'adjustment', 'aaht']}
-            tableData={[
-              {
-                timestamp: '7:00 AM',
-                nco: '10',
-                adjustment2: '20',
-                anco: '30',
-                aht: '40',
-                adjustment: '50',
-                aaht: '60',
-              },
-              {
-                timestamp: '8:00 AM',
-                nco: '10',
-                adjustment2: '20',
-                anco: '30',
-                aht: '40',
-                adjustment: '50',
-                aaht: '60',
-              },
-              {
-                timestamp: '9:00 AM',
-                nco: '10',
-                adjustment2: '20',
-                anco: '30',
-                aht: '40',
-                adjustment: '50',
-                aaht: '60',
-              },
-            ]}
-            // tableData={tableData.day}
+            tableData={timelineQueryTableData}
             viewMode={viewBy}
           />
         </TableSpacer>
