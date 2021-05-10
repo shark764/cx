@@ -105,7 +105,7 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
 //   }
 // );
 export const createAdjustment = (historicalPathParams: any, viewBy: string, selectedCompetence: string, adjustment: any) =>
-  wfm.forecasting.api.post_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
+  wfm.forecasting.api.post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments({
     pathParams: {
       tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
     },

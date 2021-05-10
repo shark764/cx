@@ -39,7 +39,7 @@ export class OpenApi {
       // @ts-ignore
       post: ({ path, body }) => axios({ headers: this.headers, method: 'POST', url: this.url(path), data: body, json: true }, this.parse),
       // @ts-ignore
-      delete: ({ path }) => axios({ headers: this.headers, method: 'DELETE', url: this.url(path) }, this.parse),
+      delete: ({ path, qs }) => axios({ headers: this.headers, method: 'DELETE', url: this.url(path) + this.parseQueryString(qs) }, this.parse),
     },
 
     this.api = Object.entries(openApiSpecification.paths)
