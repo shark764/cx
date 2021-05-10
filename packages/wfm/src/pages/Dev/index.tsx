@@ -70,7 +70,7 @@ export const Dev = () => {
   } = useQuery<any, any>(
     ['historicalData'],
     () => wfm.forecasting.api.post_tenants_tenant_competencies_competency_historical({
-      pathParams: { tenant_id: 'd676b68b-2f1c-498c-b6b3-db7e3a3e5708', competency_id: stagePool1Competencies['Voice'] },
+      pathParams: { tenant_id: 'd44f4620-34cb-11e7-b248-062913f854c1', competency_id: stagePool1Competencies['Voice'] },
       body: {
         channel: "voice",
         direction: "inbound",

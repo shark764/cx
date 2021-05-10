@@ -41,7 +41,7 @@ export const useTimelineQuery = (historicalPathParams: any, historicalQueryParam
       competencyIds: [
         selectedCompetence
       ],
-      channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
+      channels: ['voice', 'messaging', 'sms', 'email', 'work-item'],
       directions: ['inbound'],
       includeAdjustments: true,
       includeForecast: true,
@@ -65,7 +65,7 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
 
     return wfm.forecasting.api.get_all_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
       pathParams: {
-        tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
+        tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
       },
       queryString: {
         interval: viewBy,
@@ -107,7 +107,7 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
 export const createAdjustment = (historicalPathParams: any, viewBy: string, selectedCompetence: string, adjustment: any) =>
   wfm.forecasting.api.post_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
     pathParams: {
-      tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
+      tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
     },
     body: {
       startDateTime: adjustment.adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
@@ -128,7 +128,7 @@ export const useUpdateAdjustment = (historicalPathParams: any, adjustment: any, 
   () => wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({
     pathParams: {
       tenant_id: historicalPathParams.tenant_id,
-      forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854",
+      forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3",
       adjustment_id: adjustment.adjustmentId
     },
     body: {
@@ -154,7 +154,7 @@ export const useDeleteAdjustment = (historicalPathParams: any, adjustment: any) 
   () => wfm.forecasting.api.delete_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment({
     pathParams: {
       tenant_id: historicalPathParams.tenant_id,
-      forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854",
+      forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3",
       adjustment_id: adjustment.adjustmentId
     }
   }),
