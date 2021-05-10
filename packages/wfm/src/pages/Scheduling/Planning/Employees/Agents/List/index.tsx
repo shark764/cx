@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+// @ts-ignore
 import { DateTime } from 'luxon';
 import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
@@ -16,7 +17,6 @@ const ListWrapper = styled(Wrapper)`
 
 export function List() {
   const {
-    selectedRow: [selected],
     setFormState,
   }: ISingleRowFormContext = useFormState();
 
@@ -48,7 +48,7 @@ export function List() {
       },
       { Header: 'Timezone', accessor: 'timezone' },
     ],
-    [selected],
+    [],
   );
 
   const memoData = React.useMemo(() => data || [], [data]);

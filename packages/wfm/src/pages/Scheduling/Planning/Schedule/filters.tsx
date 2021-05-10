@@ -57,7 +57,6 @@ export function Filters() {
   const dispatch = useDispatch();
   const {
     setStartDate,
-    setEndDate,
     setTimezone,
     setCompetence
   } = planning.actions;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ColumnInterface, Cell, Column } from 'react-table';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
+// @ts-ignore
 import { DateTime } from 'luxon';
 
 const StyledInput = styled.input`
@@ -48,6 +49,7 @@ export const editableCell = ({ defaultValue, rowData }: any) => {
   };
 
   const handleOnBlurChange = (e: any) => {
+    console.log(e)
     // TODO:
     // setAdjustment({
     //   adjustmentId: rowData.adjustmentId,
@@ -110,7 +112,7 @@ const formatDateHeader = ({ data, viewMode } : any, columnName: string) => {
   }
 };
 
-const columnDefenitions = {
+const columnDefenitions: {[key: string]: any} = {
   checkbox: {
     id: 'selection',
     disableResizing: true,
@@ -214,49 +216,63 @@ const columnDefenitions = {
     minWidth: '80px',
     maxWidth: '200px',
   },
-  col16: {
-    Header: (tableProps: any) => formatDateHeader(tableProps, 'timestamp'),
-    Cell: formatDateValue,
+
+
+
+
+
+  timestamp: {
+    // Header: (tableProps: any) => formatDateHeader(tableProps, 'timestamp'),
+    // Cell: formatDateValue,
     accessor: 'timestamp',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  col17: {
+  nco: {
     Header: 'FORECASTED VOLUME',
     accessor: 'nco',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  col18: {
+  adjustment2: {
     Header: <EditableCellHeader>ADJUSTMENT</EditableCellHeader>,
     Cell: (tableProps: any) => editableCell(tableProps),
     accessor: 'adjustment2',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  col19: {
+  anco: {
     Header: 'ADJUSTED VOLUME',
     minWidth: '80px',
+    accessor: 'anco',
     maxWidth: '200px',
   },
-  col20: {
+  aht: {
     Header: 'FORECASTED AHT',
     accessor: 'aht',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  col21: {
+  adjustment: {
     Header: <EditableCellHeader>AHT ADJUSTMENT</EditableCellHeader>,
     Cell: (tableProps: any) => editableCell(tableProps),
     accessor: 'adjustment',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  col22: {
+  aaht: {
     Header: 'ADJUSTED AHT',
+    accessor: 'aaht',
     minWidth: '80px',
     maxWidth: '200px',
   }
+
+
+
+
+
+
+
 };
 
 const getColumn = (columnName: string) => columnDefenitions[columnName];

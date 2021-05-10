@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { useTable, useRowSelect, useExpanded} from 'react-table';
 import styled from 'styled-components';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
@@ -11,13 +10,12 @@ import { week } from '@cx/fakedata/week';
 import { WorkSchedule } from '@cx/components/WorkSchedule';
 import { TimeScale } from '@cx/components/TimeScale';
 import { Legend } from './legend';
-import { RootState } from 'redux/store';
 import { ExpandedRow } from './expandedRow';
 
 function CreateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
-    const v = c == 'x' ? r : (r & 0x3) | 0x8;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }

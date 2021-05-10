@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
@@ -31,10 +31,7 @@ const AddButton = styled(Button)`
 `;
 
 export function List() {
-  const theme: any = useTheme();
-
   const {
-    selectedRow: [selected],
     setFormState,
   }: ISingleRowFormContext = useFormState();
 
@@ -57,7 +54,7 @@ export function List() {
       { Header: 'Agent', accessor: 'agent' },
       { Header: 'Agreed Hours', accessor: 'agreedHours' },
     ],
-    [selected],
+    [],
   );
 
   const memoData = React.useMemo(() => data || [], [data]);

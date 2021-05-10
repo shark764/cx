@@ -20,11 +20,11 @@ const temp  = {"result":{
   "tenantId":"44720170-922b-11e6-8754-ca81484488df"}};
 
 const {
-  navBar,
-  navbarText,
+  // navBar,
+  // navbarText,
   primaryColor,
-  accentColor,
-  accentHoverColor
+  // accentColor,
+  // accentHoverColor
 } = JSON.parse(temp.result.styles);
 
 export function AppThemeProvider({ children }: Props) {

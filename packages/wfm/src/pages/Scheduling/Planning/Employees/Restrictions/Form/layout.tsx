@@ -3,7 +3,7 @@ import { HeaderGroup } from '@cx/components/Form/HeaderGroup';
 import { Button } from '@cx/components/Inputs/Button';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
 import { IForm } from '@cx/types/form';
 import { TextBox } from '@cx/components/Inputs/TextBox';
@@ -40,7 +40,6 @@ export function FormLayout({
   onCancel,
   isFormSubmitting = false,
 }: IFormLayout) {
-  const theme: any = useTheme();
 
   const {
     handleSubmit, control, register, watch, reset,

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { useQuery } from 'react-query';
+// @ts-ignore
+import { DateTime } from 'luxon';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -30,9 +31,10 @@ import {
   fetchForecastScenarios
 } from '../../redux/thunks';
 
-import { filters } from './fakeData';
-import { wfm } from '../../api';
-import { useTimelines } from './forecastApiQuerys';
+import {
+  filters,
+  // tableData
+} from './fakeData';
 import { createForecastFormDefenition } from './forecastFormDefinition';
 import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
 import { createTimelineFormDefenition } from './newTimelineFormDefenition';
@@ -40,18 +42,26 @@ import { InProgress } from './inProgress';
 import { Filters } from './filters';
 
 import { forecasting } from '../../redux/reducers/forecasting';
+import {
+  useMemoLineChartData,
+  useMemoTimelineAdjustments,
+  // useMemoTableData
+} from './forecastingHooks';
 
-import { operations, components } from '@cx/cxapi/forecast-schema';
-import { useMemoLineChartData } from './forecastingHooks';
+import {
+  useTimelines,
+  useTimelineQuery,
+  useTimelineAdjustments,
+  createAdjustment,
+  // useUpdateAdjustment,
+  // useDeleteAdjustment,
+} from './forecastApiQuerys';
+
+
 const {
   setStartDate,
   setEndDate
 } = forecasting.actions;
-
-type HistoricalData = components["schemas"]["HistoricalDataDTO"];
-type HistoricalPathParams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["path"];
-type HistoricalQueryparams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["query"];
-type HistoricalApiError = components["schemas"]["HTTPValidationError"];
 
 const Title = styled.h4`
   color: grey;
@@ -125,6 +135,9 @@ const LoadingWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
+const TableSpacer = styled.div`
+  margin-top: 40px;
+`;
 
 export function Forecasting() {
   // Global State
@@ -157,148 +170,57 @@ export function Forecasting() {
   // React Queries
   const {
     data: timelines,
-    isLoading: timelinesLoading,
-    error: timelinesError
+    // isLoading: timelinesLoading,
+    // error: timelinesError
   } = useTimelines(historicalPathParams);
 
+  const {
+    data: timelineQuery,
+    isLoading: timelineQueryLoading,
+    // error: timelineQueryError
+  } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
+  const timelineQueryData = useMemoLineChartData(timelineQuery, viewBy, selectedCompetence);
+  // const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence);
 
-  // TODO: move this to the queries file
-  const { data, isLoading, error } = useQuery<any, any>(
-    ['historicalData', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
-    () => selectedTimeline && selectedCompetence && wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
-      pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: selectedTimeline.id},
-      body: {
-        startDate: historicalQueryParams.startDateTime,
-        endDate: historicalQueryParams.endDateTime,
-        interval: viewBy,
-        /**
-         * TODO: right now we are selecting only one competency which the user has selected and is in state
-         * however the api can support mulitple as an array but testing would need to be done to see what is more
-         * efficient..   getting all competencies or just the one your interested in?
-         */
-        competencyIds: [
-          selectedCompetence
-        ],
-        channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
-        directions: ['inbound'],
-        includeAdjustments: true,
-        includeForecast: true,
-      }
-    }),
-    {
-      refetchOnWindowFocus: false,
-      // enabled: false
-    }
-  );
+  const {
+    data: timelineAdjustments,
+    // isLoading: timelineAdjustmentsLoading,
+    // error: timelineAdjustmentsError
+  } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline, viewBy);
+  const memoAdjustments = useMemoTimelineAdjustments(timelineAdjustments, selectedCompetence);
 
+  console.log(memoAdjustments);
 
+  // const {
+  //   data: newDdjustment,
+  //   isLoading: newAdjustmentLoading,
+  //   error: newAdjustmentError,
+  //   refetch: createNewAdjustment,
+  // } = useCreateAdjustment(historicalPathParams, viewBy, selectedCompetence);
 
-  const memoData = useMemoLineChartData(data, viewBy, selectedCompetence);
+  const now = DateTime.now();
+  const later = now.plus({days: 1});
 
-  // adjustments CRUD
-  // const { data: newAdjustment } = useQuery<any, any>(
-  //   ['newAdjustment', adjustment],
-  //   () => {
-  //     const { adjustmentOperation, adjustmentId, timestamp, value } = adjustment;
-  //     let adjustmentStartDate = DateTime.fromISO(timestamp), adjustmentEndDate;
-  //     if (intervalType === 'quarter-hour') { //Interval = day
-  //       adjustmentEndDate = adjustmentStartDate.plus({ minutes: 14, seconds: 59 });
-  //     } else if (intervalType === 'hour') {  //Interval = twoDays
-  //       adjustmentEndDate = adjustmentStartDate.plus({ minutes: 59, seconds: 59 });
-  //     } else {  //Interval = week || dateRange
-  //       adjustmentEndDate = adjustmentStartDate.plus({ hours: 23, minutes: 59, seconds: 59 });
-  //     }
-  //     if (adjustmentOperation === 'post' && value !== '') {
-  //       return wfm.forecasting.api.post_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
-  //         pathParams: {
-  //           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
-  //         },
-  //         body: {
-  //           startDateTime: adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
-  //           endDateTime: adjustmentEndDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
-  //           intervalLength: intervalType,
-  //           competency: selectedCompetence,
-  //           channel: 'voice',
-  //           direction: 'inbound',
-  //           numberOfIntervals: 1,
-  //           type: 'percentage',
-  //           value: value
-  //         }
-  //       })
-  //     } else if (adjustmentOperation === 'update') {
-  //       return wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({
-  //         pathParams: {
-  //           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
-  //         },
-  //         body: {
-  //           startDateTime: adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
-  //           endDateTime: adjustmentEndDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
-  //           intervalLength: intervalType,
-  //           competency: selectedCompetence,
-  //           channel: 'voice',
-  //           direction: 'inbound',
-  //           numberOfIntervals: 1,
-  //           type: 'percentage',
-  //           value: value
-  //         }
-  //       });
-  //     } else if (adjustmentOperation === 'delete' && adjustmentId) {
-  //       return wfm.forecasting.api.delete_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment({
-  //         pathParams: {
-  //           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
-  //         }
-  //       });
-  //     }
-  //   },
-  //   {
-  //     refetchOnWindowFocus: true
-  //   }
-  // );
+  const temp = () => {
+    console.log('View By, ', viewBy)
+    createAdjustment(historicalPathParams, viewBy, selectedCompetence, {
+      adjustmentStartDate: now.startOf('hour'),
+      adjustmentEndDate: later.endOf('hour'),
+      value: 4,
+    })
+  };
 
-  // GET adjustments
-  // const { data: allAdjustments } = useQuery<any, any>(
-  //   ['adjustmentsData', historicalPathParams, selectedTimeline, selectedCompetence, viewBy, tableData],
-  //   () => {
-  //     const allAdjustmentStartDate = DateTime.fromISO(historicalQueryParams.startDateTime)
-  //       .startOf('day').toISO({ includeOffset: intervalType !== 'quarter-hour' ? true : false });
-  //     const allAdjustmentEndDate = DateTime.fromISO(historicalQueryParams.endDateTime)
-  //       .endOf('day').toISO({ includeOffset: intervalType !== 'quarter-hour' ? true : false });
-  //     return wfm.forecasting.api.get_all_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
-  //       pathParams: {
-  //         tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
-  //       },
-  //       queryString: {
-  //         interval: intervalType,
-  //         channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
-  //         directions: ['inbound'],
-  //         startDateTime: allAdjustmentStartDate,
-  //         endDateTime: allAdjustmentEndDate
-  //       }
-  //     })
-  //   },
-  //   {
-  //     refetchOnWindowFocus: true
-  //   }
-  // ) || [];
-
+  // TODO: looks like may need to pass in timeline info to get all adjustments stuff???
+  // will be able to tell once data comes back on the adjustments section
   // useEffect(() => {
   //   if (allAdjustments?.data) {
   //    // setAdjustments(allAdjustments.data.find(({ name }: any) => name === 'notebook_temp' || "Ruben's"));
   //   }
   // }, [allAdjustments]);
 
-  // const memoAdjustments = useMemo(() =>
-  //   allAdjustments
-  //     ?.data
-  //     ?.filter(({ competency }: any) => competency === selectedCompetence)
-  //     .map(({ startDateTime, id, value }: any) => ({
-  //       startDateTime: startDateTime,
-  //       id: id,
-  //       adjustment: value
-  //     })) || [], [allAdjustments, selectedCompetence]);
 
 
-      // TODO: should instead be stored in state this way
+  // TODO: should instead be stored in state this way
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
     label: `${startDate} - ${endDate}`,
     startDate,
@@ -457,12 +379,12 @@ export function Forecasting() {
 
       <ChartsWrapper>
         <Title> Forecasted Interaction Volume </Title>
-        {isLoading ?
+        {timelineQueryLoading ?
           <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
           <LineChart
             chartName="forecast"
             intervalLength={intervalLength}
-            data={memoData}
+            data={timelineQueryData}
             xDataKey={linechartData.xDataKey}
             dataKeys={linechartData.dataKeys}
           // intervalType={intervalType}
@@ -496,15 +418,44 @@ export function Forecasting() {
             />
           </span>
         </TableFilters>
-        <div style={{ marginTop: '40px' }}>
+        <TableSpacer>
           <Table
             themeVariant='forecast'
-            columnDefenitions={['col16', 'col17', 'col18', 'col19', 'col20', 'col21', 'col22']}
-            // tableData={tableData}
-            tableData={[]}
+            columnDefenitions={['timestamp', 'nco', 'adjustment2', 'anco', 'aht', 'adjustment', 'aaht']}
+            tableData={[
+              {
+                timestamp: '7:00 AM',
+                nco: '10',
+                adjustment2: '20',
+                anco: '30',
+                aht: '40',
+                adjustment: '50',
+                aaht: '60',
+              },
+              {
+                timestamp: '8:00 AM',
+                nco: '10',
+                adjustment2: '20',
+                anco: '30',
+                aht: '40',
+                adjustment: '50',
+                aaht: '60',
+              },
+              {
+                timestamp: '9:00 AM',
+                nco: '10',
+                adjustment2: '20',
+                anco: '30',
+                aht: '40',
+                adjustment: '50',
+                aaht: '60',
+              },
+            ]}
+            // tableData={tableData.day}
             viewMode={viewBy}
           />
-        </div>
+        </TableSpacer>
       </TableWrapper>
+      <button onClick={temp} >Apply adjustment now</button>
     </>)
 };

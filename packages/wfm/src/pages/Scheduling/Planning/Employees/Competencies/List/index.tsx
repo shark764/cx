@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { Message } from '@cx/components/Message';
 import { TableContainer, DataTable } from '@cx/components/DataTable';
@@ -9,11 +9,9 @@ import { Dot } from '@cx/components/Icons/Dot';
 import { Label, Title, Wrapper } from '@cx/components/Styled';
 import { getCompetencies, humanizeQueue } from '@cx/fakedata/planningEmployeesCompetencies';
 import { IQuery } from '@cx/types';
+// @ts-ignore
 import { DateTime } from 'luxon';
 import { DatePicker } from '@cx/components/DateTime/DatePicker';
-import { Play } from '@cx/components/Icons/Play';
-import { addDays } from '@cx/utilities/date';
-import { Calendar } from '@cx/components/Icons/Calendar';
 import { useFormState } from 'context/RowSelection';
 import { Legend } from './Legend';
 
@@ -36,20 +34,6 @@ const Toolbar = styled.div`
   gap: 8px;
   grid-template-columns: max-content min-content min-content;
 `;
-const DatePickerContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: 1rem;
-`;
-const PlayIcon = styled(Play)`
-  margin: auto;
-  line-height: normal;
-`;
-const CalendarIcon = styled(Calendar)`
-  margin: auto;
-  line-height: normal;
-  margin-left: 0.5rem;
-`;
 
 const Header = styled.div`
   display: flex;
@@ -57,15 +41,12 @@ const Header = styled.div`
 `;
 
 export function List() {
-  const theme: any = useTheme();
 
   const {
-    selectedRow: [selected],
     setFormState,
   }: any = useFormState();
 
   const [calDate, setCalDate] = React.useState(new Date());
-  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
 
   const fromDate = DateTime.fromJSDate(calDate)
     .startOf('day')
@@ -133,7 +114,7 @@ export function List() {
       return [...staticColumns, ...dynamicColumns];
     }
     return staticColumns;
-  }, [isLoading, data, selected]);
+  }, [isLoading, data]);
 
   const memoData = React.useMemo(() => {
     if (isLoading && !data) {
@@ -144,10 +125,6 @@ export function List() {
 
   const onTableRowSelection = ({ original }: any) => {
     setFormState(original, true);
-  };
-
-  const handleManuallyAddDays = (days: number) => {
-    setCalDate((currentDate) => addDays(currentDate, days));
   };
 
   if (error) {

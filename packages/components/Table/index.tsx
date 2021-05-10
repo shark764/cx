@@ -70,13 +70,13 @@ const TableBody = styled.div<TableColumnInfo>`
 
 export const Table: React.VFC<TableProps> = ({
   tableData,
-  columnDefenitions = ['col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7'],
+  columnDefenitions,
   themeVariant,
   viewMode,
 }) => {
   const gridTemplateColumns = defineGridTemplateColumns(columnDefenitions);
   const data = useMemo(() => tableData || [], [tableData]);
-  const columns = useMemo(() => defineColumns(columnDefenitions), [data]);
+  const columns = useMemo(() => defineColumns(columnDefenitions), [columnDefenitions]);
   const {
     getTableProps,
     headerGroups,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/store';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { useQuery } from 'react-query';
 import { useDivWidth } from '@cx/utilities/CustomHooks/useDivWidth';
 
@@ -12,6 +12,7 @@ import { BigCalendar } from '@cx/components/DateTime/BigCalendar';
 import { LoadSpinner } from '@cx/components/LoadSpinner';
 import { Wrapper } from '@cx/components/Styled';
 import { agentId, getAgentSchedule } from '@cx/fakedata/agentSchedule';
+// @ts-ignore
 import { DateTime } from 'luxon';
 import { IQuery } from '@cx/types';
 import { Footer } from './Footer';
@@ -46,10 +47,10 @@ const LoadingMessage = styled.span`
 
 export function AgentSchedule() {
   const displaySize = useSelector((state: RootState) => state.main.displaySize);
-  const theme: any = useTheme();
+  // const theme: any = useTheme();
 
   const [calDate, setCalDate] = React.useState(new Date());
-  const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
+  // const [datePickerIsOpen, setDatePickerIsOpen] = React.useState(false);
   const [calendarView, setCalendarView] = React.useState('week');
   const [ref, width] = useDivWidth();
   const [isMobile, setIsMobile] = React.useState(false);
