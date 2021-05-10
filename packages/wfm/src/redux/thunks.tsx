@@ -31,7 +31,8 @@ export function loadTheme() {
 export const fetchTenantCompetencies = () => {
   return async (dispatch: any, getState: any) => {
     const { forecasting: { historicalPathParams: { tenant_id } } } = getState();
-    const { data } = await wfm.planning.api.get_all_tenants_tenant_competencies({
+    // TODO:
+    const { data } = await wfm.planning.api.get_all_competencies_tenants_tenant_id_competencies({
       pathParams: { tenant_id },
     });
     // Set all global known competencies
@@ -46,7 +47,7 @@ export const fetchTenantCompetencies = () => {
 export const fetchForecastScenarios = (selectedTimeline: any) => {
   return async (dispatch: any, getState: any) => {
     const { forecasting: { historicalPathParams: { tenant_id } } } = getState();
-    const { data } = await wfm.forecasting.api.get_timeline_scenarios_tenants_tenant_forecasttimelines_forecast_timeline_scenarios({
+    const { data } = await wfm.forecasting.api.get_timeline_scenarios_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios({
       pathParams: { tenant_id: tenant_id, forecast_timeline_id: selectedTimeline.id },
     });
     dispatch(setScenarios(data));

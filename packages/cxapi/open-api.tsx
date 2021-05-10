@@ -47,14 +47,10 @@ export class OpenApi {
       ...functions,
       ...Object.entries(methods).reduce((functions, [action, methodDetails]: any) => ({
         ...functions,
-        [this.parseOperationId(methodDetails.operationId, action)]: this.apiFunctionBody(action, path)
+        [methodDetails.operationId]: this.apiFunctionBody(action, path)
       }), {})
     }), {})
 
-  }
-
-  parseOperationId(operationId: string, action: string): string {
-    return operationId.replace(/_id/g, '').replace(/__/g, '_').replace(`_${action}`,'');
   }
 
   parseSummary(summary: string): string {

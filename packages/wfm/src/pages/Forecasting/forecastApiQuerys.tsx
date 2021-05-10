@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 
 export const useTimelines = (historicalPathParams: any) => useQuery<any, any>(
   ['Timelines', historicalPathParams],
-  () => wfm.forecasting.api.get_all_tenants_tenant_forecasttimelines({
+  () => wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimelines({
     pathParams: { tenant_id: historicalPathParams.tenant_id },
   })
   .then(({data}: any) => ({
@@ -27,7 +27,7 @@ export const useTimelines = (historicalPathParams: any) => useQuery<any, any>(
 
 export const useTimelineQuery = (historicalPathParams: any, historicalQueryParams: any, selectedTimeline: any, selectedCompetence: any, viewBy: any) => useQuery<any, any>(
   ['Timeline Query', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
-  () => selectedTimeline && selectedCompetence && wfm.forecasting.api.timeline_series_queries_tenants_tenant_forecasttimelines_timeline_series_query({
+  () => selectedTimeline && selectedCompetence && wfm.forecasting.api.timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query({
     pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: selectedTimeline.id},
     body: {
       startDate: historicalQueryParams.startDateTime,
@@ -63,7 +63,7 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
     const allAdjustmentEndDate = DateTime.fromISO(historicalQueryParams.endDateTime)
       .endOf('day').toISO({ includeOffset: Boolean(viewBy !== 'quarter-hour') });
 
-    return wfm.forecasting.api.get_all_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
+    return wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments({
       pathParams: {
         tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
       },

@@ -1,15 +1,61 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "FastAPI",
+    "title": "CX WFM API (Agent, Planning, Admin)",
+    "description": "The purpose of this API is to provide endpoints\n    for working with agent-data and schedules in CxWFM.",
     "version": "0.1.0"
   },
   "paths": {
+    "/tenants/{tenant_id}/agents": {
+      "get": {
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Get Agents",
+        "description": "Retrieve agents.\n\nReturns all agents for the provided tenant.",
+        "operationId": "get_agents_tenants_tenant_id_agents",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tenants/{tenant_id}/agents/{agent_id}": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Agent",
         "description": "Retrieve a single agent.",
-        "operationId": "get_agent_tenants__tenant_id__agents__agent_id__get",
+        "operationId": "get_agent_tenants_tenant_id_agents_agent_id",
         "parameters": [
           {
             "required": true,
@@ -54,50 +100,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents": {
-      "get": {
-        "summary": "Get Agents",
-        "description": "Retrieve a single agent.",
-        "operationId": "get_agents_tenants__tenant_id__agents_get",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "title": "Tenant Id",
-              "type": "string",
-              "format": "uuid"
-            },
-            "name": "tenant_id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/tenants/{tenant_id}/agents/{agent_id}/address": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Address",
         "description": "Retrieve an agent's address.",
-        "operationId": "get_address_tenants__tenant_id__agents__agent_id__address_get",
+        "operationId": "get_address_tenants_tenant_id_agents_agent_id_address",
         "parameters": [
           {
             "required": true,
@@ -142,9 +152,12 @@
         }
       },
       "put": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Put Address",
         "description": "Add or update an agent's address.",
-        "operationId": "put_address_tenants__tenant_id__agents__agent_id__address_put",
+        "operationId": "put_address_tenants_tenant_id_agents_agent_id_address",
         "parameters": [
           {
             "required": true,
@@ -199,9 +212,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Delete Address",
         "description": "Delete an agent's address.",
-        "operationId": "delete_address_tenants__tenant_id__agents__agent_id__address_delete",
+        "operationId": "delete_address_tenants_tenant_id_agents_agent_id_address",
         "parameters": [
           {
             "required": true,
@@ -248,9 +264,12 @@
     },
     "/tenants/{tenant_id}/agents/{agent_id}/employment": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Employment",
         "description": "Retrieve an agent's employment.",
-        "operationId": "get_employment_tenants__tenant_id__agents__agent_id__employment_get",
+        "operationId": "get_employment_tenants_tenant_id_agents_agent_id_employment",
         "parameters": [
           {
             "required": true,
@@ -295,9 +314,12 @@
         }
       },
       "put": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Put Employment",
         "description": "Add or update an agent's employment.",
-        "operationId": "put_employment_tenants__tenant_id__agents__agent_id__employment_put",
+        "operationId": "put_employment_tenants_tenant_id_agents_agent_id_employment",
         "parameters": [
           {
             "required": true,
@@ -352,9 +374,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Delete Employment",
         "description": "Delete an agent's employment.",
-        "operationId": "delete_employment_tenants__tenant_id__agents__agent_id__employment_delete",
+        "operationId": "delete_employment_tenants_tenant_id_agents_agent_id_employment",
         "parameters": [
           {
             "required": true,
@@ -401,9 +426,12 @@
     },
     "/tenants/{tenant_id}/agents/{agent_id}/availability": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get All Availabilities",
-        "description": "Retrieve an agents availability patterns.",
-        "operationId": "get_all_availabilities_tenants__tenant_id__agents__agent_id__availability_get",
+        "description": "Retrieve all availability patterns assigned to an agent.",
+        "operationId": "get_all_availabilities_tenants_tenant_id_agents_agent_id_availability",
         "parameters": [
           {
             "required": true,
@@ -448,9 +476,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Post Availability",
-        "description": "Add an availability pattern to an agent.",
-        "operationId": "post_availability_tenants__tenant_id__agents__agent_id__availability_post",
+        "description": "Assign an availability pattern to an agent.\n\nAdds a new assignment of a availability pattern to an agent. Multiple\npatterns can be added per agent as long as the date-range\nwhen for which it is assigned do not overlap. Treated as a closed interval.",
+        "operationId": "post_availability_tenants_tenant_id_agents_agent_id_availability",
         "parameters": [
           {
             "required": true,
@@ -507,9 +538,12 @@
     },
     "/tenants/{tenant_id}/agents/{agent_id}/availability/{id}": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Availability",
-        "description": "Retrieve a specific agents availability pattern.",
-        "operationId": "get_availability_tenants__tenant_id__agents__agent_id__availability__id__get",
+        "description": "Retrieve a specific assignment of an availability pattern to an agent.",
+        "operationId": "get_availability_tenants_tenant_id_agents_agent_id_availability_id",
         "parameters": [
           {
             "required": true,
@@ -564,9 +598,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Delete Availability",
-        "description": "Delete a specific agent availability pattern for an agent.",
-        "operationId": "delete_availability_tenants__tenant_id__agents__agent_id__availability__id__delete",
+        "description": "Remove an assigned availability pattern for an agent.",
+        "operationId": "delete_availability_tenants_tenant_id_agents_agent_id_availability_id",
         "parameters": [
           {
             "required": true,
@@ -623,9 +660,12 @@
     },
     "/tenants/{tenant_id}/agents/{agent_id}/restrictions": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Assigned Restriction Sets",
         "description": "Get all restriction sets assigned to an agent.",
-        "operationId": "get_assigned_restriction_sets_tenants__tenant_id__agents__agent_id__restrictions_get",
+        "operationId": "get_assigned_restriction_sets_tenants_tenant_id_agents_agent_id_restrictions",
         "parameters": [
           {
             "required": true,
@@ -676,9 +716,12 @@
         }
       },
       "post": {
-        "summary": "Post Restriction Set",
-        "description": "Assign a restriction set to an agent.",
-        "operationId": "post_restriction_set_tenants__tenant_id__agents__agent_id__restrictions_post",
+        "tags": [
+          "Agent"
+        ],
+        "summary": "Post Assigned Restriction Set",
+        "description": "Assign a restriction set to an agent.\n\nA restriction set can only be added if it does not overlap\nin time with an existing restriction set.",
+        "operationId": "post_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions",
         "parameters": [
           {
             "required": true,
@@ -737,9 +780,12 @@
     },
     "/tenants/{tenant_id}/agents/{agent_id}/restrictions/{assigned_restriction_set_id}": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Assigned Restriction Set",
-        "description": "Get all restriction sets assigned to an agent.",
-        "operationId": "get_assigned_restriction_set_tenants__tenant_id__agents__agent_id__restrictions__assigned_restriction_set_id__get",
+        "description": "Retrieve a single assigned restriction set.",
+        "operationId": "get_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -796,9 +842,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Delete Assigned Restriction Set",
         "description": "Remove an assigned restriction set.",
-        "operationId": "delete_assigned_restriction_set_tenants__tenant_id__agents__agent_id__restrictions__assigned_restriction_set_id__delete",
+        "operationId": "delete_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -853,9 +902,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Patch Assigned Restriction Set",
-        "description": "Get all restriction sets assigned to an agent.",
-        "operationId": "patch_assigned_restriction_set_tenants__tenant_id__agents__agent_id__restrictions__assigned_restriction_set_id__patch",
+        "description": "Update a single assigned restriction set.",
+        "operationId": "patch_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -924,9 +976,12 @@
     },
     "/tenants/{tenant_id}/agents/{agent_id}/competencies": {
       "get": {
+        "tags": [
+          "Agent"
+        ],
         "summary": "Get Competencies",
         "description": "Get all competencies associated with an agent.",
-        "operationId": "get_competencies_tenants__tenant_id__agents__agent_id__competencies_get",
+        "operationId": "get_competencies_tenants_tenant_id_agents_agent_id_competencies",
         "parameters": [
           {
             "required": true,
@@ -977,11 +1032,56 @@
         }
       }
     },
+    "/tenants/{tenant_id}/availabilitypatterns": {
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Get All",
+        "description": "Retrieve all availabilities of one tenant.",
+        "operationId": "get_all_tenants_tenant_id_availabilitypatterns",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tenants/{tenant_id}/availabilitypatterns/{availability_id}": {
       "get": {
-        "summary": "Get Availability",
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Get",
         "description": "Retrieve a single availability.",
-        "operationId": "get_availability_tenants__tenant_id__availabilitypatterns__availability_id__get",
+        "operationId": "get_tenants_tenant_id_availabilitypatterns_availability_id",
         "parameters": [
           {
             "required": true,
@@ -1026,50 +1126,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/availabilitypatterns": {
-      "get": {
-        "summary": "Get Availabilities",
-        "description": "Retrieve all availabilities of one tenant.",
-        "operationId": "get_availabilities_tenants__tenant_id__availabilitypatterns_get",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "title": "Tenant Id",
-              "type": "string",
-              "format": "uuid"
-            },
-            "name": "tenant_id",
-            "in": "path"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/tenants/{tenant_id}/availabilitypatterns/{availability_pattern_id}": {
       "put": {
-        "summary": "Put Availability Pattern",
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Put",
         "description": "Update an availability pattern.",
-        "operationId": "put_availability_pattern_tenants__tenant_id__availabilitypatterns__availability_pattern_id__put",
+        "operationId": "put_tenants_tenant_id_availabilitypatterns_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -1120,9 +1184,12 @@
         }
       },
       "delete": {
-        "summary": "Delete Availability Pattern",
+        "tags": [
+          "Availability"
+        ],
+        "summary": "Delete",
         "description": "Delete an availability pattern.",
-        "operationId": "delete_availability_pattern_tenants__tenant_id__availabilitypatterns__availability_pattern_id__delete",
+        "operationId": "delete_tenants_tenant_id_availabilitypatterns_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -1169,9 +1236,12 @@
     },
     "/tenants/{tenant_id}/plans": {
       "get": {
+        "tags": [
+          "Plans"
+        ],
         "summary": "Get All",
         "description": "Retrieve a all plans in a tenant.",
-        "operationId": "get_all_tenants__tenant_id__plans_get",
+        "operationId": "get_all_tenants_tenant_id_plans",
         "parameters": [
           {
             "required": true,
@@ -1221,9 +1291,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Plans"
+        ],
         "summary": "Post",
         "description": "Add a new plan.",
-        "operationId": "post_tenants__tenant_id__plans_post",
+        "operationId": "post_tenants_tenant_id_plans",
         "parameters": [
           {
             "required": true,
@@ -1272,9 +1345,12 @@
     },
     "/tenants/{tenant_id}/plans/{plan_id}": {
       "get": {
+        "tags": [
+          "Plans"
+        ],
         "summary": "Get",
         "description": "Retrieve a single plan.",
-        "operationId": "get_tenants__tenant_id__plans__plan_id__get",
+        "operationId": "get_tenants_tenant_id_plans_plan_id",
         "parameters": [
           {
             "required": true,
@@ -1321,9 +1397,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Plans"
+        ],
         "summary": "Delete",
         "description": "Delete a plan.",
-        "operationId": "delete_tenants__tenant_id__plans__plan_id__delete",
+        "operationId": "delete_tenants_tenant_id_plans_plan_id",
         "parameters": [
           {
             "required": true,
@@ -1368,9 +1447,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Plans"
+        ],
         "summary": "Patch",
         "description": "Update a plan.",
-        "operationId": "patch_tenants__tenant_id__plans__plan_id__patch",
+        "operationId": "patch_tenants_tenant_id_plans_plan_id",
         "parameters": [
           {
             "required": true,
@@ -1429,9 +1511,12 @@
     },
     "/tenants/{tenant_id}/activities": {
       "get": {
+        "tags": [
+          "Activities"
+        ],
         "summary": "Get All",
         "description": "Retrieve all activities.",
-        "operationId": "get_all_tenants__tenant_id__activities_get",
+        "operationId": "get_all_tenants_tenant_id_activities",
         "parameters": [
           {
             "required": true,
@@ -1472,9 +1557,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Activities"
+        ],
         "summary": "Post",
-        "description": "Add a new activity.",
-        "operationId": "post_tenants__tenant_id__activities_post",
+        "description": "Create a new activity type.",
+        "operationId": "post_tenants_tenant_id_activities",
         "parameters": [
           {
             "required": true,
@@ -1523,9 +1611,12 @@
     },
     "/tenants/{tenant_id}/activities/{activity_id}": {
       "get": {
+        "tags": [
+          "Activities"
+        ],
         "summary": "Get",
         "description": "Get a single activity.",
-        "operationId": "get_tenants__tenant_id__activities__activity_id__get",
+        "operationId": "get_tenants_tenant_id_activities_activity_id",
         "parameters": [
           {
             "required": true,
@@ -1572,9 +1663,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Activities"
+        ],
         "summary": "Patch",
         "description": "Update a single activity.",
-        "operationId": "patch_tenants__tenant_id__activities__activity_id__patch",
+        "operationId": "patch_tenants_tenant_id_activities_activity_id",
         "parameters": [
           {
             "required": true,
@@ -1633,9 +1727,12 @@
     },
     "/tenants/{tenant_id}/plans/{plan_id}/schedules/query": {
       "post": {
+        "tags": [
+          "Schedules"
+        ],
         "summary": "Query",
-        "description": "Query schedules.",
-        "operationId": "query_tenants__tenant_id__plans__plan_id__schedules_query_post",
+        "description": "Query for schedules.\n\nReturns all schedules that covers the period that is provided in the query\n(if any).",
+        "operationId": "query_tenants_tenant_id_plans_plan_id_schedules_query",
         "parameters": [
           {
             "required": true,
@@ -1705,11 +1802,79 @@
         }
       }
     },
+    "/tenants/{tenant_id}/plans/{plan_id}/schedules/copy": {
+      "post": {
+        "tags": [
+          "Not implemented"
+        ],
+        "summary": "Copy",
+        "description": "Copy schedules from other plan.\n\nCopies the provided schedules from the source plan to this plan (target).\nAgents that have schedules in the target plan will have those overwritten\nunless the schedules are marked as locked. Schedules can only be copied\nfrom within the same schedule period.",
+        "operationId": "copy_tenants_tenant_id_plans_plan_id_schedules_copy",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCopyDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Failure, possible reasons:\n                  (If a failure occurs, no schedules are copied).\n\n                  * There are overlapping shifts with the previous or\n                  following schedule period in the target plan.\n                 "
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/tenants/{tenant_id}/plans/{plan_id}/schedules": {
       "get": {
+        "tags": [
+          "Schedules"
+        ],
         "summary": "Get All",
-        "description": "Get all schedules for a plan.",
-        "operationId": "get_all_tenants__tenant_id__plans__plan_id__schedules_get",
+        "description": "Retrieve all schedules for a plan.",
+        "operationId": "get_all_tenants_tenant_id_plans_plan_id_schedules",
         "parameters": [
           {
             "required": true,
@@ -1769,9 +1934,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Schedules"
+        ],
         "summary": "Post",
-        "description": "Add a new schedule.",
-        "operationId": "post_tenants__tenant_id__plans__plan_id__schedules_post",
+        "description": "Add a new set of schedules.",
+        "operationId": "post_tenants_tenant_id_plans_plan_id_schedules",
         "parameters": [
           {
             "required": true,
@@ -1823,6 +1991,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure, possible reasons:\n\n                    * Missing or invalid `schedulePeriodId`\n                    * See failures for `POST` shifts\n                 "
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -1838,9 +2009,12 @@
     },
     "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}": {
       "get": {
+        "tags": [
+          "Schedules"
+        ],
         "summary": "Get",
-        "description": "Get a single schedule.",
-        "operationId": "get_tenants__tenant_id__plans__plan_id__schedules__schedule_id__get",
+        "description": "Retrieve a single schedule.",
+        "operationId": "get_tenants_tenant_id_plans_plan_id_schedules_schedule_id",
         "parameters": [
           {
             "required": true,
@@ -1897,9 +2071,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Schedules"
+        ],
         "summary": "Delete",
         "description": "Soft delete a schedule.",
-        "operationId": "delete_tenants__tenant_id__plans__plan_id__schedules__schedule_id__delete",
+        "operationId": "delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id",
         "parameters": [
           {
             "required": true,
@@ -1954,9 +2131,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Schedules"
+        ],
         "summary": "Patch",
         "description": "Update a single schedule.",
-        "operationId": "patch_tenants__tenant_id__plans__plan_id__schedules__schedule_id__patch",
+        "operationId": "patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id",
         "parameters": [
           {
             "required": true,
@@ -2010,6 +2190,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure, see `POST`."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -2025,9 +2208,12 @@
     },
     "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts": {
       "get": {
+        "tags": [
+          "Shifts"
+        ],
         "summary": "Get All",
-        "description": "Retrieve all shifts in a schedule.",
-        "operationId": "get_all_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts_get",
+        "description": "Retrieve all shifts for a schedule.",
+        "operationId": "get_all_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts",
         "parameters": [
           {
             "required": true,
@@ -2097,9 +2283,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Shifts"
+        ],
         "summary": "Post",
-        "description": "Handle creation of new shifts.",
-        "operationId": "post_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts_post",
+        "description": "Add a new set of shifts to a schedule.",
+        "operationId": "post_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts",
         "parameters": [
           {
             "required": true,
@@ -2161,6 +2350,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure reasons:\n\n                * activity start time must be before end time\n                * activities must follow sequentially\n                * shifts must contain at least one activity\n                * there must be at least one activity in a shift\n                 "
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -2176,9 +2368,12 @@
     },
     "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts/{shift_id}": {
       "get": {
+        "tags": [
+          "Shifts"
+        ],
         "summary": "Get",
         "description": "Retrieve a single shift.",
-        "operationId": "get_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts__shift_id__get",
+        "operationId": "get_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id",
         "parameters": [
           {
             "required": true,
@@ -2245,9 +2440,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Shifts"
+        ],
         "summary": "Delete",
         "description": "Soft delete a shift.",
-        "operationId": "delete_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts__shift_id__delete",
+        "operationId": "delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id",
         "parameters": [
           {
             "required": true,
@@ -2312,9 +2510,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Shifts"
+        ],
         "summary": "Patch",
         "description": "Update a single shift.",
-        "operationId": "patch_tenants__tenant_id__plans__plan_id__schedules__schedule_id__shifts__shift_id__patch",
+        "operationId": "patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id",
         "parameters": [
           {
             "required": true,
@@ -2378,6 +2579,9 @@
               }
             }
           },
+          "400": {
+            "description": "See failure reasons for `POST`"
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -2391,11 +2595,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/restrictions/breaksettings": {
+    "/tenants/{tenant_id}/breaksettings": {
       "get": {
+        "tags": [
+          "Break settings"
+        ],
         "summary": "Get All",
         "description": "Retrieve all break settings for a tenant.",
-        "operationId": "get_all_tenants__tenant_id__restrictions_breaksettings_get",
+        "operationId": "get_all_tenants_tenant_id_breaksettings",
         "parameters": [
           {
             "required": true,
@@ -2414,7 +2621,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Restrictions Breaksettings Get",
+                  "title": "Response Get All Tenants  Tenant Id  Breaksettings Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/BreakSettingsDTO"
@@ -2436,9 +2643,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Break settings"
+        ],
         "summary": "Post",
         "description": "Add a new break setting to a tenant.",
-        "operationId": "post_tenants__tenant_id__restrictions_breaksettings_post",
+        "operationId": "post_tenants_tenant_id_breaksettings",
         "parameters": [
           {
             "required": true,
@@ -2485,11 +2695,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/restrictions/breaksettings/{breaksetting_id}": {
+    "/tenants/{tenant_id}/breaksettings/{breaksetting_id}": {
       "get": {
+        "tags": [
+          "Break settings"
+        ],
         "summary": "Get",
         "description": "Retrieve a single break setting.",
-        "operationId": "get_tenants__tenant_id__restrictions_breaksettings__breaksetting_id__get",
+        "operationId": "get_tenants_tenant_id_breaksettings_breaksetting_id",
         "parameters": [
           {
             "required": true,
@@ -2536,9 +2749,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Break settings"
+        ],
         "summary": "Delete",
         "description": "Delete a single break setting.",
-        "operationId": "delete_tenants__tenant_id__restrictions_breaksettings__breaksetting_id__delete",
+        "operationId": "delete_tenants_tenant_id_breaksettings_breaksetting_id",
         "parameters": [
           {
             "required": true,
@@ -2583,9 +2799,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Break settings"
+        ],
         "summary": "Patch",
         "description": "Update single breaksetting.",
-        "operationId": "patch_tenants__tenant_id__restrictions_breaksettings__breaksetting_id__patch",
+        "operationId": "patch_tenants_tenant_id_breaksettings_breaksetting_id",
         "parameters": [
           {
             "required": true,
@@ -2646,7 +2865,7 @@
       "get": {
         "summary": "Get Status",
         "description": "Handle healthcheck.",
-        "operationId": "get_status_status_get",
+        "operationId": "get_status_status",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -2661,9 +2880,12 @@
     },
     "/tenants/{tenant_id}/restrictionsets": {
       "get": {
+        "tags": [
+          "Restrictions"
+        ],
         "summary": "Get All",
         "description": "Retrieve all Restriction sets.",
-        "operationId": "get_all_tenants__tenant_id__restrictionsets_get",
+        "operationId": "get_all_tenants_tenant_id_restrictionsets",
         "parameters": [
           {
             "required": true,
@@ -2704,9 +2926,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Restrictions"
+        ],
         "summary": "Post",
-        "description": "Add new restriction set.",
-        "operationId": "post_tenants__tenant_id__restrictionsets_post",
+        "description": "Add a new restriction set.",
+        "operationId": "post_tenants_tenant_id_restrictionsets",
         "parameters": [
           {
             "required": true,
@@ -2755,9 +2980,12 @@
     },
     "/tenants/{tenant_id}/restrictionsets/{restriction_set_id}": {
       "get": {
+        "tags": [
+          "Restrictions"
+        ],
         "summary": "Get",
         "description": "Retrieve a single restriction set.",
-        "operationId": "get_tenants__tenant_id__restrictionsets__restriction_set_id__get",
+        "operationId": "get_tenants_tenant_id_restrictionsets_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -2804,9 +3032,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Restrictions"
+        ],
         "summary": "Delete",
         "description": "Delete a single restriction set.",
-        "operationId": "delete_tenants__tenant_id__restrictionsets__restriction_set_id__delete",
+        "operationId": "delete_tenants_tenant_id_restrictionsets_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -2851,9 +3082,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Restrictions"
+        ],
         "summary": "Patch",
         "description": "Update a single restriction set.",
-        "operationId": "patch_tenants__tenant_id__restrictionsets__restriction_set_id__patch",
+        "operationId": "patch_tenants_tenant_id_restrictionsets_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -2912,9 +3146,12 @@
     },
     "/tenants/{tenant_id}/scheduleperiods": {
       "get": {
+        "tags": [
+          "Schedule Period"
+        ],
         "summary": "Get All",
         "description": "Retrieve all schedule periods.",
-        "operationId": "get_all_tenants__tenant_id__scheduleperiods_get",
+        "operationId": "get_all_tenants_tenant_id_scheduleperiods",
         "parameters": [
           {
             "required": true,
@@ -2955,9 +3192,12 @@
         }
       },
       "post": {
+        "tags": [
+          "Schedule Period"
+        ],
         "summary": "Post",
         "description": "Add a new schedule period.",
-        "operationId": "post_tenants__tenant_id__scheduleperiods_post",
+        "operationId": "post_tenants_tenant_id_scheduleperiods",
         "parameters": [
           {
             "required": true,
@@ -2991,6 +3231,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure. Possible reasons are:\n\n                * The date-range overlaps with another SchedulePeriod.\n                * The name is not unique.\n             "
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -3006,9 +3249,12 @@
     },
     "/tenants/{tenant_id}/scheduleperiods/{id}": {
       "get": {
+        "tags": [
+          "Schedule Period"
+        ],
         "summary": "Get",
         "description": "Retrieve a single schedule period.",
-        "operationId": "get_tenants__tenant_id__scheduleperiods__id__get",
+        "operationId": "get_tenants_tenant_id_scheduleperiods_id",
         "parameters": [
           {
             "required": true,
@@ -3055,9 +3301,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Schedule Period"
+        ],
         "summary": "Delete",
         "description": "Delete a single schedule period.",
-        "operationId": "delete_tenants__tenant_id__scheduleperiods__id__delete",
+        "operationId": "delete_tenants_tenant_id_scheduleperiods_id",
         "parameters": [
           {
             "required": true,
@@ -3089,6 +3338,9 @@
               }
             }
           },
+          "400": {
+            "description": "Possible reasons:\n\n                    * There are schedules associated with the schedule period.\n                  "
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -3102,9 +3354,12 @@
         }
       },
       "patch": {
+        "tags": [
+          "Schedule Period"
+        ],
         "summary": "Patch",
         "description": "Update an existing schedule period.",
-        "operationId": "patch_tenants__tenant_id__scheduleperiods__id__patch",
+        "operationId": "patch_tenants_tenant_id_scheduleperiods_id",
         "parameters": [
           {
             "required": true,
@@ -3148,6 +3403,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure, see `POST` for details."
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -3163,9 +3421,12 @@
     },
     "/tenants/{tenant_id}/plans/{plan_id}/optimization": {
       "get": {
+        "tags": [
+          "Optimization"
+        ],
         "summary": "Get Optimization",
-        "description": "Get current optimization.",
-        "operationId": "get_optimization_tenants__tenant_id__plans__plan_id__optimization_get",
+        "description": "Get the current optimization.",
+        "operationId": "get_optimization_tenants_tenant_id_plans_plan_id_optimization",
         "parameters": [
           {
             "required": true,
@@ -3212,9 +3473,12 @@
         }
       },
       "put": {
+        "tags": [
+          "Optimization"
+        ],
         "summary": "Put Optimization",
-        "description": "Update current optimization.",
-        "operationId": "put_optimization_tenants__tenant_id__plans__plan_id__optimization_put",
+        "description": "Start the current optimization.",
+        "operationId": "put_optimization_tenants_tenant_id_plans_plan_id_optimization",
         "parameters": [
           {
             "required": true,
@@ -3258,6 +3522,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure reasons:\n\n                    * Cannot initiate a new optimization while there is one\n                    running or pending.\n                    * Cannot optimize the official plan, check the plan id.\n            "
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -3271,9 +3538,12 @@
         }
       },
       "delete": {
+        "tags": [
+          "Optimization"
+        ],
         "summary": "Delete Optimization",
-        "description": "Delete current optimization.",
-        "operationId": "delete_optimization_tenants__tenant_id__plans__plan_id__optimization_delete",
+        "description": "Cancel the current optimization.\n\nDeleting an optimization will not remove the entity itself or the resulting\nschedules. The optimization run will continue to run to end but the result\nwill not be used in the schedules.",
+        "operationId": "delete_optimization_tenants_tenant_id_plans_plan_id_optimization",
         "parameters": [
           {
             "required": true,
@@ -3322,9 +3592,12 @@
     },
     "/tenants/{tenant_id}/competencies": {
       "get": {
-        "summary": "Get All",
+        "tags": [
+          "Competency"
+        ],
+        "summary": "Get All Competencies",
         "description": "Retrieve all competencies for a tenant.",
-        "operationId": "get_all_tenants__tenant_id__competencies_get",
+        "operationId": "get_all_competencies_tenants_tenant_id_competencies",
         "parameters": [
           {
             "required": true,
@@ -3343,7 +3616,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Competencies Get",
+                  "title": "Response Get All Competencies Tenants  Tenant Id  Competencies Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/CompetencyDTO"
@@ -3367,9 +3640,12 @@
     },
     "/tenants/{tenant_id}/competencies/{competency_id}/agents": {
       "get": {
-        "summary": "Get Agent",
+        "tags": [
+          "Competency"
+        ],
+        "summary": "Get Agents",
         "description": "Retrieve all agents associated with a competency.",
-        "operationId": "get_agent_tenants__tenant_id__competencies__competency_id__agents_get",
+        "operationId": "get_agents_tenants_tenant_id_competencies_competency_id_agents",
         "parameters": [
           {
             "required": true,
@@ -3408,6 +3684,89 @@
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenants/{tenant_id}/plans/{plan_id}/simulation": {
+      "post": {
+        "tags": [
+          "Simulation"
+        ],
+        "summary": "Post Simulation",
+        "description": "Route to create a simulation.",
+        "operationId": "post_simulation_tenants_tenant_id_plans_plan_id_simulation",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tenant Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "tenant_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Plan Id",
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": "plan_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure reasons:\n              * Only agents or competencies can be provided, not both.\n              "
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/changelog.md": {
+      "get": {
+        "summary": " Get Changelog",
+        "operationId": "_get_changelog_changelog.md",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           }
@@ -3547,6 +3906,53 @@
         },
         "description": "Links an agent to an availability."
       },
+      "AgentOccupancyLimit": {
+        "title": "AgentOccupancyLimit",
+        "required": [
+          "limit",
+          "numberOfAgents"
+        ],
+        "type": "object",
+        "properties": {
+          "limit": {
+            "title": "Limit",
+            "maximum": 1,
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "numberOfAgents": {
+            "title": "Numberofagents",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "description": "Contain data for how many agents are above or below the limit."
+      },
+      "AgentResult": {
+        "title": "AgentResult",
+        "required": [
+          "id",
+          "occupancy"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "occupancy": {
+            "title": "Occupancy",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "description": "Simulation result for one agent."
+      },
       "AssignedRestrictionSetDTO": {
         "title": "AssignedRestrictionSetDTO",
         "required": [
@@ -3618,8 +4024,8 @@
           },
           "dayNumber": {
             "title": "Daynumber",
-            "exclusiveMaximum": 7.0,
-            "exclusiveMinimum": -1.0,
+            "exclusiveMaximum": 7,
+            "exclusiveMinimum": -1,
             "type": "integer"
           },
           "weekNumber": {
@@ -3789,11 +4195,24 @@
         },
         "description": "DTO-model for breaksettings updates."
       },
+      "ChannelType": {
+        "title": "ChannelType",
+        "enum": [
+          "voice",
+          "messaging",
+          "sms",
+          "email",
+          "work-item"
+        ],
+        "type": "string",
+        "description": "Interaction types supported by CxEngage."
+      },
       "CompetencyDTO": {
         "title": "CompetencyDTO",
         "required": [
           "name",
-          "type"
+          "type",
+          "active"
         ],
         "type": "object",
         "properties": {
@@ -3808,9 +4227,61 @@
           },
           "type": {
             "$ref": "#/components/schemas/CompetencyType"
+          },
+          "active": {
+            "title": "Active",
+            "type": "boolean"
           }
         },
         "description": "A DTO model used to return the dto object."
+      },
+      "CompetencyResult": {
+        "title": "CompetencyResult",
+        "required": [
+          "id",
+          "channelType",
+          "backlog",
+          "handledWithinSla",
+          "handled",
+          "abandons"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "channelType": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "backlog": {
+            "title": "Backlog",
+            "type": "integer"
+          },
+          "handledWithinSla": {
+            "title": "Handledwithinsla",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "handled": {
+            "title": "Handled",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "abandons": {
+            "title": "Abandons",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "description": "Simulation result for one competency and channel type.\n\nThe competency is queue based."
       },
       "CompetencyType": {
         "title": "CompetencyType",
@@ -3836,7 +4307,7 @@
           },
           "hourlySalary": {
             "title": "Hourlysalary",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "number"
           },
           "timezone": {
@@ -3966,60 +4437,60 @@
           },
           "agreedWeeklyHours": {
             "title": "Agreedweeklyhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "minHoursWeek": {
             "title": "Minhoursweek",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxHoursWeek": {
             "title": "Maxhoursweek",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "agreedDaysPerWeek": {
             "title": "Agreeddaysperweek",
-            "maximum": 7.0,
-            "minimum": 1.0,
+            "maximum": 7,
+            "minimum": 1,
             "type": "integer"
           },
           "minDaysPerWeek": {
             "title": "Mindaysperweek",
-            "maximum": 6.0,
-            "minimum": 0.0,
+            "maximum": 6,
+            "minimum": 0,
             "type": "integer"
           },
           "maxDaysPerWeek": {
             "title": "Maxdaysperweek",
-            "maximum": 7.0,
-            "minimum": 1.0,
+            "maximum": 7,
+            "minimum": 1,
             "type": "integer"
           },
           "minShiftLengthHours": {
             "title": "Minshiftlengthhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxShiftLengthHours": {
             "title": "Maxshiftlengthhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxConsecutiveWorkDays": {
             "title": "Maxconsecutiveworkdays",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "minHoursNightRest": {
             "title": "Minhoursnightrest",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxConsecutiveWeekends": {
             "title": "Maxconsecutiveweekends",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "type": "integer"
           }
         },
@@ -4162,60 +4633,60 @@
           },
           "agreedWeeklyHours": {
             "title": "Agreedweeklyhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "minHoursWeek": {
             "title": "Minhoursweek",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxHoursWeek": {
             "title": "Maxhoursweek",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "agreedDaysPerWeek": {
             "title": "Agreeddaysperweek",
-            "maximum": 7.0,
-            "minimum": 1.0,
+            "maximum": 7,
+            "minimum": 1,
             "type": "integer"
           },
           "minDaysPerWeek": {
             "title": "Mindaysperweek",
-            "maximum": 6.0,
-            "minimum": 0.0,
+            "maximum": 6,
+            "minimum": 0,
             "type": "integer"
           },
           "maxDaysPerWeek": {
             "title": "Maxdaysperweek",
-            "maximum": 7.0,
-            "minimum": 1.0,
+            "maximum": 7,
+            "minimum": 1,
             "type": "integer"
           },
           "minShiftLengthHours": {
             "title": "Minshiftlengthhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxShiftLengthHours": {
             "title": "Maxshiftlengthhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxConsecutiveWorkDays": {
             "title": "Maxconsecutiveworkdays",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "minHoursNightRest": {
             "title": "Minhoursnightrest",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxConsecutiveWeekends": {
             "title": "Maxconsecutiveweekends",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "type": "integer"
           },
           "id": {
@@ -4246,64 +4717,101 @@
           },
           "agreedWeeklyHours": {
             "title": "Agreedweeklyhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "minHoursWeek": {
             "title": "Minhoursweek",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxHoursWeek": {
             "title": "Maxhoursweek",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "agreedDaysPerWeek": {
             "title": "Agreeddaysperweek",
-            "maximum": 7.0,
-            "minimum": 1.0,
+            "maximum": 7,
+            "minimum": 1,
             "type": "integer"
           },
           "minDaysPerWeek": {
             "title": "Mindaysperweek",
-            "maximum": 6.0,
-            "minimum": 0.0,
+            "maximum": 6,
+            "minimum": 0,
             "type": "integer"
           },
           "maxDaysPerWeek": {
             "title": "Maxdaysperweek",
-            "maximum": 7.0,
-            "minimum": 1.0,
+            "maximum": 7,
+            "minimum": 1,
             "type": "integer"
           },
           "minShiftLengthHours": {
             "title": "Minshiftlengthhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxShiftLengthHours": {
             "title": "Maxshiftlengthhours",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxConsecutiveWorkDays": {
             "title": "Maxconsecutiveworkdays",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "minHoursNightRest": {
             "title": "Minhoursnightrest",
-            "minimum": 0.0,
+            "minimum": 0,
             "type": "integer"
           },
           "maxConsecutiveWeekends": {
             "title": "Maxconsecutiveweekends",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "type": "integer"
           }
         },
         "description": "Restriction set dto for updates."
+      },
+      "ScheduleCopyDTO": {
+        "title": "ScheduleCopyDTO",
+        "required": [
+          "schedulePeriod",
+          "sourcePlan",
+          "schedules"
+        ],
+        "type": "object",
+        "properties": {
+          "schedulePeriod": {
+            "title": "Scheduleperiod",
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourcePlan": {
+            "title": "Sourceplan",
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedules": {
+            "title": "Schedules",
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Synchronize"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            ]
+          }
+        },
+        "description": "Represents the DTO-model for a schedule copy request.\n\nAttributes\n----------\nschedule_period : UUID\n\nsource_plan : UUID\n\nschedules : Union[Synchronize, List[UUID]]\n  Either a list of the schedules that should be copied or the value\n  `synchronize`. If `synchronize` is used then a complete synchronization\n  is being done meaning that all schedules in the target-plan will be\n  removed before the new schedules are copied."
       },
       "ScheduleDTO": {
         "title": "ScheduleDTO",
@@ -4546,6 +5054,125 @@
         },
         "description": "DTO-model for shift-updates."
       },
+      "SimulationDTO": {
+        "title": "SimulationDTO",
+        "required": [
+          "schedulePeriodId",
+          "startDateTime",
+          "competencies"
+        ],
+        "type": "object",
+        "properties": {
+          "schedulePeriodId": {
+            "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDateTime": {
+            "title": "Startdatetime",
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalOccupancy": {
+            "title": "Totaloccupancy",
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "default": []
+          },
+          "agentsUnderLimit": {
+            "title": "Agentsunderlimit",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentOccupancyLimit"
+            },
+            "default": []
+          },
+          "agentsAboveLimit": {
+            "title": "Agentsabovelimit",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentOccupancyLimit"
+            },
+            "default": []
+          },
+          "competencies": {
+            "title": "Competencies",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompetencyResult"
+            }
+          },
+          "agents": {
+            "title": "Agents",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgentResult"
+            }
+          }
+        },
+        "description": "A simulation result."
+      },
+      "SimulationRequestDTO": {
+        "title": "SimulationRequestDTO",
+        "required": [
+          "schedulePeriodId"
+        ],
+        "type": "object",
+        "properties": {
+          "schedulePeriodId": {
+            "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "agents": {
+            "title": "Agents",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "competencies": {
+            "title": "Competencies",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "upperOccupancyLimits": {
+            "title": "Upperoccupancylimits",
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "default": []
+          },
+          "lowerOccupancyLimits": {
+            "title": "Loweroccupancylimits",
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "default": []
+          },
+          "includeFullAgentResult": {
+            "title": "Includefullagentresult",
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "description": "A request for a simulation.\n\nA simulation request can only include agents or competencies, not both.\n\nAttributes\n----------\nschedule_period_id : UUID\n\nagents : Optional[List[UUID]]\n\ncompetencies : Optional[List[UUID]]\n\nupper_occupancy_limits : List[float] = []\n    Values can be between 0 and 1 and represent a percentage. If specified\n    the result will include an array with the number of agents above\n    the occupancy limit per 15 min period.\n\nlower_occupancy_limits : List[float] = []\n    Values can be between 0 and 1 and represent a percentage. If specified\n    the result will include an array with the number of agents below\n    the occupancy limit per 15 min period.\n\ninclude_full_agent_result : bool = False\n    If specified the occupancies per agent will be added to the result."
+      },
+      "Synchronize": {
+        "title": "Synchronize",
+        "enum": [
+          "synchronize"
+        ],
+        "description": "Synchronize if schedule should be synchronized."
+      },
       "ValidationError": {
         "title": "ValidationError",
         "required": [
@@ -4573,5 +5200,59 @@
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Agent",
+      "description": "Routes for interacting with agents.\n\nAn agent is a person that works in the contact center.\n"
+    },
+    {
+      "name": "Restrictions",
+      "description": "Restriction sets routes.\n\nA RestrictionSet is a collection of restrictions that applies when an\nagent is being scheduled.\n"
+    },
+    {
+      "name": "Availability",
+      "description": "Routes for interacting with availabilities.\n\nAvailabilities describe when an agent can be scheduled.\n"
+    },
+    {
+      "name": "Break settings",
+      "description": "Routes for managing break settings.\n\nA Break Setting is a set of break specific restrictions used when scheduleling.\nAn Agent can have several assigned break settings.\n"
+    },
+    {
+      "name": "Competency",
+      "description": "Routes for interacting with competencies.\n\nA Competency represents some work that an agent can perform, e.g., handling\ninteractions from a queue, working as team lead or doing back-office tasks.\n"
+    },
+    {
+      "name": "Plans",
+      "description": "Routes for interacting with Plans.\n\nA plan is a collection of schedules. A contact center can have multiple plans\nfor different purposes such as testing scenarios, doing preliminary planning,\none plan will be set as the official plan and this plan can be published to\nagents. A plan is not restricted to a date range but should be viewed as a\n(possibly) continuous set of schedules.\n"
+    },
+    {
+      "name": "Schedule Period",
+      "description": "Routes for interacting with Schedule Periods.\n\nA schedule period defines the period that is used scheduling within an\norganization. The schedule period allows the scheduling process to work around\na common period within which schedules can be organized and moved between\nplans. The start- and end-date of the schedule period is related to the agent's\nown timezone and not strictly to the tenant's timezone. The actual time range\nof the schedule period is therefore dependent on the agents that are scheduled\nwithin it.\n"
+    },
+    {
+      "name": "Schedules",
+      "description": "Routes for managing schedules.\n\nA schedule is a finite set of shifts limited by a date range. The schedule can\nbut does not have to be assigned to an agent.\n"
+    },
+    {
+      "name": "Shifts",
+      "description": "Routes for handling CRUD-operations on shifts.\n\nA shift is a continuos period of work for an agent and consists of one or more\nactivities that an agent is scheduled for during that day. A shift can stretch\ninto the next day. There can be no gap between activities in a shift.\n"
+    },
+    {
+      "name": "Activities",
+      "description": "Routes for managing activities.\n\nAn activity is information about what an agent is scheduled to do. Activities\nare tasks that can be scheduled for agents. Activities cannot be deleted, only\ndisabled.\n"
+    },
+    {
+      "name": "Optimization",
+      "description": "Routes related to optimization.\n\nOptimization is the process of generating schedules that are optimal for a\nnumber of agents evaluated by a forecast of expected workload. A plan can\nonly have one optimization running at a time.\n"
+    },
+    {
+      "name": "Simulation",
+      "description": "Routes for simulating plans.\n\nSimulation is the process of simulating a given number of schedules based on a\nworkload from a number of competencies. In a simulation the agents will handle\ninteractions and it is therefore currently not supported to simulate schedules\nwithout an agent. The simulation can be based on either agents or competencies.\nIf agents are selected, the simulation will use forecasts for all competencies\nassociated with the agents. If competencies are selected, then all agents that\nhas a schedule during the period and at least one of the competencies will be\nsimulated. All available channel types for the competencies will be used.\n"
+    },
+    {
+      "name": "Organization (Not implemented)",
+      "description": "Agents can be grouped into organizations that\n        provides order and allows actions to be performed on multiple\n        agents at once. Organizations are hierarchical meaning that an\n        organization can have sub-organization (like a\n        departmental structure). A sub-organization can only be a member\n        of a single parent organization. Agents can be members of only\n        one organization.\n        "
+    }
+  ]
 }

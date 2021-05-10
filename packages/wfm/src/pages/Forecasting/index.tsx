@@ -189,7 +189,7 @@ export function Forecasting() {
   } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline, viewBy);
   const memoAdjustments = useMemoTimelineAdjustments(timelineAdjustments, selectedCompetence);
 
-  console.log(memoAdjustments);
+  console.log('memoAdjustments', memoAdjustments);
 
   // const {
   //   data: newDdjustment,

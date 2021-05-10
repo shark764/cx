@@ -63,7 +63,7 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
 
   const { data: generatedForecasts } = useQuery<any, any>(
     ['timelinesData', historicalPathParams, forecast_scenario_id],
-    () => forecast_scenario_id && wfm.forecasting.api.get_all_tenants_tenant_forecastscenarios_scenario_series({
+    () => forecast_scenario_id && wfm.forecasting.api.get_all_tenants_tenant_id_forecastscenarios_scenario_id_series({
       pathParams: { tenant_id: historicalPathParams.tenant_id, scenario_id: forecast_scenario_id },
     }),
     {

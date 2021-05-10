@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "./",
   "wfmForecastApiVersion": "0.1.0",
+  "wfmPlanningApiVersion": "0.1.0",
   "dependencies": {
     "@cx/components": "1.0.0",
     "@cx/fakedata": "1.0.0",
