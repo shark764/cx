@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { ColumnInterface, Cell, Column } from 'react-table';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
-// @ts-ignore
 import { DateTime } from 'luxon';
 
 const StyledInput = styled.input`
@@ -37,35 +36,20 @@ export interface ColumnDefenition {
   [key: string]: ColumnInterface;
 };
 
-export const editableCell = ({ defaultValue, rowData }: any) => {
-  const [value, setValue] = React.useState(defaultValue || '');
-  const [adjustmentOperation, setAdjustmentOperation] = React.useState('');
+export const EditableCell = ({ value, adjustmentCellMethod, rest }: any) => {
 
-  const handleInputChange = (e: any) => {
-    setValue(e.target.value);
-    if (e.target.value === '') {
-      setAdjustmentOperation('delete');
-    }
-  };
+  const [inputValue, setInputValue] = React.useState(value);
 
-  const handleOnBlurChange = (e: any) => {
-    console.log(e)
-    // TODO:
-    // setAdjustment({
-    //   adjustmentId: rowData.adjustmentId,
-    //   timestamp: rowData.timestamp,
-    //   value: e.target.value,
-    //   adjustmentOperation: adjustmentOperation
-    // });
-  };
+  const handleInputChange = ({target: { value }}: any) => {
+    setInputValue(value);
 
-  // Check if there is a value, so we can update it instead of creating a new one or deleting it
-  const handleOnClick = (e: any) => {
-    if (e.target.value !== '') {
-      setAdjustmentOperation('update');
-    } else {
-      setAdjustmentOperation('post');
-    }
+    const timestamp = rest.row.original.timestamp;
+
+    // only working in hour interval atm..//TODO:
+    adjustmentCellMethod({
+      timestamp,
+      value
+    });
   };
 
   return (
@@ -73,9 +57,7 @@ export const editableCell = ({ defaultValue, rowData }: any) => {
       name="input"
       type="text"
       onChange={(e) => handleInputChange(e)}
-      onClick={(e) => handleOnClick(e)}
-      onBlur={(e) => handleOnBlurChange(e)}
-      value={value}
+      value={inputValue}
     />
   );
 };
@@ -90,7 +72,7 @@ const formatDateValue = ({ value, viewMode }: any) => {
     case 'range':
       return `${DateTime.fromISO(value).toLocaleString({ weekday: 'long', }).toUpperCase()} ${DateTime.fromISO(value).toLocaleString({ day: '2-digit' })}`;
     default:
-      return value;
+      return DateTime.fromISO(value).toLocaleString( DateTime.TIME_SIMPLE );
   }
 };
 
@@ -164,66 +146,10 @@ const columnDefenitions: {[key: string]: any} = {
     minWidth: '40px',
     maxWidth: '40px',
   },
-  col8: {
-    Header: 'Monday Jan 11',
-    accessor: 'col0',
-    minWidth: '80px',
-    maxWidth: '200px',
-  },
-  col9: {
-    Header: 'Forecasted Volume',
-    accessor: 'col1',
-    minWidth: '80px',
-    maxWidth: '200px',
-  },
-  col10: {
-    Header: 'Adjustment test',
-    Cell: (tableProps: any) => editableCell(tableProps),
-    accessor: 'col2',
-    minWidth: '80px',
-    maxWidth: '200px',
-    columnBackground: '#8ac6dd26'
-  },
-  col11: {
-    Header: 'Adjusted Volume',
-    accessor: 'col3',
-    minWidth: '80px',
-    maxWidth: '200px',
-  },
-  col12: {
-    Header: 'Forecasted AHT',
-    accessor: 'col4',
-    minWidth: '80px',
-    maxWidth: '200px',
-  },
-  col13: {
-    Header: 'Adjustment',
-    Cell: (tableProps: any) => editableCell(tableProps),
-    accessor: 'col5',
-    minWidth: '80px',
-    maxWidth: '200px',
-    columnBackground: '#8ac6dd26'
-  },
-  col14: {
-    Header: 'AHT ADJUSTMENT',
-    accessor: 'col6',
-    minWidth: '80px',
-    maxWidth: '200px',
-  },
-  col15: {
-    Header: 'Estimated Maximum Hours',
-    accessor: 'col7',
-    minWidth: '80px',
-    maxWidth: '200px',
-  },
-
-
-
-
 
   timestamp: {
-    // Header: (tableProps: any) => formatDateHeader(tableProps, 'timestamp'),
-    // Cell: formatDateValue,
+    Header: (tableProps: any) => formatDateHeader(tableProps, 'timestamp'),
+    Cell: formatDateValue,
     accessor: 'timestamp',
     minWidth: '80px',
     maxWidth: '200px',
@@ -234,17 +160,22 @@ const columnDefenitions: {[key: string]: any} = {
     minWidth: '80px',
     maxWidth: '200px',
   },
-  adjustment2: {
+  adjustedNco: {
     Header: <EditableCellHeader>ADJUSTMENT</EditableCellHeader>,
-    Cell: (tableProps: any) => editableCell(tableProps),
-    accessor: 'adjustment2',
+    Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
+      return (
+      <EditableCell
+        value={value}
+        adjustmentCellMethod={adjustmentCellMethod}
+        rest={rest}
+      />) },
+    accessor: 'adjustedNco',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  anco: {
+  speculatedNco: {
     Header: 'ADJUSTED VOLUME',
     minWidth: '80px',
-    accessor: 'anco',
     maxWidth: '200px',
   },
   aht: {
@@ -253,26 +184,18 @@ const columnDefenitions: {[key: string]: any} = {
     minWidth: '80px',
     maxWidth: '200px',
   },
-  adjustment: {
+  adjustedAht: {
     Header: <EditableCellHeader>AHT ADJUSTMENT</EditableCellHeader>,
-    Cell: (tableProps: any) => editableCell(tableProps),
-    accessor: 'adjustment',
+    Cell: function editableCell({ value }: Cell): JSX.Element { return <EditableCell value={value}></EditableCell> },
+    accessor: 'adjustedAht',
     minWidth: '80px',
     maxWidth: '200px',
   },
-  aaht: {
+  speculatedAht: {
     Header: 'ADJUSTED AHT',
-    accessor: 'aaht',
     minWidth: '80px',
     maxWidth: '200px',
   }
-
-
-
-
-
-
-
 };
 
 const getColumn = (columnName: string) => columnDefenitions[columnName];

@@ -2,8 +2,6 @@ import * as React from 'react';
 import { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
-// @ts-ignore
-import { DateTime } from 'luxon';
 import styled from 'styled-components';
 import Select from 'react-select';
 
@@ -153,9 +151,6 @@ export function Forecasting() {
   const [createNewForecast, setCreateNewForecast] = useState(false);
   const [createNewTimeline, setCreateNewTimeline] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
-  // const [adjustments, setAdjustments] = useState<any>([]);
-  // const [adjustment, setAdjustment] = useState<any>({});
-  // const [tableData, setTableData] = useState([]);
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
@@ -180,43 +175,13 @@ export function Forecasting() {
     // error: timelineQueryError
   } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
 
-  const timelineQueryData = useMemoLineChartData(timelineQuery, viewBy, selectedCompetence);
-  const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence);
+  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence);
+  const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence);
 
-  // const {
-  //   data: timelineAdjustments,
-  //   // isLoading: timelineAdjustmentsLoading,
-  //   // error: timelineAdjustmentsError
-  // } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline, viewBy);
-  // const memoAdjustments = useMemoTimelineAdjustments(timelineAdjustments, selectedCompetence);
 
-  // console.log('memoAdjustments', memoAdjustments);
 
-  // const {
-  //   data: newDdjustment,
-  //   isLoading: newAdjustmentLoading,
-  //   error: newAdjustmentError,
-  //   refetch: createNewAdjustment,
-  // } = useCreateAdjustment(historicalPathParams, viewBy, selectedCompetence);
 
-  const now = DateTime.now();
-  const later = now.plus({days: 1});
 
-  const temp = () => {
-    console.log('View By, ', viewBy)
-    createAdjustment(historicalPathParams, viewBy, selectedCompetence, {
-      adjustmentStartDate: now.startOf('hour'),
-      adjustmentEndDate: later.endOf('hour'),
-      value: 4,
-    })
-  };
-
-  // will be able to tell once data comes back on the adjustments section
-  // useEffect(() => {
-  //   if (allAdjustments?.data) {
-  //    // setAdjustments(allAdjustments.data.find(({ name }: any) => name === 'notebook_temp' || "Ruben's"));
-  //   }
-  // }, [allAdjustments]);
 
 
 
@@ -256,22 +221,6 @@ export function Forecasting() {
     }
   }, [dispatch, selectedTimeline]);
 
-    // useEffect(() => {
-  //   let tableData;
-  //   if (memoAdjustments.length > 0) {
-  //     tableData = memoData.map((dataRow: any) => {
-  //       const recordFound = memoAdjustments.find((memoAdjustment: any) => DateTime.fromISO(memoAdjustment.startDateTime).toMillis() === DateTime.fromISO(dataRow.timestamp).toMillis());
-  //       if (recordFound) {
-  //         dataRow.adjustment = recordFound.adjustment;
-  //         dataRow.adjustmentId = recordFound.id;
-  //       }
-  //       return dataRow;
-  //     });
-  //     setTableData(tableData);
-  //   } else {
-  //     setTableData(memoData);
-  //   }
-  // }, [viewBy, memoData, memoAdjustments]);
 
   return (<>
       <Actions>
@@ -419,12 +368,17 @@ export function Forecasting() {
         <TableSpacer>
           <Table
             themeVariant='forecast'
-            columnDefenitions={['timestamp', 'nco', 'adjustment2', 'anco', 'aht', 'adjustment', 'aaht']}
+            columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
             tableData={timelineQueryTableData}
-            viewMode={viewBy}
+            viewMode={intervalLength}
+            adjustmentCellMethod={createAdjustment(
+              historicalPathParams,
+              selectedTimeline?.id,
+              viewBy,
+              selectedCompetence,
+            )}
           />
         </TableSpacer>
       </TableWrapper>
-      <button onClick={temp} >Apply adjustment now</button>
     </>)
 };

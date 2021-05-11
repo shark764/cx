@@ -68,11 +68,12 @@ const TableBody = styled.div<TableColumnInfo>`
   grid-template-columns: ${({ columnTemplate }) => columnTemplate} ;
 `;
 
-export const Table: React.VFC<TableProps> = ({
+export const Table: React.VFC<any> = ({
   tableData,
   columnDefenitions,
   themeVariant,
   viewMode,
+  ...rest
 }) => {
   const gridTemplateColumns = defineGridTemplateColumns(columnDefenitions);
   const data = useMemo(() => tableData || [], [tableData]);
@@ -115,12 +116,10 @@ export const Table: React.VFC<TableProps> = ({
               <TableRow
                 themeVariant={themeVariant} {...row.getRowProps()}
                 columnBackground={cell.column.columnBackground}
-                onClick={() => row.toggleRowExpanded()}
+                // onClick={() => row.toggleRowExpanded()}
                 key={CreateUUID()}
               >
-                {cell.render('Cell', {
-                  viewMode: viewMode
-                })}
+                {cell.render('Cell', {...rest})}
               </TableRow>
             ))}
 
