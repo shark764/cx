@@ -42,21 +42,21 @@ import { InProgress } from './inProgress';
 import { Filters } from './filters';
 
 import { forecasting } from '../../redux/reducers/forecasting';
+
+// WFM Api Utilities and Services
 import {
   useMemoLineChartData,
-  useMemoTimelineAdjustments,
+  // useMemoTimelineAdjustments,
   useMemoTableData
 } from './forecastingHooks';
-
 import {
-  useTimelines,
-  useTimelineQuery,
-  useTimelineAdjustments,
+  // useTimelineAdjustments,
   createAdjustment,
   // useUpdateAdjustment,
   // useDeleteAdjustment,
 } from './forecastApiQuerys';
-
+import { useTimelineQuery } from '../../api/useTimelineQuery';
+import { useTimelines } from '../../api/useTimelines';
 
 const {
   setStartDate,
@@ -169,27 +169,28 @@ export function Forecasting() {
 
   // React Queries
   const {
-    data: timelines,
+    data: timelines = [],
     // isLoading: timelinesLoading,
     // error: timelinesError
   } = useTimelines(historicalPathParams);
 
   const {
-    data: timelineQuery,
+    data: timelineQuery = [],
     isLoading: timelineQueryLoading,
     // error: timelineQueryError
   } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
+
   const timelineQueryData = useMemoLineChartData(timelineQuery, viewBy, selectedCompetence);
   const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence);
 
-  const {
-    data: timelineAdjustments,
-    // isLoading: timelineAdjustmentsLoading,
-    // error: timelineAdjustmentsError
-  } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline, viewBy);
-  const memoAdjustments = useMemoTimelineAdjustments(timelineAdjustments, selectedCompetence);
+  // const {
+  //   data: timelineAdjustments,
+  //   // isLoading: timelineAdjustmentsLoading,
+  //   // error: timelineAdjustmentsError
+  // } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline, viewBy);
+  // const memoAdjustments = useMemoTimelineAdjustments(timelineAdjustments, selectedCompetence);
 
-  console.log('memoAdjustments', memoAdjustments);
+  // console.log('memoAdjustments', memoAdjustments);
 
   // const {
   //   data: newDdjustment,
@@ -210,7 +211,6 @@ export function Forecasting() {
     })
   };
 
-  // TODO: looks like may need to pass in timeline info to get all adjustments stuff???
   // will be able to tell once data comes back on the adjustments section
   // useEffect(() => {
   //   if (allAdjustments?.data) {
@@ -220,7 +220,6 @@ export function Forecasting() {
 
 
 
-  // TODO: should instead be stored in state this way
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
     label: `${startDate} - ${endDate}`,
     startDate,
@@ -229,7 +228,6 @@ export function Forecasting() {
   })) || [], [allScenarios]);
 
 
-  // TODO: maybe rename this to lineCHartConfig or something instead
   const linechartData = {
     xDataKey: 'timestamp',
     dataKeys: [
@@ -247,7 +245,7 @@ export function Forecasting() {
   /** Set a default timeline */
   useEffect(() => {
     if (timelines) {
-      setSelectedTimeline(timelines.data[0]);
+      setSelectedTimeline(timelines[0]);
     }
   }, [timelines]);
   /** New timeline, reset scenario selections */
@@ -277,7 +275,7 @@ export function Forecasting() {
 
   return (<>
       <Actions>
-        {(timelines?.data.length === 0) &&
+        {(timelines?.length === 0) &&
           <Button
             style={{ color: '#4c4a4a' }}
             onClick={() => setCreateNewTimeline(true)}
@@ -288,10 +286,10 @@ export function Forecasting() {
             Create Timeline
           </Button>
         }
-        {(timelines?.data.length > 0) && selectedTimeline &&
+        {(timelines?.length > 0) && selectedTimeline &&
           <Autocomplete
             id="choose_timeline"
-            options={timelines.data}
+            options={timelines || []}
             getOptionLabel={({ label }: any) => label}
             size="small"
             getOptionSelected={(option, value) => option.id === value.id}

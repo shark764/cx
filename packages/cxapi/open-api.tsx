@@ -13,6 +13,11 @@ export interface QueryString {
 }
 export type Body = unknown;
 
+import {
+  AxiosResponse,
+  AxiosError,
+} from "axios";
+
 export class OpenApi {
   openApiSpecification: unknown;
   headers: any;
@@ -33,13 +38,13 @@ export class OpenApi {
 
     this.apiMethods = {
       // @ts-ignore
-      get: ({ path, qs }) => axios({ headers: this.headers, method: 'GET', url: this.url(path) + this.parseQueryString(qs) }, this.parse),
+      get: ({ path, qs }) => axios({ headers: this.headers, method: 'GET', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),
       // @ts-ignore
-      put: ({ path, body }) => axios({ headers: this.headers, method: 'PUT', url: this.url(path), data: body, json: true }, this.parse),
+      put: ({ path, body }) => axios({ headers: this.headers, method: 'PUT', url: this.url(path), data: body, json: true }).then(this.parse),
       // @ts-ignore
-      post: ({ path, body }) => axios({ headers: this.headers, method: 'POST', url: this.url(path), data: body, json: true }, this.parse),
+      post: ({ path, body }) => axios({ headers: this.headers, method: 'POST', url: this.url(path), data: body, json: true }).then(this.parse),
       // @ts-ignore
-      delete: ({ path, qs }) => axios({ headers: this.headers, method: 'DELETE', url: this.url(path) + this.parseQueryString(qs) }, this.parse),
+      delete: ({ path, qs }) => axios({ headers: this.headers, method: 'DELETE', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),
     },
 
     this.api = Object.entries(openApiSpecification.paths)
@@ -60,14 +65,14 @@ export class OpenApi {
     return withoutSpaces.toLowerCase();
   }
 
-  parseQueryString(queryString: any = {}): string {
+  parseQueryString(queryString: {[key: string]: string} = {}): string {
     const qs = Object.keys(queryString).map((key) => `${key}=${queryString[key]}`).join('&');
     return `?${qs}`;
   }
 
-  parse(err: any, res: any): any {
-    if (err) throw new Error(err);
-    return (typeof res === 'string') ? JSON.parse(res) : res
+  parse(response: AxiosResponse, error: AxiosError): AxiosResponse["data"] {
+    if (error) throw new Error(error.message);
+    return response.data;
   };
 
   url = (path: string): string =>`${this.baseUrl}${path}`;

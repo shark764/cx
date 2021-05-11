@@ -1,57 +1,6 @@
 import { wfm } from '../../api';
 import { useQuery } from 'react-query';
-// @ts-ignore
 import { DateTime } from 'luxon';
-// import { operations, components } from '@cx/cxapi/forecast-schema';
-// type HistoricalData = components["schemas"]["HistoricalDataDTO"];
-// type HistoricalPathParams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["path"];
-// type HistoricalQueryparams = operations["get_tenants_tenant_competencies_competency_historical"]["parameters"]["query"];
-// type HistoricalApiError = components["schemas"]["HTTPValidationError"];
-
-export const useTimelines = (historicalPathParams: any) => useQuery<any, any>(
-  ['Timelines', historicalPathParams],
-  () => wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimelines({
-    pathParams: { tenant_id: historicalPathParams.tenant_id },
-  })
-  .then(({data}: any) => ({
-    data: data.map(({ description, id, name }: any) => ({
-      label: name,
-      id,
-      description,
-    }))
-  })),
-  {
-    refetchOnWindowFocus: false
-  }
-);
-
-export const useTimelineQuery = (historicalPathParams: any, historicalQueryParams: any, selectedTimeline: any, selectedCompetence: any, viewBy: any) => useQuery<any, any>(
-  ['Timeline Query', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
-  () => selectedTimeline && selectedCompetence && wfm.forecasting.api.timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query({
-    pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: selectedTimeline.id},
-    body: {
-      startDate: historicalQueryParams.startDateTime,
-      endDate: historicalQueryParams.endDateTime,
-      interval: viewBy,
-      /**
-       * TODO: right now we are selecting only one competency which the user has selected and is in state
-       * however the api can support mulitple as an array but testing would need to be done to see what is more
-       * efficient..   getting all competencies or just the one your interested in?
-       */
-      competencyIds: [
-        selectedCompetence
-      ],
-      channels: ['voice', 'messaging', 'sms', 'email', 'work-item'],
-      directions: ['inbound'],
-      includeAdjustments: true,
-      includeForecast: true,
-    }
-  }), // TODO: change the memo function to instead just map the data here??
-  {
-    refetchOnWindowFocus: false,
-    // enabled: false
-  }
-);
 
 export const useTimelineAdjustments = (historicalPathParams: any, historicalQueryParams: any, selectedTimeline: any, viewBy: string) => useQuery<any, any>(
   ['Timeline Adjustments', historicalPathParams, selectedTimeline, viewBy],

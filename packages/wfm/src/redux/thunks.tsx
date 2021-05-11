@@ -31,8 +31,7 @@ export function loadTheme() {
 export const fetchTenantCompetencies = () => {
   return async (dispatch: any, getState: any) => {
     const { forecasting: { historicalPathParams: { tenant_id } } } = getState();
-    // TODO:
-    const { data } = await wfm.planning.api.get_all_competencies_tenants_tenant_id_competencies({
+    const data = await wfm.planning.api.get_all_competencies_tenants_tenant_id_competencies({
       pathParams: { tenant_id },
     });
     // Set all global known competencies
@@ -115,7 +114,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     /**
     * First make a new forecast scenario and grab scenario ID off that for the next step
     */
-    const { data: { id: forecast_scenario_id } } = await wfm.forecasting.api.post_tenants_tenant_id_forecastscenarios({
+    const { id: forecast_scenario_id } = await wfm.forecasting.api.post_tenants_tenant_id_forecastscenarios({
       pathParams: { tenant_id },
       body: { name, description, startDate, endDate, scenarioType },
     });
