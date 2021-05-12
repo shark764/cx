@@ -9,15 +9,30 @@ const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
   }
 };
 
-export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() =>
-  data?.find(({ competency }: any) => competency === selectedCompetence)
-    ?.forecast
-    .map(({ timestamp, nco, aht, abandons }: any) => ({
-      timestamp: chooseXaxisLabel(timestamp, intervalLength),
-      nco: nco,
-      aht: aht,
-    })) || [], [data, intervalLength, selectedCompetence]
-);
+// export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() =>
+//   data?.find(({ competency }: any) => competency === selectedCompetence)
+//     ?.forecast
+//     .map(({ timestamp, nco, aht, abandons }: any) => ({
+//       timestamp: chooseXaxisLabel(timestamp, intervalLength),
+//       nco: nco,
+//       aht: aht,
+//     })) || [], [data, intervalLength, selectedCompetence]
+// );
+
+export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
+
+  const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
+
+  return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
+    timestamp: chooseXaxisLabel(timestamp, intervalLength),
+    nco: nco,
+    adjustedNco: competency?.adjusted[index].nco + 2,
+    aht: aht,
+    adjustedAht: competency?.adjusted[index].aht + 2
+  })
+  ) || []
+
+}, [data, intervalLength, selectedCompetence]);
 
 export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
 
@@ -26,13 +41,13 @@ export const useMemoTableData = (data: any, intervalLength: string, selectedComp
   return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
     timestamp: timestamp,
     nco: nco,
-    adjustedNco: competency?.adjusted[index].nco,
+    adjustedNco: competency?.adjusted[index].nco + 2,
     aht: aht,
-    adjustedAht: competency?.adjusted[index].aht
+    adjustedAht: competency?.adjusted[index].aht + 2
   })
   ) || []
 
-}, [data, intervalLength, selectedCompetence]);
+}, [data, selectedCompetence]);
 
 export const useMemoTimelineAdjustments = (timelineAdjustments: any, selectedCompetence: string) => useMemo(() =>
   timelineAdjustments?.filter(({ competency }: any) => competency === selectedCompetence)

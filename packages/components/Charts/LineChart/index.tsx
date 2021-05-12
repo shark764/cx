@@ -10,6 +10,10 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+import { useRef, useEffect, useState } from 'react';
+import { fromEvent } from 'rxjs';
+import { pluck, tap, switchMap, takeUntil } from 'rxjs/operators';
+
 const Wrapper = styled.div`
   margin: 20px auto;
   font-size: 12px;
@@ -26,6 +30,7 @@ export interface DataKeys {
   lineStroke?: string;
   yAxisId?: string;
   name?: string;
+  color?: string;
 };
 export interface ChartProps {
   data: unknown[];
@@ -40,6 +45,60 @@ export interface ChartProps {
   containerHeight?: number;
   intervalLength?: string;
 };
+const StyledCircle = styled.circle.attrs<{ yOffset: number }>(({yOffset, cy}) => ({
+  cy: yOffset || cy
+}))`
+
+`;
+
+// TODO: pass in some kind of callback that will change the parents data array..  ie set the new adjusted value
+export const Dot: React.VFC<any> = (props) => {
+  const ref: any = useRef(null);
+  const [yOffset, setYoffset] = useState(0);
+
+  const domain = [0, props.topValue];
+
+  const pixelsPerTick = props.containerHeight / (domain[1] - domain[0]);
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element) {
+      return;
+    }
+
+    const mousedown$ = fromEvent<MouseEvent>(element, 'mousedown').pipe(tap(e => e.preventDefault() ));
+    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault() ));
+    const mouseup$ = fromEvent<MouseEvent>(element, 'mouseup').pipe(tap(e => e.preventDefault() ));
+
+    const drag$ = mousedown$.pipe(
+      switchMap(
+        () => mousemove$.pipe(
+          pluck('offsetY'),
+          takeUntil(mouseup$))
+      )).subscribe(offset => {
+        // const calculateValue = offset >= 0 ?
+        // console.log('offset' ,offset, 'ppt', pixelsPerTick);
+        console.log('offset' ,offset, 'ppt', pixelsPerTick);
+        console.log('nows' ,offset / pixelsPerTick);
+        setYoffset(offset);
+      });
+
+    return () => drag$.unsubscribe();
+  }, []);
+
+  if (props.dataKey === 'nco' || props.dataKey === 'aht') {
+    return (<></>);
+  }
+
+  return (<StyledCircle
+    {...props}
+    yOffset={yOffset}
+    ref={ref}
+    r="7"
+    fill={props.fill}
+    />)
+};
 
 export const LineChart: React.VFC<ChartProps> = ({
   data,
@@ -53,7 +112,6 @@ export const LineChart: React.VFC<ChartProps> = ({
   containerHeight = 300,
   intervalLength
 }) => {
-  const fillColors = ['#07487a', 'orange', 'green'];
 
   const interval = useMemo(() => {
     if (intervalLength === 'week') {
@@ -65,13 +123,25 @@ export const LineChart: React.VFC<ChartProps> = ({
     }
   }, [intervalLength]);
 
-  const yDomain = useMemo(() => {
-    if (intervalLength === 'range') {
-      return ['auto', 'auto'];
-    } else {
-      return [0, 'auto'];
-    }
-  }, [intervalLength]);
+  const [ncoYDomain, ahtYDomain] = useMemo(() => {
+
+    const roundToNearestTen = (value: number) => Math.ceil(value / 10) * 10;
+    // @ts-ignore
+    const sortDesc = (key) => [...data].sort((a,b) => (b[key] - a[key]))[0]?.[key];
+
+    const largestNco = sortDesc('nco');
+    const largestNcoAdjusted = sortDesc('adjustedNco');
+    const largestAht = sortDesc('aht');
+    const largestAhtAdjusted = sortDesc('adjustedAht');
+
+    const topNco = largestNco > largestNcoAdjusted ? largestNco : largestNcoAdjusted;
+    const topAht = largestAht > largestAhtAdjusted ? largestAht : largestAhtAdjusted;
+
+    // TODO: apply some arithmatic based on place value ie 10s round to nearest ten 100s round to nearest 100
+    const ncoYDomain = [0, roundToNearestTen(topNco)];
+    const ahtYDomain = [0, roundToNearestTen(topAht)];
+    return [ncoYDomain, ahtYDomain];
+  }, [data]);
 
   return (
     <Wrapper>
@@ -89,13 +159,13 @@ export const LineChart: React.VFC<ChartProps> = ({
           <YAxis
             yAxisId="left"
             label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15 }}
-            domain={yDomain}
+            domain={ncoYDomain}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
             label={{ value: 'AHT _ _ _ _', angle: -90, position: 'center', dx: 15 }}
-            domain={yDomain}
+            domain={ahtYDomain}
           />
           {showTooltip && (
             <Tooltip
@@ -103,16 +173,20 @@ export const LineChart: React.VFC<ChartProps> = ({
               formatter={(value: any) => value}
             />
           )}
-          {dataKeys.map((item: DataKeys, index) => (
+          {dataKeys.map((item: DataKeys) => (
             <Line
-              key={index.toString()}
+              key={item.name}
               name={item.name}
               dataKey={item.key}
               dot={false}
               type="linear"
               yAxisId={item.yAxisId}
-              fill={fillColors[index]}
-              strokeDasharray={item.lineStroke && '3 4 5 2'}
+              stroke={item.color}
+              activeDot={<Dot
+                topValue={ (item.key === 'nco' || item.key === 'adjustedNco')? ncoYDomain[1] : ahtYDomain[1] }
+                containerHeight={containerHeight}
+              />}
+              strokeDasharray={item.lineStroke && '5 5'}
             />
           ))}
         </ReChartsLineChart>

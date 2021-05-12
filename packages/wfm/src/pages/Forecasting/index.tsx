@@ -179,12 +179,6 @@ export function Forecasting() {
   const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence);
 
 
-
-
-
-
-
-
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
     label: `${startDate} - ${endDate}`,
     startDate,
@@ -196,8 +190,11 @@ export function Forecasting() {
   const linechartData = {
     xDataKey: 'timestamp',
     dataKeys: [
-      { key: 'nco', lineType: 'monotone', yAxisId: 'left' },
-      { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'aht', lineStroke: 'dotted' },
+      { key: 'nco', lineType: 'monotone', yAxisId: 'left', name: 'NCO', color: '#07487a' },
+      { key: 'adjustedNco', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO', lineStroke: 'dotted', color: '#07487a' },
+
+      { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'AHT', color: 'lightgrey' },
+      { key: 'adjustedAht', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT', lineStroke: 'dotted', color: 'lightgrey' },
     ],
   };
 
