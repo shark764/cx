@@ -29,26 +29,24 @@ const TableWrapper = styled.div<{ themeVariant: string }>`
   `}
 `;
 
-const TableRow = styled.div<{ themeVariant: string, columnBackground: string }>`
+const TableCell = styled.div<{ themeVariant: string, columnBackground: string }>`
   height: 25px;
-  &:hover {
-    background: #fafaaa54;
-    cursor: pointer;
-  }
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 5px;
   text-align: center;
-  ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`}
+  /* ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`}
   &:focus {
     ${({ columnBackground }) => columnBackground && `border: 1px solid grey;`}
-  }
+  } */
   ${({ themeVariant }) => themeVariant === 'forecast' && css`
     border-bottom: 1px solid #80808038;
   `}
+  /* display: grid;
+  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ; */
 `;
 
-const TableHeaderRow = styled.div<{ themeVariant: string, columnBackground: string }>`
+const TableHeader = styled.div<{ themeVariant: string, columnBackground: string }>`
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   color: grey;
   ${({ themeVariant }) => !themeVariant && css`
@@ -61,11 +59,23 @@ const TableHeaderRow = styled.div<{ themeVariant: string, columnBackground: stri
     padding: 5px;
     text-align: center;
   `}
+  /* display: grid;
+  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ; */
+`;
+const Columns = styled.div`
+  display: grid;
+  grid-template-columns: ${({ columnTemplate }) => columnTemplate};
+  /* ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`} */
+
+    &:hover {
+    background: #fafaaa54;
+    cursor: pointer;
+  }
 `;
 
 const TableBody = styled.div<TableColumnInfo>`
-  display: grid;
-  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ;
+  /* display: grid;
+  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ; */
 `;
 
 export const Table: React.VFC<any> = ({
@@ -73,6 +83,7 @@ export const Table: React.VFC<any> = ({
   columnDefenitions,
   themeVariant,
   viewMode,
+  rowComponent,
   ...rest
 }) => {
   const gridTemplateColumns = defineGridTemplateColumns(columnDefenitions);
@@ -82,51 +93,54 @@ export const Table: React.VFC<any> = ({
     getTableProps,
     headerGroups,
     rows,
-    prepareRow
+    prepareRow,
+    // toggleRowExpanded
   } = useTable(
     {
       columns,
       data,
-      autoResetExpanded: false
+      autoResetExpanded: true
     },
     useExpanded,
     useRowSelect,
   );
   return (
     <TableWrapper {...getTableProps()} themeVariant={themeVariant}>
-      <TableBody columnTemplate={gridTemplateColumns} >
-        {headerGroups.map((headerGroup) => (<Fragment key={CreateUUID()}>
+      <TableBody>
+        {headerGroups.map((headerGroup) => (<Columns columnTemplate={gridTemplateColumns} key={CreateUUID()}>
           {headerGroup.headers.map((column) =>
-            <TableHeaderRow
+            <TableHeader
               themeVariant={themeVariant}
-              columnBackground={column.columnBackground}
+              // columnBackground={column.columnBackground}
               key={column.id}
+              // columnTemplate={gridTemplateColumns}
             >
-              {column.render('Header', {
+              <span>{column.render('Header', {
                 key: column.id,
                 viewMode: viewMode
-              })}
-            </TableHeaderRow>)}
-        </Fragment>))}
+              })}</span>
+            </TableHeader>)}
+        </Columns>))}
 
         {rows.map((row) => {
           prepareRow(row);
-          return (<Fragment key={CreateUUID()} >
+          return (<Columns columnTemplate={gridTemplateColumns} key={CreateUUID()} >
             {row.cells.map((cell) => (
-              <TableRow
+              <TableCell
                 themeVariant={themeVariant} {...row.getRowProps()}
-                columnBackground={cell.column.columnBackground}
-                // onClick={() => row.toggleRowExpanded()}
+                // columnBackground={cell.column.columnBackground}
+                // columnTemplate={gridTemplateColumns}
+                // @ts-ignore
+                onClick={() => row.toggleRowExpanded()}
                 key={CreateUUID()}
               >
-                {cell.render('Cell', {...rest})}
-              </TableRow>
+                <span>{cell.render('Cell', {...rest})}</span>
+              </TableCell>
             ))}
-
-          </Fragment>);
-          // {row.isExpanded && <div style={{width: '100%'}}>
-          //   HERYYYYYY
-          // </div>}
+          {row.isExpanded && <div style={{width: '100%'}}>
+            { rowComponent({hey: 'hey', ...row}) }
+          </div>}
+          </Columns>);
         })}
       </TableBody>
     </TableWrapper>

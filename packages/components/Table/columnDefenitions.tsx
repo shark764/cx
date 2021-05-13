@@ -162,13 +162,13 @@ const columnDefenitions: {[key: string]: any} = {
   },
   adjustedNco: {
     Header: <EditableCellHeader>ADJUSTMENT</EditableCellHeader>,
-    Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
-      return (
-      <EditableCell
-        value={value}
-        adjustmentCellMethod={adjustmentCellMethod}
-        rest={rest}
-      />) },
+    // Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
+    //   return (
+    //   <EditableCell
+    //     value={value}
+    //     adjustmentCellMethod={adjustmentCellMethod}
+    //     rest={rest}
+    //   />) },
     accessor: 'adjustedNco',
     minWidth: '80px',
     maxWidth: '200px',
@@ -186,7 +186,7 @@ const columnDefenitions: {[key: string]: any} = {
   },
   adjustedAht: {
     Header: <EditableCellHeader>AHT ADJUSTMENT</EditableCellHeader>,
-    Cell: function editableCell({ value }: Cell): JSX.Element { return <EditableCell value={value}></EditableCell> },
+    // Cell: function editableCell({ value }: Cell): JSX.Element { return <EditableCell value={value}></EditableCell> },
     accessor: 'adjustedAht',
     minWidth: '80px',
     maxWidth: '200px',

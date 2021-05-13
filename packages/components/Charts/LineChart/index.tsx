@@ -12,7 +12,7 @@ import {
 
 import { useRef, useEffect, useState } from 'react';
 import { fromEvent } from 'rxjs';
-import { pluck, tap, switchMap, takeUntil } from 'rxjs/operators';
+import { pluck, tap, map, switchMap, takeUntil, takeLast } from 'rxjs/operators';
 
 const Wrapper = styled.div`
   margin: 20px auto;
@@ -44,21 +44,31 @@ export interface ChartProps {
   containerWidth?: string;
   containerHeight?: number;
   intervalLength?: string;
+  adjustemntCallback?: any;
 };
+
+
+
 const StyledCircle = styled.circle.attrs<{ yOffset: number }>(({yOffset, cy}) => ({
   cy: yOffset || cy
 }))`
-
+  cursor: grab;
+  .small {
+    font-family: Arial, Helvetica, sans-serif;
+  }
 `;
 
-// TODO: pass in some kind of callback that will change the parents data array..  ie set the new adjusted value
-export const Dot: React.VFC<any> = (props) => {
+export const Dot: React.VFC<any> = ({containerHeight, topValue, adjustemntCallback, dataKey, ...props}) => {
   const ref: any = useRef(null);
   const [yOffset, setYoffset] = useState(0);
+  const [adjustment, setAdjustment] = useState(0);
+  const [adjustmentText, setAdjustmentText] = useState('');
+  const graphHeight = containerHeight - 30;
+  const domain = [0, topValue];
+  const timestamp = props.payload.ogTimestamp;
+  const value = props.value;
 
-  const domain = [0, props.topValue];
-
-  const pixelsPerTick = props.containerHeight / (domain[1] - domain[0]);
+  const pixelsPerTick = graphHeight / (domain[1] - domain[0]);
 
   useEffect(() => {
     const element = ref.current;
@@ -69,35 +79,54 @@ export const Dot: React.VFC<any> = (props) => {
 
     const mousedown$ = fromEvent<MouseEvent>(element, 'mousedown').pipe(tap(e => e.preventDefault() ));
     const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault() ));
-    const mouseup$ = fromEvent<MouseEvent>(element, 'mouseup').pipe(tap(e => e.preventDefault() ));
-
+    const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup').pipe(tap(e => e.preventDefault() )); // TODO: OR hits upper or lower bounds?
     const drag$ = mousedown$.pipe(
       switchMap(
         () => mousemove$.pipe(
-          pluck('offsetY'),
-          takeUntil(mouseup$))
-      )).subscribe(offset => {
-        // const calculateValue = offset >= 0 ?
-        // console.log('offset' ,offset, 'ppt', pixelsPerTick);
-        console.log('offset' ,offset, 'ppt', pixelsPerTick);
-        console.log('nows' ,offset / pixelsPerTick);
-        setYoffset(offset);
+            pluck('offsetY'),
+            tap((offset) => setYoffset(offset)),
+            map((offset: number) => Math.trunc((graphHeight - offset) / pixelsPerTick)),
+            tap((adjustmentValue) => {
+              // TODO: precentage should be from original forecasted value and not the original adjustment value?
+              const percentageChange = Math.trunc(((adjustmentValue - value) / value) * 100);
+              setAdjustmentText( `${adjustmentValue} or ${percentageChange}%` );
+              setAdjustment( adjustmentValue );
+            }),
+            takeUntil(mouseup$),
+            takeLast(1),
+          )
+      )).subscribe(adjustmentValue => {
+        if (adjustemntCallback) {
+          adjustemntCallback(adjustmentValue, dataKey, timestamp)
+        }
       });
 
     return () => drag$.unsubscribe();
-  }, []);
+  }, [graphHeight, pixelsPerTick, adjustemntCallback, dataKey, timestamp, value]);
 
-  if (props.dataKey === 'nco' || props.dataKey === 'aht') {
+  if (dataKey === 'nco' || dataKey === 'aht') {
     return (<></>);
   }
 
-  return (<StyledCircle
-    {...props}
-    yOffset={yOffset}
-    ref={ref}
-    r="7"
-    fill={props.fill}
-    />)
+  return (<>
+    <StyledCircle
+      {...props}
+      yOffset={yOffset}
+      ref={ref}
+      r="7"
+      fill={props.fill}
+    />
+
+    { adjustment &&
+      <text
+      // TODO: move this to the left if there's no room on the right
+        x={props.cx - 100}
+        y={yOffset + 5}
+        className="small"
+      >
+        { adjustmentText }
+      </text>}
+  </>)
 };
 
 export const LineChart: React.VFC<ChartProps> = ({
@@ -110,7 +139,8 @@ export const LineChart: React.VFC<ChartProps> = ({
   showTooltip = true,
   containerWidth = '100%',
   containerHeight = 300,
-  intervalLength
+  intervalLength,
+  adjustemntCallback,
 }) => {
 
   const interval = useMemo(() => {
@@ -155,7 +185,7 @@ export const LineChart: React.VFC<ChartProps> = ({
           data={data}
           onClick={onClick}
         >
-          <XAxis dataKey={xDataKey} interval={interval} dy={10} />
+          <XAxis dataKey={xDataKey} interval={interval} dy={10.47} />
           <YAxis
             yAxisId="left"
             label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15 }}
@@ -180,11 +210,13 @@ export const LineChart: React.VFC<ChartProps> = ({
               dataKey={item.key}
               dot={false}
               type="linear"
+              // type="monotone"
               yAxisId={item.yAxisId}
               stroke={item.color}
               activeDot={<Dot
                 topValue={ (item.key === 'nco' || item.key === 'adjustedNco')? ncoYDomain[1] : ahtYDomain[1] }
                 containerHeight={containerHeight}
+                adjustemntCallback={adjustemntCallback}
               />}
               strokeDasharray={item.lineStroke && '5 5'}
             />

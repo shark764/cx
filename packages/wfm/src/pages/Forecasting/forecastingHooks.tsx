@@ -9,30 +9,21 @@ const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
   }
 };
 
-// export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() =>
-//   data?.find(({ competency }: any) => competency === selectedCompetence)
-//     ?.forecast
-//     .map(({ timestamp, nco, aht, abandons }: any) => ({
-//       timestamp: chooseXaxisLabel(timestamp, intervalLength),
-//       nco: nco,
-//       aht: aht,
-//     })) || [], [data, intervalLength, selectedCompetence]
-// );
-
-export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
+export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any) => useMemo(() => {
 
   const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
 
   return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
     timestamp: chooseXaxisLabel(timestamp, intervalLength),
+    ogTimestamp: timestamp,
     nco: nco,
-    adjustedNco: competency?.adjusted[index].nco + 2,
+    adjustedNco: localAdjustments?.['adjustedNco']?.[timestamp] || competency?.adjusted[index].nco,
     aht: aht,
-    adjustedAht: competency?.adjusted[index].aht + 2
+    adjustedAht: localAdjustments?.['adjustedAht']?.[timestamp] || competency?.adjusted[index].aht
   })
   ) || []
 
-}, [data, intervalLength, selectedCompetence]);
+}, [data, intervalLength, selectedCompetence, localAdjustments]);
 
 export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
 

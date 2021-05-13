@@ -22,11 +22,14 @@ import { selectedRangeFn } from '@cx/utilities/date';
 
 import { defaultForecastFormValues } from './forecastFormDefaultValues';
 
+import { AdjustmentPanel } from './adjustmentPanel';
+
 import {
   createForecastApi,
   deleteForecastScenario,
   createNewTimelineApi,
-  fetchForecastScenarios
+  fetchForecastScenarios,
+  // competence
 } from '../../redux/thunks';
 
 import {
@@ -151,6 +154,8 @@ export function Forecasting() {
   const [createNewForecast, setCreateNewForecast] = useState(false);
   const [createNewTimeline, setCreateNewTimeline] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
+  // const [localAdjustedData, setLocalAdjustedData] = useState([]);
+  const [localAdjustments, setLocalAdjustemnts] = useState({});
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
@@ -175,7 +180,7 @@ export function Forecasting() {
     // error: timelineQueryError
   } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
 
-  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence);
+  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments);
   const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence);
 
 
@@ -187,7 +192,7 @@ export function Forecasting() {
   })) || [], [allScenarios]);
 
 
-  const linechartData = {
+  const linechartConfig = {
     xDataKey: 'timestamp',
     dataKeys: [
       { key: 'nco', lineType: 'monotone', yAxisId: 'left', name: 'NCO', color: '#07487a' },
@@ -217,6 +222,17 @@ export function Forecasting() {
       dispatch(fetchForecastScenarios(selectedTimeline));
     }
   }, [dispatch, selectedTimeline]);
+
+  const setLocalAdjustment = (value: number, key: string, timestamp: string) => {
+    setLocalAdjustemnts({
+      ...localAdjustments,
+      [key]: {
+        // @ts-ignore
+        ...localAdjustments[key],
+        [timestamp]: value
+      }
+    });
+  };
 
 
   return (<>
@@ -329,8 +345,9 @@ export function Forecasting() {
             chartName="forecast"
             intervalLength={intervalLength}
             data={timelineQueryData}
-            xDataKey={linechartData.xDataKey}
-            dataKeys={linechartData.dataKeys}
+            xDataKey={linechartConfig.xDataKey}
+            dataKeys={linechartConfig.dataKeys}
+            adjustemntCallback={setLocalAdjustment}
           // intervalType={intervalType}
           />
         }
@@ -365,7 +382,7 @@ export function Forecasting() {
         <TableSpacer>
           <Table
             themeVariant='forecast'
-            columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
+            columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'aht', 'adjustedAht']}
             tableData={timelineQueryTableData}
             viewMode={intervalLength}
             adjustmentCellMethod={createAdjustment(
@@ -374,6 +391,7 @@ export function Forecasting() {
               viewBy,
               selectedCompetence,
             )}
+            rowComponent={AdjustmentPanel}
           />
         </TableSpacer>
       </TableWrapper>
