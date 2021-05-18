@@ -68,7 +68,6 @@ const Columns = styled.div`
   /* ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`} */
 
     &:hover {
-    background: #fafaaa54;
     cursor: pointer;
   }
 `;

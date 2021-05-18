@@ -48,7 +48,8 @@ export const EditableCell = ({ value, adjustmentCellMethod, rest }: any) => {
     // only working in hour interval atm..//TODO:
     adjustmentCellMethod({
       timestamp,
-      value
+      value,
+      metric: 'nco'
     });
   };
 
@@ -56,6 +57,7 @@ export const EditableCell = ({ value, adjustmentCellMethod, rest }: any) => {
     <StyledInput
       name="input"
       type="text"
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
       onChange={(e) => handleInputChange(e)}
       value={inputValue}
     />
@@ -155,20 +157,20 @@ const columnDefenitions: {[key: string]: any} = {
     maxWidth: '200px',
   },
   nco: {
-    Header: 'FORECASTED VOLUME',
+    Header: 'Forecasted NCO',
     accessor: 'nco',
     minWidth: '80px',
     maxWidth: '200px',
   },
   adjustedNco: {
-    Header: <EditableCellHeader>ADJUSTMENT</EditableCellHeader>,
-    // Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
-    //   return (
-    //   <EditableCell
-    //     value={value}
-    //     adjustmentCellMethod={adjustmentCellMethod}
-    //     rest={rest}
-    //   />) },
+    Header: 'NCO Adjustment',
+    Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
+      return (
+      <EditableCell
+        value={value}
+        adjustmentCellMethod={adjustmentCellMethod}
+        rest={rest}
+      />) },
     accessor: 'adjustedNco',
     minWidth: '80px',
     maxWidth: '200px',
@@ -179,14 +181,20 @@ const columnDefenitions: {[key: string]: any} = {
     maxWidth: '200px',
   },
   aht: {
-    Header: 'FORECASTED AHT',
+    Header: 'Forecasted AHT',
     accessor: 'aht',
     minWidth: '80px',
     maxWidth: '200px',
   },
   adjustedAht: {
-    Header: <EditableCellHeader>AHT ADJUSTMENT</EditableCellHeader>,
-    // Cell: function editableCell({ value }: Cell): JSX.Element { return <EditableCell value={value}></EditableCell> },
+    Header: 'AHT Adjustment',
+    Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
+      return (
+      <EditableCell
+        value={value}
+        adjustmentCellMethod={adjustmentCellMethod}
+        rest={rest}
+      />) },
     accessor: 'adjustedAht',
     minWidth: '80px',
     maxWidth: '200px',

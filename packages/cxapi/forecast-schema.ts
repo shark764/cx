@@ -185,6 +185,7 @@ export interface components {
       intervalLength: components["schemas"]["IntervalType"];
       numberOfIntervals: number;
       type: components["schemas"]["AdjustmentType"];
+      metric: components["schemas"]["MetricType"];
       value: number;
       id: string;
     } & { [key: string]: any };
@@ -330,7 +331,11 @@ export interface components {
     JobStatus: "pending" | "running" | "success" | "failed";
     /** The type of data in a series. */
     MetricType: "nco" | "aht" | "tot" | "abandons";
-    /** Represent dto model for input requests. */
+    /**
+     * Represent dto model for input requests.
+     *
+     * Currently only the metrics nco and aht are supported.
+     */
     NewForecastAdjustmentDTO: {
       competency: string;
       channel: components["schemas"]["ChannelType"];
@@ -339,6 +344,7 @@ export interface components {
       intervalLength: components["schemas"]["IntervalType"];
       numberOfIntervals: number;
       type: components["schemas"]["AdjustmentType"];
+      metric: components["schemas"]["MetricType"];
       value: number;
     } & { [key: string]: any };
     /** Represent dto model for input requests. */
@@ -1222,7 +1228,8 @@ export interface operations {
       /**
        * Failure, possible reasons:
        *
-       *                      startDateTime missing timezone specification.
+       *                      * startDateTime missing timezone specification.
+       *                      * unsupported metric: only nco and aht are supported.
        */
       400: unknown;
       /** Validation Error */

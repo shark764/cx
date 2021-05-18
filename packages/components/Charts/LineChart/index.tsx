@@ -136,7 +136,6 @@ export const LineChart: React.VFC<ChartProps> = ({
   xDataKey,
   statName,
   chartName,
-  showTooltip = true,
   containerWidth = '100%',
   containerHeight = 300,
   intervalLength,
@@ -197,12 +196,12 @@ export const LineChart: React.VFC<ChartProps> = ({
             label={{ value: 'AHT _ _ _ _', angle: -90, position: 'center', dx: 15 }}
             domain={ahtYDomain}
           />
-          {showTooltip && (
-            <Tooltip
-              cursor={false}
-              formatter={(value: any) => value}
-            />
-          )}
+
+          <Tooltip
+            cursor={false}
+            offset={20}
+          />
+
           {dataKeys.map((item: DataKeys) => (
             <Line
               key={item.name}
@@ -210,7 +209,6 @@ export const LineChart: React.VFC<ChartProps> = ({
               dataKey={item.key}
               dot={false}
               type="linear"
-              // type="monotone"
               yAxisId={item.yAxisId}
               stroke={item.color}
               activeDot={<Dot

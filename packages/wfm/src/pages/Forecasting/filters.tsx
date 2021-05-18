@@ -1,11 +1,12 @@
 import * as React from 'react';
+import styled from 'styled-components';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import styled from 'styled-components';
-import { DateRange } from '@cx/components/DateRange';
 import { DateTime } from 'luxon';
+import { DateRange } from '@cx/components/DateRange';
 import { forecasting } from '../../redux/reducers/forecasting';
-import { Selector } from '@cx/components/Inputs/Selector';
 
 const BoxDiv = styled.div`
   border: 1px solid #80808096;
@@ -18,6 +19,7 @@ const BoxDiv = styled.div`
 const FilterSections = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 5px;
 `;
 
 const Title = styled.h4`
@@ -25,6 +27,7 @@ const Title = styled.h4`
   font-style: italic;
   margin-top: 0px;
   margin-left: 10px;
+  margin-bottom: 25px;
 `;
 
 export function Filters() {
@@ -69,14 +72,21 @@ export function Filters() {
         />
 
         <span>
-          <Selector
-            // label="Competence" TODO: make label for competence and time span.. looks better
+          <TextField
+            id="outlined-select-currency"
+            select
+            label="Competency"
             value={selectedCompetence}
-            onChange={({target: { value }}: any, e: any) => handleCompetenceChanged(value)}
-            options={competenceOptions}
-            // @ts-ignore
+            onChange={({target: { value }}: any) => handleCompetenceChanged(value)}
+            variant="outlined"
             style={{ width: '200px' }}
-          />
+          >
+            {competenceOptions.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </span>
 
       </FilterSections>

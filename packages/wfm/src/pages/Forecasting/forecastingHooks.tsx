@@ -9,7 +9,9 @@ const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
   }
 };
 
-export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any) => useMemo(() => {
+
+
+export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
 
   const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
 
@@ -25,7 +27,12 @@ export const useMemoLineChartData = (data: any, intervalLength: string, selected
 
 }, [data, intervalLength, selectedCompetence, localAdjustments]);
 
-export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
+
+
+export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
+
+  console.log('localAdjustemnts', localAdjustments)
+  console.log('globalInitialAdjustments', globalInitialAdjustments)
 
   const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
 
@@ -33,12 +40,28 @@ export const useMemoTableData = (data: any, intervalLength: string, selectedComp
     timestamp: timestamp,
     nco: nco,
     adjustedNco: competency?.adjusted[index].nco + 2,
+    ncoDerivedAdjustements: globalInitialAdjustments.filter((adjustemnt: any) => adjustemnt.metric === 'nco')
+      .filter((adjustment: any) => (
+        adjustment.startDateTime === timestamp &&
+        adjustment.competency === selectedCompetence
+        // TODO: nopes...   it's missing the type of adjustment in the adjustments response?
+      )),
+    ncoLocalAdjustement: localAdjustments['adjustedNco']?.[timestamp],
     aht: aht,
-    adjustedAht: competency?.adjusted[index].aht + 2
+    adjustedAht: competency?.adjusted[index].aht + 2,
+    ahtDerivedAdjustements: globalInitialAdjustments.filter((adjustemnt: any) => adjustemnt.metric === 'aht')
+    .filter((adjustment: any) => (
+      adjustment.startDateTime === timestamp &&
+      adjustment.competency === selectedCompetence
+      // TODO: nopes...   it's missing the type of adjustment in the adjustments response?
+    )),
+    ahtLocalAdjustment: localAdjustments['adjustedAht']?.[timestamp],
   })
   ) || []
 
-}, [data, selectedCompetence]);
+}, [data, selectedCompetence, localAdjustments, globalInitialAdjustments]);
+
+
 
 export const useMemoTimelineAdjustments = (timelineAdjustments: any, selectedCompetence: string) => useMemo(() =>
   timelineAdjustments?.filter(({ competency }: any) => competency === selectedCompetence)

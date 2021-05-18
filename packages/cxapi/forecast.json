@@ -2180,7 +2180,7 @@
             }
           },
           "400": {
-            "description": "Failure, possible reasons:\n\n                     startDateTime missing timezone specification.\n                     "
+            "description": "Failure, possible reasons:\n\n                     * startDateTime missing timezone specification.\n                     * unsupported metric: only nco and aht are supported.\n                     "
           },
           "422": {
             "description": "Validation Error",
@@ -2677,6 +2677,7 @@
           "intervalLength",
           "numberOfIntervals",
           "type",
+          "metric",
           "value",
           "id"
         ],
@@ -2708,6 +2709,9 @@
           },
           "type": {
             "$ref": "#/components/schemas/AdjustmentType"
+          },
+          "metric": {
+            "$ref": "#/components/schemas/MetricType"
           },
           "value": {
             "title": "Value",
@@ -3309,6 +3313,7 @@
           "intervalLength",
           "numberOfIntervals",
           "type",
+          "metric",
           "value"
         ],
         "type": "object",
@@ -3340,12 +3345,15 @@
           "type": {
             "$ref": "#/components/schemas/AdjustmentType"
           },
+          "metric": {
+            "$ref": "#/components/schemas/MetricType"
+          },
           "value": {
             "title": "Value",
             "type": "number"
           }
         },
-        "description": "Represent dto model for input requests."
+        "description": "Represent dto model for input requests.\n\nCurrently only the metrics nco and aht are supported."
       },
       "NewForecastSeriesDTO": {
         "title": "NewForecastSeriesDTO",

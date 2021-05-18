@@ -3,11 +3,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import styled from 'styled-components';
-import Select from 'react-select';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -52,12 +52,14 @@ import {
 } from './forecastingHooks';
 import {
   // useTimelineAdjustments,
-  createAdjustment,
+  // createAdjustment,
   // useUpdateAdjustment,
   // useDeleteAdjustment,
+  useTimelineAdjustments
 } from './forecastApiQuerys';
 import { useTimelineQuery } from '../../api/useTimelineQuery';
 import { useTimelines } from '../../api/useTimelines';
+import { createAdjustment } from './createAdjustment';
 
 const {
   setStartDate,
@@ -70,26 +72,9 @@ const Title = styled.h4`
   margin-top: 0px;
   margin-left: 10px;
 `;
-const StyledSelect = styled(Select)`
-  width: 150px;
-  height: 35px;
-  border-color: #07487a;
-`;
 const ForecastFilters = styled.section`
   margin-top: 30px;
 `;
-const customStyles = {
-  option: (provided: any, state: any) => ({
-    ...provided,
-    color: 'black',
-    background: 'white',
-  }),
-  singleValue: (provided: any, state: any) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
-    return { ...provided, opacity, transition };
-  },
-};
 const ChartsWrapper = styled.div`
   width: 100%;
   background: white;
@@ -120,12 +105,6 @@ const ProgressIcon = styled.span`
   position: absolute;
   margin-left: 20px;
   top: -4px;
-`;
-const Label = styled.span`
-  font-size: 11px;
-  color: grey;
-  vertical-align: super;
-  margin-left: 10px;
 `;
 const TableFilters = styled.div`
   padding: 0 10px;
@@ -159,10 +138,11 @@ export function Forecasting() {
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
-  const viewBy = {
+  // @ts-ignore
+  const viewBy: any = {
       day: 'hour',
       twoDays: 'hour',
-      week: 'day', //'week' = Disallowed interval?
+      week: 'hour', //'week' = Disallowed interval?
       range: 'day'
     }[intervalLength] || 'day';
 
@@ -180,8 +160,14 @@ export function Forecasting() {
     // error: timelineQueryError
   } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
 
-  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments);
-  const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence);
+  const {
+    data: timelineAdjustments = [],
+    // isLoading: timelineAdjustmentsLoading,
+    // error: timelineQueryError
+  } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline,  viewBy);
+
+  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
+  const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
 
 
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
@@ -313,7 +299,7 @@ export function Forecasting() {
           </FormDialog>
           <FormDialog open={createNewForecast} title='Create Forecast Scenario' close={() => setCreateNewForecast(false)} >
             <DynamicForm
-              defaultValues={defaultForecastFormValues}
+              defaultValues={defaultForecastFormValues()}
               formDefenition={createForecastFormDefenition}
               onCancel={() => setCreateNewForecast(false)}
               onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, historicalPathParams.tenant_id, selectedTimeline.id) }}
@@ -367,16 +353,20 @@ export function Forecasting() {
         <Title> Forecast table view </Title>
         <TableFilters>
           <span>
-            <Label>Channel</Label>
-            <StyledSelect
-              className="choose-channel"
-              classNamePrefix="select"
-              value={filters.channel[0]}
-              name="choose-channel"
-              options={filters.channel}
-              styles={customStyles}
-              onChange={ () => {} }
-            />
+            <TextField
+              select
+              label="Channel"
+              // value={filters.channel[0]}
+              // onChange={() => { }}
+              variant="outlined"
+              style={{ width: '180px' }}
+            >
+              {filters.channel.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </span>
         </TableFilters>
         <TableSpacer>
@@ -384,7 +374,7 @@ export function Forecasting() {
             themeVariant='forecast'
             columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'aht', 'adjustedAht']}
             tableData={timelineQueryTableData}
-            viewMode={intervalLength}
+            viewMode={viewBy}
             adjustmentCellMethod={createAdjustment(
               historicalPathParams,
               selectedTimeline?.id,

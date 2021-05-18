@@ -57,27 +57,7 @@ const addHourOffset = (date: DateTime): DateTime => date.plus({ minutes: 14, sec
 const parseDate = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
 const adjustmentDateFormat = (date: DateTime): string => date.toISO({ suppressMilliseconds: true, includeOffset: true });
 
-const adjustmentStartDate = (date: string) => adjustmentDateFormat(parseDate(date));
-const adjustmentEndDate = (date: string) => adjustmentDateFormat(addHourOffset(parseDate(date)));
 
-export const createAdjustment = (historicalPathParams: any, forecast_timeline_id: string, viewBy: string, selectedCompetence: string) => (adjustment: any) =>
-  wfm.forecasting.api.post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments({
-    pathParams: {
-      tenant_id: historicalPathParams.tenant_id, forecast_timeline_id,
-    },
-    body: {
-      startDateTime: adjustmentStartDate(adjustment.timestamp),
-      endDateTime: adjustmentEndDate(adjustment.timestamp),
-      intervalLength: viewBy,
-      competency: selectedCompetence,
-      channel: 'voice',
-      direction: 'inbound',
-      numberOfIntervals: 1,
-      // type: 'percentage',
-      type: 'absolute',
-      value: adjustment.value
-    }
-});
 
 export const useUpdateAdjustment = (historicalPathParams: any, adjustment: any, viewBy: string, selectedCompetence: string) => useQuery<any, any>(
   ['Update Adjustment'],

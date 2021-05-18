@@ -2,9 +2,10 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { DatePicker } from '../DateTime/DatePicker';
 import Arrow from '@material-ui/icons/ArrowRightAlt';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import { selectedRangeFn, changeRangeFn } from '@cx/utilities/date';
 import { DateTime } from 'luxon';
-import { Selector } from '../Inputs/Selector';
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: 5px;
@@ -65,14 +66,20 @@ export const DateRange: React.FC<DateRangeProps> = ({ startDateTime, endDateTime
   return <>
 
     <DateFields>
-      <Selector
-        // label="Time Span"
+      <TextField
+        select
+        label="Time Span"
         value={dateRangeVal}
-        options={dateOptions}
         onChange={timeSpanChange}
-        // @ts-ignore
-        style={{ width: '135px' }}
-      />
+        variant="outlined"
+        style={{ width: '150px' }}
+      >
+        {dateOptions.map((option) => (
+          <MenuItem key={option.id} value={option.id}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
 
       <StyledDatePicker
         selected={startInJS}
