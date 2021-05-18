@@ -21,3 +21,22 @@ export interface IQuery {
   isFetching: boolean;
   error: any | Error;
 }
+
+export interface LinkItem {
+  label: string;
+  to: string;
+  LinkIcon: React.ComponentType;
+}
+export interface LinksMap {
+  [key: string]: LinkItem;
+}
+export interface LinksArray {
+  [key: string]: LinkItem[];
+}
+export interface LinkGroup {
+  key?: string;
+  title: string;
+  GroupIcon: React.ComponentType;
+  links: LinkItem[];
+  open: boolean;
+}

@@ -43,7 +43,16 @@ export function GlobalFilters() {
   };
 
   return (
-    <>
+    <Grid
+      container
+      item
+      xs={12}
+      sm={12}
+      lg={12}
+      xl={12}
+      spacing={4}
+      justify="flex-end"
+    >
       {[
         { menu: 'channel', title: 'Channel', options: channelOptions },
         { menu: 'direction', title: 'Direction', options: directionOptions },
@@ -60,6 +69,6 @@ export function GlobalFilters() {
           />
         </Grid>
       ))}
-    </>
+    </Grid>
   );
 }

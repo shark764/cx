@@ -1,13 +1,28 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './redux/store';
 import styled, { css } from 'styled-components';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
-import { Navigation } from './navigation';
 import { useDivWidth } from '@cx/utilities/CustomHooks/useDivWidth';
-import { fetchTenantCompetencies } from './redux/thunks';
 import './App.css';
+import { CssBaseline, Toolbar } from '@material-ui/core';
+import { inIframe } from '@cx/utilities';
+import { LinksArray } from '@cx/types';
+import {
+  AllInbox,
+  AssignmentInd,
+  AssignmentLate,
+  CalendarToday,
+  DesktopAccessDisabled,
+  People,
+  Public,
+  Settings,
+  Timeline,
+} from '@material-ui/icons';
+import { useLocation } from 'react-router-dom';
+import { fetchTenantCompetencies } from './redux/thunks';
+import { Navigation } from './navigation';
+import { RootState } from './redux/store';
 
 const Main = styled.main`
   margin: 0;
@@ -15,16 +30,71 @@ const Main = styled.main`
 `;
 
 const Content = styled.section<{ isMobile: boolean }>`
-  ${({ isMobile }) => isMobile ?
-    css`
-      margin-left: 56px;
-    ` :
-    css`
-      padding: 24px;
-      margin-left: 100px;
-    `
-  }
+  ${({ isMobile }) => (isMobile
+    ? css`
+          margin-left: 56px;
+        `
+    : css`
+          padding: 24px;
+          margin-left: 100px;
+        `)}
 `;
+
+const navLinks = [
+  { label: 'Planning', to: '/planning' },
+  { label: 'Forecasting', to: '/forecasting' },
+  { label: 'Agent', to: '/agent' },
+  { label: 'Admin', to: '/admin' },
+];
+const linkMap: LinksArray = {
+  planning: [
+    { label: 'Schedule', to: '/planning/schedule', LinkIcon: CalendarToday },
+    { label: 'Employees', to: '/planning/employees', LinkIcon: People },
+    { label: 'Settings', to: '/planning/settings', LinkIcon: Settings },
+  ],
+  standard: [
+    { label: 'Schedule', to: '/planning/schedule', LinkIcon: CalendarToday },
+    { label: 'Employees', to: '/planning/employees', LinkIcon: People },
+    { label: 'Settings', to: '/planning/settings', LinkIcon: Settings },
+  ],
+  forecasting: [
+    { label: 'Forecast', to: '/forecasting', LinkIcon: Timeline },
+    { label: 'Settings', to: '/forecasting/settings', LinkIcon: Settings },
+  ],
+  agent: [
+    { label: 'Schedule', to: '/agent/schedule', LinkIcon: CalendarToday },
+    {
+      label: 'Availability',
+      to: '/agent/availability',
+      LinkIcon: AssignmentLate,
+    },
+    /**
+     * NOT REQUIRED FOR MVP
+     */
+    // { label: 'Request', to: '/agent/request', LinkIcon: Icon },
+    // { label: 'Trade', to: '/agent/trade', LinkIcon: Icon },
+    // { label: 'Messages', to: '/agent/messages', LinkIcon: Icon },
+  ],
+  admin: [
+    { label: 'Organization', to: '/admin/organization', LinkIcon: AllInbox },
+    {
+      label: 'Activity Management',
+      to: '/admin/activity-management',
+      LinkIcon: AssignmentLate,
+    },
+    {
+      label: 'Competence Management',
+      to: '/admin/competence-management',
+      LinkIcon: AssignmentInd,
+    },
+    { label: 'Day Types', to: '/admin/day-types', LinkIcon: Public },
+    {
+      label: 'Default Restriction',
+      to: '/admin/default-restriction',
+      LinkIcon: DesktopAccessDisabled,
+    },
+  ],
+};
 
 export function App() {
   const displaySize = useSelector((state: RootState) => state.main.displaySize);
@@ -36,18 +106,28 @@ export function App() {
     width < displaySize ? setIsMobile(true) : setIsMobile(false);
   }, [width, displaySize]);
 
-
   React.useEffect(() => {
     dispatch(fetchTenantCompetencies());
   }, [dispatch]);
 
+  const route: string = useLocation().pathname.split('/')?.[1];
+  const sideLinks = route && linkMap[route] ? linkMap[route] : [];
+
   return (
     <>
-      {window.parent === window ? <PageHeader /> : <></>}
+      <CssBaseline />
 
-      <PageSideBar />
+      {/* Not in iframe */}
+      {!inIframe() && (
+        <PageHeader links={navLinks} header="Workforce Management" />
+      )}
+
+      <PageSideBar links={sideLinks} />
 
       <Main>
+        {/* Needed to adjust when app has a PageHeader */}
+        {!inIframe() && <Toolbar />}
+
         <Content ref={ref} isMobile={isMobile}>
           <Navigation />
         </Content>

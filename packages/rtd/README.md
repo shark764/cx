@@ -28,6 +28,16 @@ yarn install
 yarn start:rtd
 ```
 
+This will run project silently on port 3007. Change following line on `package.json` file to run on a different port if needed
+```json
+{
+  "scripts": {
+    "start": "BROWSER=none PORT=3007 react-app-rewired start"
+  }
+}
+```
+setting `BROWSER=none` makes project to run without opening browser automatically
+
 If you run this project from its package folder
 
 ```bash

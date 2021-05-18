@@ -1,68 +1,76 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
-import { withTheme, Theme } from "@material-ui/core/styles"
+import {
+  AppBar,
+  Container,
+  Link,
+  List,
+  ListItem,
+  makeStyles,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
-const Header = withTheme(styled('header')`
-  display: grid;
-  grid-template-areas: 'logo nav';
-  height: 50px;
-  background-color: ${({theme}: any) => {
-    return theme.palette.primary.main;
-    }};
-  padding-left: 20px;
-  padding-right: 20px;
-`);
-const Nav = styled.nav`
-  grid-area: nav;
-  display: grid;
-  grid-template-columns: repeat(6, auto);
-  align-items: center;
-  justify-items: center;
-`;
-const StyledNavLink = withTheme(styled(NavLink)`
-  text-decoration: none;
-  color: ${({theme: { palette: { getContrastText, primary } }}) => getContrastText(primary.main) };
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  activeLink: {
+    color: theme.palette.secondary.light,
+  },
+}));
 
-  &.active {
-    color: grey;
-  }
+interface LinksMap {
+  label: string;
+  to: string;
+}
 
-  &:focus,
-  &:hover,
-  &:visited,
-  &:link,
-  &:active {
-    text-decoration: none;
-  }
-`);
+export function PageHeader({
+  links,
+  header,
+}: {
+  links: LinksMap[];
+  header?: string;
+}): React.ReactElement {
+  const classes = useStyles();
+  const { pathname } = useLocation();
+  const splitLocation = pathname.split('/');
 
-const links = [
-  { label: 'Planning', to: '/planning' },
-  { label: 'Forecasting', to: '/forecasting' },
-  { label: 'Agent', to: '/agent' },
-  { label: 'Admin', to: '/admin' },
-];
-
-export function PageHeader() {
   return (
-    <Header>
-      <Nav>
-        {links.map((link) => (
-          <StyledNavLink
-            to={link.to}
-            key={link.to}
-            isActive={(match, location) => {
-              if (!match) {
-                return false;
-              }
-              return link.to === location.pathname;
-            }}
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar className={classes.toolbar} variant="dense">
+        <Link color="inherit" component={RouterLink} to="/">
+          <Typography variant="h6" noWrap>
+            {header}
+          </Typography>
+        </Link>
+        <Container maxWidth="md" className={classes.toolbar}>
+          <List
+            component="nav"
+            aria-labelledby="main navigation"
+            className={classes.toolbar}
           >
-            <span>{link.label}</span>
-          </StyledNavLink>
-        ))}
-      </Nav>
-    </Header>
+            {links.map((link) => (
+              <ListItem
+                button
+                color="inherit"
+                component={RouterLink}
+                to={link.to}
+                key={link.to}
+                className={
+                  `/${splitLocation[1]}` === link.to ? classes.activeLink : ''
+                }
+              >
+                {link.label}
+              </ListItem>
+            ))}
+          </List>
+        </Container>
+      </Toolbar>
+    </AppBar>
   );
 }

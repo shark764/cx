@@ -1,48 +1,30 @@
 import * as React from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import clsx from 'clsx';
+import { inIframe } from '@cx/utilities';
 import {
-  createStyles, makeStyles, useTheme, Theme,
-} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import AssignmentLateIcon from '@material-ui/icons/AssignmentLate';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import SettingsIcon from '@material-ui/icons/Settings';
-import AllInboxIcon from '@material-ui/icons/AllInbox';
-import PublicIcon from '@material-ui/icons/Public';
-import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
-import PeopleIcon from '@material-ui/icons/People';
-import TimelineIcon from '@material-ui/icons/Timeline';
+  ClickAwayListener,
+  Collapse,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  makeStyles,
+  Theme,
+  Toolbar,
+} from '@material-ui/core';
+import {
+  ChevronLeft,
+  ExpandLess,
+  ExpandMore,
+  Menu as MenuIcon,
+} from '@material-ui/icons';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { LinkGroup, LinkItem } from '@cx/types';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
+const useStyles = makeStyles((theme: Theme) => ({
   menuButton: {
     marginRight: 11,
   },
@@ -59,7 +41,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    top: window.parent === window ? '50px' : '0px',
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -71,7 +52,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
-    top: window.parent === window ? '50px' : '0px',
   },
   toolbar: {
     display: 'flex',
@@ -81,46 +61,138 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
+  rlink: {
+    textDecoration: 'none',
+    color: 'grey',
+    fontWeight: 'bold',
+  },
+  submenu: {
+    color: '#2a3439',
+  },
+  nested: {
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: theme.spacing(4),
+    color: '#3b444b',
+  },
+  activeLink: {
+    color: '#2a3439',
   },
 }));
 
-export function PageSideBar() {
-  const linkMap: { [key: string]: any[] } = {
-    planning: [
-      { label: 'Schedule', to: '/planning/schedule', icon: <CalendarTodayIcon /> },
-      { label: 'Employees', to: '/planning/employees', icon: <PeopleIcon /> },
-      { label: 'Settings', to: '/planning/settings', icon: <SettingsIcon /> },
-    ],
-    forecasting: [
-      { label: 'Forecast', to: '/forecasting', icon: <TimelineIcon /> },
-      { label: 'Settings', to: '/forecasting/settings', icon: <SettingsIcon /> },
-    ],
-    agent: [
-      { label: 'Schedule', to: '/agent/schedule', icon: <CalendarTodayIcon /> },
-      { label: 'Availability', to: '/agent/availability', icon: <AssignmentLateIcon /> },
-      /**
-       * NOT REQUIRED FOR MVP
-       */
-      // { label: 'Request', to: '/agent/request', icon: <Icon /> },
-      // { label: 'Trade', to: '/agent/trade', icon: <Icon /> },
-      // { label: 'Messages', to: '/agent/messages', icon: <Icon /> },
-    ],
-    admin: [
-      { label: 'Organization', to: '/admin/organization', icon: <AllInboxIcon /> },
-      { label: 'Activity Management', to: '/admin/activity-management', icon: <AssignmentLateIcon /> },
-      { label: 'Competence Management', to: '/admin/competence-management', icon: <AssignmentIndIcon /> },
-      { label: 'Day Types', to: '/admin/day-types', icon: <PublicIcon /> },
-      { label: 'Default Restriction', to: '/admin/default-restriction', icon: <DesktopAccessDisabledIcon /> },
-    ],
-  };
-  const route: string = useLocation().pathname.split('/')?.[1];
-  const links = route && linkMap[route] ? linkMap[route] : [];
-
+function MenuListItem({
+  link,
+  isNested = false,
+  handleOnClick,
+}: {
+  link: LinkItem;
+  isNested: boolean;
+  handleOnClick(): void;
+}) {
   const classes = useStyles();
-  const theme = useTheme();
+  const { pathname } = useLocation();
+  const { LinkIcon } = link;
+
+  return (
+    <ListItem
+      button
+      key={link.to}
+      color="inherit"
+      component={RouterLink}
+      to={link.to}
+      title={link.label}
+      selected={link.to === pathname}
+      className={`${link.label.split(' ').join('')}Link ${classes.rlink} ${
+        isNested ? classes.nested : ''
+      } ${link.to === pathname ? classes.activeLink : ''}`}
+      onClick={handleOnClick}
+    >
+      <ListItemIcon>
+        <LinkIcon />
+      </ListItemIcon>
+      <ListItemText primary={link.label} />
+    </ListItem>
+  );
+}
+
+function GroupList({
+  title,
+  GroupIcon,
+  links,
+  open,
+  drawerOpen,
+  handleDrawerOpen,
+  handleDrawerClose,
+}: {
+  title: string;
+  GroupIcon: React.ComponentType;
+  links: LinkItem[];
+  open: boolean;
+  drawerOpen: boolean;
+  handleDrawerOpen(): void;
+  handleDrawerClose(): void;
+}) {
+  const classes = useStyles();
+  const [isOpen, setIsOpen] = React.useState(!!open);
+
+  /**
+   * TODO:
+   * Rewrite this without using hook useEffect
+   */
+  React.useEffect(() => {
+    if (!drawerOpen) {
+      setIsOpen(false);
+    }
+  }, [drawerOpen]);
+
+  const handleClick = () => {
+    if (!drawerOpen) {
+      handleDrawerOpen();
+    }
+    setIsOpen(!isOpen);
+  };
+
+  const handleItemClick = () => {
+    setIsOpen(false);
+    handleDrawerClose();
+  };
+
+  return (
+    <>
+      <ListItem button onClick={handleClick}>
+        <ListItemIcon>
+          <GroupIcon />
+        </ListItemIcon>
+        <ListItemText primary={title} className={classes.submenu} />
+        {isOpen ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={isOpen} timeout={100} unmountOnExit>
+        <List component="div" disablePadding>
+          {links.map((link: LinkItem) => (
+            <MenuListItem
+              key={link.to}
+              link={link}
+              isNested
+              handleOnClick={handleItemClick}
+            />
+          ))}
+        </List>
+      </Collapse>
+    </>
+  );
+}
+
+export function PageSideBar({
+  links,
+  groups,
+  subheader,
+}: {
+  links?: LinkItem[];
+  groups?: LinkGroup[];
+  subheader?: string;
+}): React.ReactElement {
+  const classes = useStyles();
+
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -132,65 +204,65 @@ export function PageSideBar() {
   };
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      />
+    <ClickAwayListener onClickAway={handleDrawerClose}>
       <Drawer
         variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
+        className={`${classes.drawer} ${
+          open ? classes.drawerOpen : classes.drawerClose
+        }`}
         classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
+          paper: open ? classes.drawerOpen : classes.drawerClose,
         }}
       >
+        {/* Needed to adjust when app has a PageHeader */}
+        {!inIframe() && <Toolbar />}
+
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            <ChevronLeft />
           </IconButton>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
+            className={`${classes.menuButton} ${open ? classes.hide : ''}`}
           >
             <MenuIcon />
           </IconButton>
         </div>
         <Divider />
-        <List>
-          {links.map((link) => (
-            <Link
-              to={link.to}
-              key={link.to}
-              style={{
-                textDecoration: 'none',
-                color: 'grey',
-                fontWeight: 'bold',
-              }}
-              title={link.label}
-              className={link.label.split(' ').join('') + 'Link'}
-            >
-              <ListItem button key={link.to}>
-                <ListItemIcon>{link.icon}</ListItemIcon>
-                <ListItemText primary={link.label} />
-              </ListItem>
-            </Link>
-          ))}
+        <List
+          aria-labelledby="list-menuitems"
+          subheader={
+            open && subheader ? (
+              <ListSubheader component="div">{subheader}</ListSubheader>
+            ) : (
+              undefined
+            )
+          }
+        >
+          {links
+            && links.map((link: LinkItem) => (
+              <MenuListItem
+                key={link.to}
+                link={link}
+                isNested={false}
+                handleOnClick={handleDrawerClose}
+              />
+            ))}
+          {groups
+            && groups.map((group: LinkGroup, index) => (
+              <GroupList
+                {...group}
+                key={group.key || index.toString()}
+                drawerOpen={open}
+                handleDrawerOpen={handleDrawerOpen}
+                handleDrawerClose={handleDrawerClose}
+              />
+            ))}
         </List>
       </Drawer>
-    </div>
+    </ClickAwayListener>
   );
 }

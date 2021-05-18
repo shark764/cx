@@ -1,3 +1,4 @@
+import { LinksMap } from '@cx/types';
 import {
   DonutLarge,
   PermPhoneMsg,
@@ -10,14 +11,6 @@ import {
 export const tempTenantId = 'b045f7b3-6f30-45ec-89aa-6f6ed2cf2040';
 
 export const drawerWidth = 300;
-
-interface LinksMap {
-  [key: string]: {
-    label: string;
-    to: string;
-    LinkIcon: React.ReactNode;
-  };
-}
 
 export const standardDashboardLinks: LinksMap = {
   '/standard/overview-dashboard': {

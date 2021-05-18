@@ -1,64 +1,83 @@
 import { inIframe } from '@cx/utilities';
 import {
-  Divider, makeStyles, Paper, Toolbar,
+  CssBaseline,
+  Divider,
+  makeStyles,
+  Paper,
+  Toolbar,
 } from '@material-ui/core';
-import { useSelector } from 'react-redux';
-import { MainState } from 'redux/reducers/main';
-import { drawerWidth } from 'utils/consts';
-import { Navigation } from './navigation/Navigation';
-import { Header } from './components/Header';
-import { PageHeader } from './components/PageHeader';
-import { PageSideMenu } from './components/PageSideMenu';
+import { standardDashboardLinks } from 'utils/consts';
+import { PageSideBar } from '@cx/components/PageSideBar';
+import { PageHeader } from '@cx/components/PageHeader';
+import { DashboardCustomize } from '@cx/components/Icons/DashboardCustomize';
+import { LinkGroup } from '@cx/types';
+import { Dashboard } from '@material-ui/icons';
+import { Header } from 'components/Header';
+import { Navigation } from 'navigation/Navigation';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-    backgroundColor: '#fafafa',
+    marginLeft: theme.spacing(12),
+    padding: theme.spacing(2, 4),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: -drawerWidth,
+    backgroundColor: 'inherit',
   },
-  divider: {
-    margin: theme.spacing(2, 0),
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
+  divider: { margin: theme.spacing(4, 0) },
 }));
+
+const navLinks = [
+  { label: 'Realtime', to: '/standard' },
+  { label: 'Custom', to: '/custom' },
+];
+
+const mockCustomLinks = [
+  {
+    label: 'My Awesome Dashboard',
+    to: '/custom/4e1d31e0-b071-11eb-8529-0242ac130003',
+    LinkIcon: Dashboard,
+  },
+  {
+    label: 'More Awesome than the last one',
+    to: '/custom/6f96eb72-b071-11eb-8529-0242ac130003',
+    LinkIcon: Dashboard,
+  },
+];
+const menuBarLinks: LinkGroup[] = [
+  {
+    key: 'standard',
+    title: 'Standard Dashboards',
+    GroupIcon: Dashboard,
+    links: Object.values(standardDashboardLinks),
+    open: false,
+  },
+  {
+    key: 'custom',
+    title: 'Custom Dashboards',
+    GroupIcon: DashboardCustomize,
+    links: mockCustomLinks,
+    open: false,
+  },
+];
 
 export function App() {
   const classes = useStyles();
-  const isLeftPanelOpen = useSelector(
-    (state: { main: MainState }) => state.main.leftPanelOpen,
-  );
 
   return (
-    <div className={classes.root}>
+    <>
+      <CssBaseline />
+
       {/* Not in iframe */}
-      {!inIframe() && <PageHeader />}
+      {!inIframe() && (
+        <PageHeader links={navLinks} header="Realtime Dashboards" />
+      )}
 
-      <PageSideMenu />
+      <PageSideBar groups={menuBarLinks} subheader="Realtime Dashboards" />
 
-      <Paper
-        elevation={0}
-        className={`${classes.content} ${
-          isLeftPanelOpen ? classes.contentShift : ''
-        }`}
-      >
+      <Paper elevation={0} className={classes.content}>
         {/* Needed to adjust when app has a PageHeader */}
         {!inIframe() && <Toolbar />}
 
@@ -68,6 +87,6 @@ export function App() {
 
         <Navigation />
       </Paper>
-    </div>
+    </>
   );
 }
