@@ -30,35 +30,6 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
   }
 );
 
-// export const useCreateAdjustment = (historicalPathParams: any, viewBy: string, selectedCompetence: string, adjustment: any) => useQuery<any, any>(
-//   ['New Adjustment', historicalPathParams, viewBy, selectedCompetence],
-//   () => wfm.forecasting.api.post_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
-//     pathParams: {
-//       tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
-//     },
-//     body: {
-//       startDateTime: adjustment.adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
-//       endDateTime: adjustment.adjustmentEndDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
-//       intervalLength: viewBy,
-//       competency: selectedCompetence,
-//       channel: 'voice',
-//       direction: 'inbound',
-//       numberOfIntervals: 1,
-//       type: 'percentage',
-//       value: adjustment.value
-//     }
-//   }),
-//   {
-//     refetchOnWindowFocus: false,
-//     enabled: false
-//   }
-// );
-const addHourOffset = (date: DateTime): DateTime => date.plus({ minutes: 14, seconds: 59 });
-const parseDate = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
-const adjustmentDateFormat = (date: DateTime): string => date.toISO({ suppressMilliseconds: true, includeOffset: true });
-
-
-
 export const useUpdateAdjustment = (historicalPathParams: any, adjustment: any, viewBy: string, selectedCompetence: string) => useQuery<any, any>(
   ['Update Adjustment'],
   () => wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({

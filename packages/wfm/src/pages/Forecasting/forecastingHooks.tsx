@@ -31,9 +31,6 @@ export const useMemoLineChartData = (data: any, intervalLength: string, selected
 
 export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
 
-  console.log('localAdjustemnts', localAdjustments)
-  console.log('globalInitialAdjustments', globalInitialAdjustments)
-
   const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
 
   return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({

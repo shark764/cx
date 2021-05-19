@@ -9,8 +9,7 @@ const initialState = {
   scenarios: [],
   timezone: '',
   historicalPathParams: {
-    // nickg tenant on qe
-    tenant_id: 'd44f4620-34cb-11e7-b248-062913f854c1',
+    tenant_id: '',
   },
   historicalQueryParams: {
     channel: 'voice',
@@ -46,6 +45,9 @@ export const forecasting = createSlice({
     },
     setScenarioInProgress: (state, action) => {
       state.scenarioInProgress = action.payload;
+    },
+    setActiveTenant: (state, action) => {
+      state.historicalPathParams.tenant_id = action.payload;
     },
   },
 });

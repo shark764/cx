@@ -48,6 +48,11 @@ export function AppThemeProvider({ children }: Props) {
         input: {
           padding: '12px 14px'
         }
+      },
+      MuiInputLabel: {
+        outlined: {
+          transform: 'translate(14px, 15px) scale(1)'
+        }
       }
     },
     palette: {

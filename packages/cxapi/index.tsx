@@ -7,8 +7,10 @@ const basePathOverride = '';
 
 const specificationWithOverridesForecast = (spec: any) => ({
   ...spec,
-  protocol: protocol,
-  host: 'us-east-1-qe-wfm-cx-forecast.cxengagelabs.net',
+  protocol: 'https',
+  host: 'qe-api.cxengagelabs.net/v1',
+  // protocol: protocol,
+  // host: 'us-east-1-qe-wfm-cx-forecast.cxengagelabs.net',
   basePath: basePathOverride,
 });
 

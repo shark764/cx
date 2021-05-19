@@ -28,9 +28,10 @@ export class OpenApi {
   constructor(openApiSpecification: any, authToken: string) {
 
     this.openApiSpecification = openApiSpecification,
-    // this.headers = { headers: { authorization: authToken } },
     this.headers = {
 
+      authorization: `Token ${authToken}`,
+      'content-type': 'application/json',
       'x-cx-auth-tenant': '["CXWFM_FORECAST_READ", "CXWFM_FORECAST_WRITE"]',
       'x-cx-auth-platform': '[""]',
     },

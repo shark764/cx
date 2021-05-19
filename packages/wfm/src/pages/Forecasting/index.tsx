@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+// import MenuItem from '@material-ui/core/MenuItem';
 
 import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -33,7 +33,7 @@ import {
 } from '../../redux/thunks';
 
 import {
-  filters,
+  // filters,
   // tableData
 } from './fakeData';
 import { createForecastFormDefenition } from './forecastFormDefinition';
@@ -352,7 +352,7 @@ export function Forecasting() {
       <TableWrapper>
         <Title> Forecast table view </Title>
         <TableFilters>
-          <span>
+          {/* <span>
             <TextField
               select
               label="Channel"
@@ -367,7 +367,7 @@ export function Forecasting() {
                 </MenuItem>
               ))}
             </TextField>
-          </span>
+          </span> */}
         </TableFilters>
         <TableSpacer>
           <Table
