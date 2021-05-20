@@ -29,11 +29,8 @@ export class OpenApi {
 
     this.openApiSpecification = openApiSpecification,
     this.headers = {
-
-      authorization: `Token ${authToken}`,
-      'content-type': 'application/json',
-      'x-cx-auth-tenant': '["CXWFM_FORECAST_READ", "CXWFM_FORECAST_WRITE"]',
-      'x-cx-auth-platform': '[""]',
+      'Authorization': `Token ${authToken}`,
+      'Content-Type': 'application/json',
     },
     this.baseUrl = `${openApiSpecification.protocol}://${openApiSpecification.host}${openApiSpecification.basePath}`,
 

@@ -2,22 +2,20 @@ import { OpenApi } from './open-api';
 import forecast from './forecast.json';
 import planning from './planning.json';
 
-const protocol = 'http';
+const protocol = 'https';
 const basePathOverride = '';
 
 const specificationWithOverridesForecast = (spec: any) => ({
   ...spec,
-  protocol: 'https',
+  protocol: protocol,
   host: 'qe-api.cxengagelabs.net/v1',
-  // protocol: protocol,
-  // host: 'us-east-1-qe-wfm-cx-forecast.cxengagelabs.net',
   basePath: basePathOverride,
 });
 
 const specificationWithOverridesPlanning = (spec: any) => ({
   ...spec,
   protocol: protocol,
-  host: 'us-east-1-qe-wfm-cx-planning.cxengagelabs.net',
+  host: 'qe-api.cxengagelabs.net/v1',
   basePath: basePathOverride,
 });
 
