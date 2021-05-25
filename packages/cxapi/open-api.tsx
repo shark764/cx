@@ -21,28 +21,28 @@ import {
 export class OpenApi {
   openApiSpecification: unknown;
   headers: any;
-  baseUrl: string;
+  baseUrl: any;
   apiMethods: any;
   api: any;
 
-  constructor(openApiSpecification: any, authToken: string) {
+  constructor(openApiSpecification: any, authToken: any, baseUrl: any) {
 
     this.openApiSpecification = openApiSpecification,
-    this.headers = {
-      'Authorization': `Token ${authToken}`,
+    this.headers = () => ({
+      'Authorization': `Token ${authToken()}`,
       'Content-Type': 'application/json',
-    },
-    this.baseUrl = `${openApiSpecification.protocol}://${openApiSpecification.host}${openApiSpecification.basePath}`,
+    });
+    this.baseUrl = () => `${baseUrl()}${openApiSpecification.basePath}`,
 
     this.apiMethods = {
       // @ts-ignore
-      get: ({ path, qs }) => axios({ headers: this.headers, method: 'GET', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),
+      get: ({ path, qs }) => axios({ headers: this.headers(), method: 'GET', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),
       // @ts-ignore
-      put: ({ path, body }) => axios({ headers: this.headers, method: 'PUT', url: this.url(path), data: body, json: true }).then(this.parse),
+      put: ({ path, body }) => axios({ headers: this.headers(), method: 'PUT', url: this.url(path), data: body, json: true }).then(this.parse),
       // @ts-ignore
-      post: ({ path, body }) => axios({ headers: this.headers, method: 'POST', url: this.url(path), data: body, json: true }).then(this.parse),
+      post: ({ path, body }) => axios({ headers: this.headers(), method: 'POST', url: this.url(path), data: body, json: true }).then(this.parse),
       // @ts-ignore
-      delete: ({ path, qs }) => axios({ headers: this.headers, method: 'DELETE', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),
+      delete: ({ path, qs }) => axios({ headers: this.headers(), method: 'DELETE', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),
     },
 
     this.api = Object.entries(openApiSpecification.paths)
@@ -73,7 +73,7 @@ export class OpenApi {
     return response.data;
   };
 
-  url = (path: string): string =>`${this.baseUrl}${path}`;
+  url = (path: string): string =>`${this.baseUrl()}${path}`;
 
   pathWithParamsTransposed(path: string, pathParams: PathParms): string {
     return `/${path.substring(1).split('/').map(node =>

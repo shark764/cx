@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
 import { useDivWidth } from '@cx/utilities/CustomHooks/useDivWidth';
+import { fetchTenantCompetencies } from './redux/thunks';
+import { main } from './redux/reducers/main';
 import './App.css';
 import { CssBaseline, Toolbar } from '@material-ui/core';
 import { inIframe } from '@cx/utilities';
@@ -20,9 +23,12 @@ import {
   Timeline,
 } from '@material-ui/icons';
 import { useLocation } from 'react-router-dom';
-import { fetchTenantCompetencies } from './redux/thunks';
 import { Navigation } from './navigation';
 import { RootState } from './redux/store';
+
+const {
+  setSessionData
+} = main.actions;
 
 const Main = styled.main`
   margin: 0;
@@ -96,19 +102,26 @@ const linkMap: LinksArray = {
   ],
 };
 
-export function App() {
+export function App({tenant_id}: any) {
   const displaySize = useSelector((state: RootState) => state.main.displaySize);
+  const sessionTenantId = useSelector((state: RootState) => state.main.session.tenant_id);
   const [ref, width] = useDivWidth();
   const [isMobile, setIsMobile] = React.useState(false);
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     width < displaySize ? setIsMobile(true) : setIsMobile(false);
   }, [width, displaySize]);
 
-  React.useEffect(() => {
-    dispatch(fetchTenantCompetencies());
-  }, [dispatch]);
+  useEffect(() => {
+    if (sessionTenantId) {
+      dispatch(fetchTenantCompetencies());
+    }
+  }, [dispatch, sessionTenantId]);
+
+  useEffect(() => {
+    dispatch(setSessionData({tenant_id: tenant_id}));
+  }, [dispatch, tenant_id]);
 
   const route: string = useLocation().pathname.split('/')?.[1];
   const sideLinks = route && linkMap[route] ? linkMap[route] : [];
@@ -132,6 +145,7 @@ export function App() {
           <Navigation />
         </Content>
       </Main>
+
     </>
   );
 }
