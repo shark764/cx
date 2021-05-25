@@ -2,8 +2,8 @@ import { wfm } from '../../api';
 import { useQuery } from 'react-query';
 import { DateTime } from 'luxon';
 
-export const useTimelineAdjustments = (historicalPathParams: any, historicalQueryParams: any, selectedTimeline: any, viewBy: string) => useQuery<any, any>(
-  ['Timeline Adjustments', historicalPathParams, selectedTimeline, viewBy],
+export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams: any, selectedTimeline: any, viewBy: string) => useQuery<any, any>(
+  ['Timeline Adjustments', tenant_id, selectedTimeline, viewBy],
   () => {
     // TODO: this seems to fire twice?
     const allAdjustmentStartDate = DateTime.fromISO(historicalQueryParams.startDateTime)
@@ -14,7 +14,7 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
 
     return wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments({
       pathParams: {
-        tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
+        tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
       },
       queryString: {
         interval: viewBy,
@@ -26,15 +26,16 @@ export const useTimelineAdjustments = (historicalPathParams: any, historicalQuer
     })
   },
   {
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!tenant_id,
   }
 );
 
-export const useUpdateAdjustment = (historicalPathParams: any, adjustment: any, viewBy: string, selectedCompetence: string) => useQuery<any, any>(
+export const useUpdateAdjustment = (tenant_id: string, adjustment: any, viewBy: string, selectedCompetence: string) => useQuery<any, any>(
   ['Update Adjustment'],
   () => wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({
     pathParams: {
-      tenant_id: historicalPathParams.tenant_id,
+      tenant_id,
       forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3",
       adjustment_id: adjustment.adjustmentId
     },
@@ -56,11 +57,11 @@ export const useUpdateAdjustment = (historicalPathParams: any, adjustment: any, 
   }
 );
 
-export const useDeleteAdjustment = (historicalPathParams: any, adjustment: any) => useQuery<any, any>(
+export const useDeleteAdjustment = (tenant_id: string, adjustment: any) => useQuery<any, any>(
   ['Delete Adjustment'],
   () => wfm.forecasting.api.delete_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment({
     pathParams: {
-      tenant_id: historicalPathParams.tenant_id,
+      tenant_id,
       forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3",
       adjustment_id: adjustment.adjustmentId
     }
@@ -86,7 +87,7 @@ export const useDeleteAdjustment = (historicalPathParams: any, adjustment: any) 
 //     if (adjustmentOperation === 'post' && value !== '') {
 //       return wfm.forecasting.api.post_tenants_tenant_forecasttimeline_forecast_timeline_adjustments({
 //         pathParams: {
-//           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
+//           tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854"
 //         },
 //         body: {
 //           startDateTime: adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
@@ -103,7 +104,7 @@ export const useDeleteAdjustment = (historicalPathParams: any, adjustment: any) 
 //     } else if (adjustmentOperation === 'update') {
 //       return wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({
 //         pathParams: {
-//           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
+//           tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
 //         },
 //         body: {
 //           startDateTime: adjustmentStartDate.toISO({ suppressMilliseconds: true, includeOffset: false }),
@@ -120,7 +121,7 @@ export const useDeleteAdjustment = (historicalPathParams: any, adjustment: any) 
 //     } else if (adjustmentOperation === 'delete' && adjustmentId) {
 //       return wfm.forecasting.api.delete_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment({
 //         pathParams: {
-//           tenant_id: historicalPathParams.tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
+//           tenant_id, forecast_timeline_id: "94a42382-725f-48eb-8880-533cae2e1854", adjustment_id: adjustmentId
 //         }
 //       });
 //     }

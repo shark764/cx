@@ -122,7 +122,7 @@ const TableSpacer = styled.div`
 export function Forecasting() {
   // Global State
   const dispatch = useDispatch();
-  const historicalPathParams = useSelector((state: RootState) => state.forecasting.historicalPathParams);
+  const tenant_id = useSelector((state: RootState) => state.main.session.tenant_id);
   const historicalQueryParams = useSelector((state: RootState) => state.forecasting.historicalQueryParams);
   const allScenarios = useSelector((state: RootState) => state.forecasting.scenarios);
   const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
@@ -152,19 +152,19 @@ export function Forecasting() {
     data: timelines = [],
     // isLoading: timelinesLoading,
     // error: timelinesError
-  } = useTimelines(historicalPathParams);
+  } = useTimelines(tenant_id);
 
   const {
     data: timelineQuery = [],
     isLoading: timelineQueryLoading,
     // error: timelineQueryError
-  } = useTimelineQuery(historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
+  } = useTimelineQuery(tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
 
   const {
     data: timelineAdjustments = [],
     // isLoading: timelineAdjustmentsLoading,
     // error: timelineQueryError
-  } = useTimelineAdjustments(historicalPathParams, historicalQueryParams, selectedTimeline,  viewBy);
+  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline,  viewBy);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
   const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
@@ -293,7 +293,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={createTimelineFormDefenition}
               onCancel={() => setCreateNewTimeline(false)}
-              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, historicalPathParams.tenant_id, 'refetch') }}
+              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, tenant_id, 'refetch') }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -302,7 +302,7 @@ export function Forecasting() {
               defaultValues={defaultForecastFormValues()}
               formDefenition={createForecastFormDefenition}
               onCancel={() => setCreateNewForecast(false)}
-              onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, historicalPathParams.tenant_id, selectedTimeline.id) }}
+              onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, tenant_id, selectedTimeline.id) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -311,7 +311,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={deleteForcastFormDefinition}
               onCancel={() => setDeleteForecast(false)}
-              onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastScenario(data, historicalPathParams.tenant_id, selectedTimeline.id) }}
+              onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastScenario(data, tenant_id, selectedTimeline.id) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>
@@ -376,7 +376,7 @@ export function Forecasting() {
             tableData={timelineQueryTableData}
             viewMode={viewBy}
             adjustmentCellMethod={createAdjustment(
-              historicalPathParams,
+              tenant_id,
               selectedTimeline?.id,
               viewBy,
               selectedCompetence,

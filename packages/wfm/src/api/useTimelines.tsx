@@ -18,13 +18,11 @@ interface ModifiedTimelines {
   description: string | undefined;
 };
 
-export const useTimelines = (historicalPathParams: any) => useQuery<TimelinesData[], Error>(
-  ['Timelines', historicalPathParams],
+export const useTimelines = (tenant_id: string) => useQuery<TimelinesData[], Error>(
+  ['Timelines', tenant_id],
   () => {
 
-    const requestDetails: TimelineRequest = {
-      pathParams: { tenant_id: historicalPathParams.tenant_id }
-    };
+    const requestDetails: TimelineRequest = { pathParams: { tenant_id } };
     return wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimelines(requestDetails)
 
       .then(( data: TimelinesData[]): ModifiedTimelines[] =>
@@ -36,6 +34,7 @@ export const useTimelines = (historicalPathParams: any) => useQuery<TimelinesDat
       )
   },
   {
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: !!tenant_id,
   }
 );

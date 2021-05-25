@@ -11,11 +11,11 @@ interface TimelineRequest {
   body: TimelineSeriesRequestObject;
 };
 
-export const useTimelineQuery = (historicalPathParams: any, historicalQueryParams: any, selectedTimeline: any, selectedCompetence: any, viewBy: any) => useQuery<TimelineSeriesData, Error>(
-  ['Timeline Query', historicalPathParams, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
+export const useTimelineQuery = (tenant_id: any, historicalQueryParams: any, selectedTimeline: any, selectedCompetence: any, viewBy: any) => useQuery<TimelineSeriesData, Error>(
+  ['Timeline Query', tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
   () => {
     const requestDetails: TimelineRequest = {
-      pathParams: { tenant_id: historicalPathParams.tenant_id, timeline_id: selectedTimeline?.id },
+      pathParams: { tenant_id, timeline_id: selectedTimeline?.id },
       body: {
         startDate: historicalQueryParams.startDateTime,
         endDate: historicalQueryParams.endDateTime,
@@ -41,5 +41,6 @@ export const useTimelineQuery = (historicalPathParams: any, historicalQueryParam
   },
   {
     refetchOnWindowFocus: false,
+    enabled: !!tenant_id,
   }
 );

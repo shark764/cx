@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  session: {
+    tenant_id: null,
+  },
   theme: null,
   displaySize: 720,
   competencies: [],
@@ -15,6 +18,9 @@ export const main = createSlice({
     },
     setCompetencies: (state, action) => {
       state.competencies = action.payload;
+    },
+    setSessionData: (state, action) => {
+      state.session = action.payload;
     },
   },
 });

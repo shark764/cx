@@ -21,11 +21,11 @@ const adjustmentDateFormat = (date: DateTime): string => date.toISO({ suppressMi
 const adjustmentStartDate = (date: string) => adjustmentDateFormat(parseDate(date));
 const adjustmentEndDate = (date: string) => adjustmentDateFormat(addHourOffset(parseDate(date)));
 
-export const createAdjustment = (historicalPathParams: any, forecast_timeline_id: string, intervalLength: IntervalLength, selectedCompetence: string) => (adjustment: any) => {
+export const createAdjustment = (tenant_id: string, forecast_timeline_id: string, intervalLength: IntervalLength, selectedCompetence: string) => (adjustment: any) => {
 
   const newAdjustmentRequest: NewAdjustmentRequest = {
     pathParams: {
-      tenant_id: historicalPathParams.tenant_id, forecast_timeline_id,
+      tenant_id, forecast_timeline_id,
     },
     body: {
       startDateTime: adjustmentStartDate(adjustment.timestamp),

@@ -58,13 +58,13 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
   const classes = useStylesBootstrap();
 
   const dispatch = useDispatch();
-  const historicalPathParams = useSelector((state: RootState) => state.forecasting.historicalPathParams);
+  const tenant_id = useSelector((state: RootState) => state.main.session.tenant_id);
   const { startDate, endDate, forecast_scenario_id } = useSelector((state: RootState) => state.forecasting.scenarioInProgress);
 
   const { data: generatedForecasts } = useQuery<any, any>(
-    ['timelinesData', historicalPathParams, forecast_scenario_id],
+    ['timelinesData', tenant_id, forecast_scenario_id],
     () => forecast_scenario_id && wfm.forecasting.api.get_all_tenants_tenant_id_forecastscenarios_scenario_id_series({
-      pathParams: { tenant_id: historicalPathParams.tenant_id, scenario_id: forecast_scenario_id },
+      pathParams: { tenant_id, scenario_id: forecast_scenario_id },
     }),
     {
       refetchInterval: 15000,

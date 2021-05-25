@@ -6,6 +6,9 @@ export interface RootState {
     theme: any;
     displaySize: number;
     competencies: any[];
+    session: {
+      tenant_id: string;
+    };
   };
   planning: {
     startDate: string;
@@ -18,10 +21,6 @@ export interface RootState {
     scenarios: any[];
     scenarioInProgress: {startDate: string, endDate: string, forecast_scenario_id: string};
     timezone: string;
-    historicalPathParams: {
-      tenant_id: string;
-      competency_id: string;
-    },
     historicalQueryParams: {
       channel: string;
       direction: string;

@@ -8,9 +8,6 @@ const initialState = {
   competence: '',
   scenarios: [],
   timezone: '',
-  historicalPathParams: {
-    tenant_id: '',
-  },
   historicalQueryParams: {
     channel: 'voice',
     direction: 'inbound',
@@ -45,9 +42,6 @@ export const forecasting = createSlice({
     },
     setScenarioInProgress: (state, action) => {
       state.scenarioInProgress = action.payload;
-    },
-    setActiveTenant: (state, action) => {
-      state.historicalPathParams.tenant_id = action.payload;
     },
   },
 });
