@@ -4,7 +4,7 @@ import planning from './planning.json';
 
 const specificationWithOverrides = (spec: any) => ({
   ...spec,
-  basePath: 'v1',
+  basePath: '/v1',
 });
 
 const token = () => localStorage.getItem('token');
