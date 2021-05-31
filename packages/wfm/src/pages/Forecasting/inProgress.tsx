@@ -6,7 +6,7 @@ import { RootState } from '../../redux/store';
 import { useQuery } from 'react-query';
 import { wfm } from '../../api';
 import Tooltip from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { Ellipsis } from '@cx/components/Icons/Ellipsis';
 import { Insights } from '@cx/components/Icons/Insights';
 import { forecasting } from '../../redux/reducers/forecasting';
@@ -87,7 +87,6 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
       <div>
         <Tooltip
           classes={classes}
-          interactive
           TransitionComponent={Zoom}
           arrow
           title={

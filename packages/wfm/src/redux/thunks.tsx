@@ -31,7 +31,7 @@ export function loadTheme() {
 export const fetchTenantCompetencies = () => {
   return async (dispatch: any, getState: any) => {
     const { main: { session: { tenant_id } } } = getState();
-    const data = await wfm.planning.api.get_all_competencies_tenants_tenant_id_competencies({
+    const data = await wfm.planning.api.get_all_competencies_tenants_tenant_id_wfm_competencies({
       pathParams: { tenant_id },
     });
     // Set all global known competencies

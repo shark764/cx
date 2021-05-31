@@ -80,6 +80,7 @@ export function Filters() {
             onChange={({target: { value }}: any) => handleCompetenceChanged(value)}
             variant="outlined"
             style={{ width: '200px' }}
+            size="small"
           >
             {competenceOptions.map((option) => (
               <MenuItem key={option.id} value={option.id}>

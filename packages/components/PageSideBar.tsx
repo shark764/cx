@@ -11,10 +11,10 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
-  makeStyles,
   Theme,
   Toolbar,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import {
   ChevronLeft,
   ExpandLess,
@@ -48,9 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
+      width: theme.spacing(9),
     },
   },
   toolbar: {
@@ -218,18 +217,17 @@ export function PageSideBar({
         {!inIframe() && <Toolbar />}
 
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
+          {open && <IconButton onClick={handleDrawerClose}>
             <ChevronLeft />
-          </IconButton>
-          <IconButton
+          </IconButton>}
+          {!open && <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            className={`${classes.menuButton} ${open ? classes.hide : ''}`}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton>}
         </div>
         <Divider />
         <List

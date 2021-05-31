@@ -3,7 +3,7 @@
   "info": {
     "title": "CX WFM Api (Historical, Forecast and Target)",
     "description": "CxWFM platform api for handling historical data and generating and storing forecasts.",
-    "version": "0.1.0"
+    "version": "0.3.0"
   },
   "paths": {
     "/status": {
@@ -2116,7 +2116,7 @@
           "Adjustment"
         ],
         "summary": "Post",
-        "description": "Add new adjustment.\n\nAdjustments are required to have a start date time,\nthat matches the chosen interval length. This check\nis performed in the timezone of the tenant.\n\nFor example can hour adjustments start on whole hours,\nwhile day adjustments should be placed at 0:00.",
+        "description": "Add new adjustment.\n\nAdjustments are required to have a start date time,\nthat matches the chosen interval length. This check\nis performed in the timezone of the tenant.\n\nFor example can hour adjustments start on whole hours,\nwhile day adjustments should be placed at 0:00.\n\nOnly quarter hour, hour and day adjustments are supported.",
         "operationId": "post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments",
         "parameters": [
           {
@@ -2359,7 +2359,7 @@
           "Adjustment"
         ],
         "summary": "Patch",
-        "description": "Update an adjustment.",
+        "description": "Update an adjustment.\n\nOnly quarter hour, hour and day adjustments are supported.",
         "operationId": "patch_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
         "parameters": [
           {
@@ -2451,7 +2451,7 @@
           "Forecast Timeline"
         ],
         "summary": "Timeline Series Queries",
-        "description": "Retrieve the data series for a timeline.\n\nBased on the input parameters this endpoint will return the data series\nfor a timeline. If adjustments are stacked (i.e. more than one adjustment\nis applied to an interval), any percentage-based adjustment is applied\nbefore absolute adjustments.\n\nThe start and end date in the query is in the tenant timezone, i.e.,\ntimestamps will be relative to the tenants timezone. Timestamps represent\nthe start of the interval.",
+        "description": "Retrieve the data series for a timeline.\n\nBased on the input parameters this endpoint will return the data series\nfor a timeline. If adjustments are stacked (i.e. more than one adjustment\nis applied to an interval), any percentage-based adjustment is applied\nbefore absolute adjustments.\n\nThe start and end date in the query is in the tenant timezone, i.e.,\ntimestamps will be relative to the tenants timezone. Timestamps represent\nthe start of the interval.\n\nFor staffing estimates the sla threshold is taken from the sla assigned to\nthe competency if available, if that is unavailable it is then taken from\nthe assigned default sla for the tenant, in case niether has a sla\ndefined then a fallback default of 20 seconds is used.",
         "operationId": "timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query",
         "parameters": [
           {
@@ -2679,7 +2679,8 @@
           "type",
           "metric",
           "value",
-          "id"
+          "id",
+          "endDateTime"
         ],
         "type": "object",
         "properties": {
@@ -2717,10 +2718,19 @@
             "title": "Value",
             "type": "number"
           },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
           "id": {
             "title": "Id",
             "type": "string",
             "format": "uuid"
+          },
+          "endDateTime": {
+            "title": "Enddatetime",
+            "type": "string",
+            "format": "date-time"
           }
         },
         "description": "Represent dto model for output responses."
@@ -2759,6 +2769,10 @@
           "value": {
             "title": "Value",
             "type": "number"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
           }
         },
         "description": "Represent dto model for updates."
@@ -3102,9 +3116,7 @@
         "required": [
           "competency",
           "channel",
-          "direction",
-          "forecast",
-          "adjusted"
+          "direction"
         ],
         "type": "object",
         "properties": {
@@ -3131,6 +3143,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ForecastTimelineSeriesDataSeriesDTO"
+            }
+          },
+          "staffing": {
+            "title": "Staffing",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastTimelineSeriesStaffingSeriesDto"
             }
           }
         },
@@ -3217,9 +3236,33 @@
             "title": "Includeforecast",
             "type": "boolean",
             "default": false
+          },
+          "includeStaffing": {
+            "title": "Includestaffing",
+            "type": "boolean",
+            "default": false
           }
         },
         "description": "Query input for getting timeline data series."
+      },
+      "ForecastTimelineSeriesStaffingSeriesDto": {
+        "title": "ForecastTimelineSeriesStaffingSeriesDto",
+        "required": [
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string",
+            "format": "date-time"
+          },
+          "staffing_estimate": {
+            "title": "Staffing Estimate",
+            "type": "integer"
+          }
+        },
+        "description": "A forecasted staffing requirement."
       },
       "ForecastValueType": {
         "title": "ForecastValueType",
@@ -3351,6 +3394,10 @@
           "value": {
             "title": "Value",
             "type": "number"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
           }
         },
         "description": "Represent dto model for input requests.\n\nCurrently only the metrics nco and aht are supported."
@@ -3508,7 +3555,7 @@
     },
     {
       "name": "Adjustment",
-      "description": "Routes for managing forecast adjustments.\n\nAdjustments are changes to the forecasted values\nthat are applied when the forecast is used to optimize a schedule.\nAdjustments can be made at different intervals (quarter-hour, hourly,\ndaily, monthly or yearly) and when applied it will update all values within\nthat interval. The type of update can be set either as a percentage of\nexisting values or as an absolute value. If set as an absolute value\nover anything else than a quarter-hour interval, the value will be\ndistributed over the whole interval. Adjustments can be stacked (i.e.\nmultiple adjustments can be applied to an interval) and they can also\noverlap. When overlapping, percentage-based adjustments will be applied\nfirst.\n"
+      "description": "Routes for managing forecast adjustments.\n\nAdjustments are changes to the forecasted values\nthat are applied when the forecast is used to optimize a schedule.\nAdjustments can be made at different intervals (quarter-hour, hourly,\nor daily) and when applied it will update all values within\nthat interval. The type of update can be set either as a percentage of\nexisting values or as an absolute value. If set as an hour absolute value\nwill that value be distributed into the 4 individual quarter hour intervals.\nA daily absolute adjustment is somewhat different since it will distribute\nthe daily adjustment proportinally over the quarters. This means that\nquarter intervals with no interactions, for example outside open hours,\nwill not be affected.\nAdjustments can be stacked (i.e. multiple adjustments can be applied\nto an interval) and they can also\noverlap. When overlapping, percentage-based adjustments will be applied\nfirst.\n"
     }
   ]
 }

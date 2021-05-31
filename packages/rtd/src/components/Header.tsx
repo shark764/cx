@@ -1,9 +1,19 @@
-import { makeStyles, Paper, Typography } from '@material-ui/core';
+import { Paper, Typography, Theme } from '@material-ui/core';
+import styled from 'styled-components';
+import { makeStyles } from '@material-ui/styles';
 import { useLocation } from 'react-router';
 import { standardDashboardLinks } from 'utils/consts';
 import { GlobalFilters } from './Filters/GlobalFilters';
 
-const useStyles = makeStyles((theme) => ({
+const Title = styled.h4`
+  color: grey;
+  font-style: italic;
+  margin-top: 0px;
+  margin-left: 10px;
+  margin-bottom: 0px;
+`;
+
+const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -34,18 +44,18 @@ export function Header() {
     : 'Some custom dashboad';
 
   return (
-    <>
+    <span style={{background: '#fff !important'}}>
       <Typography variant="h6" color="textSecondary">
         {dashboardTitle}
       </Typography>
 
-      <Paper className={classes.paper}>
-        <Typography variant="h4" className={classes.title}>
+      <Paper elevation={0} className={classes.paper}>
+        <Title>
           Global Filters
-        </Typography>
+        </Title>
 
         <GlobalFilters />
       </Paper>
-    </>
+    </span>
   );
 }

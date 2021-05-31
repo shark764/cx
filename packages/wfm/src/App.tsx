@@ -33,6 +33,7 @@ const {
 const Main = styled.main`
   margin: 0;
   overflow: auto;
+  background: #80808014;
 `;
 
 const Content = styled.section<{ isMobile: boolean }>`

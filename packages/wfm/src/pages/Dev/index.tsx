@@ -38,7 +38,7 @@ const typicalDay = (day: any) => new Array(96).fill(day).map((day, index) => {
   return {
     timestamp: interval.toISO().replace('0-04:00', 'Z').replace('0-03:00', 'Z'), // replace is due to current users timezone and DST for past dates
     nco: randomNco(interval, index),
-    aht: rand(3, 7),
+    aht: rand(900, 1200), // between 15 and 20 min
     abandons: rand(0, 1),
   }
 } );
@@ -51,20 +51,19 @@ export const Dev = () => {
    * Starting with a day in the past, fill in some historical data for 31 days
    * Then go create a forecast for that data
    */
-  const [startDate, setStartDate] = useState('2020-05-01');
+  const [startDate, setStartDate] = useState('2019-01-01');
+  const [totalDays, setTotalDays] = useState(31);
 
   const seriesDataToAdd = useMemo(() => {
     const start = DateTime.fromISO(startDate);
-    const thing =  new Array(31).fill(start).flatMap((start, index) => typicalDay(start.plus({days: index}) ));
-    // @ts-ignore   get an idea of how many interactions per day
-    console.log(thing.reduce((total, {nco}) => total += nco, 0) / 31 );
-    return thing;
+    const dailyInteractions =  new Array(totalDays).fill(start).flatMap((start, index) => typicalDay(start.plus({days: index}) ));
+    return dailyInteractions;
   }
-  , [startDate])
+  , [startDate, totalDays])
 
   const {
-    // data,
-    // isLoading,
+    data,
+    isLoading,
     // error,
     refetch: generateData
   } = useQuery<any, any>(
@@ -87,11 +86,16 @@ export const Dev = () => {
     <>
       <h3>🎉 You've reached the secret bonus menu of WFM 🎉</h3>
 
-      <div>Add some randomized historical data starting on a date in the past spanning over 31 days</div>
+      <div>Add some randomized historical data for a specified amount of days</div>
+      <br /><br />
       <input placeholder="Start Date" value={startDate} onChange={({target: { value }}) => setStartDate(value)} />
-      <br />
-      <br />
+      <br /><br />
+      <input placeholder="Total Days" value={totalDays} onChange={({target: { value }}) => setTotalDays(parseInt(value))} />
+      <br /><br />
       <button onClick={() => generateData()} >Submit</button>
+      <br /><br />
+      {isLoading && <span>Loading...</span> }
+      {(data === null) && <span>Done</span> }
     </>
   )
 };

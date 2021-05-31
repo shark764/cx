@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 // import MenuItem from '@material-ui/core/MenuItem';
 
 import Button from '@material-ui/core/Button';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@material-ui/core/Autocomplete';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -15,10 +15,11 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
 import { Table } from '@cx/components/Table';
-// import { BarChart } from '@cx/components/Charts/BarChart';
+import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
 import { selectedRangeFn } from '@cx/utilities/date';
+import { BulkAdjustment } from './bulkAdjustment';
 
 import { defaultForecastFormValues } from './forecastFormDefaultValues';
 
@@ -48,7 +49,8 @@ import { forecasting } from '../../redux/reducers/forecasting';
 import {
   useMemoLineChartData,
   // useMemoTimelineAdjustments,
-  useMemoTableData
+  useMemoTableData,
+  useMemoStaffingData,
 } from './forecastingHooks';
 import {
   // useTimelineAdjustments,
@@ -60,6 +62,7 @@ import {
 import { useTimelineQuery } from '../../api/useTimelineQuery';
 import { useTimelines } from '../../api/useTimelines';
 import { createAdjustment } from './createAdjustment';
+import { SinglePointAdjustment } from './singlePointAdjustment';
 
 const {
   setStartDate,
@@ -118,6 +121,10 @@ const LoadingWrapper = styled.div`
 const TableSpacer = styled.div`
   margin-top: 40px;
 `;
+const ForecastGraphHeader = styled.span`
+  display: grid;
+  grid-template-columns: 1fr 200px;
+`;
 
 export function Forecasting() {
   // Global State
@@ -133,13 +140,16 @@ export function Forecasting() {
   const [createNewForecast, setCreateNewForecast] = useState(false);
   const [createNewTimeline, setCreateNewTimeline] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
+  const [singlePointAdjustment, setSinglePointAdjustment] = useState(false);
   // const [localAdjustedData, setLocalAdjustedData] = useState([]);
   const [localAdjustments, setLocalAdjustemnts] = useState({});
+  const [localBulkAdjustments, setLocalBulkAdjustemnts] = useState<any>(null);
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
   // @ts-ignore
   const viewBy: any = {
+      // day: 'quarter-hour', // TODO: ask product if this makes sense
       day: 'hour',
       twoDays: 'hour',
       week: 'hour', //'week' = Disallowed interval?
@@ -168,6 +178,7 @@ export function Forecasting() {
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
   const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
+  const timelineQueryStaffingEstimate = useMemoStaffingData(timelineQuery, intervalLength, selectedCompetence);
 
 
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
@@ -219,6 +230,17 @@ export function Forecasting() {
       }
     });
   };
+  const setLocalBulkAdjustment = (data: any) => {
+    const parseAndSort = (key: any) =>
+      data.filter((adjustment: any) => adjustment.key === key )
+      .sort((a: any,b: any) => a.timestamp - b.timestamp);
+    const firstAndLast = (array: any) => ({start: array[0], end: array.pop()});
+
+    const adjustedNco = firstAndLast(parseAndSort('adjustedNco'));
+    const adjustedAht = firstAndLast(parseAndSort('adjustedAht'));
+
+    setLocalBulkAdjustemnts({adjustedNco,adjustedAht});
+  };
 
 
   return (<>
@@ -238,10 +260,8 @@ export function Forecasting() {
           <Autocomplete
             id="choose_timeline"
             options={timelines || []}
-            getOptionLabel={({ label }: any) => label}
             size="small"
-            getOptionSelected={(option, value) => option.id === value.id}
-            style={{ width: 200, display: 'inline-block' }}
+            sx={{ width: 250, display: 'inline-block' }}
             renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
             value={selectedTimeline}
             autoSelect
@@ -252,10 +272,9 @@ export function Forecasting() {
           <Autocomplete
             id="choose_scenario"
             options={memoScenariosOptions}
-            getOptionLabel={(option: any) => option.label}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
             size="small"
-            getOptionSelected={(option, value) => option.id === value.id}
-            style={{ width: 275, display: 'inline-block', marginLeft: '20px' }}
+            sx={{ width: 250, display: 'inline-block', marginLeft: '20px' }}
             renderInput={(params: any) => <TextField {...params} label="Forecasted Range" variant="outlined" />}
             value={selectedScenario}
             autoSelect
@@ -324,7 +343,10 @@ export function Forecasting() {
 
 
       <ChartsWrapper>
-        <Title> Forecasted Interaction Volume </Title>
+        <ForecastGraphHeader>
+          <Title> Forecasted Interaction Volume </Title>
+          <SinglePointAdjustment singlePointAdjustment={singlePointAdjustment} setSinglePointAdjustment={setSinglePointAdjustment} />
+        </ForecastGraphHeader>
         {timelineQueryLoading ?
           <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
           <LineChart
@@ -334,19 +356,31 @@ export function Forecasting() {
             xDataKey={linechartConfig.xDataKey}
             dataKeys={linechartConfig.dataKeys}
             adjustemntCallback={setLocalAdjustment}
-          // intervalType={intervalType}
+            bulkAdjustemntCallback={setLocalBulkAdjustment}
+            singlePointAdjustment={singlePointAdjustment}
           />
         }
-        {/* TODO: api is not ready for staffing estimates just yet */}
-        {/* <Title> Staffing Estimate Per Channel </Title>
+        {localBulkAdjustments?.adjustedNco && <>
+          <BulkAdjustment adjustmentKey="nco" adjustment={localBulkAdjustments?.adjustedNco}/>
+          <br />
+          <br />
+          <br />
+          </>
+        }
+        {localBulkAdjustments?.adjustedAht &&
+          <BulkAdjustment adjustmentKey="aht" adjustment={localBulkAdjustments?.adjustedAht}/>
+        }
+
+
+        <Title> Staffing Estimate Per Channel </Title>
         <BarChart
           chartName="staffingEstimate"
           statName="Staffing Estimate"
-          data={barChart[viewBy].data}
+          data={timelineQueryStaffingEstimate}
           stackId={viewBy === 'dateRange' ? 'a' : null}
-          xDataKey={barChart[viewBy].xDataKey}
-          dataKeys={barChart[viewBy].dataKeys}
-        /> */}
+          xDataKey={'timestamp'}
+          dataKeys={['staffing_estimate']}
+        />
       </ChartsWrapper>
 
       <TableWrapper>

@@ -137,7 +137,6 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
 
       <FormActions>
         <Button
-          color="default"
           variant="outlined"
           onClick={onCancel}
           className="dynamicFormCancel"

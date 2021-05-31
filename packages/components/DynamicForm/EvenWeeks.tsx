@@ -70,22 +70,12 @@ const MiniMultiplier = styled.span`
 `;
 const IncrementControls = styled.span`
   position: absolute;
-  right: 24px;
+  right: 0px;
   top: 10px;
   width: 90px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-`;
-
-const Input = styled(TextField)`
-  width: 170px;
-  .MuiInputBase-input {
-    padding: 11px 14px;
-  }
-  .MuiOutlinedInput-adornedEnd {
-    padding-right: 0px;
-  }
 `;
 
 const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
@@ -202,7 +192,8 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue 
                     }
                   }}
                   render={({ onChange }) => (
-                    <Input
+                    <TextField
+                      size="small"
                       error={ Boolean(errors[name]?.weeks) }
                       helperText={errors?.[name]?.weeks?.message}
                       value={totalWeeks}

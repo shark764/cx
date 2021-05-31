@@ -6,13 +6,17 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  LineChart as ReChartsLineChart,
+  ComposedChart,
   ResponsiveContainer,
 } from 'recharts';
 
 import { useRef, useEffect, useState } from 'react';
 import { fromEvent } from 'rxjs';
-import { pluck, tap, map, switchMap, takeUntil, takeLast } from 'rxjs/operators';
+import { tap, map, switchMap, takeUntil, takeLast, throttleTime } from 'rxjs/operators';
+
+import { SelectionRect } from './selectionRect';
+import { CustomizedDot } from './customizedDot';
+import { Dot } from './dot';
 
 const Wrapper = styled.div`
   margin: 20px auto;
@@ -45,93 +49,12 @@ export interface ChartProps {
   containerHeight?: number;
   intervalLength?: string;
   adjustemntCallback?: any;
-};
-
-
-
-const StyledCircle = styled.circle.attrs<{ yOffset: number }>(({yOffset, cy}) => ({
-  cy: yOffset || cy
-}))`
-  cursor: grab;
-  .small {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-`;
-
-export const Dot: React.VFC<any> = ({containerHeight, topValue, adjustemntCallback, dataKey, ...props}) => {
-  const ref: any = useRef(null);
-  const [yOffset, setYoffset] = useState(0);
-  const [adjustment, setAdjustment] = useState(0);
-  const [adjustmentText, setAdjustmentText] = useState('');
-  const graphHeight = containerHeight - 30;
-  const domain = [0, topValue];
-  const timestamp = props.payload.ogTimestamp;
-  const value = props.value;
-
-  const pixelsPerTick = graphHeight / (domain[1] - domain[0]);
-
-  useEffect(() => {
-    const element = ref.current;
-
-    if (!element) {
-      return;
-    }
-
-    const mousedown$ = fromEvent<MouseEvent>(element, 'mousedown').pipe(tap(e => e.preventDefault() ));
-    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault() ));
-    const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup').pipe(tap(e => e.preventDefault() )); // TODO: OR hits upper or lower bounds?
-    const drag$ = mousedown$.pipe(
-      switchMap(
-        () => mousemove$.pipe(
-            pluck('offsetY'),
-            tap((offset) => setYoffset(offset)),
-            map((offset: number) => Math.trunc((graphHeight - offset) / pixelsPerTick)),
-            tap((adjustmentValue) => {
-              // TODO: precentage should be from original forecasted value and not the original adjustment value?
-              const percentageChange = Math.trunc(((adjustmentValue - value) / value) * 100);
-              setAdjustmentText( `${adjustmentValue} or ${percentageChange}%` );
-              setAdjustment( adjustmentValue );
-            }),
-            takeUntil(mouseup$),
-            takeLast(1),
-          )
-      )).subscribe(adjustmentValue => {
-        if (adjustemntCallback) {
-          adjustemntCallback(adjustmentValue, dataKey, timestamp)
-        }
-      });
-
-    return () => drag$.unsubscribe();
-  }, [graphHeight, pixelsPerTick, adjustemntCallback, dataKey, timestamp, value]);
-
-  if (dataKey === 'nco' || dataKey === 'aht') {
-    return (<></>);
-  }
-
-  return (<>
-    <StyledCircle
-      {...props}
-      yOffset={yOffset}
-      ref={ref}
-      r="7"
-      fill={props.fill}
-    />
-
-    { adjustment &&
-      <text
-      // TODO: move this to the left if there's no room on the right
-        x={props.cx - 100}
-        y={yOffset + 5}
-        className="small"
-      >
-        { adjustmentText }
-      </text>}
-  </>)
+  bulkAdjustemntCallback?: any;
+  singlePointAdjustment?: boolean;
 };
 
 export const LineChart: React.VFC<ChartProps> = ({
   data,
-  onClick,
   dataKeys,
   xDataKey,
   statName,
@@ -140,7 +63,76 @@ export const LineChart: React.VFC<ChartProps> = ({
   containerHeight = 300,
   intervalLength,
   adjustemntCallback,
+  bulkAdjustemntCallback,
+  singlePointAdjustment = false,
 }) => {
+  const ref: any = useRef(null);
+  const [isDragging, setDragging] = useState(false);
+  const [selectionArea, setSelectionArea] = useState<any>([0,0]);
+  const [selectionArea2, setSelectionArea2] = useState<any>([0,0]);
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element || singlePointAdjustment) {
+      return;
+    }
+
+    const mousedown$ = fromEvent<MouseEvent>(element, 'mousedown').pipe(tap(e => e.preventDefault()));
+    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(
+      tap(e => e.preventDefault()),
+      throttleTime(150),
+    );
+    const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup').pipe(tap(e => e.preventDefault()));
+    const drag$ = mousedown$.pipe(
+      map(({offsetY, offsetX}) => ({offsetY, offsetX})),
+      tap(({offsetY, offsetX}) => {
+        // Start drawing the outlined square, mousedown is the starting point
+        setSelectionArea([offsetX, offsetY]);
+        setDragging(true);
+      }),
+      switchMap(
+        (startingCoordinates) => mousemove$.pipe(
+          map(({offsetY, offsetX}) => ({offsetY, offsetX})),
+          tap(({offsetY, offsetX}) => {
+            setSelectionArea2([offsetX, offsetY]);
+          }),
+          takeUntil(mouseup$),
+          takeLast(1),
+          tap(() => { setDragging(false); }),
+          map(endingCoordinates => {
+            const { offsetX: startingX, offsetY: startingY } = startingCoordinates;
+            const { offsetX: endingX, offsetY: endingY } = endingCoordinates;
+
+            const myDots = document.getElementsByClassName('fancy-dot');
+            const dots = Array.from(myDots);
+            const dotCoordinates = dots.map((dot) => ({
+              x: dot.getAttribute('cx'),
+              y: dot.getAttribute('cy'),
+              timestamp: dot.getAttribute('datatimestamp'),
+              key: dot.getAttribute('datakey'),
+              value: dot.getAttribute('value'),
+            }))
+            .filter((dot: any) => dot.key.includes('adjusted'))
+            .filter((dot: any) => {
+
+              if((dot.x >= startingX && dot.x <= endingX) && (dot.y >= startingY && dot.y <= endingY)) {
+                // TODO: selecting only works left to right atm..(down, right)   try other combos up right, left up, left down
+                // TODO: make it so the item can;t drag past the edges
+                return true
+              } else {
+                return false
+              }
+            });
+            return dotCoordinates
+          }),
+        )
+      )).subscribe(selectedDots => {
+        bulkAdjustemntCallback(selectedDots);
+      });
+
+    return () => drag$.unsubscribe();
+  }, [singlePointAdjustment, bulkAdjustemntCallback]);
 
   const interval = useMemo(() => {
     if (intervalLength === 'week') {
@@ -156,7 +148,7 @@ export const LineChart: React.VFC<ChartProps> = ({
 
     const roundToNearestTen = (value: number) => Math.ceil(value / 10) * 10;
     // @ts-ignore
-    const sortDesc = (key) => [...data].sort((a,b) => (b[key] - a[key]))[0]?.[key];
+    const sortDesc = (key) => [...data].sort((a, b) => (b[key] - a[key]))[0]?.[key];
 
     const largestNco = sortDesc('nco');
     const largestNcoAdjusted = sortDesc('adjustedNco');
@@ -173,18 +165,21 @@ export const LineChart: React.VFC<ChartProps> = ({
   }, [data]);
 
   return (
-    <Wrapper>
+    <Wrapper ref={ref}>
       {statName && <StatName>{statName}</StatName>}
+      <SelectionRect className="selection" isDragging={isDragging} selectionArea={selectionArea} selectionArea2={selectionArea2} />
       <ResponsiveContainer
         id={`${chartName}-responsive-container`}
         width={containerWidth}
         height={containerHeight}
       >
-        <ReChartsLineChart
+        <ComposedChart
           data={data}
-          onClick={onClick}
+          // @ts-ignore
+          cursor={singlePointAdjustment ? 'grab' : 'crosshair'}
         >
-          <XAxis dataKey={xDataKey} interval={interval} dy={10.47} />
+
+          <XAxis dataKey={xDataKey} interval={interval} dy={10.47} scale="band" />
           <YAxis
             yAxisId="left"
             label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15 }}
@@ -197,29 +192,30 @@ export const LineChart: React.VFC<ChartProps> = ({
             domain={ahtYDomain}
           />
 
-          <Tooltip
+          {singlePointAdjustment && <Tooltip
             cursor={false}
             offset={20}
-          />
+          />}
 
           {dataKeys.map((item: DataKeys) => (
             <Line
               key={item.name}
               name={item.name}
               dataKey={item.key}
-              dot={false}
+              dot={<CustomizedDot isDragging={isDragging} ></CustomizedDot>}
               type="linear"
               yAxisId={item.yAxisId}
               stroke={item.color}
+              animationDuration={800}
               activeDot={<Dot
-                topValue={ (item.key === 'nco' || item.key === 'adjustedNco')? ncoYDomain[1] : ahtYDomain[1] }
+                topValue={(item.key === 'nco' || item.key === 'adjustedNco') ? ncoYDomain[1] : ahtYDomain[1]}
                 containerHeight={containerHeight}
                 adjustemntCallback={adjustemntCallback}
               />}
               strokeDasharray={item.lineStroke && '5 5'}
             />
           ))}
-        </ReChartsLineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </Wrapper>
   );

@@ -8,8 +8,8 @@ const shiftTimes = ['04:00', '06:00', '07:00', '08:00', '10:00', '11:00', '12:00
 const amPm = ['AM', 'PM'];
 
 export const availability = () => ({
-  id: faker.random.uuid(),
-  agentId: faker.random.uuid(),
+  id: faker.datatype.uuid(),
+  agentId: faker.datatype.uuid(),
   agent: faker.fake('{{name.lastName}}, {{name.firstName}}'),
   agreedHours: Math.floor(Math.random() * 50),
 });
@@ -27,7 +27,7 @@ export const fetchAvailabilities = (): Promise<any> => new Promise((resolve, rej
 export const getAvailabilities = (): Promise<any> => apiCall(fetchAvailabilities());
 
 export const week = (agentId: string, index: number) => ({
-  // id: faker.random.uuid(),
+  // id: faker.datatype.uuid(),
   agentId,
   week: index,
   sundayAvailable: Math.random() < 0.5 ? 'available' : 'unavailable',
@@ -71,7 +71,7 @@ export const timetable = (aval: any, agentId: string) => {
   const connectToAgent = Math.random() < 0.5 ? allAgentsInformation[Math.floor(Math.random() * 25)] : null;
   const nWeeks = Math.floor(Math.random() * 5);
   return {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     name: connectToAgent ? `${aval.agent.split(' ')[1]} and ${connectToAgent.name.split(' ')[1]}` : faker.name.title(),
     startDate: new Date(),
@@ -140,7 +140,7 @@ export const updateAvailabilityTimeTable = async ({ id, payload }: IPayload) => 
   if (payload.saveAsTimetable) {
     const newTimetable = {
       ...result,
-      id: faker.random.uuid(),
+      id: faker.datatype.uuid(),
       name: payload.newName,
       startDate: payload.newStartDate,
       endDate: payload.newEndDate,

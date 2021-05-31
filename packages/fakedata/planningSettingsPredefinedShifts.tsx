@@ -40,7 +40,7 @@ export const predefinedShift = () => {
   const end = `${shiftTimes[Math.floor(Math.random() * 7)]} ${amPm[Math.random() >= 0.5 ? 1 : 0]}`;
   const shiftActivities = new Array(Math.floor(Math.random() * 5)).fill({}).map(() => shiftActivity());
   return {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     shiftName: `${shiftActivities[0] ? `${shiftActivities[0].activity.name} ` : ''}${start} - ${end}`,
     start,
     end,

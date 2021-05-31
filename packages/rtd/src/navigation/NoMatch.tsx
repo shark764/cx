@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Box, makeStyles, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({

@@ -4,37 +4,37 @@
  */
 
 export interface paths {
-  "/tenants/{tenant_id}/agents": {
+  "/tenants/{tenant_id}/wfm/agents": {
     /**
      * Retrieve agents.
      *
      * Returns all agents for the provided tenant.
      */
-    get: operations["get_agents_tenants_tenant_id_agents"];
+    get: operations["get_agents_tenants_tenant_id_wfm_agents"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}": {
     /** Retrieve a single agent. */
-    get: operations["get_agent_tenants_tenant_id_agents_agent_id"];
+    get: operations["get_agent_tenants_tenant_id_wfm_agents_agent_id"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/address": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/address": {
     /** Retrieve an agent's address. */
-    get: operations["get_address_tenants_tenant_id_agents_agent_id_address"];
+    get: operations["get_address_tenants_tenant_id_wfm_agents_agent_id_address"];
     /** Add or update an agent's address. */
-    put: operations["put_address_tenants_tenant_id_agents_agent_id_address"];
+    put: operations["put_address_tenants_tenant_id_wfm_agents_agent_id_address"];
     /** Delete an agent's address. */
-    delete: operations["delete_address_tenants_tenant_id_agents_agent_id_address"];
+    delete: operations["delete_address_tenants_tenant_id_wfm_agents_agent_id_address"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/employment": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/employment": {
     /** Retrieve an agent's employment. */
-    get: operations["get_employment_tenants_tenant_id_agents_agent_id_employment"];
+    get: operations["get_employment_tenants_tenant_id_wfm_agents_agent_id_employment"];
     /** Add or update an agent's employment. */
-    put: operations["put_employment_tenants_tenant_id_agents_agent_id_employment"];
+    put: operations["put_employment_tenants_tenant_id_wfm_agents_agent_id_employment"];
     /** Delete an agent's employment. */
-    delete: operations["delete_employment_tenants_tenant_id_agents_agent_id_employment"];
+    delete: operations["delete_employment_tenants_tenant_id_wfm_agents_agent_id_employment"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/availability": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability": {
     /** Retrieve all availability patterns assigned to an agent. */
-    get: operations["get_all_availabilities_tenants_tenant_id_agents_agent_id_availability"];
+    get: operations["get_all_availabilities_tenants_tenant_id_wfm_agents_agent_id_availability"];
     /**
      * Assign an availability pattern to an agent.
      *
@@ -42,87 +42,87 @@ export interface paths {
      * patterns can be added per agent as long as the date-range
      * when for which it is assigned do not overlap. Treated as a closed interval.
      */
-    post: operations["post_availability_tenants_tenant_id_agents_agent_id_availability"];
+    post: operations["post_availability_tenants_tenant_id_wfm_agents_agent_id_availability"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/availability/{id}": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability/{id}": {
     /** Retrieve a specific assignment of an availability pattern to an agent. */
-    get: operations["get_availability_tenants_tenant_id_agents_agent_id_availability_id"];
+    get: operations["get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id"];
     /** Remove an assigned availability pattern for an agent. */
-    delete: operations["delete_availability_tenants_tenant_id_agents_agent_id_availability_id"];
+    delete: operations["delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/restrictions": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/restrictions": {
     /** Get all restriction sets assigned to an agent. */
-    get: operations["get_assigned_restriction_sets_tenants_tenant_id_agents_agent_id_restrictions"];
+    get: operations["get_assigned_restriction_sets_tenants_tenant_id_wfm_agents_agent_id_restrictions"];
     /**
      * Assign a restriction set to an agent.
      *
      * A restriction set can only be added if it does not overlap
      * in time with an existing restriction set.
      */
-    post: operations["post_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions"];
+    post: operations["post_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/restrictions/{assigned_restriction_set_id}": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/restrictions/{assigned_restriction_set_id}": {
     /** Retrieve a single assigned restriction set. */
-    get: operations["get_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id"];
+    get: operations["get_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id"];
     /** Remove an assigned restriction set. */
-    delete: operations["delete_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id"];
+    delete: operations["delete_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id"];
     /** Update a single assigned restriction set. */
-    patch: operations["patch_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id"];
+    patch: operations["patch_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id"];
   };
-  "/tenants/{tenant_id}/agents/{agent_id}/competencies": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/competencies": {
     /** Get all competencies associated with an agent. */
-    get: operations["get_competencies_tenants_tenant_id_agents_agent_id_competencies"];
+    get: operations["get_competencies_tenants_tenant_id_wfm_agents_agent_id_competencies"];
   };
-  "/tenants/{tenant_id}/availabilitypatterns": {
+  "/tenants/{tenant_id}/wfm/availabilitypatterns": {
     /** Retrieve all availabilities of one tenant. */
-    get: operations["get_all_tenants_tenant_id_availabilitypatterns"];
+    get: operations["get_all_tenants_tenant_id_wfm_availabilitypatterns"];
   };
-  "/tenants/{tenant_id}/availabilitypatterns/{availability_id}": {
+  "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_id}": {
     /** Retrieve a single availability. */
-    get: operations["get_tenants_tenant_id_availabilitypatterns_availability_id"];
+    get: operations["get_tenants_tenant_id_wfm_availabilitypatterns_availability_id"];
   };
-  "/tenants/{tenant_id}/availabilitypatterns/{availability_pattern_id}": {
+  "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_pattern_id}": {
     /** Update an availability pattern. */
-    put: operations["put_tenants_tenant_id_availabilitypatterns_availability_pattern_id"];
+    put: operations["put_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id"];
     /** Delete an availability pattern. */
-    delete: operations["delete_tenants_tenant_id_availabilitypatterns_availability_pattern_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id"];
   };
-  "/tenants/{tenant_id}/plans": {
+  "/tenants/{tenant_id}/wfm/plans": {
     /** Retrieve a all plans in a tenant. */
-    get: operations["get_all_tenants_tenant_id_plans"];
+    get: operations["get_all_tenants_tenant_id_wfm_plans"];
     /** Add a new plan. */
-    post: operations["post_tenants_tenant_id_plans"];
+    post: operations["post_tenants_tenant_id_wfm_plans"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}": {
     /** Retrieve a single plan. */
-    get: operations["get_tenants_tenant_id_plans_plan_id"];
+    get: operations["get_tenants_tenant_id_wfm_plans_plan_id"];
     /** Delete a plan. */
-    delete: operations["delete_tenants_tenant_id_plans_plan_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_plans_plan_id"];
     /** Update a plan. */
-    patch: operations["patch_tenants_tenant_id_plans_plan_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_plans_plan_id"];
   };
-  "/tenants/{tenant_id}/activities": {
+  "/tenants/{tenant_id}/wfm/activities": {
     /** Retrieve all activities. */
-    get: operations["get_all_tenants_tenant_id_activities"];
+    get: operations["get_all_tenants_tenant_id_wfm_activities"];
     /** Create a new activity type. */
-    post: operations["post_tenants_tenant_id_activities"];
+    post: operations["post_tenants_tenant_id_wfm_activities"];
   };
-  "/tenants/{tenant_id}/activities/{activity_id}": {
+  "/tenants/{tenant_id}/wfm/activities/{activity_id}": {
     /** Get a single activity. */
-    get: operations["get_tenants_tenant_id_activities_activity_id"];
+    get: operations["get_tenants_tenant_id_wfm_activities_activity_id"];
     /** Update a single activity. */
-    patch: operations["patch_tenants_tenant_id_activities_activity_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_activities_activity_id"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/schedules/query": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/query": {
     /**
      * Query for schedules.
      *
      * Returns all schedules that covers the period that is provided in the query
      * (if any).
      */
-    post: operations["query_tenants_tenant_id_plans_plan_id_schedules_query"];
+    post: operations["query_tenants_tenant_id_wfm_plans_plan_id_schedules_query"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/schedules/copy": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/copy": {
     /**
      * Copy schedules from other plan.
      *
@@ -131,87 +131,87 @@ export interface paths {
      * unless the schedules are marked as locked. Schedules can only be copied
      * from within the same schedule period.
      */
-    post: operations["copy_tenants_tenant_id_plans_plan_id_schedules_copy"];
+    post: operations["copy_tenants_tenant_id_wfm_plans_plan_id_schedules_copy"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/schedules": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules": {
     /** Retrieve all schedules for a plan. */
-    get: operations["get_all_tenants_tenant_id_plans_plan_id_schedules"];
+    get: operations["get_all_tenants_tenant_id_wfm_plans_plan_id_schedules"];
     /** Add a new set of schedules. */
-    post: operations["post_tenants_tenant_id_plans_plan_id_schedules"];
+    post: operations["post_tenants_tenant_id_wfm_plans_plan_id_schedules"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/{schedule_id}": {
     /** Retrieve a single schedule. */
-    get: operations["get_tenants_tenant_id_plans_plan_id_schedules_schedule_id"];
+    get: operations["get_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id"];
     /** Soft delete a schedule. */
-    delete: operations["delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id"];
     /** Update a single schedule. */
-    patch: operations["patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/{schedule_id}/shifts": {
     /** Retrieve all shifts for a schedule. */
-    get: operations["get_all_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts"];
+    get: operations["get_all_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts"];
     /** Add a new set of shifts to a schedule. */
-    post: operations["post_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts"];
+    post: operations["post_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts/{shift_id}": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/{schedule_id}/shifts/{shift_id}": {
     /** Retrieve a single shift. */
-    get: operations["get_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id"];
+    get: operations["get_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id"];
     /** Soft delete a shift. */
-    delete: operations["delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id"];
     /** Update a single shift. */
-    patch: operations["patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id"];
   };
-  "/tenants/{tenant_id}/breaksettings": {
+  "/tenants/{tenant_id}/wfm/breaksettings": {
     /** Retrieve all break settings for a tenant. */
-    get: operations["get_all_tenants_tenant_id_breaksettings"];
+    get: operations["get_all_tenants_tenant_id_wfm_breaksettings"];
     /** Add a new break setting to a tenant. */
-    post: operations["post_tenants_tenant_id_breaksettings"];
+    post: operations["post_tenants_tenant_id_wfm_breaksettings"];
   };
-  "/tenants/{tenant_id}/breaksettings/{breaksetting_id}": {
+  "/tenants/{tenant_id}/wfm/breaksettings/{breaksetting_id}": {
     /** Retrieve a single break setting. */
-    get: operations["get_tenants_tenant_id_breaksettings_breaksetting_id"];
+    get: operations["get_tenants_tenant_id_wfm_breaksettings_breaksetting_id"];
     /** Delete a single break setting. */
-    delete: operations["delete_tenants_tenant_id_breaksettings_breaksetting_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_breaksettings_breaksetting_id"];
     /** Update single breaksetting. */
-    patch: operations["patch_tenants_tenant_id_breaksettings_breaksetting_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_breaksettings_breaksetting_id"];
   };
   "/status": {
     /** Handle healthcheck. */
     get: operations["get_status_status"];
   };
-  "/tenants/{tenant_id}/restrictionsets": {
+  "/tenants/{tenant_id}/wfm/restrictionsets": {
     /** Retrieve all Restriction sets. */
-    get: operations["get_all_tenants_tenant_id_restrictionsets"];
+    get: operations["get_all_tenants_tenant_id_wfm_restrictionsets"];
     /** Add a new restriction set. */
-    post: operations["post_tenants_tenant_id_restrictionsets"];
+    post: operations["post_tenants_tenant_id_wfm_restrictionsets"];
   };
-  "/tenants/{tenant_id}/restrictionsets/{restriction_set_id}": {
+  "/tenants/{tenant_id}/wfm/restrictionsets/{restriction_set_id}": {
     /** Retrieve a single restriction set. */
-    get: operations["get_tenants_tenant_id_restrictionsets_restriction_set_id"];
+    get: operations["get_tenants_tenant_id_wfm_restrictionsets_restriction_set_id"];
     /** Delete a single restriction set. */
-    delete: operations["delete_tenants_tenant_id_restrictionsets_restriction_set_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_restrictionsets_restriction_set_id"];
     /** Update a single restriction set. */
-    patch: operations["patch_tenants_tenant_id_restrictionsets_restriction_set_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_restrictionsets_restriction_set_id"];
   };
-  "/tenants/{tenant_id}/scheduleperiods": {
+  "/tenants/{tenant_id}/wfm/scheduleperiods": {
     /** Retrieve all schedule periods. */
-    get: operations["get_all_tenants_tenant_id_scheduleperiods"];
+    get: operations["get_all_tenants_tenant_id_wfm_scheduleperiods"];
     /** Add a new schedule period. */
-    post: operations["post_tenants_tenant_id_scheduleperiods"];
+    post: operations["post_tenants_tenant_id_wfm_scheduleperiods"];
   };
-  "/tenants/{tenant_id}/scheduleperiods/{id}": {
+  "/tenants/{tenant_id}/wfm/scheduleperiods/{id}": {
     /** Retrieve a single schedule period. */
-    get: operations["get_tenants_tenant_id_scheduleperiods_id"];
+    get: operations["get_tenants_tenant_id_wfm_scheduleperiods_id"];
     /** Delete a single schedule period. */
-    delete: operations["delete_tenants_tenant_id_scheduleperiods_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_scheduleperiods_id"];
     /** Update an existing schedule period. */
-    patch: operations["patch_tenants_tenant_id_scheduleperiods_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_scheduleperiods_id"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/optimization": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/optimization": {
     /** Get the current optimization. */
-    get: operations["get_optimization_tenants_tenant_id_plans_plan_id_optimization"];
+    get: operations["get_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization"];
     /** Start the current optimization. */
-    put: operations["put_optimization_tenants_tenant_id_plans_plan_id_optimization"];
+    put: operations["put_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization"];
     /**
      * Cancel the current optimization.
      *
@@ -219,19 +219,19 @@ export interface paths {
      * schedules. The optimization run will continue to run to end but the result
      * will not be used in the schedules.
      */
-    delete: operations["delete_optimization_tenants_tenant_id_plans_plan_id_optimization"];
+    delete: operations["delete_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization"];
   };
-  "/tenants/{tenant_id}/competencies": {
+  "/tenants/{tenant_id}/wfm/competencies": {
     /** Retrieve all competencies for a tenant. */
-    get: operations["get_all_competencies_tenants_tenant_id_competencies"];
+    get: operations["get_all_competencies_tenants_tenant_id_wfm_competencies"];
   };
-  "/tenants/{tenant_id}/competencies/{competency_id}/agents": {
+  "/tenants/{tenant_id}/wfm/competencies/{competency_id}/agents": {
     /** Retrieve all agents associated with a competency. */
-    get: operations["get_agents_tenants_tenant_id_competencies_competency_id_agents"];
+    get: operations["get_agents_tenants_tenant_id_wfm_competencies_competency_id_agents"];
   };
-  "/tenants/{tenant_id}/plans/{plan_id}/simulation": {
+  "/tenants/{tenant_id}/wfm/plans/{plan_id}/simulation": {
     /** Route to create a simulation. */
-    post: operations["post_simulation_tenants_tenant_id_plans_plan_id_simulation"];
+    post: operations["post_simulation_tenants_tenant_id_wfm_plans_plan_id_simulation"];
   };
   "/changelog.md": {
     get: operations["_get_changelog_changelog.md"];
@@ -253,8 +253,8 @@ export interface components {
       name: string;
       paid: boolean;
       category: components["schemas"]["ActivityCategory"];
-      disabled?: boolean;
-    } & { [key: string]: any };
+      disabled: boolean;
+    };
     /** Represents the DTO-model for patching an activity. */
     ActivityPatchDTO: {
       id?: string;
@@ -262,7 +262,7 @@ export interface components {
       paid?: boolean;
       category?: components["schemas"]["ActivityCategory"];
       disabled?: boolean;
-    } & { [key: string]: any };
+    };
     /** DTO representing an agent's address. */
     AddressDTO: {
       addressLine1?: string;
@@ -272,57 +272,57 @@ export interface components {
       postCode?: string;
       country?: string;
       phone?: string;
-    } & { [key: string]: any };
+    };
     /** Links an agent to an availability. */
     AgentAvailabilityPatternDTO: {
       availabilityPatternId: string;
       startDate?: string;
       endDate?: string;
-    } & { [key: string]: any };
+    };
     /** Contain data for how many agents are above or below the limit. */
     AgentOccupancyLimit: {
       limit: number;
       numberOfAgents: number[];
-    } & { [key: string]: any };
+    };
     /** Simulation result for one agent. */
     AgentResult: {
       id: string;
       occupancy: number[];
-    } & { [key: string]: any };
+    };
     /** Assigned restriction set dto for responses. */
     AssignedRestrictionSetDTO: {
       startDate: string;
       endDate: string;
       restrictionSetId: string;
       id: string;
-    } & { [key: string]: any };
+    };
     /** Assigned restriction set dto for updates. */
     AssignedRestrictionSetPatchDTO: {
       startDate?: string;
       endDate?: string;
       restrictionSetId?: string;
-    } & { [key: string]: any };
+    };
     /** Represents DTO-model for availabiliy elements. */
     AvailabilityElementDTO: {
       /** Allowed values are 'available' or 'unavailable' */
       intervalType: string;
       dayNumber: number;
-      weekNumber?: number;
+      weekNumber: number;
       startTime?: string;
       endTime?: string;
-    } & { [key: string]: any };
+    };
     /** Represents DTO model for an AvailabilityPattern. */
     AvailabilityPatternDTO: {
       name: string;
       elements: components["schemas"]["AvailabilityElementDTO"][];
-    } & { [key: string]: any };
+    };
     /** Represents the DTO-model for a break. */
     BreakDTO: {
       paid: boolean;
       length: number;
       intervalStart: number;
       intervalEnd: number;
-    } & { [key: string]: any };
+    };
     /** Represents the DTO-model for a break settings. */
     BreakSettingsDTO: {
       id?: string;
@@ -333,7 +333,7 @@ export interface components {
       timeBetweenBreaksMin: number;
       dayTypes: number[];
       breaks: components["schemas"]["BreakDTO"][];
-    } & { [key: string]: any };
+    };
     /** DTO-model for breaksettings updates. */
     BreakSettingsUpdateDTO: {
       shiftLengthMin?: number;
@@ -343,7 +343,7 @@ export interface components {
       timeBetweenBreaksMin?: number;
       dayTypes?: number[];
       breaks?: components["schemas"]["BreakDTO"][];
-    } & { [key: string]: any };
+    };
     /** Interaction types supported by CxEngage. */
     ChannelType: "voice" | "messaging" | "sms" | "email" | "work-item";
     /** A DTO model used to return the dto object. */
@@ -352,7 +352,7 @@ export interface components {
       name: string;
       type: components["schemas"]["CompetencyType"];
       active: boolean;
-    } & { [key: string]: any };
+    };
     /**
      * Simulation result for one competency and channel type.
      *
@@ -365,7 +365,7 @@ export interface components {
       handledWithinSla: number[];
       handled: number[];
       abandons: number[];
-    } & { [key: string]: any };
+    };
     /** Type of competency. */
     CompetencyType: "manual" | "queue";
     /** DTO for employment. */
@@ -374,10 +374,10 @@ export interface components {
       end?: string;
       hourlySalary?: number;
       timezone?: string;
-    } & { [key: string]: any };
+    };
     HTTPValidationError: {
       detail?: components["schemas"]["ValidationError"][];
-    } & { [key: string]: any };
+    };
     /** Status for jobs. */
     JobStatus: "pending" | "running" | "success" | "failed";
     /** Assigned restriction set dto for requests. */
@@ -385,13 +385,13 @@ export interface components {
       startDate: string;
       endDate: string;
       restrictionSetId: string;
-    } & { [key: string]: any };
+    };
     /** Class used to create a new optimization. */
     NewOptimizationDTO: {
       schedulePeriodId: string;
       agents: string[];
       competencies: string[];
-    } & { [key: string]: any };
+    };
     /** Restriction set dto for requests. */
     NewRestrictionSetDTO: {
       name: string;
@@ -408,7 +408,7 @@ export interface components {
       maxConsecutiveWorkDays: number;
       minHoursNightRest: number;
       maxConsecutiveWeekends: number;
-    } & { [key: string]: any };
+    };
     /** The response class for optimizations. */
     OptimizationDTO: {
       schedulePeriodId: string;
@@ -418,20 +418,20 @@ export interface components {
       created?: string;
       updated?: string;
       status: components["schemas"]["JobStatus"];
-    } & { [key: string]: any };
+    };
     /** Represents the DTO-model for a planning period. */
     PlanDTO: {
       id?: string;
       name: string;
       official: boolean;
-      deleted?: boolean;
-    } & { [key: string]: any };
+      deleted: boolean;
+    };
     /** Represents the data model that is used for PATCH-operations. */
     PlanPatchDTO: {
       name?: string;
       official?: boolean;
       deleted?: boolean;
-    } & { [key: string]: any };
+    };
     /** Restriction set dto for responses. */
     RestrictionSetDTO: {
       name: string;
@@ -449,7 +449,7 @@ export interface components {
       minHoursNightRest: number;
       maxConsecutiveWeekends: number;
       id: string;
-    } & { [key: string]: any };
+    };
     /** Restriction set dto for updates. */
     RestrictionSetPatchDTO: {
       name?: string;
@@ -466,7 +466,7 @@ export interface components {
       maxConsecutiveWorkDays?: number;
       minHoursNightRest?: number;
       maxConsecutiveWeekends?: number;
-    } & { [key: string]: any };
+    };
     /**
      * Represents the DTO-model for a schedule copy request.
      *
@@ -485,9 +485,9 @@ export interface components {
     ScheduleCopyDTO: {
       schedulePeriod: string;
       sourcePlan: string;
-      schedules: (Partial<components["schemas"]["Synchronize"]> &
-        Partial<string[]>) & { [key: string]: any };
-    } & { [key: string]: any };
+      schedules: Partial<components["schemas"]["Synchronize"]> &
+        Partial<string[]>;
+    };
     /** Represents the DTO-model for a schedule. */
     ScheduleDTO: {
       id?: string;
@@ -496,7 +496,7 @@ export interface components {
       locked: boolean;
       deleted: boolean;
       shifts: components["schemas"]["ShiftDTO"][];
-    } & { [key: string]: any };
+    };
     /** DTO-model for schedule updates. */
     SchedulePatchDTO: {
       agentId?: string;
@@ -505,55 +505,55 @@ export interface components {
       deleted?: boolean;
       timezone?: string;
       shifts?: components["schemas"]["ShiftDTO"][];
-    } & { [key: string]: any };
+    };
     /** DTO-model for SchedulePeriod. */
     SchedulePeriodDTO: {
       id?: string;
       name: string;
       startDate: string;
       endDate: string;
-    } & { [key: string]: any };
+    };
     /** DTO-model for patching a SchedulePeriod. */
     SchedulePeriodPatchDTO: {
       name?: string;
       startDate?: string;
       endDate?: string;
-    } & { [key: string]: any };
+    };
     /** Query-dto. */
     ScheduleQueryDTO: {
       agentIds?: string[];
       schedulePeriodIds?: string[];
-    } & { [key: string]: any };
+    };
     /** Represent an activity scheduled within a shift. */
     ScheduledActivityDTO: {
       activityId: string;
       startTime: string;
       endTime: string;
-    } & { [key: string]: any };
+    };
     /** Represents the DTO-model for a shift. */
     ShiftDTO: {
       id?: string;
       locked: boolean;
-      deleted?: boolean;
+      deleted: boolean;
       activities: components["schemas"]["ScheduledActivityDTO"][];
       startTime?: string;
       endTime?: string;
-    } & { [key: string]: any };
+    };
     /** DTO-model for shift-updates. */
     ShiftPatchDTO: {
       locked?: boolean;
       activities?: components["schemas"]["ScheduledActivityDTO"][];
-    } & { [key: string]: any };
+    };
     /** A simulation result. */
     SimulationDTO: {
       schedulePeriodId: string;
       startDateTime: string;
-      totalOccupancy?: number[];
-      agentsUnderLimit?: components["schemas"]["AgentOccupancyLimit"][];
-      agentsAboveLimit?: components["schemas"]["AgentOccupancyLimit"][];
+      totalOccupancy: number[];
+      agentsUnderLimit: components["schemas"]["AgentOccupancyLimit"][];
+      agentsAboveLimit: components["schemas"]["AgentOccupancyLimit"][];
       competencies: components["schemas"]["CompetencyResult"][];
       agents?: components["schemas"]["AgentResult"][];
-    } & { [key: string]: any };
+    };
     /**
      * A request for a simulation.
      *
@@ -584,17 +584,17 @@ export interface components {
       schedulePeriodId: string;
       agents?: string[];
       competencies?: string[];
-      upperOccupancyLimits?: number[];
-      lowerOccupancyLimits?: number[];
-      includeFullAgentResult?: boolean;
-    } & { [key: string]: any };
+      upperOccupancyLimits: number[];
+      lowerOccupancyLimits: number[];
+      includeFullAgentResult: boolean;
+    };
     /** Synchronize if schedule should be synchronized. */
     Synchronize: "synchronize";
     ValidationError: {
       loc: string[];
       msg: string;
       type: string;
-    } & { [key: string]: any };
+    };
   };
 }
 
@@ -604,10 +604,14 @@ export interface operations {
    *
    * Returns all agents for the provided tenant.
    */
-  get_agents_tenants_tenant_id_agents: {
+  get_agents_tenants_tenant_id_wfm_agents: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -626,11 +630,15 @@ export interface operations {
     };
   };
   /** Retrieve a single agent. */
-  get_agent_tenants_tenant_id_agents_agent_id: {
+  get_agent_tenants_tenant_id_wfm_agents_agent_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -649,11 +657,15 @@ export interface operations {
     };
   };
   /** Retrieve an agent's address. */
-  get_address_tenants_tenant_id_agents_agent_id_address: {
+  get_address_tenants_tenant_id_wfm_agents_agent_id_address: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -672,11 +684,15 @@ export interface operations {
     };
   };
   /** Add or update an agent's address. */
-  put_address_tenants_tenant_id_agents_agent_id_address: {
+  put_address_tenants_tenant_id_wfm_agents_agent_id_address: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -700,11 +716,15 @@ export interface operations {
     };
   };
   /** Delete an agent's address. */
-  delete_address_tenants_tenant_id_agents_agent_id_address: {
+  delete_address_tenants_tenant_id_wfm_agents_agent_id_address: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -723,11 +743,15 @@ export interface operations {
     };
   };
   /** Retrieve an agent's employment. */
-  get_employment_tenants_tenant_id_agents_agent_id_employment: {
+  get_employment_tenants_tenant_id_wfm_agents_agent_id_employment: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -746,11 +770,15 @@ export interface operations {
     };
   };
   /** Add or update an agent's employment. */
-  put_employment_tenants_tenant_id_agents_agent_id_employment: {
+  put_employment_tenants_tenant_id_wfm_agents_agent_id_employment: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -774,11 +802,15 @@ export interface operations {
     };
   };
   /** Delete an agent's employment. */
-  delete_employment_tenants_tenant_id_agents_agent_id_employment: {
+  delete_employment_tenants_tenant_id_wfm_agents_agent_id_employment: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -797,11 +829,15 @@ export interface operations {
     };
   };
   /** Retrieve all availability patterns assigned to an agent. */
-  get_all_availabilities_tenants_tenant_id_agents_agent_id_availability: {
+  get_all_availabilities_tenants_tenant_id_wfm_agents_agent_id_availability: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -826,11 +862,15 @@ export interface operations {
    * patterns can be added per agent as long as the date-range
    * when for which it is assigned do not overlap. Treated as a closed interval.
    */
-  post_availability_tenants_tenant_id_agents_agent_id_availability: {
+  post_availability_tenants_tenant_id_wfm_agents_agent_id_availability: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -854,12 +894,16 @@ export interface operations {
     };
   };
   /** Retrieve a specific assignment of an availability pattern to an agent. */
-  get_availability_tenants_tenant_id_agents_agent_id_availability_id: {
+  get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
         id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -878,12 +922,16 @@ export interface operations {
     };
   };
   /** Remove an assigned availability pattern for an agent. */
-  delete_availability_tenants_tenant_id_agents_agent_id_availability_id: {
+  delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
         id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -902,11 +950,15 @@ export interface operations {
     };
   };
   /** Get all restriction sets assigned to an agent. */
-  get_assigned_restriction_sets_tenants_tenant_id_agents_agent_id_restrictions: {
+  get_assigned_restriction_sets_tenants_tenant_id_wfm_agents_agent_id_restrictions: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -930,11 +982,15 @@ export interface operations {
    * A restriction set can only be added if it does not overlap
    * in time with an existing restriction set.
    */
-  post_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions: {
+  post_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -958,12 +1014,16 @@ export interface operations {
     };
   };
   /** Retrieve a single assigned restriction set. */
-  get_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id: {
+  get_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
         assigned_restriction_set_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -982,12 +1042,16 @@ export interface operations {
     };
   };
   /** Remove an assigned restriction set. */
-  delete_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id: {
+  delete_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
         assigned_restriction_set_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1006,12 +1070,16 @@ export interface operations {
     };
   };
   /** Update a single assigned restriction set. */
-  patch_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id: {
+  patch_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
         assigned_restriction_set_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1035,11 +1103,15 @@ export interface operations {
     };
   };
   /** Get all competencies associated with an agent. */
-  get_competencies_tenants_tenant_id_agents_agent_id_competencies: {
+  get_competencies_tenants_tenant_id_wfm_agents_agent_id_competencies: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1058,10 +1130,14 @@ export interface operations {
     };
   };
   /** Retrieve all availabilities of one tenant. */
-  get_all_tenants_tenant_id_availabilitypatterns: {
+  get_all_tenants_tenant_id_wfm_availabilitypatterns: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1080,11 +1156,15 @@ export interface operations {
     };
   };
   /** Retrieve a single availability. */
-  get_tenants_tenant_id_availabilitypatterns_availability_id: {
+  get_tenants_tenant_id_wfm_availabilitypatterns_availability_id: {
     parameters: {
       path: {
         tenant_id: string;
         availability_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1103,11 +1183,15 @@ export interface operations {
     };
   };
   /** Update an availability pattern. */
-  put_tenants_tenant_id_availabilitypatterns_availability_pattern_id: {
+  put_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id: {
     parameters: {
       path: {
         tenant_id: { [key: string]: any };
         availability_pattern_id: { [key: string]: any };
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1131,11 +1215,15 @@ export interface operations {
     };
   };
   /** Delete an availability pattern. */
-  delete_tenants_tenant_id_availabilitypatterns_availability_pattern_id: {
+  delete_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id: {
     parameters: {
       path: {
         tenant_id: string;
         availability_pattern_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1154,13 +1242,17 @@ export interface operations {
     };
   };
   /** Retrieve a all plans in a tenant. */
-  get_all_tenants_tenant_id_plans: {
+  get_all_tenants_tenant_id_wfm_plans: {
     parameters: {
       path: {
         tenant_id: string;
       };
       query: {
         includeDeleted?: boolean;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1179,10 +1271,14 @@ export interface operations {
     };
   };
   /** Add a new plan. */
-  post_tenants_tenant_id_plans: {
+  post_tenants_tenant_id_wfm_plans: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1206,11 +1302,15 @@ export interface operations {
     };
   };
   /** Retrieve a single plan. */
-  get_tenants_tenant_id_plans_plan_id: {
+  get_tenants_tenant_id_wfm_plans_plan_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1229,11 +1329,15 @@ export interface operations {
     };
   };
   /** Delete a plan. */
-  delete_tenants_tenant_id_plans_plan_id: {
+  delete_tenants_tenant_id_wfm_plans_plan_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1252,11 +1356,15 @@ export interface operations {
     };
   };
   /** Update a plan. */
-  patch_tenants_tenant_id_plans_plan_id: {
+  patch_tenants_tenant_id_wfm_plans_plan_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1280,10 +1388,14 @@ export interface operations {
     };
   };
   /** Retrieve all activities. */
-  get_all_tenants_tenant_id_activities: {
+  get_all_tenants_tenant_id_wfm_activities: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1302,10 +1414,14 @@ export interface operations {
     };
   };
   /** Create a new activity type. */
-  post_tenants_tenant_id_activities: {
+  post_tenants_tenant_id_wfm_activities: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1329,11 +1445,15 @@ export interface operations {
     };
   };
   /** Get a single activity. */
-  get_tenants_tenant_id_activities_activity_id: {
+  get_tenants_tenant_id_wfm_activities_activity_id: {
     parameters: {
       path: {
         tenant_id: string;
         activity_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1352,11 +1472,15 @@ export interface operations {
     };
   };
   /** Update a single activity. */
-  patch_tenants_tenant_id_activities_activity_id: {
+  patch_tenants_tenant_id_wfm_activities_activity_id: {
     parameters: {
       path: {
         tenant_id: string;
         activity_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1385,7 +1509,7 @@ export interface operations {
    * Returns all schedules that covers the period that is provided in the query
    * (if any).
    */
-  query_tenants_tenant_id_plans_plan_id_schedules_query: {
+  query_tenants_tenant_id_wfm_plans_plan_id_schedules_query: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1393,6 +1517,10 @@ export interface operations {
       };
       query: {
         includeDeleted?: boolean;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1423,11 +1551,15 @@ export interface operations {
    * unless the schedules are marked as locked. Schedules can only be copied
    * from within the same schedule period.
    */
-  copy_tenants_tenant_id_plans_plan_id_schedules_copy: {
+  copy_tenants_tenant_id_wfm_plans_plan_id_schedules_copy: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1459,7 +1591,7 @@ export interface operations {
     };
   };
   /** Retrieve all schedules for a plan. */
-  get_all_tenants_tenant_id_plans_plan_id_schedules: {
+  get_all_tenants_tenant_id_wfm_plans_plan_id_schedules: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1467,6 +1599,10 @@ export interface operations {
       };
       query: {
         includeDeleted?: boolean;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1485,11 +1621,15 @@ export interface operations {
     };
   };
   /** Add a new set of schedules. */
-  post_tenants_tenant_id_plans_plan_id_schedules: {
+  post_tenants_tenant_id_wfm_plans_plan_id_schedules: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1520,12 +1660,16 @@ export interface operations {
     };
   };
   /** Retrieve a single schedule. */
-  get_tenants_tenant_id_plans_plan_id_schedules_schedule_id: {
+  get_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1544,12 +1688,16 @@ export interface operations {
     };
   };
   /** Soft delete a schedule. */
-  delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id: {
+  delete_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1568,12 +1716,16 @@ export interface operations {
     };
   };
   /** Update a single schedule. */
-  patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id: {
+  patch_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1599,7 +1751,7 @@ export interface operations {
     };
   };
   /** Retrieve all shifts for a schedule. */
-  get_all_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts: {
+  get_all_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1608,6 +1760,10 @@ export interface operations {
       };
       query: {
         includeDeleted?: boolean;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1626,12 +1782,16 @@ export interface operations {
     };
   };
   /** Add a new set of shifts to a schedule. */
-  post_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts: {
+  post_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1664,13 +1824,17 @@ export interface operations {
     };
   };
   /** Retrieve a single shift. */
-  get_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id: {
+  get_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
         shift_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1689,13 +1853,17 @@ export interface operations {
     };
   };
   /** Soft delete a shift. */
-  delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id: {
+  delete_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
         shift_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1714,13 +1882,17 @@ export interface operations {
     };
   };
   /** Update a single shift. */
-  patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id: {
+  patch_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
         schedule_id: string;
         shift_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1746,10 +1918,14 @@ export interface operations {
     };
   };
   /** Retrieve all break settings for a tenant. */
-  get_all_tenants_tenant_id_breaksettings: {
+  get_all_tenants_tenant_id_wfm_breaksettings: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1768,10 +1944,14 @@ export interface operations {
     };
   };
   /** Add a new break setting to a tenant. */
-  post_tenants_tenant_id_breaksettings: {
+  post_tenants_tenant_id_wfm_breaksettings: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1795,11 +1975,15 @@ export interface operations {
     };
   };
   /** Retrieve a single break setting. */
-  get_tenants_tenant_id_breaksettings_breaksetting_id: {
+  get_tenants_tenant_id_wfm_breaksettings_breaksetting_id: {
     parameters: {
       path: {
         tenant_id: string;
         breaksetting_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1818,11 +2002,15 @@ export interface operations {
     };
   };
   /** Delete a single break setting. */
-  delete_tenants_tenant_id_breaksettings_breaksetting_id: {
+  delete_tenants_tenant_id_wfm_breaksettings_breaksetting_id: {
     parameters: {
       path: {
         tenant_id: string;
         breaksetting_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1841,11 +2029,15 @@ export interface operations {
     };
   };
   /** Update single breaksetting. */
-  patch_tenants_tenant_id_breaksettings_breaksetting_id: {
+  patch_tenants_tenant_id_wfm_breaksettings_breaksetting_id: {
     parameters: {
       path: {
         tenant_id: string;
         breaksetting_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1880,10 +2072,14 @@ export interface operations {
     };
   };
   /** Retrieve all Restriction sets. */
-  get_all_tenants_tenant_id_restrictionsets: {
+  get_all_tenants_tenant_id_wfm_restrictionsets: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1902,10 +2098,14 @@ export interface operations {
     };
   };
   /** Add a new restriction set. */
-  post_tenants_tenant_id_restrictionsets: {
+  post_tenants_tenant_id_wfm_restrictionsets: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1929,11 +2129,15 @@ export interface operations {
     };
   };
   /** Retrieve a single restriction set. */
-  get_tenants_tenant_id_restrictionsets_restriction_set_id: {
+  get_tenants_tenant_id_wfm_restrictionsets_restriction_set_id: {
     parameters: {
       path: {
         tenant_id: string;
         restriction_set_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1952,11 +2156,15 @@ export interface operations {
     };
   };
   /** Delete a single restriction set. */
-  delete_tenants_tenant_id_restrictionsets_restriction_set_id: {
+  delete_tenants_tenant_id_wfm_restrictionsets_restriction_set_id: {
     parameters: {
       path: {
         tenant_id: string;
         restriction_set_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -1975,11 +2183,15 @@ export interface operations {
     };
   };
   /** Update a single restriction set. */
-  patch_tenants_tenant_id_restrictionsets_restriction_set_id: {
+  patch_tenants_tenant_id_wfm_restrictionsets_restriction_set_id: {
     parameters: {
       path: {
         tenant_id: string;
         restriction_set_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2003,10 +2215,14 @@ export interface operations {
     };
   };
   /** Retrieve all schedule periods. */
-  get_all_tenants_tenant_id_scheduleperiods: {
+  get_all_tenants_tenant_id_wfm_scheduleperiods: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2025,10 +2241,14 @@ export interface operations {
     };
   };
   /** Add a new schedule period. */
-  post_tenants_tenant_id_scheduleperiods: {
+  post_tenants_tenant_id_wfm_scheduleperiods: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2059,11 +2279,15 @@ export interface operations {
     };
   };
   /** Retrieve a single schedule period. */
-  get_tenants_tenant_id_scheduleperiods_id: {
+  get_tenants_tenant_id_wfm_scheduleperiods_id: {
     parameters: {
       path: {
         tenant_id: string;
         id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2082,11 +2306,15 @@ export interface operations {
     };
   };
   /** Delete a single schedule period. */
-  delete_tenants_tenant_id_scheduleperiods_id: {
+  delete_tenants_tenant_id_wfm_scheduleperiods_id: {
     parameters: {
       path: {
         tenant_id: string;
         id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2111,11 +2339,15 @@ export interface operations {
     };
   };
   /** Update an existing schedule period. */
-  patch_tenants_tenant_id_scheduleperiods_id: {
+  patch_tenants_tenant_id_wfm_scheduleperiods_id: {
     parameters: {
       path: {
         tenant_id: string;
         id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2141,11 +2373,15 @@ export interface operations {
     };
   };
   /** Get the current optimization. */
-  get_optimization_tenants_tenant_id_plans_plan_id_optimization: {
+  get_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2164,11 +2400,15 @@ export interface operations {
     };
   };
   /** Start the current optimization. */
-  put_optimization_tenants_tenant_id_plans_plan_id_optimization: {
+  put_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2206,11 +2446,15 @@ export interface operations {
    * schedules. The optimization run will continue to run to end but the result
    * will not be used in the schedules.
    */
-  delete_optimization_tenants_tenant_id_plans_plan_id_optimization: {
+  delete_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2229,10 +2473,14 @@ export interface operations {
     };
   };
   /** Retrieve all competencies for a tenant. */
-  get_all_competencies_tenants_tenant_id_competencies: {
+  get_all_competencies_tenants_tenant_id_wfm_competencies: {
     parameters: {
       path: {
         tenant_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2251,11 +2499,15 @@ export interface operations {
     };
   };
   /** Retrieve all agents associated with a competency. */
-  get_agents_tenants_tenant_id_competencies_competency_id_agents: {
+  get_agents_tenants_tenant_id_wfm_competencies_competency_id_agents: {
     parameters: {
       path: {
         tenant_id: string;
         competency_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {
@@ -2274,11 +2526,15 @@ export interface operations {
     };
   };
   /** Route to create a simulation. */
-  post_simulation_tenants_tenant_id_plans_plan_id_simulation: {
+  post_simulation_tenants_tenant_id_wfm_plans_plan_id_simulation: {
     parameters: {
       path: {
         tenant_id: string;
         plan_id: string;
+      };
+      header: {
+        "x-cx-auth-tenant"?: string;
+        "x-cx-auth-platform"?: string;
       };
     };
     responses: {

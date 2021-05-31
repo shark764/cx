@@ -31,6 +31,8 @@ export class OpenApi {
     this.headers = () => ({
       'Authorization': `Token ${authToken()}`,
       'Content-Type': 'application/json',
+      'x-cx-auth-tenant': '["CXWFM_FORECAST_READ", "CXWFM_FORECAST_WRITE"]',
+      'x-cx-auth-platform': '[""]',
     });
     this.baseUrl = () => `${baseUrl()}${openApiSpecification.basePath}`,
 

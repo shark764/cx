@@ -7,6 +7,8 @@ import { QueryProvider } from './providers/queryProvider';
 import { AppThemeProvider } from './providers/appThemeProvider';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { StyledEngineProvider } from '@material-ui/core/styles';
 import './index.css';
 
 const getSession = async () => await new Promise((resolve, reject) => {
@@ -29,6 +31,14 @@ const getSession = async () => await new Promise((resolve, reject) => {
       { module: 'updateLocalStorage' }, '*'
     );
     window.addEventListener('message', eventHandler, false);
+  } else {
+    eventHandler({
+      data: { response: {
+        token: '',
+        baseUrl: '',
+        tenant: { tenantId: 'd44f4620-34cb-11e7-b248-062913f854c1' }
+      } },
+    });
   }
 
 })
@@ -38,15 +48,18 @@ const getSession = async () => await new Promise((resolve, reject) => {
 
   ReactDOM.render(
     <React.StrictMode>
-      <HashRouter>
-        <Provider store={store}>
-          <QueryProvider>
-            <AppThemeProvider>
-                <App tenant_id={data.tenant?.tenantId} />
-            </AppThemeProvider>
-          </QueryProvider>
-        </Provider>
-      </HashRouter>
+      <StyledEngineProvider injectFirst>
+        <CssBaseline />
+        <HashRouter>
+          <Provider store={store}>
+            <QueryProvider>
+              <AppThemeProvider>
+                  <App tenant_id={data.tenant?.tenantId} />
+              </AppThemeProvider>
+            </QueryProvider>
+          </Provider>
+        </HashRouter>
+      </StyledEngineProvider>
     </React.StrictMode>,
     document.getElementById('root'),
   );

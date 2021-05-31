@@ -9,11 +9,11 @@ const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
   }
 };
 
-
+const pluckCompetence = (data: any, competencId: string) => data?.find(({ competency }: any) => competency === competencId)
 
 export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
 
-  const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
+  const competency = pluckCompetence(data, selectedCompetence);
 
   return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
     timestamp: chooseXaxisLabel(timestamp, intervalLength),
@@ -31,7 +31,7 @@ export const useMemoLineChartData = (data: any, intervalLength: string, selected
 
 export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
 
-  const competency = data?.find(({ competency }: any) => competency === selectedCompetence);
+  const competency = pluckCompetence(data, selectedCompetence);
 
   return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
     timestamp: timestamp,
@@ -67,3 +67,16 @@ export const useMemoTimelineAdjustments = (timelineAdjustments: any, selectedCom
       id: id,
       adjustment: value
     })) || [], [timelineAdjustments, selectedCompetence]);
+
+
+export const useMemoStaffingData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
+
+  const competency = pluckCompetence(data, selectedCompetence);
+
+  return competency?.staffing.map(({ timestamp, staffing_estimate }: any) => ({
+    timestamp: chooseXaxisLabel(timestamp, intervalLength),
+    staffing_estimate,
+  })
+  ) || []
+
+  }, [data, intervalLength, selectedCompetence]);

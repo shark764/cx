@@ -5,10 +5,10 @@ import {
   Link,
   List,
   ListItem,
-  makeStyles,
   Toolbar,
   Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({

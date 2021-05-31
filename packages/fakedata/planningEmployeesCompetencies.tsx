@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 export const competency = (nQueues: number) => Object.assign(
   {},
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     name: faker.fake('{{name.lastName}}, {{name.firstName}}'),
     admin: Math.random() < 0.5,
     backOffice: Math.random() < 0.5,

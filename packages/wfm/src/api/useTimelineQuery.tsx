@@ -30,8 +30,9 @@ export const useTimelineQuery = (tenant_id: any, historicalQueryParams: any, sel
         ],
         channels: ['voice', 'messaging', 'sms', 'email', 'work-item'],
         directions: ['inbound'],
-        includeAdjustments: true,
+        includeAdjusted: true,
         includeForecast: true,
+        includeStaffing: true,
       }
     }
     if (selectedTimeline && selectedCompetence) {

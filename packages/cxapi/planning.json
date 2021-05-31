@@ -3,17 +3,17 @@
   "info": {
     "title": "CX WFM API (Agent, Planning, Admin)",
     "description": "The purpose of this API is to provide endpoints\n    for working with agent-data and schedules in CxWFM.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "paths": {
-    "/tenants/{tenant_id}/agents": {
+    "/tenants/{tenant_id}/wfm/agents": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Agents",
         "description": "Retrieve agents.\n\nReturns all agents for the provided tenant.",
-        "operationId": "get_agents_tenants_tenant_id_agents",
+        "operationId": "get_agents_tenants_tenant_id_wfm_agents",
         "parameters": [
           {
             "required": true,
@@ -24,6 +24,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -48,14 +66,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Agent",
         "description": "Retrieve a single agent.",
-        "operationId": "get_agent_tenants_tenant_id_agents_agent_id",
+        "operationId": "get_agent_tenants_tenant_id_wfm_agents_agent_id",
         "parameters": [
           {
             "required": true,
@@ -76,6 +94,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -100,14 +136,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/address": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/address": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Address",
         "description": "Retrieve an agent's address.",
-        "operationId": "get_address_tenants_tenant_id_agents_agent_id_address",
+        "operationId": "get_address_tenants_tenant_id_wfm_agents_agent_id_address",
         "parameters": [
           {
             "required": true,
@@ -128,6 +164,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -157,7 +211,7 @@
         ],
         "summary": "Put Address",
         "description": "Add or update an agent's address.",
-        "operationId": "put_address_tenants_tenant_id_agents_agent_id_address",
+        "operationId": "put_address_tenants_tenant_id_wfm_agents_agent_id_address",
         "parameters": [
           {
             "required": true,
@@ -178,6 +232,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -217,7 +289,7 @@
         ],
         "summary": "Delete Address",
         "description": "Delete an agent's address.",
-        "operationId": "delete_address_tenants_tenant_id_agents_agent_id_address",
+        "operationId": "delete_address_tenants_tenant_id_wfm_agents_agent_id_address",
         "parameters": [
           {
             "required": true,
@@ -238,6 +310,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -262,14 +352,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/employment": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/employment": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Employment",
         "description": "Retrieve an agent's employment.",
-        "operationId": "get_employment_tenants_tenant_id_agents_agent_id_employment",
+        "operationId": "get_employment_tenants_tenant_id_wfm_agents_agent_id_employment",
         "parameters": [
           {
             "required": true,
@@ -290,6 +380,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -319,7 +427,7 @@
         ],
         "summary": "Put Employment",
         "description": "Add or update an agent's employment.",
-        "operationId": "put_employment_tenants_tenant_id_agents_agent_id_employment",
+        "operationId": "put_employment_tenants_tenant_id_wfm_agents_agent_id_employment",
         "parameters": [
           {
             "required": true,
@@ -340,6 +448,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -379,7 +505,7 @@
         ],
         "summary": "Delete Employment",
         "description": "Delete an agent's employment.",
-        "operationId": "delete_employment_tenants_tenant_id_agents_agent_id_employment",
+        "operationId": "delete_employment_tenants_tenant_id_wfm_agents_agent_id_employment",
         "parameters": [
           {
             "required": true,
@@ -400,6 +526,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -424,14 +568,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/availability": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get All Availabilities",
         "description": "Retrieve all availability patterns assigned to an agent.",
-        "operationId": "get_all_availabilities_tenants_tenant_id_agents_agent_id_availability",
+        "operationId": "get_all_availabilities_tenants_tenant_id_wfm_agents_agent_id_availability",
         "parameters": [
           {
             "required": true,
@@ -452,6 +596,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -481,7 +643,7 @@
         ],
         "summary": "Post Availability",
         "description": "Assign an availability pattern to an agent.\n\nAdds a new assignment of a availability pattern to an agent. Multiple\npatterns can be added per agent as long as the date-range\nwhen for which it is assigned do not overlap. Treated as a closed interval.",
-        "operationId": "post_availability_tenants_tenant_id_agents_agent_id_availability",
+        "operationId": "post_availability_tenants_tenant_id_wfm_agents_agent_id_availability",
         "parameters": [
           {
             "required": true,
@@ -502,6 +664,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -536,14 +716,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/availability/{id}": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability/{id}": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Availability",
         "description": "Retrieve a specific assignment of an availability pattern to an agent.",
-        "operationId": "get_availability_tenants_tenant_id_agents_agent_id_availability_id",
+        "operationId": "get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id",
         "parameters": [
           {
             "required": true,
@@ -574,6 +754,24 @@
             },
             "name": "id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -603,7 +801,7 @@
         ],
         "summary": "Delete Availability",
         "description": "Remove an assigned availability pattern for an agent.",
-        "operationId": "delete_availability_tenants_tenant_id_agents_agent_id_availability_id",
+        "operationId": "delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id",
         "parameters": [
           {
             "required": true,
@@ -634,6 +832,24 @@
             },
             "name": "id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -658,14 +874,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/restrictions": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/restrictions": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Assigned Restriction Sets",
         "description": "Get all restriction sets assigned to an agent.",
-        "operationId": "get_assigned_restriction_sets_tenants_tenant_id_agents_agent_id_restrictions",
+        "operationId": "get_assigned_restriction_sets_tenants_tenant_id_wfm_agents_agent_id_restrictions",
         "parameters": [
           {
             "required": true,
@@ -686,6 +902,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -694,7 +928,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get Assigned Restriction Sets Tenants  Tenant Id  Agents  Agent Id  Restrictions Get",
+                  "title": "Response Get Assigned Restriction Sets Tenants  Tenant Id  Wfm Agents  Agent Id  Restrictions Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/AssignedRestrictionSetDTO"
@@ -721,7 +955,7 @@
         ],
         "summary": "Post Assigned Restriction Set",
         "description": "Assign a restriction set to an agent.\n\nA restriction set can only be added if it does not overlap\nin time with an existing restriction set.",
-        "operationId": "post_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions",
+        "operationId": "post_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions",
         "parameters": [
           {
             "required": true,
@@ -742,6 +976,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -778,14 +1030,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/restrictions/{assigned_restriction_set_id}": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/restrictions/{assigned_restriction_set_id}": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Assigned Restriction Set",
         "description": "Retrieve a single assigned restriction set.",
-        "operationId": "get_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id",
+        "operationId": "get_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -816,6 +1068,24 @@
             },
             "name": "assigned_restriction_set_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -847,7 +1117,7 @@
         ],
         "summary": "Delete Assigned Restriction Set",
         "description": "Remove an assigned restriction set.",
-        "operationId": "delete_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id",
+        "operationId": "delete_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -878,6 +1148,24 @@
             },
             "name": "assigned_restriction_set_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -907,7 +1195,7 @@
         ],
         "summary": "Patch Assigned Restriction Set",
         "description": "Update a single assigned restriction set.",
-        "operationId": "patch_assigned_restriction_set_tenants_tenant_id_agents_agent_id_restrictions_assigned_restriction_set_id",
+        "operationId": "patch_assigned_restriction_set_tenants_tenant_id_wfm_agents_agent_id_restrictions_assigned_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -938,6 +1226,24 @@
             },
             "name": "assigned_restriction_set_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -974,14 +1280,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/agents/{agent_id}/competencies": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/competencies": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Competencies",
         "description": "Get all competencies associated with an agent.",
-        "operationId": "get_competencies_tenants_tenant_id_agents_agent_id_competencies",
+        "operationId": "get_competencies_tenants_tenant_id_wfm_agents_agent_id_competencies",
         "parameters": [
           {
             "required": true,
@@ -1002,6 +1308,24 @@
             },
             "name": "agent_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1010,7 +1334,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get Competencies Tenants  Tenant Id  Agents  Agent Id  Competencies Get",
+                  "title": "Response Get Competencies Tenants  Tenant Id  Wfm Agents  Agent Id  Competencies Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/CompetencyDTO"
@@ -1032,14 +1356,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/availabilitypatterns": {
+    "/tenants/{tenant_id}/wfm/availabilitypatterns": {
       "get": {
         "tags": [
           "Availability"
         ],
         "summary": "Get All",
         "description": "Retrieve all availabilities of one tenant.",
-        "operationId": "get_all_tenants_tenant_id_availabilitypatterns",
+        "operationId": "get_all_tenants_tenant_id_wfm_availabilitypatterns",
         "parameters": [
           {
             "required": true,
@@ -1050,6 +1374,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1074,14 +1416,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/availabilitypatterns/{availability_id}": {
+    "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_id}": {
       "get": {
         "tags": [
           "Availability"
         ],
         "summary": "Get",
         "description": "Retrieve a single availability.",
-        "operationId": "get_tenants_tenant_id_availabilitypatterns_availability_id",
+        "operationId": "get_tenants_tenant_id_wfm_availabilitypatterns_availability_id",
         "parameters": [
           {
             "required": true,
@@ -1102,6 +1444,24 @@
             },
             "name": "availability_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1126,14 +1486,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/availabilitypatterns/{availability_pattern_id}": {
+    "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_pattern_id}": {
       "put": {
         "tags": [
           "Availability"
         ],
         "summary": "Put",
         "description": "Update an availability pattern.",
-        "operationId": "put_tenants_tenant_id_availabilitypatterns_availability_pattern_id",
+        "operationId": "put_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -1150,6 +1510,24 @@
             },
             "name": "availability_pattern_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1189,7 +1567,7 @@
         ],
         "summary": "Delete",
         "description": "Delete an availability pattern.",
-        "operationId": "delete_tenants_tenant_id_availabilitypatterns_availability_pattern_id",
+        "operationId": "delete_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -1210,6 +1588,24 @@
             },
             "name": "availability_pattern_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1234,14 +1630,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans": {
+    "/tenants/{tenant_id}/wfm/plans": {
       "get": {
         "tags": [
           "Plans"
         ],
         "summary": "Get All",
         "description": "Retrieve a all plans in a tenant.",
-        "operationId": "get_all_tenants_tenant_id_plans",
+        "operationId": "get_all_tenants_tenant_id_wfm_plans",
         "parameters": [
           {
             "required": true,
@@ -1261,6 +1657,24 @@
             },
             "name": "includeDeleted",
             "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1269,7 +1683,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Plans Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Plans Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/PlanDTO"
@@ -1296,7 +1710,7 @@
         ],
         "summary": "Post",
         "description": "Add a new plan.",
-        "operationId": "post_tenants_tenant_id_plans",
+        "operationId": "post_tenants_tenant_id_wfm_plans",
         "parameters": [
           {
             "required": true,
@@ -1307,6 +1721,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1343,14 +1775,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}": {
       "get": {
         "tags": [
           "Plans"
         ],
         "summary": "Get",
         "description": "Retrieve a single plan.",
-        "operationId": "get_tenants_tenant_id_plans_plan_id",
+        "operationId": "get_tenants_tenant_id_wfm_plans_plan_id",
         "parameters": [
           {
             "required": true,
@@ -1371,6 +1803,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1402,7 +1852,7 @@
         ],
         "summary": "Delete",
         "description": "Delete a plan.",
-        "operationId": "delete_tenants_tenant_id_plans_plan_id",
+        "operationId": "delete_tenants_tenant_id_wfm_plans_plan_id",
         "parameters": [
           {
             "required": true,
@@ -1423,6 +1873,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1452,7 +1920,7 @@
         ],
         "summary": "Patch",
         "description": "Update a plan.",
-        "operationId": "patch_tenants_tenant_id_plans_plan_id",
+        "operationId": "patch_tenants_tenant_id_wfm_plans_plan_id",
         "parameters": [
           {
             "required": true,
@@ -1473,6 +1941,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1509,14 +1995,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/activities": {
+    "/tenants/{tenant_id}/wfm/activities": {
       "get": {
         "tags": [
           "Activities"
         ],
         "summary": "Get All",
         "description": "Retrieve all activities.",
-        "operationId": "get_all_tenants_tenant_id_activities",
+        "operationId": "get_all_tenants_tenant_id_wfm_activities",
         "parameters": [
           {
             "required": true,
@@ -1527,6 +2013,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1535,7 +2039,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Activities Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Activities Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ActivityDTO"
@@ -1562,7 +2066,7 @@
         ],
         "summary": "Post",
         "description": "Create a new activity type.",
-        "operationId": "post_tenants_tenant_id_activities",
+        "operationId": "post_tenants_tenant_id_wfm_activities",
         "parameters": [
           {
             "required": true,
@@ -1573,6 +2077,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1609,14 +2131,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/activities/{activity_id}": {
+    "/tenants/{tenant_id}/wfm/activities/{activity_id}": {
       "get": {
         "tags": [
           "Activities"
         ],
         "summary": "Get",
         "description": "Get a single activity.",
-        "operationId": "get_tenants_tenant_id_activities_activity_id",
+        "operationId": "get_tenants_tenant_id_wfm_activities_activity_id",
         "parameters": [
           {
             "required": true,
@@ -1637,6 +2159,24 @@
             },
             "name": "activity_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1668,7 +2208,7 @@
         ],
         "summary": "Patch",
         "description": "Update a single activity.",
-        "operationId": "patch_tenants_tenant_id_activities_activity_id",
+        "operationId": "patch_tenants_tenant_id_wfm_activities_activity_id",
         "parameters": [
           {
             "required": true,
@@ -1689,6 +2229,24 @@
             },
             "name": "activity_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1725,14 +2283,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/schedules/query": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/query": {
       "post": {
         "tags": [
           "Schedules"
         ],
         "summary": "Query",
         "description": "Query for schedules.\n\nReturns all schedules that covers the period that is provided in the query\n(if any).",
-        "operationId": "query_tenants_tenant_id_plans_plan_id_schedules_query",
+        "operationId": "query_tenants_tenant_id_wfm_plans_plan_id_schedules_query",
         "parameters": [
           {
             "required": true,
@@ -1762,6 +2320,24 @@
             },
             "name": "includeDeleted",
             "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1780,7 +2356,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Query Tenants  Tenant Id  Plans  Plan Id  Schedules Query Post",
+                  "title": "Response Query Tenants  Tenant Id  Wfm Plans  Plan Id  Schedules Query Post",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ScheduleDTO"
@@ -1802,14 +2378,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/schedules/copy": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/copy": {
       "post": {
         "tags": [
           "Not implemented"
         ],
         "summary": "Copy",
         "description": "Copy schedules from other plan.\n\nCopies the provided schedules from the source plan to this plan (target).\nAgents that have schedules in the target plan will have those overwritten\nunless the schedules are marked as locked. Schedules can only be copied\nfrom within the same schedule period.",
-        "operationId": "copy_tenants_tenant_id_plans_plan_id_schedules_copy",
+        "operationId": "copy_tenants_tenant_id_wfm_plans_plan_id_schedules_copy",
         "parameters": [
           {
             "required": true,
@@ -1830,6 +2406,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1867,14 +2461,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/schedules": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules": {
       "get": {
         "tags": [
           "Schedules"
         ],
         "summary": "Get All",
         "description": "Retrieve all schedules for a plan.",
-        "operationId": "get_all_tenants_tenant_id_plans_plan_id_schedules",
+        "operationId": "get_all_tenants_tenant_id_wfm_plans_plan_id_schedules",
         "parameters": [
           {
             "required": true,
@@ -1904,6 +2498,24 @@
             },
             "name": "includeDeleted",
             "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -1912,7 +2524,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Plans  Plan Id  Schedules Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Plans  Plan Id  Schedules Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ScheduleDTO"
@@ -1939,7 +2551,7 @@
         ],
         "summary": "Post",
         "description": "Add a new set of schedules.",
-        "operationId": "post_tenants_tenant_id_plans_plan_id_schedules",
+        "operationId": "post_tenants_tenant_id_wfm_plans_plan_id_schedules",
         "parameters": [
           {
             "required": true,
@@ -1960,6 +2572,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -1982,7 +2612,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Post Tenants  Tenant Id  Plans  Plan Id  Schedules Post",
+                  "title": "Response Post Tenants  Tenant Id  Wfm Plans  Plan Id  Schedules Post",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ScheduleDTO"
@@ -2007,14 +2637,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/{schedule_id}": {
       "get": {
         "tags": [
           "Schedules"
         ],
         "summary": "Get",
         "description": "Retrieve a single schedule.",
-        "operationId": "get_tenants_tenant_id_plans_plan_id_schedules_schedule_id",
+        "operationId": "get_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id",
         "parameters": [
           {
             "required": true,
@@ -2045,6 +2675,24 @@
             },
             "name": "schedule_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2076,7 +2724,7 @@
         ],
         "summary": "Delete",
         "description": "Soft delete a schedule.",
-        "operationId": "delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id",
+        "operationId": "delete_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id",
         "parameters": [
           {
             "required": true,
@@ -2107,6 +2755,24 @@
             },
             "name": "schedule_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2136,7 +2802,7 @@
         ],
         "summary": "Patch",
         "description": "Update a single schedule.",
-        "operationId": "patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id",
+        "operationId": "patch_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id",
         "parameters": [
           {
             "required": true,
@@ -2167,6 +2833,24 @@
             },
             "name": "schedule_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -2206,14 +2890,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/{schedule_id}/shifts": {
       "get": {
         "tags": [
           "Shifts"
         ],
         "summary": "Get All",
         "description": "Retrieve all shifts for a schedule.",
-        "operationId": "get_all_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts",
+        "operationId": "get_all_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts",
         "parameters": [
           {
             "required": true,
@@ -2253,6 +2937,24 @@
             },
             "name": "includeDeleted",
             "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2261,7 +2963,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Plans  Plan Id  Schedules  Schedule Id  Shifts Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Plans  Plan Id  Schedules  Schedule Id  Shifts Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ShiftDTO"
@@ -2288,7 +2990,7 @@
         ],
         "summary": "Post",
         "description": "Add a new set of shifts to a schedule.",
-        "operationId": "post_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts",
+        "operationId": "post_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts",
         "parameters": [
           {
             "required": true,
@@ -2319,6 +3021,24 @@
             },
             "name": "schedule_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -2341,7 +3061,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Post Tenants  Tenant Id  Plans  Plan Id  Schedules  Schedule Id  Shifts Post",
+                  "title": "Response Post Tenants  Tenant Id  Wfm Plans  Plan Id  Schedules  Schedule Id  Shifts Post",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ShiftDTO"
@@ -2366,14 +3086,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/schedules/{schedule_id}/shifts/{shift_id}": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/schedules/{schedule_id}/shifts/{shift_id}": {
       "get": {
         "tags": [
           "Shifts"
         ],
         "summary": "Get",
         "description": "Retrieve a single shift.",
-        "operationId": "get_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id",
+        "operationId": "get_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id",
         "parameters": [
           {
             "required": true,
@@ -2414,6 +3134,24 @@
             },
             "name": "shift_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2445,7 +3183,7 @@
         ],
         "summary": "Delete",
         "description": "Soft delete a shift.",
-        "operationId": "delete_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id",
+        "operationId": "delete_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id",
         "parameters": [
           {
             "required": true,
@@ -2486,6 +3224,24 @@
             },
             "name": "shift_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2515,7 +3271,7 @@
         ],
         "summary": "Patch",
         "description": "Update a single shift.",
-        "operationId": "patch_tenants_tenant_id_plans_plan_id_schedules_schedule_id_shifts_shift_id",
+        "operationId": "patch_tenants_tenant_id_wfm_plans_plan_id_schedules_schedule_id_shifts_shift_id",
         "parameters": [
           {
             "required": true,
@@ -2556,6 +3312,24 @@
             },
             "name": "shift_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -2595,14 +3369,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/breaksettings": {
+    "/tenants/{tenant_id}/wfm/breaksettings": {
       "get": {
         "tags": [
           "Break settings"
         ],
         "summary": "Get All",
         "description": "Retrieve all break settings for a tenant.",
-        "operationId": "get_all_tenants_tenant_id_breaksettings",
+        "operationId": "get_all_tenants_tenant_id_wfm_breaksettings",
         "parameters": [
           {
             "required": true,
@@ -2613,6 +3387,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2621,7 +3413,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Breaksettings Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Breaksettings Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/BreakSettingsDTO"
@@ -2648,7 +3440,7 @@
         ],
         "summary": "Post",
         "description": "Add a new break setting to a tenant.",
-        "operationId": "post_tenants_tenant_id_breaksettings",
+        "operationId": "post_tenants_tenant_id_wfm_breaksettings",
         "parameters": [
           {
             "required": true,
@@ -2659,6 +3451,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -2695,14 +3505,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/breaksettings/{breaksetting_id}": {
+    "/tenants/{tenant_id}/wfm/breaksettings/{breaksetting_id}": {
       "get": {
         "tags": [
           "Break settings"
         ],
         "summary": "Get",
         "description": "Retrieve a single break setting.",
-        "operationId": "get_tenants_tenant_id_breaksettings_breaksetting_id",
+        "operationId": "get_tenants_tenant_id_wfm_breaksettings_breaksetting_id",
         "parameters": [
           {
             "required": true,
@@ -2723,6 +3533,24 @@
             },
             "name": "breaksetting_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2754,7 +3582,7 @@
         ],
         "summary": "Delete",
         "description": "Delete a single break setting.",
-        "operationId": "delete_tenants_tenant_id_breaksettings_breaksetting_id",
+        "operationId": "delete_tenants_tenant_id_wfm_breaksettings_breaksetting_id",
         "parameters": [
           {
             "required": true,
@@ -2775,6 +3603,24 @@
             },
             "name": "breaksetting_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2804,7 +3650,7 @@
         ],
         "summary": "Patch",
         "description": "Update single breaksetting.",
-        "operationId": "patch_tenants_tenant_id_breaksettings_breaksetting_id",
+        "operationId": "patch_tenants_tenant_id_wfm_breaksettings_breaksetting_id",
         "parameters": [
           {
             "required": true,
@@ -2825,6 +3671,24 @@
             },
             "name": "breaksetting_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -2878,14 +3742,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/restrictionsets": {
+    "/tenants/{tenant_id}/wfm/restrictionsets": {
       "get": {
         "tags": [
           "Restrictions"
         ],
         "summary": "Get All",
         "description": "Retrieve all Restriction sets.",
-        "operationId": "get_all_tenants_tenant_id_restrictionsets",
+        "operationId": "get_all_tenants_tenant_id_wfm_restrictionsets",
         "parameters": [
           {
             "required": true,
@@ -2896,6 +3760,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -2904,7 +3786,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Restrictionsets Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Restrictionsets Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/RestrictionSetDTO"
@@ -2931,7 +3813,7 @@
         ],
         "summary": "Post",
         "description": "Add a new restriction set.",
-        "operationId": "post_tenants_tenant_id_restrictionsets",
+        "operationId": "post_tenants_tenant_id_wfm_restrictionsets",
         "parameters": [
           {
             "required": true,
@@ -2942,6 +3824,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -2978,14 +3878,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/restrictionsets/{restriction_set_id}": {
+    "/tenants/{tenant_id}/wfm/restrictionsets/{restriction_set_id}": {
       "get": {
         "tags": [
           "Restrictions"
         ],
         "summary": "Get",
         "description": "Retrieve a single restriction set.",
-        "operationId": "get_tenants_tenant_id_restrictionsets_restriction_set_id",
+        "operationId": "get_tenants_tenant_id_wfm_restrictionsets_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -3006,6 +3906,24 @@
             },
             "name": "restriction_set_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3037,7 +3955,7 @@
         ],
         "summary": "Delete",
         "description": "Delete a single restriction set.",
-        "operationId": "delete_tenants_tenant_id_restrictionsets_restriction_set_id",
+        "operationId": "delete_tenants_tenant_id_wfm_restrictionsets_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -3058,6 +3976,24 @@
             },
             "name": "restriction_set_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3087,7 +4023,7 @@
         ],
         "summary": "Patch",
         "description": "Update a single restriction set.",
-        "operationId": "patch_tenants_tenant_id_restrictionsets_restriction_set_id",
+        "operationId": "patch_tenants_tenant_id_wfm_restrictionsets_restriction_set_id",
         "parameters": [
           {
             "required": true,
@@ -3108,6 +4044,24 @@
             },
             "name": "restriction_set_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -3144,14 +4098,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/scheduleperiods": {
+    "/tenants/{tenant_id}/wfm/scheduleperiods": {
       "get": {
         "tags": [
           "Schedule Period"
         ],
         "summary": "Get All",
         "description": "Retrieve all schedule periods.",
-        "operationId": "get_all_tenants_tenant_id_scheduleperiods",
+        "operationId": "get_all_tenants_tenant_id_wfm_scheduleperiods",
         "parameters": [
           {
             "required": true,
@@ -3162,6 +4116,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3170,7 +4142,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Scheduleperiods Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Scheduleperiods Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/SchedulePeriodDTO"
@@ -3197,7 +4169,7 @@
         ],
         "summary": "Post",
         "description": "Add a new schedule period.",
-        "operationId": "post_tenants_tenant_id_scheduleperiods",
+        "operationId": "post_tenants_tenant_id_wfm_scheduleperiods",
         "parameters": [
           {
             "required": true,
@@ -3208,6 +4180,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -3247,14 +4237,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/scheduleperiods/{id}": {
+    "/tenants/{tenant_id}/wfm/scheduleperiods/{id}": {
       "get": {
         "tags": [
           "Schedule Period"
         ],
         "summary": "Get",
         "description": "Retrieve a single schedule period.",
-        "operationId": "get_tenants_tenant_id_scheduleperiods_id",
+        "operationId": "get_tenants_tenant_id_wfm_scheduleperiods_id",
         "parameters": [
           {
             "required": true,
@@ -3275,6 +4265,24 @@
             },
             "name": "id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3306,7 +4314,7 @@
         ],
         "summary": "Delete",
         "description": "Delete a single schedule period.",
-        "operationId": "delete_tenants_tenant_id_scheduleperiods_id",
+        "operationId": "delete_tenants_tenant_id_wfm_scheduleperiods_id",
         "parameters": [
           {
             "required": true,
@@ -3327,6 +4335,24 @@
             },
             "name": "id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3359,7 +4385,7 @@
         ],
         "summary": "Patch",
         "description": "Update an existing schedule period.",
-        "operationId": "patch_tenants_tenant_id_scheduleperiods_id",
+        "operationId": "patch_tenants_tenant_id_wfm_scheduleperiods_id",
         "parameters": [
           {
             "required": true,
@@ -3380,6 +4406,24 @@
             },
             "name": "id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -3419,14 +4463,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/optimization": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/optimization": {
       "get": {
         "tags": [
           "Optimization"
         ],
         "summary": "Get Optimization",
         "description": "Get the current optimization.",
-        "operationId": "get_optimization_tenants_tenant_id_plans_plan_id_optimization",
+        "operationId": "get_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization",
         "parameters": [
           {
             "required": true,
@@ -3447,6 +4491,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3478,7 +4540,7 @@
         ],
         "summary": "Put Optimization",
         "description": "Start the current optimization.",
-        "operationId": "put_optimization_tenants_tenant_id_plans_plan_id_optimization",
+        "operationId": "put_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization",
         "parameters": [
           {
             "required": true,
@@ -3499,6 +4561,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {
@@ -3543,7 +4623,7 @@
         ],
         "summary": "Delete Optimization",
         "description": "Cancel the current optimization.\n\nDeleting an optimization will not remove the entity itself or the resulting\nschedules. The optimization run will continue to run to end but the result\nwill not be used in the schedules.",
-        "operationId": "delete_optimization_tenants_tenant_id_plans_plan_id_optimization",
+        "operationId": "delete_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization",
         "parameters": [
           {
             "required": true,
@@ -3564,6 +4644,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3590,14 +4688,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/competencies": {
+    "/tenants/{tenant_id}/wfm/competencies": {
       "get": {
         "tags": [
           "Competency"
         ],
         "summary": "Get All Competencies",
         "description": "Retrieve all competencies for a tenant.",
-        "operationId": "get_all_competencies_tenants_tenant_id_competencies",
+        "operationId": "get_all_competencies_tenants_tenant_id_wfm_competencies",
         "parameters": [
           {
             "required": true,
@@ -3608,6 +4706,24 @@
             },
             "name": "tenant_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3616,7 +4732,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Competencies Tenants  Tenant Id  Competencies Get",
+                  "title": "Response Get All Competencies Tenants  Tenant Id  Wfm Competencies Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/CompetencyDTO"
@@ -3638,14 +4754,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/competencies/{competency_id}/agents": {
+    "/tenants/{tenant_id}/wfm/competencies/{competency_id}/agents": {
       "get": {
         "tags": [
           "Competency"
         ],
         "summary": "Get Agents",
         "description": "Retrieve all agents associated with a competency.",
-        "operationId": "get_agents_tenants_tenant_id_competencies_competency_id_agents",
+        "operationId": "get_agents_tenants_tenant_id_wfm_competencies_competency_id_agents",
         "parameters": [
           {
             "required": true,
@@ -3666,6 +4782,24 @@
             },
             "name": "competency_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "responses": {
@@ -3690,14 +4824,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/plans/{plan_id}/simulation": {
+    "/tenants/{tenant_id}/wfm/plans/{plan_id}/simulation": {
       "post": {
         "tags": [
           "Simulation"
         ],
         "summary": "Post Simulation",
         "description": "Route to create a simulation.",
-        "operationId": "post_simulation_tenants_tenant_id_plans_plan_id_simulation",
+        "operationId": "post_simulation_tenants_tenant_id_wfm_plans_plan_id_simulation",
         "parameters": [
           {
             "required": true,
@@ -3718,6 +4852,24 @@
             },
             "name": "plan_id",
             "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Tenant",
+              "type": "string"
+            },
+            "name": "x-cx-auth-tenant",
+            "in": "header"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Cx-Auth-Platform",
+              "type": "string"
+            },
+            "name": "x-cx-auth-platform",
+            "in": "header"
           }
         ],
         "requestBody": {

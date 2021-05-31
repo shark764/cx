@@ -14,12 +14,10 @@ interface NewAdjustmentRequest {
 };
 
 
-const addHourOffset = (date: DateTime): DateTime => date.plus({ minutes: 14, seconds: 59 });
 const parseDate = (timestamp: string): DateTime => DateTime.fromISO(timestamp);
 const adjustmentDateFormat = (date: DateTime): string => date.toISO({ suppressMilliseconds: true, includeOffset: true });
 
 const adjustmentStartDate = (date: string) => adjustmentDateFormat(parseDate(date));
-const adjustmentEndDate = (date: string) => adjustmentDateFormat(addHourOffset(parseDate(date)));
 
 export const createAdjustment = (tenant_id: string, forecast_timeline_id: string, intervalLength: IntervalLength, selectedCompetence: string) => (adjustment: any) => {
 
@@ -29,7 +27,6 @@ export const createAdjustment = (tenant_id: string, forecast_timeline_id: string
     },
     body: {
       startDateTime: adjustmentStartDate(adjustment.timestamp),
-      endDateTime: adjustmentEndDate(adjustment.timestamp),
       intervalLength: intervalLength,
       competency: selectedCompetence,
       channel: 'voice',

@@ -3,7 +3,7 @@ import { IPayload } from '@cx/types/api';
 import { apiCall } from '@cx/utilities/api';
 
 export const agentInformation = (index: number) => ({
-  id: faker.random.uuid(),
+  id: faker.datatype.uuid(),
   name: faker.fake('{{name.lastName}}, {{name.firstName}}'),
   email: faker.internet.email(),
   team: faker.commerce.color(),
@@ -334,7 +334,7 @@ export const fetchTeams = (): Promise<any> => new Promise((resolve, reject) => {
 export const getTeams = (): Promise<any> => apiCall(fetchTeams());
 
 export const organization = (agentId: string) => ({
-  id: faker.random.uuid(),
+  id: faker.datatype.uuid(),
   agentId,
   team: faker.commerce.color(),
   validFrom: faker.date.past(),
@@ -379,7 +379,7 @@ export const updateAgent = async ({ id, payload }: IPayload) => new Promise((res
 
   if (validFrom && validTo) {
     allOrganization.push({
-      id: faker.random.uuid(),
+      id: faker.datatype.uuid(),
       agentId: id,
       team: result.team,
       validFrom,

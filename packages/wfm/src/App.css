@@ -46,3 +46,9 @@ input[type=number]::-webkit-outer-spin-button {
 .MuiButton-label {
   text-transform: capitalize;
 }
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 100;
+  }
+}

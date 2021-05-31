@@ -5,8 +5,7 @@ import { Props } from '@cx/types';
 import { loadTheme } from '../redux/thunks';
 import { RootState } from '../redux/store';
 import ThemeProvider from '@material-ui/styles/ThemeProvider'
-import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core/styles';
-// import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 
 // https://staging-api.cxengagelabs.net/v1/tenants/d676b68b-2f1c-498c-b6b3-db7e3a3e5708/branding
 const temp = {
@@ -42,19 +41,7 @@ export function AppThemeProvider({ children }: Props) {
     return null;
   }
 
-  const themez = createMuiTheme({
-    overrides: {
-      MuiOutlinedInput: {
-        input: {
-          padding: '12px 14px'
-        }
-      },
-      MuiInputLabel: {
-        outlined: {
-          transform: 'translate(14px, 15px) scale(1)'
-        }
-      }
-    },
+  const themez = createTheme({
     palette: {
       primary: {
         // light: will be calculated from palette.primary.main,

@@ -27,7 +27,7 @@ export const TextboxInput: React.VFC<Props> = ({control, name, isFormSubmitting,
     defaultValue={defaultValue}
     render={({ onChange, onBlur, value }) => (
       <Textarea
-        value={value}
+        value={value || ''}
         className={name}
         onChange={onChange}
         onBlur={onBlur}

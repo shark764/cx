@@ -29,7 +29,7 @@ const breakTime = () => ({
 });
 
 export const breakSetting = () => ({
-  id: faker.random.uuid(),
+  id: faker.datatype.uuid(),
   shiftStartTimeFrom: `${shiftTimes[Math.floor(Math.random() * 7)]} ${amPm[Math.random() >= 0.5 ? 1 : 0]}`,
   shiftStartTimeTo: `${shiftTimes[Math.floor(Math.random() * 7)]} ${amPm[Math.random() >= 0.5 ? 1 : 0]}`,
   minShiftLength: shiftTimes[Math.floor(Math.random() * 7)],

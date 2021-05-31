@@ -73,6 +73,7 @@ export const DateRange: React.FC<DateRangeProps> = ({ startDateTime, endDateTime
         onChange={timeSpanChange}
         variant="outlined"
         style={{ width: '150px' }}
+        size="small"
       >
         {dateOptions.map((option) => (
           <MenuItem key={option.id} value={option.id}>

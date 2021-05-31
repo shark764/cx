@@ -1,13 +1,13 @@
 import {
   FormControl,
-  InputLabel,
-  makeStyles,
   MenuItem,
-  Select,
+  Theme
 } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/styles';
 import { FilterTypes } from 'redux/reducers/main';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
@@ -35,14 +35,21 @@ export function FilterMenu({
 
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel>{title}</InputLabel>
-      <Select value={selected} onChange={handleChange}>
+      <TextField
+        select
+        label={title}
+        value={selected}
+        onChange={({target: { value }}: any) => handleChange(value)}
+        variant="outlined"
+        style={{ width: '200px' }}
+        size="small"
+      >
         {options.map((option) => (
           <MenuItem key={option.id} value={option.id}>
             {option.label}
           </MenuItem>
         ))}
-      </Select>
+      </TextField>
     </FormControl>
   );
 }

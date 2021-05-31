@@ -1,11 +1,11 @@
 import * as faker from 'faker';
 
-export const agentId = faker.random.uuid();
-export const tenantId = faker.random.uuid();
+export const agentId = faker.datatype.uuid();
+export const tenantId = faker.datatype.uuid();
 
 export const data = [
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     sunday: { start: '07:00 AM', end: '08:00 PM' },

@@ -54,12 +54,12 @@ const styles = {
   },
 };
 
-export const agentId = faker.random.uuid();
-export const tenantId = faker.random.uuid();
+export const agentId = faker.datatype.uuid();
+export const tenantId = faker.datatype.uuid();
 
 export const events = [
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -69,7 +69,7 @@ export const events = [
     end: new Date(days.monday.setHours(10, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -79,7 +79,7 @@ export const events = [
     end: new Date(days.monday.setHours(10, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -89,7 +89,7 @@ export const events = [
     end: new Date(days.monday.setHours(12, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Lunch',
@@ -99,7 +99,7 @@ export const events = [
     end: new Date(days.monday.setHours(12, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Meeting',
@@ -109,7 +109,7 @@ export const events = [
     end: new Date(days.monday.setHours(13, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Back Office',
@@ -119,7 +119,7 @@ export const events = [
     end: new Date(days.monday.setHours(14, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -129,7 +129,7 @@ export const events = [
     end: new Date(days.monday.setHours(15, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Back Office',
@@ -139,7 +139,7 @@ export const events = [
     end: new Date(days.monday.setHours(16, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -149,7 +149,7 @@ export const events = [
     end: new Date(days.tuesday.setHours(10, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -159,7 +159,7 @@ export const events = [
     end: new Date(days.tuesday.setHours(10, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -169,7 +169,7 @@ export const events = [
     end: new Date(days.tuesday.setHours(12, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Lunch',
@@ -179,7 +179,7 @@ export const events = [
     end: new Date(days.tuesday.setHours(12, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -189,7 +189,7 @@ export const events = [
     end: new Date(days.tuesday.setHours(14, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -199,7 +199,7 @@ export const events = [
     end: new Date(days.tuesday.setHours(14, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Back Office',
@@ -269,7 +269,7 @@ export const events = [
     end: new Date(days.thursday.setHours(22, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Teamleader',
@@ -279,7 +279,7 @@ export const events = [
     end: new Date(days.thursday.setHours(23, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Teamleader',
@@ -289,7 +289,7 @@ export const events = [
     end: new Date(days.friday.setHours(15, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -299,7 +299,7 @@ export const events = [
     end: new Date(days.friday.setHours(16, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Teamleader',
@@ -309,7 +309,7 @@ export const events = [
     end: new Date(days.friday.setHours(19, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Lunch',
@@ -319,7 +319,7 @@ export const events = [
     end: new Date(days.friday.setHours(19, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Teamleader',
@@ -329,7 +329,7 @@ export const events = [
     end: new Date(days.friday.setHours(21, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -339,7 +339,7 @@ export const events = [
     end: new Date(days.friday.setHours(22, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Teamleader',
@@ -349,7 +349,7 @@ export const events = [
     end: new Date(days.friday.setHours(23, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -359,7 +359,7 @@ export const events = [
     end: new Date(days.saturday.setHours(13, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -369,7 +369,7 @@ export const events = [
     end: new Date(days.saturday.setHours(13, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -379,7 +379,7 @@ export const events = [
     end: new Date(days.saturday.setHours(15, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Lunch',
@@ -389,7 +389,7 @@ export const events = [
     end: new Date(days.saturday.setHours(15, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',
@@ -399,7 +399,7 @@ export const events = [
     end: new Date(days.saturday.setHours(17, 0, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Break',
@@ -409,7 +409,7 @@ export const events = [
     end: new Date(days.saturday.setHours(17, 30, 0)),
   },
   {
-    id: faker.random.uuid(),
+    id: faker.datatype.uuid(),
     agentId,
     tenantId,
     title: 'Agent',

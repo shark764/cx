@@ -3,7 +3,7 @@ import * as faker from 'faker';
 import { DateTime } from 'luxon';
 
 export const restriction = (cond: boolean, isDefault: boolean) => ({
-  id: faker.random.uuid(),
+  id: faker.datatype.uuid(),
   name: isDefault ? 'Default Restriction Set' : faker.fake('{{name.lastName}}, {{name.firstName}}'),
   defaultSet: Math.random() < 0.4,
   agreedHours: cond ? Math.floor(Math.random() * 50) : null,

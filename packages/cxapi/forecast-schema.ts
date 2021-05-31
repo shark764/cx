@@ -117,6 +117,8 @@ export interface paths {
      *
      * For example can hour adjustments start on whole hours,
      * while day adjustments should be placed at 0:00.
+     *
+     * Only quarter hour, hour and day adjustments are supported.
      */
     post: operations["post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments"];
   };
@@ -125,7 +127,11 @@ export interface paths {
     get: operations["get_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
     /** Retrieve a single adjustment. */
     delete: operations["delete_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
-    /** Update an adjustment. */
+    /**
+     * Update an adjustment.
+     *
+     * Only quarter hour, hour and day adjustments are supported.
+     */
     patch: operations["patch_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
   };
   "/tenants/{tenant_id}/forecasttimelines/{timeline_id}/series/query": {
@@ -140,6 +146,11 @@ export interface paths {
      * The start and end date in the query is in the tenant timezone, i.e.,
      * timestamps will be relative to the tenants timezone. Timestamps represent
      * the start of the interval.
+     *
+     * For staffing estimates the sla threshold is taken from the sla assigned to
+     * the competency if available, if that is unavailable it is then taken from
+     * the assigned default sla for the tenant, in case niether has a sla
+     * defined then a fallback default of 20 seconds is used.
      */
     post: operations["timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query"];
   };
@@ -156,24 +167,24 @@ export interface components {
     AlgorithmOption: {
       option: string;
       value: string;
-    } & { [key: string]: any };
+    };
     /** Interaction types supported by CxEngage. */
     ChannelType: "voice" | "messaging" | "sms" | "email" | "work-item";
     /** Model for date interval. */
     DatePairDTO: {
       startDate: string;
       endDate: string;
-    } & { [key: string]: any };
+    };
     /** Represent day curve series. */
     DayCurveDTO: {
       weekDay: number;
       curve: number[];
-    } & { [key: string]: any };
+    };
     /** Represent day values series. */
     DayValueDTO: {
       valueType: components["schemas"]["ForecastValueType"];
       values: number[];
-    } & { [key: string]: any };
+    };
     /** The direction of a single interaction or group of interactions. */
     DirectionType: "inbound" | "outbound";
     /** Represent dto model for output responses. */
@@ -187,8 +198,10 @@ export interface components {
       type: components["schemas"]["AdjustmentType"];
       metric: components["schemas"]["MetricType"];
       value: number;
+      description?: string;
       id: string;
-    } & { [key: string]: any };
+      endDateTime: string;
+    };
     /** Represent dto model for updates. */
     ForecastAdjustmentPatchDTO: {
       competency?: string;
@@ -199,7 +212,8 @@ export interface components {
       numberOfIntervals?: number;
       type?: components["schemas"]["AdjustmentType"];
       value?: number;
-    } & { [key: string]: any };
+      description?: string;
+    };
     /** The forecast algorithm that should be used. */
     ForecastAlgorithmType: "average" | "prophet";
     /** Model for forecast scenarios. */
@@ -210,7 +224,7 @@ export interface components {
       startDate: string;
       endDate: string;
       scenarioType: components["schemas"]["ForecastScenarioType"];
-    } & { [key: string]: any };
+    };
     /** Model for handling forecast params. */
     ForecastScenarioParamsDTO: {
       dayValueDateRanges: components["schemas"]["DatePairDTO"][];
@@ -220,7 +234,7 @@ export interface components {
       includeDayCurve: boolean;
       metrics: components["schemas"]["MetricType"][];
       algorithmOptions: components["schemas"]["AlgorithmOption"][];
-    } & { [key: string]: any };
+    };
     /** Model for patching forecast scenarios. */
     ForecastScenarioPatchDTO: {
       name?: string;
@@ -228,7 +242,7 @@ export interface components {
       startDate?: string;
       endDate?: string;
       scenarioType?: components["schemas"]["ForecastScenarioType"];
-    } & { [key: string]: any };
+    };
     /** The type of forecast scenario. */
     ForecastScenarioType: "temporary" | "permanent";
     /** Represent dto model for output responses. */
@@ -242,13 +256,13 @@ export interface components {
       dayCurves: components["schemas"]["DayCurveDTO"][];
       dayValues: components["schemas"]["DayValueDTO"][];
       id: string;
-    } & { [key: string]: any };
+    };
     /** Model for triplet defining forecast data inclusion. */
     ForecastSeriesParam: {
       competency: string;
       channel: components["schemas"]["ChannelType"];
       direction: components["schemas"]["DirectionType"];
-    } & { [key: string]: any };
+    };
     /** Represent dto model for the input update requests. */
     ForecastSeriesPatchDTO: {
       status?: components["schemas"]["JobStatus"];
@@ -259,32 +273,33 @@ export interface components {
       startDate?: string;
       dayCurves?: components["schemas"]["DayCurveDTO"][];
       dayValues?: components["schemas"]["DayValueDTO"][];
-    } & { [key: string]: any };
+    };
     /** Represent dto model for output responses. */
     ForecastTimelineDTO: {
       name: string;
       description?: string;
       id: string;
-    } & { [key: string]: any };
+    };
     /** Represent dto model for patch requests. */
     ForecastTimelinePatchDTO: {
       name?: string;
       description?: string;
-    } & { [key: string]: any };
+    };
     /** Represent dto model for forecast timeline scenarios. */
     ForecastTimelineScenarioDTO: {
       forecastScenarioId: string;
       startDate: string;
       endDate: string;
-    } & { [key: string]: any };
+    };
     /** A list of forecasted (and possibly) adjusted data for a timeline. */
     ForecastTimelineSeriesDTO: {
       competency: string;
       channel: components["schemas"]["ChannelType"];
       direction: components["schemas"]["DirectionType"];
-      forecast: components["schemas"]["ForecastTimelineSeriesDataSeriesDTO"][];
-      adjusted: components["schemas"]["ForecastTimelineSeriesDataSeriesDTO"][];
-    } & { [key: string]: any };
+      forecast?: components["schemas"]["ForecastTimelineSeriesDataSeriesDTO"][];
+      adjusted?: components["schemas"]["ForecastTimelineSeriesDataSeriesDTO"][];
+      staffing?: components["schemas"]["ForecastTimelineSeriesStaffingSeriesDto"][];
+    };
     /**
      * The actual data series part of a timeline series.
      *
@@ -302,7 +317,7 @@ export interface components {
       nco?: number;
       aht?: number;
       abandons?: number;
-    } & { [key: string]: any };
+    };
     /** Query input for getting timeline data series. */
     ForecastTimelineSeriesQueryDTO: {
       startDate: string;
@@ -311,20 +326,26 @@ export interface components {
       competencyIds: string[];
       channels: components["schemas"]["ChannelType"][];
       directions: components["schemas"]["DirectionType"][];
-      includeAdjusted?: boolean;
-      includeForecast?: boolean;
-    } & { [key: string]: any };
+      includeAdjusted: boolean;
+      includeForecast: boolean;
+      includeStaffing: boolean;
+    };
+    /** A forecasted staffing requirement. */
+    ForecastTimelineSeriesStaffingSeriesDto: {
+      timestamp: string;
+      staffing_estimate?: number;
+    };
     /** Type of forecast values. */
     ForecastValueType: "forecast" | "upper" | "lower";
     HTTPValidationError: {
       detail?: components["schemas"]["ValidationError"][];
-    } & { [key: string]: any };
+    };
     /** The historical data that should be stored. */
     HistoricalDataDTO: {
       channel: components["schemas"]["ChannelType"];
       direction: components["schemas"]["DirectionType"];
       series: components["schemas"]["TimeSeriesDTO"][];
-    } & { [key: string]: any };
+    };
     /** The aggregation interval. */
     IntervalType: "quarter-hour" | "hour" | "day" | "week" | "month" | "year";
     /** Status for jobs. */
@@ -346,7 +367,8 @@ export interface components {
       type: components["schemas"]["AdjustmentType"];
       metric: components["schemas"]["MetricType"];
       value: number;
-    } & { [key: string]: any };
+      description?: string;
+    };
     /** Represent dto model for input requests. */
     NewForecastSeriesDTO: {
       status: components["schemas"]["JobStatus"];
@@ -357,24 +379,24 @@ export interface components {
       startDate: string;
       dayCurves: components["schemas"]["DayCurveDTO"][];
       dayValues: components["schemas"]["DayValueDTO"][];
-    } & { [key: string]: any };
+    };
     /** Represent dto model for input requests. */
     NewForecastTimelineDTO: {
       name: string;
       description?: string;
-    } & { [key: string]: any };
+    };
     /** Represent the DTO-model for an Time Series. */
     TimeSeriesDTO: {
       timestamp: string;
       nco: number;
       aht: number;
       abandons: number;
-    } & { [key: string]: any };
+    };
     ValidationError: {
       loc: string[];
       msg: string;
       type: string;
-    } & { [key: string]: any };
+    };
   };
 }
 
@@ -1206,6 +1228,8 @@ export interface operations {
    *
    * For example can hour adjustments start on whole hours,
    * while day adjustments should be placed at 0:00.
+   *
+   * Only quarter hour, hour and day adjustments are supported.
    */
   post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments: {
     parameters: {
@@ -1301,7 +1325,11 @@ export interface operations {
       };
     };
   };
-  /** Update an adjustment. */
+  /**
+   * Update an adjustment.
+   *
+   * Only quarter hour, hour and day adjustments are supported.
+   */
   patch_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
     parameters: {
       path: {
@@ -1345,6 +1373,11 @@ export interface operations {
    * The start and end date in the query is in the tenant timezone, i.e.,
    * timestamps will be relative to the tenants timezone. Timestamps represent
    * the start of the interval.
+   *
+   * For staffing estimates the sla threshold is taken from the sla assigned to
+   * the competency if available, if that is unavailable it is then taken from
+   * the assigned default sla for the tenant, in case niether has a sla
+   * defined then a fallback default of 20 seconds is used.
    */
   timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query: {
     parameters: {

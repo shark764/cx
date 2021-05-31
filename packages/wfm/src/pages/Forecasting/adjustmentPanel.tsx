@@ -111,12 +111,9 @@ export const AdjustmentPanel = (props: any) => {
       </span>
       <span>
         <AdjustmentComposition adjustments={props.original.ncoDerivedAdjustements} /><br />
-        {/* <AdjustmentInput initValue={props.original.ncoLocalAdjustement} /> <MockIcon>{' #'}</MockIcon> <br /><br /> */}
         {props.original.ncoDerivedAdjustements.length > 0 && <Button
           style={{marginLeft: '30px'}}
-          color="default"
           variant="outlined"
-          // onClick={onCancel}
           className="dynamicFormCancel"
         >
           Apply Adjustments
@@ -127,12 +124,9 @@ export const AdjustmentPanel = (props: any) => {
       </span>
       <span>
         <AdjustmentComposition adjustments={props.original.ahtDerivedAdjustements} /><br />
-        {/* <AdjustmentInput initValue={props.original.ahtLocalAdjustement} /> <MockIcon>{' #'}</MockIcon> <br /><br /> */}
         {props.original.ahtDerivedAdjustements.length > 0 && <Button
           style={{marginLeft: '30px'}}
-          color="default"
           variant="outlined"
-          // onClick={onCancel}
           className="dynamicFormCancel"
         >
           Apply Adjustments

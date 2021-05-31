@@ -29,7 +29,7 @@ export function useFetchGroups(tenantId: string) {
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Basic ${tempToken}`,
+            Authorization: `Token ${tempToken}`,
           },
         },
       );
@@ -48,7 +48,7 @@ export function useFetchSkills(tenantId: string) {
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Basic ${tempToken}`,
+            Authorization: `Token ${tempToken}`,
           },
         },
       );

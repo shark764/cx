@@ -51,7 +51,7 @@ export function GlobalFilters() {
       lg={12}
       xl={12}
       spacing={4}
-      justify="flex-end"
+      style={{justifyContent: 'flex-end'}}
     >
       {[
         { menu: 'channel', title: 'Channel', options: channelOptions },

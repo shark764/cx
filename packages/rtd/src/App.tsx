@@ -1,11 +1,11 @@
 import { inIframe } from '@cx/utilities';
 import {
   CssBaseline,
-  Divider,
-  makeStyles,
   Paper,
   Toolbar,
+  Theme
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { standardDashboardLinks } from 'utils/consts';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
@@ -15,7 +15,7 @@ import { Dashboard } from '@material-ui/icons';
 import { Header } from 'components/Header';
 import { Navigation } from 'navigation/Navigation';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   content: {
     flexGrow: 1,
     marginLeft: theme.spacing(12),
@@ -77,13 +77,12 @@ export function App() {
 
       <PageSideBar groups={menuBarLinks} subheader="Realtime Dashboards" />
 
-      <Paper elevation={0} className={classes.content}>
+      <Paper elevation={0} className={classes.content + ' main'} style={{background: 'none'}}>
         {/* Needed to adjust when app has a PageHeader */}
         {!inIframe() && <Toolbar />}
 
         <Header />
 
-        <Divider className={classes.divider} />
 
         <Navigation />
       </Paper>
