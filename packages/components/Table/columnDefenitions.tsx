@@ -25,12 +25,6 @@ const CompetenceIcon = styled(CheckRoundedIcon) <{ value: boolean }>`
 const WarningIcon = styled(WarningRoundedIcon) <{ value: boolean }>`
   display: ${({ value }) => (value ? 'inherit' : 'none !important')};
 `;
-const EditableCellHeader = styled.div`
-  margin: 0 auto;
-  border: none;
-  background-color: #8ac6dd26;
-  text-align: center;
-`
 
 export interface ColumnDefenition {
   [key: string]: ColumnInterface;
@@ -43,14 +37,6 @@ export const EditableCell = ({ value, adjustmentCellMethod, rest }: any) => {
   const handleInputChange = ({target: { value }}: any) => {
     setInputValue(value);
 
-    const timestamp = rest.row.original.timestamp;
-
-    // only working in hour interval atm..//TODO:
-    adjustmentCellMethod({
-      timestamp,
-      value,
-      metric: 'nco'
-    });
   };
 
   return (
@@ -176,7 +162,8 @@ const columnDefenitions: {[key: string]: any} = {
     maxWidth: '200px',
   },
   speculatedNco: {
-    Header: 'ADJUSTED VOLUME',
+    Header: 'Adjusted Volumne',
+    accessor: 'speculatedNco',
     minWidth: '80px',
     maxWidth: '200px',
   },
@@ -200,7 +187,8 @@ const columnDefenitions: {[key: string]: any} = {
     maxWidth: '200px',
   },
   speculatedAht: {
-    Header: 'ADJUSTED AHT',
+    Header: 'Adjusted Aht',
+    accessor: 'speculatedAht',
     minWidth: '80px',
     maxWidth: '200px',
   }

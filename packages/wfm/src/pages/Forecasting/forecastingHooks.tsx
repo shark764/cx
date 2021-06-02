@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
 import { DateTime } from 'luxon';
+import { deleteAdjustment } from './deleteAdjustment';
+import { createAdjustment } from './createAdjustment';
+import { components } from '@cx/cxapi/forecast-schema';
+type IntervalLength = components["schemas"]["IntervalType"];
 
 const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
   if (intervalLength === 'day' || intervalLength === 'twoDays') {
@@ -29,34 +33,56 @@ export const useMemoLineChartData = (data: any, intervalLength: string, selected
 
 
 
-export const useMemoTableData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
+export const useMemoTableData = (
+  data: any,
+  viewBy: IntervalLength,
+  selectedCompetence: string,
+  localAdjustments: any,
+  globalInitialAdjustments: any,
+  tenant_id: string,
+  selectedTimeline: string,
+  ) => useMemo(() => {
 
   const competency = pluckCompetence(data, selectedCompetence);
 
   return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
     timestamp: timestamp,
     nco: nco,
-    adjustedNco: competency?.adjusted[index].nco + 2,
-    ncoDerivedAdjustements: globalInitialAdjustments.filter((adjustemnt: any) => adjustemnt.metric === 'nco')
+    adjustedNco: competency?.adjusted[index].nco - nco,
+    speculatedNco: competency?.adjusted[index].nco,
+    ncoDerivedAdjustements: globalInitialAdjustments
       .filter((adjustment: any) => (
+        adjustment.metric === 'nco' &&
         adjustment.startDateTime === timestamp &&
         adjustment.competency === selectedCompetence
-        // TODO: nopes...   it's missing the type of adjustment in the adjustments response?
       )),
     ncoLocalAdjustement: localAdjustments['adjustedNco']?.[timestamp],
     aht: aht,
-    adjustedAht: competency?.adjusted[index].aht + 2,
-    ahtDerivedAdjustements: globalInitialAdjustments.filter((adjustemnt: any) => adjustemnt.metric === 'aht')
+    adjustedAht: competency?.adjusted[index].aht - aht,
+    speculatedAht: competency?.adjusted[index].aht,
+    ahtDerivedAdjustements: globalInitialAdjustments
     .filter((adjustment: any) => (
+      adjustment.metric === 'aht' &&
       adjustment.startDateTime === timestamp &&
       adjustment.competency === selectedCompetence
-      // TODO: nopes...   it's missing the type of adjustment in the adjustments response?
     )),
     ahtLocalAdjustment: localAdjustments['adjustedAht']?.[timestamp],
+    crud: {
+      create: createAdjustment(
+        tenant_id,
+        selectedTimeline,
+        viewBy,
+        selectedCompetence,
+      ),
+      delete: deleteAdjustment(
+        tenant_id,
+        selectedTimeline,
+      )
+    }
   })
   ) || []
 
-}, [data, selectedCompetence, localAdjustments, globalInitialAdjustments]);
+}, [data, selectedCompetence, localAdjustments, globalInitialAdjustments, viewBy, tenant_id, selectedTimeline]);
 
 
 

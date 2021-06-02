@@ -63,6 +63,7 @@ import { useTimelineQuery } from '../../api/useTimelineQuery';
 import { useTimelines } from '../../api/useTimelines';
 import { createAdjustment } from './createAdjustment';
 import { SinglePointAdjustment } from './singlePointAdjustment';
+import { deleteAdjustment } from './deleteAdjustment';
 
 const {
   setStartDate,
@@ -169,7 +170,6 @@ export function Forecasting() {
     isLoading: timelineQueryLoading,
     // error: timelineQueryError
   } = useTimelineQuery(tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
-
   const {
     data: timelineAdjustments = [],
     // isLoading: timelineAdjustmentsLoading,
@@ -177,7 +177,7 @@ export function Forecasting() {
   } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline,  viewBy);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
-  const timelineQueryTableData = useMemoTableData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
+  const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence, localAdjustments, timelineAdjustments, tenant_id, selectedTimeline?.id);
   const timelineQueryStaffingEstimate = useMemoStaffingData(timelineQuery, intervalLength, selectedCompetence);
 
 
@@ -406,15 +406,23 @@ export function Forecasting() {
         <TableSpacer>
           <Table
             themeVariant='forecast'
-            columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'aht', 'adjustedAht']}
+            columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
             tableData={timelineQueryTableData}
             viewMode={viewBy}
-            adjustmentCellMethod={createAdjustment(
-              tenant_id,
-              selectedTimeline?.id,
-              viewBy,
-              selectedCompetence,
-            )}
+            adjustmentCellMethod={
+              {
+                create: createAdjustment(
+                  tenant_id,
+                  selectedTimeline?.id,
+                  viewBy,
+                  selectedCompetence,
+                ),
+                delete: deleteAdjustment(
+                  tenant_id,
+                  selectedTimeline?.id,
+                )
+              }
+            }
             rowComponent={AdjustmentPanel}
           />
         </TableSpacer>

@@ -137,7 +137,7 @@ export const Table: React.VFC<any> = ({
               </TableCell>
             ))}
           {row.isExpanded && <div style={{width: '100%'}}>
-            { rowComponent({hey: 'hey', ...row}) }
+            { rowComponent({...row}) }
           </div>}
           </Columns>);
         })}

@@ -5,8 +5,10 @@ import {
 
 import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+// import { Plus } from '@cx/components/Icons/Plus';
 
 const Input = styled(TextField)`
   width: 70px;
@@ -42,13 +44,13 @@ const Header = styled.div`
 `;
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 200px 200px 200px 200px 200px;
+  grid-template-columns: 200px 200px 200px 200px 200px 200px;
 `;
 
 export const AdjustmentInput = ({initValue}: any) => {
   const [value, setValue] = useState(initValue);
-  const [type, setType] = useState('absolute');
-  const [focus, setFocus] = useState(false);
+
+  // const [focus, setFocus] = useState(false);
   return (<>
     <Input
       variant="outlined"
@@ -56,45 +58,99 @@ export const AdjustmentInput = ({initValue}: any) => {
       placeholder=' '
       type="number"
       value={value}
-      onFocus={() => setFocus(true)}
+      // onFocus={() => setFocus(true)}
       onBlur={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        setFocus(false);
+        // setFocus(false);
       }}
       onChange={({target: {value}}) => setValue(value)}
     />
-    <MockIcon
-      onClick={() => setType('absolute')}
-      visible={(focus || type === 'absolute') || (focus && type !== 'absolute')}
-    > # </MockIcon>
-    <MockIcon
-    // @ts-ignore
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('???');
-        setType('percent');
-      }}
-      visible={(focus || type === 'percent') || (focus && type !== 'percent')}
-    > % </MockIcon>
   </>);
 };
 
 const Cell = styled.div`
   margin-left: 30px;
+  margin-bottom: 10px;
 `;
-export const AdjustmentComposition = ({adjustments}: any) => (
-  <span> { adjustments.map((adjustment: any) => {
+export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: any) => {
+  const [tempAdjustments, setTempAdjustments] = useState<any>([]);
 
-    return (<Cell key={adjustment.id}>
-      <AdjustmentInput initValue={adjustment.value} />
+  const immutableSplice = (array: any[], index: number, value: unknown) => [
+    ...array.slice(0, index),
+    value,
+    ...array.slice(index + 1, array.length),
+  ];
 
-      <Trashcan />
-      <br />
-    </Cell>)
-  }) } </span>
-);
+  const changeVal = (index: number, value: any) =>
+    setTempAdjustments(
+      immutableSplice(tempAdjustments, index, value)
+    );
+
+  const immutableRemoveItem = (array: any[], index: number) => {
+    const { [index]: itemToRemove, ...restOfArray } = array;
+    return Object.values(restOfArray);
+  };
+
+  const removeTempAdjustment = (index: number) =>
+    setTempAdjustments(
+      immutableRemoveItem(tempAdjustments, index)
+    );
+
+  const deleteSavedAdjustment = (adjustment_id: string) => {
+    crud.delete({adjustment_id});
+  };
+  const saveNewAdjustment = (value: string) => {
+    crud.create({
+      timestamp: timestamp,
+      value: value,
+      metric: type,
+    });
+  };
+  const updateSavedAdjustment = (adjustment_id: string) => {
+    // crud.delete({adjustment_id}); // TODO:
+  };
+
+  return <span>
+    <Button
+      style={{marginLeft: '30px'}}
+      variant="outlined"
+      className="dynamicFormCancel"
+      onClick={() => setTempAdjustments([...tempAdjustments, {value: 0}])}
+      size="small"
+      sx={{marginBottom: '10px'}}
+    >
+      Add
+    </Button>
+
+    { adjustments.map((adjustment: any) =>
+      <Cell key={adjustment.id}>
+        <AdjustmentInput initValue={adjustment.value} />
+        <SaveIcon sx={{color: 'lightgrey'}} />
+        <Trashcan onClick={() => deleteSavedAdjustment(adjustment.id)} />
+      </Cell>
+    )}
+
+    { tempAdjustments.map((adjustment: any, index: number) =>
+      <Cell key={index}>
+        <Input
+          variant="outlined"
+          title=' '
+          placeholder=' '
+          type="number"
+          value={adjustment.value}
+          onBlur={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onChange={({target: { value }}: any) => changeVal(index, {value})}
+        />
+        <SaveIcon sx={{color: 'lightgrey'}} onClick={() => saveNewAdjustment(adjustment.value)} />
+        <Trashcan onClick={() => removeTempAdjustment(index)} />
+      </Cell>
+    )}
+  </span>
+};
 
 export const AdjustmentPanel = (props: any) => {
 
@@ -104,33 +160,28 @@ export const AdjustmentPanel = (props: any) => {
     </Header>
     <Grid>
       <span>
-
       </span>
       <span>
-
       </span>
       <span>
-        <AdjustmentComposition adjustments={props.original.ncoDerivedAdjustements} /><br />
-        {props.original.ncoDerivedAdjustements.length > 0 && <Button
-          style={{marginLeft: '30px'}}
-          variant="outlined"
-          className="dynamicFormCancel"
-        >
-          Apply Adjustments
-        </Button>}
+        <AdjustmentComposition
+          adjustments={props.original.ncoDerivedAdjustements}
+          crud={props.original.crud}
+          type="nco"
+          timestamp={props.original.timestamp}
+        />
       </span>
       <span>
-
       </span>
       <span>
-        <AdjustmentComposition adjustments={props.original.ahtDerivedAdjustements} /><br />
-        {props.original.ahtDerivedAdjustements.length > 0 && <Button
-          style={{marginLeft: '30px'}}
-          variant="outlined"
-          className="dynamicFormCancel"
-        >
-          Apply Adjustments
-        </Button>}
+      </span>
+      <span>
+        <AdjustmentComposition
+          adjustments={props.original.ahtDerivedAdjustements}
+          crud={props.original.crud}
+          type="aht"
+          timestamp={props.original.timestamp}
+        />
       </span>
     </Grid>
 
