@@ -5,7 +5,7 @@ type Error = components["schemas"]["HTTPValidationError"]; // 422 res code
 
 type TimelineSeriesData = components["schemas"]["ForecastTimelineSeriesDTO"];
 type TimelineSeriesRequestObject = components["schemas"]["ForecastTimelineSeriesQueryDTO"];
-type TimelineQueryPathParams = operations["timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query"]["parameters"]["path"];
+type TimelineQueryPathParams = operations["timeline_series_queries_tenants_tenant_id_wfm_forecasttimelines_timeline_id_series_query"]["parameters"]["path"];
 interface TimelineRequest {
   pathParams: TimelineQueryPathParams;
   body: TimelineSeriesRequestObject;
@@ -37,7 +37,7 @@ export const useTimelineQuery = (tenant_id: any, historicalQueryParams: any, sel
     }
     if (selectedTimeline && selectedCompetence) {
       return wfm.forecasting.api
-        .timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query(requestDetails)
+        .timeline_series_queries_tenants_tenant_id_wfm_forecasttimelines_timeline_id_series_query(requestDetails)
     }
   },
   {

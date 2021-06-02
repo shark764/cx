@@ -8,37 +8,37 @@ export interface paths {
     /** Handle healthcheck. */
     get: operations["get_status_status"];
   };
-  "/tenants/{tenant_id}/competencies/{competency_id}/historical": {
+  "/tenants/{tenant_id}/wfm/competencies/{competency_id}/historical": {
     /** Retrieve a set of historical data. */
-    get: operations["get_tenants_tenant_id_competencies_competency_id_historical"];
+    get: operations["get_tenants_tenant_id_wfm_competencies_competency_id_historical"];
     /** Add historical data, overlapping data points are overwritten. */
-    post: operations["post_tenants_tenant_id_competencies_competency_id_historical"];
+    post: operations["post_tenants_tenant_id_wfm_competencies_competency_id_historical"];
     /** Delete a range of historical data. */
-    delete: operations["delete_tenants_tenant_id_competencies_competency_id_historical"];
+    delete: operations["delete_tenants_tenant_id_wfm_competencies_competency_id_historical"];
   };
-  "/tenants/{tenant_id}/forecastscenarios": {
+  "/tenants/{tenant_id}/wfm/forecastscenarios": {
     /** Retrieve all scenarios. */
-    get: operations["get_all_tenants_tenant_id_forecastscenarios"];
+    get: operations["get_all_tenants_tenant_id_wfm_forecastscenarios"];
     /** Add a new forecast scenario. */
-    post: operations["post_tenants_tenant_id_forecastscenarios"];
+    post: operations["post_tenants_tenant_id_wfm_forecastscenarios"];
   };
-  "/tenants/{tenant_id}/forecastscenarios/{forecast_scenario_id}": {
+  "/tenants/{tenant_id}/wfm/forecastscenarios/{forecast_scenario_id}": {
     /** Retrieve a single scenario. */
-    get: operations["get_tenants_tenant_id_forecastscenarios_forecast_scenario_id"];
+    get: operations["get_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id"];
     /** Mark a single scenario as deleted. */
-    delete: operations["delete_tenants_tenant_id_forecastscenarios_forecast_scenario_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id"];
     /** Update a single scenario. */
-    patch: operations["patch_tenants_tenant_id_forecastscenarios_forecast_scenario_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id"];
   };
-  "/tenants/{tenant_id}/forecastscenarios/{forecast_scenario_id}/params": {
+  "/tenants/{tenant_id}/wfm/forecastscenarios/{forecast_scenario_id}/params": {
     /** Retrieve a scenario's forecast params. */
-    get: operations["get_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params"];
+    get: operations["get_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params"];
     /** Save forecast params to a scenario. */
-    put: operations["put_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params"];
+    put: operations["put_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params"];
     /** Delete a scenario's forecast params. */
-    delete: operations["delete_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params"];
+    delete: operations["delete_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params"];
   };
-  "/tenants/{tenant_id}/forecastscenarios/{forecast_scenario_id}/forecast": {
+  "/tenants/{tenant_id}/wfm/forecastscenarios/{forecast_scenario_id}/forecast": {
     /**
      * Initialize forecast creation.
      *
@@ -51,39 +51,39 @@ export interface paths {
      * All existing data series for the scenario will be overwritten. Any content
      * in the request body will be disregarded.
      */
-    post: operations["init_forecast_tenants_tenant_id_forecastscenarios_forecast_scenario_id_forecast"];
+    post: operations["init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast"];
   };
-  "/tenants/{tenant_id}/forecastscenarios/{scenario_id}/series": {
+  "/tenants/{tenant_id}/wfm/forecastscenarios/{scenario_id}/series": {
     /** Retrieve a forecast's data series. */
-    get: operations["get_all_tenants_tenant_id_forecastscenarios_scenario_id_series"];
+    get: operations["get_all_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series"];
     /** Add a new forecast data series. */
-    post: operations["post_tenants_tenant_id_forecastscenarios_scenario_id_series"];
+    post: operations["post_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series"];
   };
-  "/tenants/{tenant_id}/forecastscenarios/{scenario_id}/series/{series_id}": {
+  "/tenants/{tenant_id}/wfm/forecastscenarios/{scenario_id}/series/{series_id}": {
     /** Retrieve a single forecast data series. */
-    get: operations["get_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id"];
+    get: operations["get_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id"];
     /** Delete a single data series. */
-    delete: operations["delete_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id"];
     /** Update a single data series. */
-    patch: operations["patch_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id"];
   };
-  "/tenants/{tenant_id}/forecasttimelines": {
+  "/tenants/{tenant_id}/wfm/forecasttimelines": {
     /** Retrieve all timelines. */
-    get: operations["get_all_tenants_tenant_id_forecasttimelines"];
+    get: operations["get_all_tenants_tenant_id_wfm_forecasttimelines"];
     /** Create a new timeline. */
-    post: operations["post_timelines_tenants_tenant_id_forecasttimelines"];
+    post: operations["post_timelines_tenants_tenant_id_wfm_forecasttimelines"];
   };
-  "/tenants/{tenant_id}/forecasttimelines/{forecast_timeline_id}": {
+  "/tenants/{tenant_id}/wfm/forecasttimelines/{forecast_timeline_id}": {
     /** Retrieve single forecast timeline. */
-    get: operations["get_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id"];
+    get: operations["get_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id"];
     /** Delete single forecast timeline. */
-    delete: operations["delete_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id"];
+    delete: operations["delete_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id"];
     /** Update a single timeline. */
-    patch: operations["patch_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id"];
+    patch: operations["patch_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id"];
   };
-  "/tenants/{tenant_id}/forecasttimelines/{forecast_timeline_id}/scenarios": {
+  "/tenants/{tenant_id}/wfm/forecasttimelines/{forecast_timeline_id}/scenarios": {
     /** Retrieve all scenarios for a timeline. */
-    get: operations["get_timeline_scenarios_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios"];
+    get: operations["get_timeline_scenarios_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios"];
     /**
      * Add a forecast scenario to a timeline.
      *
@@ -96,18 +96,18 @@ export interface paths {
      * it has been added to the scenario the data used in the timeline will be
      * updated.
      */
-    post: operations["post_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios"];
+    post: operations["post_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios"];
     /**
      * Delete a single scenario from timeline.
      *
      * Deleting a forecast will simultaneously delete the forecast's data series
      * and adjustments.
      */
-    delete: operations["delete_forecast_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios"];
+    delete: operations["delete_forecast_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios"];
   };
-  "/tenants/{tenant_id}/forecasttimeline/{forecast_timeline_id}/adjustments": {
+  "/tenants/{tenant_id}/wfm/forecasttimeline/{forecast_timeline_id}/adjustments": {
     /** Retrieve all adjustments. */
-    get: operations["get_all_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments"];
+    get: operations["get_all_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments"];
     /**
      * Add new adjustment.
      *
@@ -120,21 +120,21 @@ export interface paths {
      *
      * Only quarter hour, hour and day adjustments are supported.
      */
-    post: operations["post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments"];
+    post: operations["post_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments"];
   };
-  "/tenants/{tenant_id}/forecasttimeline/{forecast_timeline_id}/adjustments/{adjustment_id}": {
+  "/tenants/{tenant_id}/wfm/forecasttimeline/{forecast_timeline_id}/adjustments/{adjustment_id}": {
     /** Retrieve a single adjustment. */
-    get: operations["get_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
+    get: operations["get_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
     /** Retrieve a single adjustment. */
-    delete: operations["delete_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
+    delete: operations["delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
     /**
      * Update an adjustment.
      *
      * Only quarter hour, hour and day adjustments are supported.
      */
-    patch: operations["patch_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
+    patch: operations["patch_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
   };
-  "/tenants/{tenant_id}/forecasttimelines/{timeline_id}/series/query": {
+  "/tenants/{tenant_id}/wfm/forecasttimelines/{timeline_id}/series/query": {
     /**
      * Retrieve the data series for a timeline.
      *
@@ -152,7 +152,7 @@ export interface paths {
      * the assigned default sla for the tenant, in case niether has a sla
      * defined then a fallback default of 20 seconds is used.
      */
-    post: operations["timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query"];
+    post: operations["timeline_series_queries_tenants_tenant_id_wfm_forecasttimelines_timeline_id_series_query"];
   };
   "/changelog.md": {
     get: operations["_get_changelog_changelog.md"];
@@ -413,7 +413,7 @@ export interface operations {
     };
   };
   /** Retrieve a set of historical data. */
-  get_tenants_tenant_id_competencies_competency_id_historical: {
+  get_tenants_tenant_id_wfm_competencies_competency_id_historical: {
     parameters: {
       path: {
         tenant_id: string;
@@ -446,7 +446,7 @@ export interface operations {
     };
   };
   /** Add historical data, overlapping data points are overwritten. */
-  post_tenants_tenant_id_competencies_competency_id_historical: {
+  post_tenants_tenant_id_wfm_competencies_competency_id_historical: {
     parameters: {
       path: {
         tenant_id: string;
@@ -478,7 +478,7 @@ export interface operations {
     };
   };
   /** Delete a range of historical data. */
-  delete_tenants_tenant_id_competencies_competency_id_historical: {
+  delete_tenants_tenant_id_wfm_competencies_competency_id_historical: {
     parameters: {
       path: {
         tenant_id: string;
@@ -511,7 +511,7 @@ export interface operations {
     };
   };
   /** Retrieve all scenarios. */
-  get_all_tenants_tenant_id_forecastscenarios: {
+  get_all_tenants_tenant_id_wfm_forecastscenarios: {
     parameters: {
       path: {
         tenant_id: string;
@@ -537,7 +537,7 @@ export interface operations {
     };
   };
   /** Add a new forecast scenario. */
-  post_tenants_tenant_id_forecastscenarios: {
+  post_tenants_tenant_id_wfm_forecastscenarios: {
     parameters: {
       path: {
         tenant_id: string;
@@ -568,7 +568,7 @@ export interface operations {
     };
   };
   /** Retrieve a single scenario. */
-  get_tenants_tenant_id_forecastscenarios_forecast_scenario_id: {
+  get_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -595,7 +595,7 @@ export interface operations {
     };
   };
   /** Mark a single scenario as deleted. */
-  delete_tenants_tenant_id_forecastscenarios_forecast_scenario_id: {
+  delete_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -622,7 +622,7 @@ export interface operations {
     };
   };
   /** Update a single scenario. */
-  patch_tenants_tenant_id_forecastscenarios_forecast_scenario_id: {
+  patch_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -654,7 +654,7 @@ export interface operations {
     };
   };
   /** Retrieve a scenario's forecast params. */
-  get_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params: {
+  get_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params: {
     parameters: {
       path: {
         tenant_id: string;
@@ -681,7 +681,7 @@ export interface operations {
     };
   };
   /** Save forecast params to a scenario. */
-  put_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params: {
+  put_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params: {
     parameters: {
       path: {
         tenant_id: string;
@@ -713,7 +713,7 @@ export interface operations {
     };
   };
   /** Delete a scenario's forecast params. */
-  delete_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params: {
+  delete_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params: {
     parameters: {
       path: {
         tenant_id: string;
@@ -751,7 +751,7 @@ export interface operations {
    * All existing data series for the scenario will be overwritten. Any content
    * in the request body will be disregarded.
    */
-  init_forecast_tenants_tenant_id_forecastscenarios_forecast_scenario_id_forecast: {
+  init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast: {
     parameters: {
       path: {
         tenant_id: string;
@@ -784,7 +784,7 @@ export interface operations {
     };
   };
   /** Retrieve a forecast's data series. */
-  get_all_tenants_tenant_id_forecastscenarios_scenario_id_series: {
+  get_all_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series: {
     parameters: {
       path: {
         tenant_id: string;
@@ -811,7 +811,7 @@ export interface operations {
     };
   };
   /** Add a new forecast data series. */
-  post_tenants_tenant_id_forecastscenarios_scenario_id_series: {
+  post_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series: {
     parameters: {
       path: {
         tenant_id: string;
@@ -843,7 +843,7 @@ export interface operations {
     };
   };
   /** Retrieve a single forecast data series. */
-  get_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id: {
+  get_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -871,7 +871,7 @@ export interface operations {
     };
   };
   /** Delete a single data series. */
-  delete_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id: {
+  delete_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -899,7 +899,7 @@ export interface operations {
     };
   };
   /** Update a single data series. */
-  patch_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id: {
+  patch_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -932,7 +932,7 @@ export interface operations {
     };
   };
   /** Retrieve all timelines. */
-  get_all_tenants_tenant_id_forecasttimelines: {
+  get_all_tenants_tenant_id_wfm_forecasttimelines: {
     parameters: {
       path: {
         tenant_id: string;
@@ -958,7 +958,7 @@ export interface operations {
     };
   };
   /** Create a new timeline. */
-  post_timelines_tenants_tenant_id_forecasttimelines: {
+  post_timelines_tenants_tenant_id_wfm_forecasttimelines: {
     parameters: {
       path: {
         tenant_id: string;
@@ -989,7 +989,7 @@ export interface operations {
     };
   };
   /** Retrieve single forecast timeline. */
-  get_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id: {
+  get_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1016,7 +1016,7 @@ export interface operations {
     };
   };
   /** Delete single forecast timeline. */
-  delete_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id: {
+  delete_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1043,7 +1043,7 @@ export interface operations {
     };
   };
   /** Update a single timeline. */
-  patch_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id: {
+  patch_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1075,7 +1075,7 @@ export interface operations {
     };
   };
   /** Retrieve all scenarios for a timeline. */
-  get_timeline_scenarios_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios: {
+  get_timeline_scenarios_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1117,7 +1117,7 @@ export interface operations {
    * it has been added to the scenario the data used in the timeline will be
    * updated.
    */
-  post_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios: {
+  post_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1154,7 +1154,7 @@ export interface operations {
    * Deleting a forecast will simultaneously delete the forecast's data series
    * and adjustments.
    */
-  delete_forecast_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios: {
+  delete_forecast_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1184,7 +1184,7 @@ export interface operations {
     };
   };
   /** Retrieve all adjustments. */
-  get_all_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments: {
+  get_all_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1231,7 +1231,7 @@ export interface operations {
    *
    * Only quarter hour, hour and day adjustments are supported.
    */
-  post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments: {
+  post_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1270,7 +1270,7 @@ export interface operations {
     };
   };
   /** Retrieve a single adjustment. */
-  get_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
+  get_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1298,7 +1298,7 @@ export interface operations {
     };
   };
   /** Retrieve a single adjustment. */
-  delete_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
+  delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1330,7 +1330,7 @@ export interface operations {
    *
    * Only quarter hour, hour and day adjustments are supported.
    */
-  patch_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
+  patch_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
     parameters: {
       path: {
         tenant_id: string;
@@ -1379,7 +1379,7 @@ export interface operations {
    * the assigned default sla for the tenant, in case niether has a sla
    * defined then a fallback default of 20 seconds is used.
    */
-  timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query: {
+  timeline_series_queries_tenants_tenant_id_wfm_forecasttimelines_timeline_id_series_query: {
     parameters: {
       path: {
         tenant_id: string;

@@ -7,7 +7,7 @@ type Error = components["schemas"]["HTTPValidationError"]; // 422 res code
 type NewAdjustment = components["schemas"]["ForecastAdjustmentDTO"];
 type NewAdjustmentRequestObject = components["schemas"]["NewForecastAdjustmentDTO"];
 type IntervalLength = components["schemas"]["IntervalType"];
-type NewAdjustmentPathParams = operations["post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments"]["parameters"]["path"];
+type NewAdjustmentPathParams = operations["post_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments"]["parameters"]["path"];
 interface NewAdjustmentRequest {
   pathParams: NewAdjustmentPathParams;
   body: NewAdjustmentRequestObject;
@@ -38,5 +38,5 @@ export const createAdjustment = (tenant_id: string, forecast_timeline_id: string
     }
   };
 
-  return wfm.forecasting.api.post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments(newAdjustmentRequest) as NewAdjustment | Error;
+  return wfm.forecasting.api.post_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments(newAdjustmentRequest) as NewAdjustment | Error;
 }

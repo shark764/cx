@@ -12,7 +12,7 @@ export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams:
     const allAdjustmentEndDate = DateTime.fromISO(historicalQueryParams.endDateTime)
       .endOf('day').toISO({ includeOffset: Boolean(viewBy !== 'quarter-hour') });
 
-    return wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments({
+    return wfm.forecasting.api.get_all_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments({
       pathParams: {
         tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
       },

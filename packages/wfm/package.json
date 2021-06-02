@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
-  "wfmForecastApiVersion": "0.3.0",
+  "wfmForecastApiVersion": "0.4.0",
   "wfmPlanningApiVersion": "0.2.0",
   "dependencies": {
     "@cx/components": "1.0.0",

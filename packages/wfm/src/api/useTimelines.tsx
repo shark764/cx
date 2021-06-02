@@ -5,7 +5,7 @@ import { operations, components } from '@cx/cxapi/forecast-schema';
 type Error = components["schemas"]["HTTPValidationError"]; // 422 res code
 
 type TimelinesData = components["schemas"]["ForecastTimelineDTO"];
-type TimelineQueryPathParams = operations["get_all_tenants_tenant_id_forecasttimelines"]["parameters"]["path"];
+type TimelineQueryPathParams = operations["get_all_tenants_tenant_id_wfm_forecasttimelines"]["parameters"]["path"];
 interface TimelineRequest {
   pathParams: TimelineQueryPathParams;
 };
@@ -23,7 +23,7 @@ export const useTimelines = (tenant_id: string) => useQuery<TimelinesData[], Err
   () => {
 
     const requestDetails: TimelineRequest = { pathParams: { tenant_id } };
-    return wfm.forecasting.api.get_all_tenants_tenant_id_forecasttimelines(requestDetails)
+    return wfm.forecasting.api.get_all_tenants_tenant_id_wfm_forecasttimelines(requestDetails)
 
       .then(( data: TimelinesData[]): ModifiedTimelines[] =>
         data.map(({ description, id, name }) => ({

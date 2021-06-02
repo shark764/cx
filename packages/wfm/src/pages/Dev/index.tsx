@@ -68,7 +68,7 @@ export const Dev = () => {
     refetch: generateData
   } = useQuery<any, any>(
     ['historicalData'],
-    () => wfm.forecasting.api.post_tenants_tenant_id_competencies_competency_id_historical({
+    () => wfm.forecasting.api.post_tenants_tenant_id_wfm_competencies_competency_id_historical({
       pathParams: { tenant_id: 'd44f4620-34cb-11e7-b248-062913f854c1', competency_id: stagePool1Competencies['Email'] },
       body: {
         channel: "voice",

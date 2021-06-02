@@ -46,7 +46,7 @@ export const fetchTenantCompetencies = () => {
 export const fetchForecastScenarios = (selectedTimeline: any) => {
   return async (dispatch: any, getState: any) => {
     const { main: { session: { tenant_id } } } = getState();
-    const data = await wfm.forecasting.api.get_timeline_scenarios_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios({
+    const data = await wfm.forecasting.api.get_timeline_scenarios_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios({
       pathParams: { tenant_id: tenant_id, forecast_timeline_id: selectedTimeline.id },
     });
     dispatch(setScenarios(data));
@@ -114,7 +114,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     /**
     * First make a new forecast scenario and grab scenario ID off that for the next step
     */
-    const { id: forecast_scenario_id } = await wfm.forecasting.api.post_tenants_tenant_id_forecastscenarios({
+    const { id: forecast_scenario_id } = await wfm.forecasting.api.post_tenants_tenant_id_wfm_forecastscenarios({
       pathParams: { tenant_id },
       body: { name, description, startDate, endDate, scenarioType },
     });
@@ -127,7 +127,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     /**
      * Then update the forecasts scenarios settings
      */
-    await wfm.forecasting.api.put_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params({
+    await wfm.forecasting.api.put_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params({
       pathParams: { tenant_id, forecast_scenario_id },
       body: {
         ...scenarioConfig,
@@ -142,14 +142,14 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
      * Then generate (AKA initiate) the forecast
      * This step can take some time to complete
      */
-    await wfm.forecasting.api.init_forecast_tenants_tenant_id_forecastscenarios_forecast_scenario_id_forecast({
+    await wfm.forecasting.api.init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast({
       pathParams: { tenant_id, forecast_scenario_id },
     });
 
     /**
      * Then add your forecast scenario to a timeline
      */
-    await wfm.forecasting.api.post_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios({
+    await wfm.forecasting.api.post_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios({
       pathParams: { tenant_id, forecast_timeline_id },
       body: {
         forecastScenarioId: forecast_scenario_id,
@@ -161,7 +161,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
 };
 
 export const deleteForecastScenario = async (formData: any, tenant_id: string, forecast_timeline_id: string) => {
-  await wfm.forecasting.api.delete_forecast_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios({
+  await wfm.forecasting.api.delete_forecast_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios({
     pathParams: { tenant_id, forecast_timeline_id },
     queryString: { ...formData }
   });

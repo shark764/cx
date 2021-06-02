@@ -2,7 +2,7 @@ import { wfm } from '../../api';
 import { operations, components } from '@cx/cxapi/forecast-schema';
 
 type Error = components["schemas"]["HTTPValidationError"]; // 422 res code
-type DeleteAdjustmentPathParams = operations["delete_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"]["parameters"]["path"];
+type DeleteAdjustmentPathParams = operations["delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"]["parameters"]["path"];
 interface DeleteAdjustmentRequest {
   pathParams: DeleteAdjustmentPathParams;
 };
@@ -18,5 +18,5 @@ export const deleteAdjustment = (tenant_id: string, forecast_timeline_id: string
     },
   };
 
-  return wfm.forecasting.api.delete_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id(deleteAdjustmentRequest) as any | Error;
+  return wfm.forecasting.api.delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id(deleteAdjustmentRequest) as any | Error;
 }

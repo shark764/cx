@@ -3,7 +3,7 @@
   "info": {
     "title": "CX WFM Api (Historical, Forecast and Target)",
     "description": "CxWFM platform api for handling historical data and generating and storing forecasts.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "paths": {
     "/status": {
@@ -23,14 +23,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/competencies/{competency_id}/historical": {
+    "/tenants/{tenant_id}/wfm/competencies/{competency_id}/historical": {
       "get": {
         "tags": [
           "Historical"
         ],
         "summary": "Get",
         "description": "Retrieve a set of historical data.",
-        "operationId": "get_tenants_tenant_id_competencies_competency_id_historical",
+        "operationId": "get_tenants_tenant_id_wfm_competencies_competency_id_historical",
         "parameters": [
           {
             "required": true,
@@ -136,7 +136,7 @@
         ],
         "summary": "Post",
         "description": "Add historical data, overlapping data points are overwritten.",
-        "operationId": "post_tenants_tenant_id_competencies_competency_id_historical",
+        "operationId": "post_tenants_tenant_id_wfm_competencies_competency_id_historical",
         "parameters": [
           {
             "required": true,
@@ -214,7 +214,7 @@
         ],
         "summary": "Delete",
         "description": "Delete a range of historical data.",
-        "operationId": "delete_tenants_tenant_id_competencies_competency_id_historical",
+        "operationId": "delete_tenants_tenant_id_wfm_competencies_competency_id_historical",
         "parameters": [
           {
             "required": true,
@@ -313,14 +313,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecastscenarios": {
+    "/tenants/{tenant_id}/wfm/forecastscenarios": {
       "get": {
         "tags": [
           "Forecast Scenario"
         ],
         "summary": "Get All",
         "description": "Retrieve all scenarios.",
-        "operationId": "get_all_tenants_tenant_id_forecastscenarios",
+        "operationId": "get_all_tenants_tenant_id_wfm_forecastscenarios",
         "parameters": [
           {
             "required": true,
@@ -357,7 +357,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Forecastscenarios Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Forecastscenarios Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ForecastScenarioDTO"
@@ -384,7 +384,7 @@
         ],
         "summary": "Post",
         "description": "Add a new forecast scenario.",
-        "operationId": "post_tenants_tenant_id_forecastscenarios",
+        "operationId": "post_tenants_tenant_id_wfm_forecastscenarios",
         "parameters": [
           {
             "required": true,
@@ -449,14 +449,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecastscenarios/{forecast_scenario_id}": {
+    "/tenants/{tenant_id}/wfm/forecastscenarios/{forecast_scenario_id}": {
       "get": {
         "tags": [
           "Forecast Scenario"
         ],
         "summary": "Get",
         "description": "Retrieve a single scenario.",
-        "operationId": "get_tenants_tenant_id_forecastscenarios_forecast_scenario_id",
+        "operationId": "get_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id",
         "parameters": [
           {
             "required": true,
@@ -526,7 +526,7 @@
         ],
         "summary": "Delete",
         "description": "Mark a single scenario as deleted.",
-        "operationId": "delete_tenants_tenant_id_forecastscenarios_forecast_scenario_id",
+        "operationId": "delete_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id",
         "parameters": [
           {
             "required": true,
@@ -594,7 +594,7 @@
         ],
         "summary": "Patch",
         "description": "Update a single scenario.",
-        "operationId": "patch_tenants_tenant_id_forecastscenarios_forecast_scenario_id",
+        "operationId": "patch_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id",
         "parameters": [
           {
             "required": true,
@@ -669,14 +669,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecastscenarios/{forecast_scenario_id}/params": {
+    "/tenants/{tenant_id}/wfm/forecastscenarios/{forecast_scenario_id}/params": {
       "get": {
         "tags": [
           "Forecast Scenario"
         ],
         "summary": "Get Params",
         "description": "Retrieve a scenario's forecast params.",
-        "operationId": "get_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params",
+        "operationId": "get_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params",
         "parameters": [
           {
             "required": true,
@@ -746,7 +746,7 @@
         ],
         "summary": "Put Params",
         "description": "Save forecast params to a scenario.",
-        "operationId": "put_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params",
+        "operationId": "put_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params",
         "parameters": [
           {
             "required": true,
@@ -824,7 +824,7 @@
         ],
         "summary": "Delete Params",
         "description": "Delete a scenario's forecast params.",
-        "operationId": "delete_params_tenants_tenant_id_forecastscenarios_forecast_scenario_id_params",
+        "operationId": "delete_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params",
         "parameters": [
           {
             "required": true,
@@ -889,14 +889,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecastscenarios/{forecast_scenario_id}/forecast": {
+    "/tenants/{tenant_id}/wfm/forecastscenarios/{forecast_scenario_id}/forecast": {
       "post": {
         "tags": [
           "Forecast Scenario"
         ],
         "summary": "Init Forecast",
         "description": "Initialize forecast creation.\n\nKicks off a a new forecast using the params that have been assigned to the\nscenario. The forecasting process is initiated and the corresponding data\nseries are generated as empty entities. The request will return before\nfinishing the forecasts and a client will have to monitor the data series\nto find out when the forecasting process has finished. The request will\nfail if there are ongoing forecast jobs running when the request is made.\nAll existing data series for the scenario will be overwritten. Any content\nin the request body will be disregarded.",
-        "operationId": "init_forecast_tenants_tenant_id_forecastscenarios_forecast_scenario_id_forecast",
+        "operationId": "init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast",
         "parameters": [
           {
             "required": true,
@@ -962,14 +962,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecastscenarios/{scenario_id}/series": {
+    "/tenants/{tenant_id}/wfm/forecastscenarios/{scenario_id}/series": {
       "get": {
         "tags": [
           "Forecast Series"
         ],
         "summary": "Get All",
         "description": "Retrieve a forecast's data series.",
-        "operationId": "get_all_tenants_tenant_id_forecastscenarios_scenario_id_series",
+        "operationId": "get_all_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series",
         "parameters": [
           {
             "required": true,
@@ -1016,7 +1016,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Forecastscenarios  Scenario Id  Series Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Forecastscenarios  Scenario Id  Series Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ForecastSeriesDTO"
@@ -1043,7 +1043,7 @@
         ],
         "summary": "Post",
         "description": "Add a new forecast data series.",
-        "operationId": "post_tenants_tenant_id_forecastscenarios_scenario_id_series",
+        "operationId": "post_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series",
         "parameters": [
           {
             "required": true,
@@ -1118,14 +1118,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecastscenarios/{scenario_id}/series/{series_id}": {
+    "/tenants/{tenant_id}/wfm/forecastscenarios/{scenario_id}/series/{series_id}": {
       "get": {
         "tags": [
           "Forecast Series"
         ],
         "summary": "Get",
         "description": "Retrieve a single forecast data series.",
-        "operationId": "get_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id",
+        "operationId": "get_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id",
         "parameters": [
           {
             "required": true,
@@ -1205,7 +1205,7 @@
         ],
         "summary": "Delete",
         "description": "Delete a single data series.",
-        "operationId": "delete_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id",
+        "operationId": "delete_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id",
         "parameters": [
           {
             "required": true,
@@ -1283,7 +1283,7 @@
         ],
         "summary": "Patch",
         "description": "Update a single data series.",
-        "operationId": "patch_tenants_tenant_id_forecastscenarios_scenario_id_series_series_id",
+        "operationId": "patch_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series_series_id",
         "parameters": [
           {
             "required": true,
@@ -1366,14 +1366,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecasttimelines": {
+    "/tenants/{tenant_id}/wfm/forecasttimelines": {
       "get": {
         "tags": [
           "Forecast Timeline"
         ],
         "summary": "Get All",
         "description": "Retrieve all timelines.",
-        "operationId": "get_all_tenants_tenant_id_forecasttimelines",
+        "operationId": "get_all_tenants_tenant_id_wfm_forecasttimelines",
         "parameters": [
           {
             "required": true,
@@ -1410,7 +1410,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Forecasttimelines Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Forecasttimelines Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ForecastTimelineDTO"
@@ -1437,7 +1437,7 @@
         ],
         "summary": "Post Timelines",
         "description": "Create a new timeline.",
-        "operationId": "post_timelines_tenants_tenant_id_forecasttimelines",
+        "operationId": "post_timelines_tenants_tenant_id_wfm_forecasttimelines",
         "parameters": [
           {
             "required": true,
@@ -1502,14 +1502,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecasttimelines/{forecast_timeline_id}": {
+    "/tenants/{tenant_id}/wfm/forecasttimelines/{forecast_timeline_id}": {
       "get": {
         "tags": [
           "Forecast Timeline"
         ],
         "summary": "Get Timeline",
         "description": "Retrieve single forecast timeline.",
-        "operationId": "get_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id",
+        "operationId": "get_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id",
         "parameters": [
           {
             "required": true,
@@ -1579,7 +1579,7 @@
         ],
         "summary": "Delete Timeline",
         "description": "Delete single forecast timeline.",
-        "operationId": "delete_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id",
+        "operationId": "delete_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id",
         "parameters": [
           {
             "required": true,
@@ -1647,7 +1647,7 @@
         ],
         "summary": "Patch Timeline",
         "description": "Update a single timeline.",
-        "operationId": "patch_timeline_tenants_tenant_id_forecasttimelines_forecast_timeline_id",
+        "operationId": "patch_timeline_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id",
         "parameters": [
           {
             "required": true,
@@ -1720,14 +1720,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecasttimelines/{forecast_timeline_id}/scenarios": {
+    "/tenants/{tenant_id}/wfm/forecasttimelines/{forecast_timeline_id}/scenarios": {
       "get": {
         "tags": [
           "Forecast Timeline"
         ],
         "summary": "Get Timeline Scenarios",
         "description": "Retrieve all scenarios for a timeline.",
-        "operationId": "get_timeline_scenarios_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios",
+        "operationId": "get_timeline_scenarios_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios",
         "parameters": [
           {
             "required": true,
@@ -1796,7 +1796,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get Timeline Scenarios Tenants  Tenant Id  Forecasttimelines  Forecast Timeline Id  Scenarios Get",
+                  "title": "Response Get Timeline Scenarios Tenants  Tenant Id  Wfm Forecasttimelines  Forecast Timeline Id  Scenarios Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ForecastTimelineScenarioDTO"
@@ -1823,7 +1823,7 @@
         ],
         "summary": "Post Timeline Scenario",
         "description": "Add a forecast scenario to a timeline.\n\nWhen a forecast scenario is added to a timeline it means that the\nforecast series of that scenario will be used as part of the timeline\nand therefore be the source for scheduling based on the timeline. Adding\na scenario to a timeline will fail if the timeline already contains a\ntime series for the same combination of competency, channel and direction\nfor the same time period. If the forecast for a scenario is re-run after\nit has been added to the scenario the data used in the timeline will be\nupdated.",
-        "operationId": "post_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios",
+        "operationId": "post_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios",
         "parameters": [
           {
             "required": true,
@@ -1901,7 +1901,7 @@
         ],
         "summary": "Delete Forecast Timeline Scenario",
         "description": "Delete a single scenario from timeline.\n\nDeleting a forecast will simultaneously delete the forecast's data series\nand adjustments.",
-        "operationId": "delete_forecast_timeline_scenario_tenants_tenant_id_forecasttimelines_forecast_timeline_id_scenarios",
+        "operationId": "delete_forecast_timeline_scenario_tenants_tenant_id_wfm_forecasttimelines_forecast_timeline_id_scenarios",
         "parameters": [
           {
             "required": true,
@@ -1974,14 +1974,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecasttimeline/{forecast_timeline_id}/adjustments": {
+    "/tenants/{tenant_id}/wfm/forecasttimeline/{forecast_timeline_id}/adjustments": {
       "get": {
         "tags": [
           "Adjustment"
         ],
         "summary": "Get All",
         "description": "Retrieve all adjustments.",
-        "operationId": "get_all_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments",
+        "operationId": "get_all_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments",
         "parameters": [
           {
             "required": true,
@@ -2090,7 +2090,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Get All Tenants  Tenant Id  Forecasttimeline  Forecast Timeline Id  Adjustments Get",
+                  "title": "Response Get All Tenants  Tenant Id  Wfm Forecasttimeline  Forecast Timeline Id  Adjustments Get",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ForecastAdjustmentDTO"
@@ -2117,7 +2117,7 @@
         ],
         "summary": "Post",
         "description": "Add new adjustment.\n\nAdjustments are required to have a start date time,\nthat matches the chosen interval length. This check\nis performed in the timezone of the tenant.\n\nFor example can hour adjustments start on whole hours,\nwhile day adjustments should be placed at 0:00.\n\nOnly quarter hour, hour and day adjustments are supported.",
-        "operationId": "post_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments",
+        "operationId": "post_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments",
         "parameters": [
           {
             "required": true,
@@ -2195,14 +2195,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecasttimeline/{forecast_timeline_id}/adjustments/{adjustment_id}": {
+    "/tenants/{tenant_id}/wfm/forecasttimeline/{forecast_timeline_id}/adjustments/{adjustment_id}": {
       "get": {
         "tags": [
           "Adjustment"
         ],
         "summary": "Get",
         "description": "Retrieve a single adjustment.",
-        "operationId": "get_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
+        "operationId": "get_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
         "parameters": [
           {
             "required": true,
@@ -2282,7 +2282,7 @@
         ],
         "summary": "Delete",
         "description": "Retrieve a single adjustment.",
-        "operationId": "delete_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
+        "operationId": "delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
         "parameters": [
           {
             "required": true,
@@ -2360,7 +2360,7 @@
         ],
         "summary": "Patch",
         "description": "Update an adjustment.\n\nOnly quarter hour, hour and day adjustments are supported.",
-        "operationId": "patch_tenants_tenant_id_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
+        "operationId": "patch_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
         "parameters": [
           {
             "required": true,
@@ -2445,14 +2445,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/forecasttimelines/{timeline_id}/series/query": {
+    "/tenants/{tenant_id}/wfm/forecasttimelines/{timeline_id}/series/query": {
       "post": {
         "tags": [
           "Forecast Timeline"
         ],
         "summary": "Timeline Series Queries",
         "description": "Retrieve the data series for a timeline.\n\nBased on the input parameters this endpoint will return the data series\nfor a timeline. If adjustments are stacked (i.e. more than one adjustment\nis applied to an interval), any percentage-based adjustment is applied\nbefore absolute adjustments.\n\nThe start and end date in the query is in the tenant timezone, i.e.,\ntimestamps will be relative to the tenants timezone. Timestamps represent\nthe start of the interval.\n\nFor staffing estimates the sla threshold is taken from the sla assigned to\nthe competency if available, if that is unavailable it is then taken from\nthe assigned default sla for the tenant, in case niether has a sla\ndefined then a fallback default of 20 seconds is used.",
-        "operationId": "timeline_series_queries_tenants_tenant_id_forecasttimelines_timeline_id_series_query",
+        "operationId": "timeline_series_queries_tenants_tenant_id_wfm_forecasttimelines_timeline_id_series_query",
         "parameters": [
           {
             "required": true,
@@ -2509,7 +2509,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "title": "Response Timeline Series Queries Tenants  Tenant Id  Forecasttimelines  Timeline Id  Series Query Post",
+                  "title": "Response Timeline Series Queries Tenants  Tenant Id  Wfm Forecasttimelines  Timeline Id  Series Query Post",
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ForecastTimelineSeriesDTO"
