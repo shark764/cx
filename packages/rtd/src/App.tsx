@@ -1,21 +1,18 @@
 import { inIframe } from '@cx/utilities';
 import {
-  CssBaseline,
-  Paper,
-  Toolbar,
-  Theme
+  Paper, Theme, Toolbar, useTheme,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import { standardDashboardLinks } from 'utils/consts';
+import { standardDashboardLinks, tempTenantId } from 'utils/consts';
 import { PageSideBar } from '@cx/components/PageSideBar';
 import { PageHeader } from '@cx/components/PageHeader';
 import { DashboardCustomize } from '@cx/components/Icons/DashboardCustomize';
-import { LinkGroup } from '@cx/types';
+import { LinkGroup, LinkItem } from '@cx/types';
 import { Dashboard } from '@material-ui/icons';
 import { Header } from 'components/Header';
 import { Navigation } from 'navigation/Navigation';
+import { useFetchEntity } from 'queries/generalQueries';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = (theme: Theme) => ({
   content: {
     flexGrow: 1,
     marginLeft: theme.spacing(12),
@@ -26,26 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }),
     backgroundColor: 'inherit',
   },
-  divider: { margin: theme.spacing(4, 0) },
-}));
+});
 
 const navLinks = [
   { label: 'Realtime', to: '/standard' },
   { label: 'Custom', to: '/custom' },
 ];
 
-const mockCustomLinks = [
-  {
-    label: 'My Awesome Dashboard',
-    to: '/custom/4e1d31e0-b071-11eb-8529-0242ac130003',
-    LinkIcon: Dashboard,
-  },
-  {
-    label: 'More Awesome than the last one',
-    to: '/custom/6f96eb72-b071-11eb-8529-0242ac130003',
-    LinkIcon: Dashboard,
-  },
-];
 const menuBarLinks: LinkGroup[] = [
   {
     key: 'standard',
@@ -58,18 +42,29 @@ const menuBarLinks: LinkGroup[] = [
     key: 'custom',
     title: 'Custom Dashboards',
     GroupIcon: DashboardCustomize,
-    links: mockCustomLinks,
+    links: [],
     open: false,
   },
 ];
 
 export function App() {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
+  const { data: dashboards } = useFetchEntity(
+    tempTenantId,
+    'dashboards',
+    'active=true&without-active-dashboard=true',
+  );
+  const customLinks: LinkItem[] = dashboards?.map((dashboard: any) => ({
+    label: dashboard.name,
+    to: `/custom/${dashboard.id}`,
+    LinkIcon: Dashboard,
+  })) || [];
+  menuBarLinks[1].links = customLinks;
 
   return (
     <>
-      <CssBaseline />
-
       {/* Not in iframe */}
       {!inIframe() && (
         <PageHeader links={navLinks} header="Realtime Dashboards" />
@@ -77,12 +72,11 @@ export function App() {
 
       <PageSideBar groups={menuBarLinks} subheader="Realtime Dashboards" />
 
-      <Paper elevation={0} className={classes.content + ' main'} style={{background: 'none'}}>
+      <Paper elevation={0} style={classes.content}>
         {/* Needed to adjust when app has a PageHeader */}
         {!inIframe() && <Toolbar />}
 
         <Header />
-
 
         <Navigation />
       </Paper>

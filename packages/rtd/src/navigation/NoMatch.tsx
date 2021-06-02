@@ -1,17 +1,19 @@
-import * as React from 'react';
-import { Box, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import {
+  Box, Theme, Typography, useTheme,
+} from '@material-ui/core';
+import { CSSProperties } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const useStyles = makeStyles(() => ({
+const useStyles = (theme: Theme) => ({
   location: {
     fontSize: 'inherit',
     fontWeight: 'bold',
-  },
-}));
+  } as CSSProperties,
+});
 
 export function NoMatch() {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const location = useLocation();
 
   return (
@@ -26,11 +28,7 @@ export function NoMatch() {
       <Typography variant="h2">
         No match for
         {' '}
-        <Typography
-          component="span"
-          color="secondary"
-          className={classes.location}
-        >
+        <Typography component="span" color="secondary" style={classes.location}>
           {location.pathname}
         </Typography>
       </Typography>

@@ -5,13 +5,14 @@ import {
   Link,
   List,
   ListItem,
+  Theme,
   Toolbar,
   Typography,
+  useTheme,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = (theme: Theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   activeLink: {
     color: theme.palette.secondary.light,
   },
-}));
+});
 
 interface LinksMap {
   label: string;
@@ -36,23 +37,24 @@ export function PageHeader({
   links: LinksMap[];
   header?: string;
 }): React.ReactElement {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const { pathname } = useLocation();
   const splitLocation = pathname.split('/');
 
   return (
-    <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar className={classes.toolbar} variant="dense">
+    <AppBar position="fixed" style={classes.appBar}>
+      <Toolbar style={classes.toolbar} variant="dense">
         <Link color="inherit" component={RouterLink} to="/">
           <Typography variant="h6" noWrap>
             {header}
           </Typography>
         </Link>
-        <Container maxWidth="md" className={classes.toolbar}>
+        <Container maxWidth="md" style={classes.toolbar}>
           <List
             component="nav"
             aria-labelledby="main navigation"
-            className={classes.toolbar}
+            style={classes.toolbar}
           >
             {links.map((link) => (
               <ListItem
@@ -61,8 +63,8 @@ export function PageHeader({
                 component={RouterLink}
                 to={link.to}
                 key={link.to}
-                className={
-                  `/${splitLocation[1]}` === link.to ? classes.activeLink : ''
+                style={
+                  `/${splitLocation[1]}` === link.to ? classes.activeLink : {}
                 }
               >
                 {link.label}

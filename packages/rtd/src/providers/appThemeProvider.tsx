@@ -1,7 +1,12 @@
 import * as React from 'react';
+import {
+  createTheme,
+  CssBaseline,
+  StyledEngineProvider,
+  ThemeProvider as MuiThemeProvider,
+} from '@material-ui/core';
+import { ThemeProvider } from 'styled-components';
 import { Props } from '@cx/types';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
-import { createTheme } from '@material-ui/core/styles';
 import { useBrandingTheme } from 'queries/generalQueries';
 
 export interface ThemeStyle {
@@ -31,6 +36,9 @@ export function AppThemeProvider({ children }: Props) {
   const muiTheme = React.useMemo(
     () => createTheme({
       palette: {
+        background: {
+          default: '#80808014',
+        },
         primary: {
           // light: will be calculated from palette.primary.main,
           main: branding.primaryColor,
@@ -45,5 +53,15 @@ export function AppThemeProvider({ children }: Props) {
     [branding],
   );
 
-  return <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>;
+  return (
+    <StyledEngineProvider injectFirst>
+      <MuiThemeProvider theme={muiTheme}>
+        <ThemeProvider theme={muiTheme}>
+          <CssBaseline />
+
+          {children}
+        </ThemeProvider>
+      </MuiThemeProvider>
+    </StyledEngineProvider>
+  );
 }

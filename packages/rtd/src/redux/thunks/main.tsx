@@ -1,6 +1,6 @@
-import { FilterTypes, main } from '../reducers/main';
+import { DashboardSetting, FilterTypes, main } from '../reducers/main';
 
-const { setFilter, setLeftPanelOpen } = main.actions;
+const { setDashboard, setFilter, setLeftPanelOpen } = main.actions;
 
 export function setGlobalFilter(filter: FilterTypes, value: string) {
   return async (dispatch: any) => {
@@ -11,5 +11,11 @@ export function setGlobalFilter(filter: FilterTypes, value: string) {
 export function setIsLeftPanelOpen(isOpen: boolean) {
   return async (dispatch: any) => {
     dispatch(setLeftPanelOpen(isOpen));
+  };
+}
+
+export function setCurrentDashboard(dashboard: DashboardSetting) {
+  return async (dispatch: any) => {
+    dispatch(setDashboard(dashboard));
   };
 }

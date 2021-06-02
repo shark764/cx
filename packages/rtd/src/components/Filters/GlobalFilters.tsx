@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { channels, directions, tempTenantId } from 'utils/consts';
-import { useFetchGroups, useFetchSkills } from 'queries/generalQueries';
+import { useFetchEntity } from 'queries/generalQueries';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGlobalFilter } from 'redux/thunks/main';
 import { FilterTypes, MainState } from 'redux/reducers/main';
@@ -11,8 +10,8 @@ import { FilterMenu } from './FilterMenu';
 export function GlobalFilters() {
   const dispatch = useDispatch();
 
-  const { data: groups } = useFetchGroups(tempTenantId);
-  const { data: skills } = useFetchSkills(tempTenantId);
+  const { data: groups } = useFetchEntity(tempTenantId, 'groups');
+  const { data: skills } = useFetchEntity(tempTenantId, 'skills');
 
   const filters: any = useSelector(
     (state: { main: MainState }) => state.main.filters,
@@ -51,7 +50,7 @@ export function GlobalFilters() {
       lg={12}
       xl={12}
       spacing={4}
-      style={{justifyContent: 'flex-end'}}
+      justifyContent="flex-end"
     >
       {[
         { menu: 'channel', title: 'Channel', options: channelOptions },

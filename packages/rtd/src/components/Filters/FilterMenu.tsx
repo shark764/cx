@@ -1,18 +1,18 @@
 import {
   FormControl,
   MenuItem,
-  Theme
+  TextField,
+  Theme,
+  useTheme,
 } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/styles';
 import { FilterTypes } from 'redux/reducers/main';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = (theme: Theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
   },
-}));
+});
 
 export function FilterMenu({
   menu,
@@ -27,21 +27,21 @@ export function FilterMenu({
   selected: string;
   handleSelectOption(filter: FilterTypes, id: string): void;
 }) {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
   const handleChange = (event: any) => {
     handleSelectOption(menu, event.target.value);
   };
 
   return (
-    <FormControl className={classes.formControl}>
+    <FormControl style={classes.formControl}>
       <TextField
         select
         label={title}
         value={selected}
-        onChange={({target: { value }}: any) => handleChange(value)}
+        onChange={handleChange}
         variant="outlined"
-        style={{ width: '200px' }}
         size="small"
       >
         {options.map((option) => (

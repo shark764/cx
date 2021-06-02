@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface DashboardSetting {
+  id: string;
+  name: string;
+  enabled: boolean;
+  widgets: any[];
+}
 export interface MainState {
   filters: {
     channel: string;
@@ -8,6 +14,7 @@ export interface MainState {
     skills: string;
   };
   leftPanelOpen: boolean;
+  dashboard: DashboardSetting | null;
 }
 
 export type FilterTypes = 'channel' | 'direction' | 'groups' | 'skills';
@@ -24,6 +31,7 @@ const initialState: MainState = {
     skills: 'all',
   },
   leftPanelOpen: true,
+  dashboard: null,
 };
 
 export const main = createSlice({
@@ -35,6 +43,9 @@ export const main = createSlice({
     },
     setLeftPanelOpen: (state, action) => {
       state.leftPanelOpen = action.payload;
+    },
+    setDashboard: (state, action) => {
+      state.dashboard = action.payload;
     },
   },
 });

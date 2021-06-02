@@ -7,24 +7,19 @@ import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { QueryProvider } from './providers/queryProvider';
 import { AppThemeProvider } from './providers/appThemeProvider';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { StyledEngineProvider } from '@material-ui/core/styles';
 import { store } from './redux/store';
 
 ReactDOM.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <CssBaseline />
-      <HashRouter>
-        <Provider store={store}>
-          <QueryProvider>
-            <AppThemeProvider>
-              <App />
-            </AppThemeProvider>
-          </QueryProvider>
-        </Provider>
-      </HashRouter>
-    </StyledEngineProvider>
+    <HashRouter>
+      <Provider store={store}>
+        <QueryProvider>
+          <AppThemeProvider>
+            <App />
+          </AppThemeProvider>
+        </QueryProvider>
+      </Provider>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById('root'),
 );

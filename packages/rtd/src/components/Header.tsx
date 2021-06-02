@@ -1,19 +1,12 @@
-import { Paper, Typography, Theme } from '@material-ui/core';
-import styled from 'styled-components';
-import { makeStyles } from '@material-ui/styles';
+import { CSSProperties } from 'react';
+import {
+  Paper, Theme, Typography, useTheme,
+} from '@material-ui/core';
 import { useLocation } from 'react-router';
 import { standardDashboardLinks } from 'utils/consts';
 import { GlobalFilters } from './Filters/GlobalFilters';
 
-const Title = styled.h4`
-  color: grey;
-  font-style: italic;
-  margin-top: 0px;
-  margin-left: 10px;
-  margin-bottom: 0px;
-`;
-
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = (theme: Theme) => ({
   paper: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -29,11 +22,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     fontSize: 'inherit',
     marginBottom: theme.spacing(1),
-  },
-}));
+  } as CSSProperties,
+});
 
 export function Header() {
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const { pathname } = useLocation();
   const splitLocation = pathname.split('/');
 
@@ -44,18 +38,18 @@ export function Header() {
     : 'Some custom dashboad';
 
   return (
-    <span style={{background: '#fff !important'}}>
+    <>
       <Typography variant="h6" color="textSecondary">
         {dashboardTitle}
       </Typography>
 
-      <Paper elevation={0} className={classes.paper}>
-        <Title>
+      <Paper elevation={0} style={classes.paper}>
+        <Typography variant="h4" style={classes.title}>
           Global Filters
-        </Title>
+        </Typography>
 
         <GlobalFilters />
       </Paper>
-    </span>
+    </>
   );
 }

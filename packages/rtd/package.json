@@ -21,7 +21,9 @@
     "@cx/cxapi": "1.0.0",
     "@cx/fakedata": "1.0.0",
     "@cx/types": "1.0.0",
-    "@cx/utilities": "1.0.0"
+    "@cx/utilities": "1.0.0",
+    "@types/react-grid-layout": "^1.1.1",
+    "react-grid-layout": "^1.2.5"
   },
   "eslintConfig": {
     "extends": [
