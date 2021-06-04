@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import {
   Bar,
@@ -32,6 +33,7 @@ export interface ChartProps {
   stackId?: any;
   containerWidth?: string;
   containerHeight?: number;
+  intervalLength?: any;
 };
 
 export const BarChart: React.VFC<ChartProps> = ({
@@ -40,7 +42,7 @@ export const BarChart: React.VFC<ChartProps> = ({
   dataKeys,
   xDataKey,
   chartName,
-  interval = 0,
+  intervalLength,
   showTooltip = true,
   stackId,
   containerWidth = '96%',
@@ -48,6 +50,18 @@ export const BarChart: React.VFC<ChartProps> = ({
 }) => {
 
   const fillColors = ['#07487a', 'orange', 'green'];
+
+  const interval = useMemo(() => {
+    if (intervalLength === 'week') {
+      return 24;
+    } else if (intervalLength === 'twoDays') {
+      return 4;
+    } else if (intervalLength === 'day') {
+      return 4;
+    } else {
+      return 0;
+    }
+  }, [intervalLength]);
 
   return (
     <Wrapper>

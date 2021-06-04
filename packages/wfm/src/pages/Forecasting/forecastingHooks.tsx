@@ -50,7 +50,7 @@ export const useMemoTableData = (
     nco: nco,
     adjustedNco: competency?.adjusted[index].nco - nco,
     speculatedNco: competency?.adjusted[index].nco,
-    ncoDerivedAdjustements: globalInitialAdjustments
+    ncoDerivedAdjustments: globalInitialAdjustments
       .filter((adjustment: any) => (
         adjustment.metric === 'nco' &&
         adjustment.startDateTime === timestamp &&
@@ -60,7 +60,7 @@ export const useMemoTableData = (
     aht: aht,
     adjustedAht: competency?.adjusted[index].aht - aht,
     speculatedAht: competency?.adjusted[index].aht,
-    ahtDerivedAdjustements: globalInitialAdjustments
+    ahtDerivedAdjustments: globalInitialAdjustments
     .filter((adjustment: any) => (
       adjustment.metric === 'aht' &&
       adjustment.startDateTime === timestamp &&

@@ -7,10 +7,10 @@ export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams:
   () => {
     // TODO: this seems to fire twice?
     const allAdjustmentStartDate = DateTime.fromISO(historicalQueryParams.startDateTime)
-      .startOf('day').toISO({ includeOffset: Boolean(viewBy !== 'quarter-hour') });
+      .startOf('day').toISO({ includeOffset: true });
 
     const allAdjustmentEndDate = DateTime.fromISO(historicalQueryParams.endDateTime)
-      .endOf('day').toISO({ includeOffset: Boolean(viewBy !== 'quarter-hour') });
+      .endOf('day').toISO({ includeOffset: true });
 
     return wfm.forecasting.api.get_all_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments({
       pathParams: {

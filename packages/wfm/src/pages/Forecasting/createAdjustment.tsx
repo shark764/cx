@@ -31,7 +31,7 @@ export const createAdjustment = (tenant_id: string, forecast_timeline_id: string
       competency: selectedCompetence,
       channel: 'voice',
       direction: 'inbound',
-      numberOfIntervals: 1,
+      numberOfIntervals: adjustment.intervals || 1,
       type: 'absolute',
       value: adjustment.value,
       metric: adjustment.metric

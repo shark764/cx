@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo, Fragment } from 'react';
+import { useMemo } from 'react';
 import { useTable, useRowSelect, useExpanded } from 'react-table';
 import styled, { css } from 'styled-components';
 import { defineColumns, defineGridTemplateColumns } from './columnDefenitions';
@@ -35,15 +35,10 @@ const TableCell = styled.div<{ themeVariant: string, columnBackground: string }>
   text-overflow: ellipsis;
   padding: 5px;
   text-align: center;
-  /* ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`}
-  &:focus {
-    ${({ columnBackground }) => columnBackground && `border: 1px solid grey;`}
-  } */
   ${({ themeVariant }) => themeVariant === 'forecast' && css`
     border-bottom: 1px solid #80808038;
   `}
-  /* display: grid;
-  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ; */
+  background-color: ${({columnBackground}) => columnBackground ? columnBackground : 'none'}
 `;
 
 const TableHeader = styled.div<{ themeVariant: string, columnBackground: string }>`
@@ -59,22 +54,16 @@ const TableHeader = styled.div<{ themeVariant: string, columnBackground: string 
     padding: 5px;
     text-align: center;
   `}
-  /* display: grid;
-  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ; */
 `;
 const Columns = styled.div`
   display: grid;
   grid-template-columns: ${({ columnTemplate }) => columnTemplate};
-  /* ${({ columnBackground }) => columnBackground && `background-color: ${columnBackground};`} */
-
-    &:hover {
+  &:hover {
     cursor: pointer;
   }
 `;
 
 const TableBody = styled.div<TableColumnInfo>`
-  /* display: grid;
-  grid-template-columns: ${({ columnTemplate }) => columnTemplate} ; */
 `;
 
 export const Table: React.VFC<any> = ({
@@ -127,7 +116,7 @@ export const Table: React.VFC<any> = ({
             {row.cells.map((cell) => (
               <TableCell
                 themeVariant={themeVariant} {...row.getRowProps()}
-                // columnBackground={cell.column.columnBackground}
+                columnBackground={cell.column.columnBackground}
                 // columnTemplate={gridTemplateColumns}
                 // @ts-ignore
                 onClick={() => row.toggleRowExpanded()}

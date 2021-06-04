@@ -101,7 +101,7 @@ const createForecastFormDefenition = [
   }
 ];
 const forecastFormDefaultValues = {
-  smoothing: 'smoothingOff',
+  smoothing: 'smoothingOn',
   startDate: Date.now(),
 };
 

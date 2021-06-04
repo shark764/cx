@@ -139,6 +139,8 @@ export const LineChart: React.VFC<ChartProps> = ({
       return 24;
     } else if (intervalLength === 'twoDays') {
       return 4;
+    } else if (intervalLength === 'day') {
+      return 4;
     } else {
       return 0;
     }
@@ -179,7 +181,12 @@ export const LineChart: React.VFC<ChartProps> = ({
           cursor={singlePointAdjustment ? 'grab' : 'crosshair'}
         >
 
-          <XAxis dataKey={xDataKey} interval={interval} dy={10.47} scale="band" />
+          <XAxis
+            dataKey={xDataKey}
+            interval={interval}
+            dy={10.47}
+            // scale="band"
+          />
           <YAxis
             yAxisId="left"
             label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15 }}

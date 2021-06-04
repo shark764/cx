@@ -70,6 +70,8 @@ const {
   setEndDate
 } = forecasting.actions;
 
+type ConversionMap = {[key: string]: any};
+
 const Title = styled.h4`
   color: grey;
   font-style: italic;
@@ -110,9 +112,6 @@ const ProgressIcon = styled.span`
   margin-left: 20px;
   top: -4px;
 `;
-const TableFilters = styled.div`
-  padding: 0 10px;
-`;
 const LoadingWrapper = styled.div`
   height: 300px;
   display: flex;
@@ -123,8 +122,8 @@ const TableSpacer = styled.div`
   margin-top: 40px;
 `;
 const ForecastGraphHeader = styled.span`
-  display: grid;
-  grid-template-columns: 1fr 200px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export function Forecasting() {
@@ -148,12 +147,10 @@ export function Forecasting() {
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
-  // @ts-ignore
   const viewBy: any = {
-      // day: 'quarter-hour', // TODO: ask product if this makes sense
-      day: 'hour',
+      day: 'quarter-hour',
       twoDays: 'hour',
-      week: 'hour', //'week' = Disallowed interval?
+      week: 'hour',
       range: 'day'
     }[intervalLength] || 'day';
 
@@ -169,11 +166,14 @@ export function Forecasting() {
     data: timelineQuery = [],
     isLoading: timelineQueryLoading,
     // error: timelineQueryError
+    refetch: refetchTimeline,
+    isFetching: timelineIsFetching,
   } = useTimelineQuery(tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
   const {
     data: timelineAdjustments = [],
     // isLoading: timelineAdjustmentsLoading,
     // error: timelineQueryError
+    refetch: refetchAdjustments,
   } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline,  viewBy);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
@@ -228,6 +228,24 @@ export function Forecasting() {
         ...localAdjustments[key],
         [timestamp]: value
       }
+    });
+    const keyConversion: ConversionMap = {
+      'adjustedNco': 'nco',
+      'adjustedAht': 'aht',
+    };
+    createAdjustment(
+      tenant_id,
+      selectedTimeline?.id,
+      viewBy,
+      selectedCompetence,
+    )({
+      timestamp: timestamp,
+      value: value,
+      metric: keyConversion[key],
+    })
+    // @ts-ignore
+    .then(() => {
+      refetchAdjustments();
     });
   };
   const setLocalBulkAdjustment = (data: any) => {
@@ -360,18 +378,55 @@ export function Forecasting() {
             singlePointAdjustment={singlePointAdjustment}
           />
         }
-        {localBulkAdjustments?.adjustedNco && <>
-          <BulkAdjustment adjustmentKey="nco" adjustment={localBulkAdjustments?.adjustedNco}/>
-          <br />
-          <br />
-          <br />
-          </>
+        {localBulkAdjustments?.adjustedNco?.start?.timestamp &&
+          <BulkAdjustment
+            adjustmentKey="nco"
+            adjustment={localBulkAdjustments?.adjustedNco}
+            refetchTimeline={refetchTimeline}
+            timelineIsFetching={timelineIsFetching}
+            intervalLength={viewBy}
+            crud={
+              {
+                create: createAdjustment(
+                  tenant_id,
+                  selectedTimeline?.id,
+                  viewBy,
+                  selectedCompetence,
+                ),
+                delete: deleteAdjustment(
+                  tenant_id,
+                  selectedTimeline?.id,
+                )
+              }
+            }
+          />
         }
-        {localBulkAdjustments?.adjustedAht &&
-          <BulkAdjustment adjustmentKey="aht" adjustment={localBulkAdjustments?.adjustedAht}/>
+        {localBulkAdjustments?.adjustedAht?.start?.timestamp &&
+          <BulkAdjustment
+            adjustmentKey="aht"
+            adjustment={localBulkAdjustments?.adjustedAht}
+            refetchTimeline={refetchTimeline}
+            timelineIsFetching={timelineIsFetching}
+            intervalLength={viewBy}
+            crud={
+              {
+                create: createAdjustment(
+                  tenant_id,
+                  selectedTimeline?.id,
+                  viewBy,
+                  selectedCompetence,
+                ),
+                delete: deleteAdjustment(
+                  tenant_id,
+                  selectedTimeline?.id,
+                )
+              }
+            }
+          />
         }
+      </ChartsWrapper>
 
-
+      <ChartsWrapper>
         <Title> Staffing Estimate Per Channel </Title>
         <BarChart
           chartName="staffingEstimate"
@@ -380,29 +435,13 @@ export function Forecasting() {
           stackId={viewBy === 'dateRange' ? 'a' : null}
           xDataKey={'timestamp'}
           dataKeys={['staffing_estimate']}
+          intervalLength={intervalLength}
         />
       </ChartsWrapper>
 
       <TableWrapper>
         <Title> Forecast table view </Title>
-        <TableFilters>
-          {/* <span>
-            <TextField
-              select
-              label="Channel"
-              // value={filters.channel[0]}
-              // onChange={() => { }}
-              variant="outlined"
-              style={{ width: '180px' }}
-            >
-              {filters.channel.map((option) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </span> */}
-        </TableFilters>
+
         <TableSpacer>
           <Table
             themeVariant='forecast'
@@ -427,5 +466,22 @@ export function Forecasting() {
           />
         </TableSpacer>
       </TableWrapper>
+
+      <Button
+        style={{ color: '#4c4a4a', marginTop: '50px' }}
+        variant="outlined"
+        onClick={() => {
+          timelineAdjustments.forEach(({id}: any) => {
+            deleteAdjustment(
+              tenant_id,
+              selectedTimeline?.id,
+            )({adjustment_id: id })
+          });
+        }}
+        startIcon={<DeleteIcon />}
+      >
+        Reset Adjustments
+      </Button>
+
     </>)
 };

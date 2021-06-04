@@ -45,9 +45,8 @@ export const Dot: React.VFC<any> = ({ containerHeight, topValue, adjustemntCallb
           tap((offset) => setYoffset(offset)),
           map((offset: number) => Math.trunc((graphHeight - offset) / pixelsPerTick)),
           tap((adjustmentValue) => {
-            // TODO: precentage should be from original forecasted value and not the original adjustment value?
-            const percentageChange = Math.trunc(((adjustmentValue - value) / value) * 100);
-            setAdjustmentText(`${adjustmentValue} or ${percentageChange}%`);
+            // const percentageChange = Math.trunc(((adjustmentValue - value) / value) * 100);
+            setAdjustmentText(`${adjustmentValue}`);
             setAdjustment(adjustmentValue);
           }),
           takeUntil(mouseup$),

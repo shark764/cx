@@ -5,12 +5,6 @@ import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
 import { DateTime } from 'luxon';
 
-const StyledInput = styled.input`
-  margin: 0 auto;
-  border: none;
-  background-color: #8ac6dd26;
-  text-align: center;
-`;
 
 const CenteredText = styled.div`
   text-align: center;
@@ -26,29 +20,16 @@ const WarningIcon = styled(WarningRoundedIcon) <{ value: boolean }>`
   display: ${({ value }) => (value ? 'inherit' : 'none !important')};
 `;
 
+const ConditionalNumber = styled.span<{ value: number }>`
+  display: ${({ value }) => (value ? 'inline-block' : 'none !important')};
+  width: 100%;
+  height: 100%;
+`;
+
 export interface ColumnDefenition {
   [key: string]: ColumnInterface;
 };
 
-export const EditableCell = ({ value, adjustmentCellMethod, rest }: any) => {
-
-  const [inputValue, setInputValue] = React.useState(value);
-
-  const handleInputChange = ({target: { value }}: any) => {
-    setInputValue(value);
-
-  };
-
-  return (
-    <StyledInput
-      name="input"
-      type="text"
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-      onChange={(e) => handleInputChange(e)}
-      value={inputValue}
-    />
-  );
-};
 
 const formatDateValue = ({ value, viewMode }: any) => {
   switch (viewMode) {
@@ -150,13 +131,8 @@ const columnDefenitions: {[key: string]: any} = {
   },
   adjustedNco: {
     Header: 'NCO Adjustment',
-    Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
-      return (
-      <EditableCell
-        value={value}
-        adjustmentCellMethod={adjustmentCellMethod}
-        rest={rest}
-      />) },
+    Cell: function conditionalNumber({ value }: Cell): JSX.Element { return (<ConditionalNumber value={value}>{value}</ConditionalNumber> )},
+    columnBackground: '#8ac6dd26',
     accessor: 'adjustedNco',
     minWidth: '80px',
     maxWidth: '200px',
@@ -175,13 +151,8 @@ const columnDefenitions: {[key: string]: any} = {
   },
   adjustedAht: {
     Header: 'AHT Adjustment',
-    Cell: function editableCell({ value, adjustmentCellMethod, ...rest }: any): JSX.Element {
-      return (
-      <EditableCell
-        value={value}
-        adjustmentCellMethod={adjustmentCellMethod}
-        rest={rest}
-      />) },
+    Cell: function conditionalNumber({ value }: Cell): JSX.Element { return (<ConditionalNumber value={value}>{value}</ConditionalNumber> )},
+    columnBackground: '#8ac6dd26',
     accessor: 'adjustedAht',
     minWidth: '80px',
     maxWidth: '200px',

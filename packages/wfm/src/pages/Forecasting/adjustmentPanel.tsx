@@ -8,7 +8,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-// import { Plus } from '@cx/components/Icons/Plus';
 
 const Input = styled(TextField)`
   width: 70px;
@@ -19,12 +18,6 @@ const Input = styled(TextField)`
   .MuiOutlinedInput-adornedEnd {
     padding-right: 0px;
   }
-`;
-const MockIcon = styled.span<{visible: boolean}>`
-  font-size: 16pt;
-  font-weight: bold;
-  color: lightgrey;
-  visibility: ${({visible}) => visible ? 'default' : 'hidden' };
 `;
 
 const Trashcan = styled(DeleteIcon)`
@@ -50,7 +43,6 @@ const Grid = styled.div`
 export const AdjustmentInput = ({initValue}: any) => {
   const [value, setValue] = useState(initValue);
 
-  // const [focus, setFocus] = useState(false);
   return (<>
     <Input
       variant="outlined"
@@ -58,11 +50,9 @@ export const AdjustmentInput = ({initValue}: any) => {
       placeholder=' '
       type="number"
       value={value}
-      // onFocus={() => setFocus(true)}
       onBlur={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        // setFocus(false);
       }}
       onChange={({target: {value}}) => setValue(value)}
     />
@@ -107,9 +97,9 @@ export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: an
       metric: type,
     });
   };
-  const updateSavedAdjustment = (adjustment_id: string) => {
-    // crud.delete({adjustment_id}); // TODO:
-  };
+  // const updateSavedAdjustment = (adjustment_id: string) => {
+  //   // crud.delete({adjustment_id}); // TODO:
+  // };
 
   return <span>
     <Button
@@ -165,7 +155,7 @@ export const AdjustmentPanel = (props: any) => {
       </span>
       <span>
         <AdjustmentComposition
-          adjustments={props.original.ncoDerivedAdjustements}
+          adjustments={props.original.ncoDerivedAdjustments}
           crud={props.original.crud}
           type="nco"
           timestamp={props.original.timestamp}
@@ -177,7 +167,7 @@ export const AdjustmentPanel = (props: any) => {
       </span>
       <span>
         <AdjustmentComposition
-          adjustments={props.original.ahtDerivedAdjustements}
+          adjustments={props.original.ahtDerivedAdjustments}
           crud={props.original.crud}
           type="aht"
           timestamp={props.original.timestamp}
