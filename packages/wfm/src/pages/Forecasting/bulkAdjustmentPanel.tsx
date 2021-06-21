@@ -15,9 +15,6 @@ const Divider = styled.div`
 
 export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetchTimeline, timelineIsFetching, localBulkAdjustments }: any) => {
 
-  console.log(adjustments, 'wow');
-
-
   const deleteSavedAdjustment = (details: any) => {
     return crud.delete({...details});
   };
