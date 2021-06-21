@@ -95,13 +95,13 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       // Currently this is the users selected competence
       store.getState()?.forecasting?.competence
     ];
-    const series = currentCompetencies.flatMap((competency) => {
-      return allChannels.map((channelType) => ({
+    const series = currentCompetencies.flatMap((competency) =>
+      allChannels.map((channelType) => ({
         competency: competency,
         channel: channelType,
         direction: 'inbound',
       }))
-    });
+    );
 
     /**
      * dayValueDateRanges doesn't show up in the form object when All Historical is chosen

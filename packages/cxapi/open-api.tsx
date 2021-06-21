@@ -40,6 +40,8 @@ export class OpenApi {
       // @ts-ignore
       put: ({ path, body }) => axios({ headers: this.headers(), method: 'PUT', url: this.url(path), data: body, json: true }).then(this.parse),
       // @ts-ignore
+      patch: ({ path, body }) => axios({ headers: this.headers(), method: 'PATCH', url: this.url(path), data: body, json: true }).then(this.parse),
+      // @ts-ignore
       post: ({ path, body }) => axios({ headers: this.headers(), method: 'POST', url: this.url(path), data: body, json: true }).then(this.parse),
       // @ts-ignore
       delete: ({ path, qs }) => axios({ headers: this.headers(), method: 'DELETE', url: this.url(path) + this.parseQueryString(qs) }).then(this.parse),

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { DateTime } from 'luxon';
 import { deleteAdjustment } from './deleteAdjustment';
+import { updateAdjustment } from './updateAdjustment';
 import { createAdjustment } from './createAdjustment';
 import { components } from '@cx/cxapi/forecast-schema';
 type IntervalLength = components["schemas"]["IntervalType"];
@@ -41,6 +42,8 @@ export const useMemoTableData = (
   globalInitialAdjustments: any,
   tenant_id: string,
   selectedTimeline: string,
+  refetchTimeline: any,
+  refetchAdjustments: any,
   ) => useMemo(() => {
 
   const competency = pluckCompetence(data, selectedCompetence);
@@ -77,12 +80,21 @@ export const useMemoTableData = (
       delete: deleteAdjustment(
         tenant_id,
         selectedTimeline,
-      )
+      ),
+      update: updateAdjustment(
+        tenant_id,
+        selectedTimeline,
+        viewBy,
+        selectedCompetence,
+      ),
+      refresh: () => {
+          refetchTimeline();
+      }
     }
   })
   ) || []
 
-}, [data, selectedCompetence, localAdjustments, globalInitialAdjustments, viewBy, tenant_id, selectedTimeline]);
+}, [data, selectedCompetence, localAdjustments, globalInitialAdjustments, viewBy, tenant_id, selectedTimeline,refetchTimeline]);
 
 
 

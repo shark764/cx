@@ -1,38 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
 import AdapterLuxon from '@material-ui/lab/AdapterLuxon';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
-import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
+import UndoIcon from '@material-ui/icons/Undo';
 import { Loading } from '@cx/components/Icons/Loading';
+import { Plus } from '@cx/components/Icons/Plus';
+
+const Trashcan = styled(DeleteIcon)`
+  color: lightgrey;
+  cursor: pointer;
+`;
 
 const Container = styled.div`
-  /* margin-bottom: 30px; */
   padding: 20px 45px;
 `;
 
 const DateTimeInput = styled.span`
   margin: 0px 10px;
 `;
-
-const Trashcan = styled(DeleteIcon)`
-  color: lightgrey;
-  float: right;
-  cursor: pointer;
-  margin-right: 20px;
+const Actions = styled.span`
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 5px;
+  margin-left: 12px;
+  vertical-align: text-top;
 `;
 
-// export const SaveOrDe
+export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetching, crud, intervalLength , starting, ending, initValue, id}: any): any => {
 
-export const BulkAdjustment = ({ adjustment, adjustmentKey, refetchTimeline, timelineIsFetching, crud, intervalLength }: any): any => {
+  const [start, setStart] = useState<any>(starting);
+  const [end, setEnd] = useState<any>(ending);
+  const [value, setValue] = useState<number>(initValue);
+  const [isLoading, setIsLoading] = useState(false);
+  const turnOffLoading = () => setIsLoading(false);
+  const turnOnLoading = () => setIsLoading(true);
 
-  const [start, setStart] = useState<any>(DateTime.fromISO(adjustment?.start?.timestamp));
-  const [end, setEnd] = useState<any>( DateTime.fromISO(adjustment?.end?.timestamp));
-  const [value, setValue] = useState<number>(0);
-  const [id, setId] = useState<string>('');
+  useEffect(() => {
+    setStart(starting);
+  }, [starting])
+  useEffect(() => {
+    setEnd(ending);
+  }, [ending])
 
   const intervalConversion: {[key: string]: number} = {
     'quarter-hour': 15,
@@ -40,22 +53,46 @@ export const BulkAdjustment = ({ adjustment, adjustmentKey, refetchTimeline, tim
     'day': 60 * 24,
   };
 
-  const saveNewAdjustment = () => {
-    const diffInMin = end.diff(start, 'minutes');
+  const calcIntervals = (start: any, end: any) => {
+    const startDate = DateTime.fromISO(start);
+    const endDate = DateTime.fromISO(end);
+    const diffInMin = endDate.diff(startDate, 'minutes');
     const { minutes } = diffInMin.toObject();
-
+    // @ts-ignore
     const totalIntervals = (minutes / intervalConversion[intervalLength])
 
-    crud.create({
+    return totalIntervals;
+  };
+
+  const deleteSavedAdjustment = () => {
+    return crud.delete({adjustment_id: id});
+  };
+  const saveNewAdjustment = () => {
+    return crud.create({
       timestamp: start,
+      intervals: calcIntervals(start, end),
       value: value,
       metric: adjustmentKey,
-      intervals: totalIntervals,
-    }).then((adjustment: any) => {
-      setId(adjustment.id);
-      refetchTimeline({});
     });
   };
+  const updateSavedAdjustment = () => {
+    return crud.update({
+      timestamp: start,
+      intervals: calcIntervals(start, end),
+      value: value,
+      adjustment_id: id,
+      metric: adjustmentKey,
+    });
+  };
+
+  const withLoading = (apiCall: any) => {
+    turnOnLoading();
+    apiCall()
+      .then(() => {
+        crud.refresh();
+        turnOffLoading()
+      });
+  }
 
   return (
     <Container className="multi-interval-adjustment">
@@ -110,22 +147,17 @@ export const BulkAdjustment = ({ adjustment, adjustmentKey, refetchTimeline, tim
         </DateTimeInput>
       </LocalizationProvider>
 
-      <span style={{float: 'right', marginTop: '8px', marginRight: '15px'}}>
-        { timelineIsFetching && id ?
-          <Loading size={24} /> : null
-        }
-        { !timelineIsFetching && !id ?
-          <SaveIcon sx={{color: 'lightgrey', cursor: 'pointer'}} onClick={() => saveNewAdjustment()} /> : null
-        }
-        {id && !timelineIsFetching ?
-          <Trashcan onClick={() =>
-            crud.delete({adjustment_id: id}).then(() => {
-              setId('');
-              refetchTimeline();
-            })
-          } /> : null
-        }
-      </span>
+    <Actions>
+      { (!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => saveNewAdjustment()) }  /> : null}
+
+      { (id && !isLoading ) ? <SaveIcon sx={{color: 'lightgrey'}} onClick={() => withLoading(() => updateSavedAdjustment())  }  /> : null}
+
+      { isLoading ? <Loading size={20} fill="grey" /> : null}
+
+      { (id && !isLoading ) ? <Trashcan onClick={() =>  withLoading(() => deleteSavedAdjustment())  } /> : null }
+
+      { (id && !isLoading ) ? <UndoIcon sx={{color: 'lightgrey'}}  onClick={() => {} } /> : null }
+    </Actions>
 
     </Container>
   )

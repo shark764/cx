@@ -62,8 +62,10 @@ import {
 import { useTimelineQuery } from '../../api/useTimelineQuery';
 import { useTimelines } from '../../api/useTimelines';
 import { createAdjustment } from './createAdjustment';
+import { updateAdjustment } from './updateAdjustment';
 import { SinglePointAdjustment } from './singlePointAdjustment';
 import { deleteAdjustment } from './deleteAdjustment';
+import { BulkAdjustmentPanel } from './bulkAdjustmentPanel';
 
 const {
   setStartDate,
@@ -177,7 +179,17 @@ export function Forecasting() {
   } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline,  viewBy);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
-  const timelineQueryTableData = useMemoTableData(timelineQuery, viewBy, selectedCompetence, localAdjustments, timelineAdjustments, tenant_id, selectedTimeline?.id);
+  const timelineQueryTableData = useMemoTableData(
+    timelineQuery,
+    viewBy,
+    selectedCompetence,
+    localAdjustments,
+    timelineAdjustments,
+    tenant_id,
+    selectedTimeline?.id,
+    refetchTimeline,
+    refetchAdjustments,
+    );
   const timelineQueryStaffingEstimate = useMemoStaffingData(timelineQuery, intervalLength, selectedCompetence);
 
 
@@ -221,14 +233,6 @@ export function Forecasting() {
   }, [dispatch, selectedTimeline]);
 
   const setLocalAdjustment = (value: number, key: string, timestamp: string) => {
-    setLocalAdjustemnts({
-      ...localAdjustments,
-      [key]: {
-        // @ts-ignore
-        ...localAdjustments[key],
-        [timestamp]: value
-      }
-    });
     const keyConversion: ConversionMap = {
       'adjustedNco': 'nco',
       'adjustedAht': 'aht',
@@ -245,6 +249,7 @@ export function Forecasting() {
     })
     // @ts-ignore
     .then(() => {
+      refetchTimeline();
       refetchAdjustments();
     });
   };
@@ -378,52 +383,31 @@ export function Forecasting() {
             singlePointAdjustment={singlePointAdjustment}
           />
         }
-        {localBulkAdjustments?.adjustedNco?.start?.timestamp &&
-          <BulkAdjustment
-            adjustmentKey="nco"
-            adjustment={localBulkAdjustments?.adjustedNco}
-            refetchTimeline={refetchTimeline}
-            timelineIsFetching={timelineIsFetching}
-            intervalLength={viewBy}
-            crud={
-              {
-                create: createAdjustment(
-                  tenant_id,
-                  selectedTimeline?.id,
-                  viewBy,
-                  selectedCompetence,
-                ),
-                delete: deleteAdjustment(
-                  tenant_id,
-                  selectedTimeline?.id,
-                )
-              }
-            }
-          />
-        }
-        {localBulkAdjustments?.adjustedAht?.start?.timestamp &&
-          <BulkAdjustment
-            adjustmentKey="aht"
-            adjustment={localBulkAdjustments?.adjustedAht}
-            refetchTimeline={refetchTimeline}
-            timelineIsFetching={timelineIsFetching}
-            intervalLength={viewBy}
-            crud={
-              {
-                create: createAdjustment(
-                  tenant_id,
-                  selectedTimeline?.id,
-                  viewBy,
-                  selectedCompetence,
-                ),
-                delete: deleteAdjustment(
-                  tenant_id,
-                  selectedTimeline?.id,
-                )
-              }
-            }
-          />
-        }
+        <BulkAdjustmentPanel crud={{
+            create: createAdjustment(
+              tenant_id,
+              selectedTimeline?.id,
+              viewBy,
+              selectedCompetence,
+            ),
+            delete: deleteAdjustment(
+              tenant_id,
+              selectedTimeline?.id,
+            ),
+            update: updateAdjustment(
+              tenant_id,
+              selectedTimeline?.id,
+              viewBy,
+              selectedCompetence,
+            ),
+            refresh: () => {}
+          }}
+          adjustments={timelineAdjustments}
+          localBulkAdjustments={localBulkAdjustments}
+          intervalLength={viewBy}
+          refetchTimeline={refetchTimeline}
+          timelineIsFetching={timelineIsFetching}
+        />
       </ChartsWrapper>
 
       <ChartsWrapper>
@@ -448,20 +432,6 @@ export function Forecasting() {
             columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
             tableData={timelineQueryTableData}
             viewMode={viewBy}
-            adjustmentCellMethod={
-              {
-                create: createAdjustment(
-                  tenant_id,
-                  selectedTimeline?.id,
-                  viewBy,
-                  selectedCompetence,
-                ),
-                delete: deleteAdjustment(
-                  tenant_id,
-                  selectedTimeline?.id,
-                )
-              }
-            }
             rowComponent={AdjustmentPanel}
           />
         </TableSpacer>

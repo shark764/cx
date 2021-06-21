@@ -6,8 +6,10 @@ import {
 import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import UndoIcon from '@material-ui/icons/Undo';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import { Loading } from '@cx/components/Icons/Loading';
+import { Plus } from '@cx/components/Icons/Plus';
 
 const Input = styled(TextField)`
   width: 70px;
@@ -22,9 +24,7 @@ const Input = styled(TextField)`
 
 const Trashcan = styled(DeleteIcon)`
   color: lightgrey;
-  float: right;
   cursor: pointer;
-  margin-right: 20px;
 `;
 
 const Container = styled.div`
@@ -35,9 +35,14 @@ const Header = styled.div`
   height: 20px;
   width: 100%;
 `;
+const Footer = styled.div`
+  display: inline-block;
+  height: 50px;
+  width: 100%;
+`;
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: 200px 200px 200px 200px 200px 200px;
+  grid-template-columns: minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px);
 `;
 
 export const AdjustmentInput = ({initValue}: any) => {
@@ -60,99 +65,111 @@ export const AdjustmentInput = ({initValue}: any) => {
 };
 
 const Cell = styled.div`
-  margin-left: 30px;
   margin-bottom: 10px;
 `;
+const CellOperations = styled.span`
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 5px;
+  margin-left: 12px;
+  vertical-align: text-top;
+`;
+const Divider = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  border-bottom: 1px solid lightgrey;
+  margin: 15px 0;
+`;
+
 export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: any) => {
-  const [tempAdjustments, setTempAdjustments] = useState<any>([]);
-
-  const immutableSplice = (array: any[], index: number, value: unknown) => [
-    ...array.slice(0, index),
-    value,
-    ...array.slice(index + 1, array.length),
-  ];
-
-  const changeVal = (index: number, value: any) =>
-    setTempAdjustments(
-      immutableSplice(tempAdjustments, index, value)
-    );
-
-  const immutableRemoveItem = (array: any[], index: number) => {
-    const { [index]: itemToRemove, ...restOfArray } = array;
-    return Object.values(restOfArray);
-  };
-
-  const removeTempAdjustment = (index: number) =>
-    setTempAdjustments(
-      immutableRemoveItem(tempAdjustments, index)
-    );
 
   const deleteSavedAdjustment = (adjustment_id: string) => {
-    crud.delete({adjustment_id});
+    return crud.delete({adjustment_id});
   };
   const saveNewAdjustment = (value: string) => {
-    crud.create({
+    return crud.create({
       timestamp: timestamp,
       value: value,
       metric: type,
     });
   };
-  // const updateSavedAdjustment = (adjustment_id: string) => {
-  //   // crud.delete({adjustment_id}); // TODO:
-  // };
+  const updateSavedAdjustment = (value: string, adjustment_id: string) => {
+    return crud.update({
+      timestamp: timestamp,
+      value: value,
+      adjustment_id,
+      metric: type,
+    });
+  };
+  const adjustmentCrud = {create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };
 
   return <span>
-    <Button
-      style={{marginLeft: '30px'}}
-      variant="outlined"
-      className="dynamicFormCancel"
-      onClick={() => setTempAdjustments([...tempAdjustments, {value: 0}])}
-      size="small"
-      sx={{marginBottom: '10px'}}
-    >
-      Add
-    </Button>
+    { AdjustmentCell({ id: null, value: 0, crud: adjustmentCrud }) }
 
-    { adjustments.map((adjustment: any) =>
-      <Cell key={adjustment.id}>
-        <AdjustmentInput initValue={adjustment.value} />
-        <SaveIcon sx={{color: 'lightgrey'}} />
-        <Trashcan onClick={() => deleteSavedAdjustment(adjustment.id)} />
-      </Cell>
-    )}
+    { adjustments.length > 0 ? <Divider /> : null }
 
-    { tempAdjustments.map((adjustment: any, index: number) =>
-      <Cell key={index}>
-        <Input
-          variant="outlined"
-          title=' '
-          placeholder=' '
-          type="number"
-          value={adjustment.value}
-          onBlur={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onChange={({target: { value }}: any) => changeVal(index, {value})}
-        />
-        <SaveIcon sx={{color: 'lightgrey'}} onClick={() => saveNewAdjustment(adjustment.value)} />
-        <Trashcan onClick={() => removeTempAdjustment(index)} />
-      </Cell>
+    { adjustments.map(({id, value}: any) =>
+      AdjustmentCell({id, value, crud: adjustmentCrud })
     )}
   </span>
 };
 
-export const AdjustmentPanel = (props: any) => {
+export const AdjustmentCell = ( {id, value, crud}: any ) => {
+  const [newVal, setNewValue] = useState(value);
+  const [isLoading, setIsLoading] = useState(false);
+  const turnOffLoading = () => setIsLoading(false);
+  const turnOnLoading = () => setIsLoading(true);
 
+  const withLoading = (apiCall: any) => {
+    turnOnLoading();
+    apiCall()
+      .then(() => {
+        crud.refresh();
+        turnOffLoading()
+      });
+  }
+
+  return <Cell key={id}>
+    <Input
+      variant="outlined"
+      title=' '
+      placeholder=' '
+      type="number"
+      value={newVal}
+      onBlur={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onChange={({target: {value}}) => setNewValue(value)}
+    />
+
+    <CellOperations>
+      { (!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => crud.create(newVal, id)) }  /> : null}
+
+      { (id && !isLoading ) ? <SaveIcon sx={{color: 'lightgrey'}} onClick={() => withLoading(() => crud.update(newVal, id))  }  /> : null}
+
+      { isLoading ? <Loading size={20} fill="grey" /> : null}
+
+      { (id && !isLoading ) ? <Trashcan onClick={() =>  withLoading(() => crud.delete(id))  } /> : null }
+
+      { (id && !isLoading ) ? <UndoIcon sx={{color: 'lightgrey'}}  onClick={() =>  setNewValue(value)  } /> : null }
+    </CellOperations>
+
+  </Cell>
+};
+
+export const AdjustmentPanel = (props: any) => {
   return (<Container>
     <Header>
-
     </Header>
     <Grid>
       <span>
+        Some adjustments may be automatically calculated based off of unevenly weighted NCO adjustments
       </span>
+
       <span>
       </span>
+
       <span>
         <AdjustmentComposition
           adjustments={props.original.ncoDerivedAdjustments}
@@ -161,10 +178,13 @@ export const AdjustmentPanel = (props: any) => {
           timestamp={props.original.timestamp}
         />
       </span>
+
       <span>
       </span>
+
       <span>
       </span>
+
       <span>
         <AdjustmentComposition
           adjustments={props.original.ahtDerivedAdjustments}
@@ -173,7 +193,12 @@ export const AdjustmentPanel = (props: any) => {
           timestamp={props.original.timestamp}
         />
       </span>
+
+      <span>
+      </span>
     </Grid>
+    <Footer>
+    </Footer>
 
   </Container>)
 };

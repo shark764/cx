@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useMemo, Fragment } from 'react';
 import { useTable, useRowSelect, useExpanded } from 'react-table';
 import styled, { css } from 'styled-components';
 import { defineColumns, defineGridTemplateColumns } from './columnDefenitions';
@@ -112,7 +112,7 @@ export const Table: React.VFC<any> = ({
 
         {rows.map((row) => {
           prepareRow(row);
-          return (<Columns columnTemplate={gridTemplateColumns} key={CreateUUID()} >
+          return (<Fragment key={CreateUUID()}  ><Columns columnTemplate={gridTemplateColumns}>
             {row.cells.map((cell) => (
               <TableCell
                 themeVariant={themeVariant} {...row.getRowProps()}
@@ -125,10 +125,11 @@ export const Table: React.VFC<any> = ({
                 <span>{cell.render('Cell', {...rest})}</span>
               </TableCell>
             ))}
+          </Columns>
           {row.isExpanded && <div style={{width: '100%'}}>
             { rowComponent({...row}) }
           </div>}
-          </Columns>);
+          </Fragment>);
         })}
       </TableBody>
     </TableWrapper>
