@@ -168,7 +168,7 @@ export const deleteForecastScenario = async (formData: any, tenant_id: string, f
 };
 
 export const createNewTimelineApi = async (body: any, tenant_id: string, onSuccess: any) => {
-  wfm.forecasting.api.post_timelines_tenants_tenant_forecasttimelines({
+  wfm.forecasting.api.post_timelines_tenants_tenant_id_wfm_forecasttimelines({
     pathParams: { tenant_id },
     body: body,
   })
