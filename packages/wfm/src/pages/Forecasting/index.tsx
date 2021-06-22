@@ -19,7 +19,7 @@ import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
 import { selectedRangeFn } from '@cx/utilities/date';
-import { BulkAdjustment } from './bulkAdjustment';
+// import { BulkAdjustment } from './bulkAdjustment';
 
 import { defaultForecastFormValues } from './forecastFormDefaultValues';
 
@@ -144,7 +144,10 @@ export function Forecasting() {
   const [deleteForecast, setDeleteForecast] = useState(false);
   const [singlePointAdjustment, setSinglePointAdjustment] = useState(false);
   // const [localAdjustedData, setLocalAdjustedData] = useState([]);
-  const [localAdjustments, setLocalAdjustemnts] = useState({});
+  const [
+    localAdjustments,
+    // setLocalAdjustemnts
+  ] = useState({});
   const [localBulkAdjustments, setLocalBulkAdjustemnts] = useState<any>(null);
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
