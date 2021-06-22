@@ -1,8 +1,12 @@
 import axios from 'axios';
+import { DashboardRequest, EntityTypes } from 'settings/types';
 
 const tempToken = localStorage.getItem('TOKEN-CX-API');
 
-export const sendBatchRequest = async (tenantId: string, requests: any[]) => {
+export const sendBatchRequest = async (
+  tenantId: string,
+  requests: DashboardRequest,
+) => {
   const { data } = await axios.post(
     `https://qe-api.cxengagelabs.net/v1/tenants/${tenantId}/realtime-statistics/batch`,
     {
@@ -17,14 +21,6 @@ export const sendBatchRequest = async (tenantId: string, requests: any[]) => {
   );
   return data.results;
 };
-
-export type EntityTypes =
-  | 'users'
-  | 'queues'
-  | 'skills'
-  | 'groups'
-  | 'reasons'
-  | 'dashboards';
 
 export const fetchEntity = async (
   tenantId: string,

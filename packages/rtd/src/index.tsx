@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './assets/styles.css';
 import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { App } from './App';
@@ -8,6 +7,9 @@ import reportWebVitals from './reportWebVitals';
 import { QueryProvider } from './providers/queryProvider';
 import { AppThemeProvider } from './providers/appThemeProvider';
 import { store } from './redux/store';
+import 'assets/styles.css';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 ReactDOM.render(
   <React.StrictMode>

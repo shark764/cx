@@ -4,9 +4,14 @@ import axios from 'axios';
 import { ThemeStyle } from 'providers/appThemeProvider';
 import { EntityData } from '@cx/types/api';
 import { capitalize } from '@cx/utilities/string';
-import { DashboardSetting } from 'redux/reducers/main';
+import {
+  DashboardRequest,
+  DashboardResponse,
+  DashboardSetting,
+  EntityTypes,
+} from 'settings/types';
 import { realtimeDashboardsSettings } from 'settings/settings';
-import { EntityTypes, fetchEntity, sendBatchRequest } from './requests';
+import { fetchEntity, sendBatchRequest } from './requests';
 
 const tempToken = localStorage.getItem('TOKEN-CX-API');
 
@@ -58,10 +63,10 @@ export function useFetchSingleDashboard(
 
 export function useDashboardPoll(
   tenantId: string,
-  requests: any[],
+  requests: DashboardRequest,
   enabled = true,
 ) {
-  return useQuery<any, Error>(
+  return useQuery<DashboardResponse, Error>(
     ['dashboardPoll', { tenantId, requests }],
     async () => sendBatchRequest(tenantId, requests),
     {

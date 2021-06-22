@@ -1,44 +1,58 @@
 import { channels, directions, tempTenantId } from 'utils/consts';
 import { useFetchEntity } from 'queries/generalQueries';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGlobalFilter } from 'redux/thunks/main';
-import { FilterTypes, MainState } from 'redux/reducers/main';
+import { applyGlobalFilter } from 'redux/thunks/main';
+import { MainState } from 'redux/reducers/main';
+import { FilterOptions, FilterTypes, GlobalFilters } from 'settings/types';
 import { EntityData } from '@cx/types/api';
 import { Grid } from '@material-ui/core';
-import { FilterMenu } from './FilterMenu';
+import { FilterSelect } from './FilterSelect';
 
-export function GlobalFilters() {
+interface FilterMenu {
+  menu: FilterTypes;
+  title: string;
+  options: FilterOptions[];
+}
+
+export function GlobalFiltersBar() {
   const dispatch = useDispatch();
 
   const { data: groups } = useFetchEntity(tempTenantId, 'groups');
   const { data: skills } = useFetchEntity(tempTenantId, 'skills');
 
-  const filters: any = useSelector(
+  const filters: GlobalFilters = useSelector(
     (state: { main: MainState }) => state.main.filters,
   );
 
-  const channelOptions = [{ id: 'all', label: 'All Channels' }, ...channels];
-  const directionOptions = [
+  const channelOptions: FilterOptions[] = [
+    { id: 'all', label: 'All Channels' },
+    ...channels,
+  ];
+  const directionOptions: FilterOptions[] = [
     { id: 'all', label: 'All Directions' },
     ...directions,
   ];
-  const groupOptions = [
+  const groupOptions: FilterOptions[] = [
     { id: 'all', label: 'All Groups' },
     ...(groups?.map((group: EntityData) => ({
       id: group.id,
-      label: group.name,
+      label: group.name ?? '--',
     })) || []),
   ];
-  const skillOptions = [
+  const skillOptions: FilterOptions[] = [
     { id: 'all', label: 'All Skills' },
     ...(skills?.map((skill: EntityData) => ({
       id: skill.id,
-      label: skill.name,
+      label: skill.name ?? '--',
     })) || []),
   ];
 
-  const handleSelectOption = (filter: FilterTypes, id: string) => {
-    dispatch(setGlobalFilter(filter, id));
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    dispatch(
+      applyGlobalFilter(event.target.name as FilterTypes, event.target.value),
+    );
   };
 
   return (
@@ -52,19 +66,19 @@ export function GlobalFilters() {
       spacing={4}
       justifyContent="flex-end"
     >
-      {[
-        { menu: 'channel', title: 'Channel', options: channelOptions },
+      {([
+        { menu: 'channelType', title: 'Channel', options: channelOptions },
         { menu: 'direction', title: 'Direction', options: directionOptions },
-        { menu: 'groups', title: 'Group', options: groupOptions },
-        { menu: 'skills', title: 'Skill', options: skillOptions },
-      ].map(({ menu, title, options }: any) => (
+        { menu: 'group-id', title: 'Group', options: groupOptions },
+        { menu: 'skill-id', title: 'Skill', options: skillOptions },
+      ] as FilterMenu[]).map(({ menu, title, options }: FilterMenu) => (
         <Grid item key={menu}>
-          <FilterMenu
-            menu={menu}
-            title={title}
+          <FilterSelect
+            name={menu}
+            label={title}
+            value={filters[menu]}
+            onChange={handleChange}
             options={options}
-            selected={filters[menu]}
-            handleSelectOption={handleSelectOption}
           />
         </Grid>
       ))}

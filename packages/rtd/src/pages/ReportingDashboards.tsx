@@ -1,33 +1,58 @@
-import { Paper, Theme, useTheme } from '@material-ui/core';
-import { useLocation } from 'react-router-dom';
-
-const useStyles = (theme: Theme) => ({
-  paper: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
-    paddingLeft: theme.spacing(3),
-    color: theme.palette.text.secondary,
-    border: 'solid 1px rgba(128, 128, 128, 0.59)',
-    boxShadow: 'none',
-  },
-});
+import * as React from 'react';
+import { useLocation } from 'react-router';
+import {
+  generateDashboardQuery,
+  getGridLayout,
+  realtimeDashboardsSettings,
+} from 'settings/settings';
+import {
+  DashboardRequest,
+  DashboardSetting,
+  WidgetData,
+  WidgetGrid,
+} from 'settings/types';
+import { useDashboardPoll } from 'queries/generalQueries';
+import { tempTenantId } from 'utils/consts';
+import { WidgetLayout } from 'components/Widgets/WidgetLayout';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentDashboard } from 'redux/thunks/main';
+import { MainState } from 'redux/reducers/main';
 
 export function ReportingDashboards() {
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
-  // const filters = useSelector(
-  //   (state: { main: MainState }) => state.main.filters,
-  // );
+  const dispatch = useDispatch();
 
   const { pathname } = useLocation();
   const [, , dashboardId] = pathname.split('/');
+  const dashboardSettings: DashboardSetting = realtimeDashboardsSettings.dashboards[dashboardId];
+  const dashboardWidgets: WidgetData[] = useSelector(
+    (state: { main: MainState }) => state.main.dashboard?.widgets ?? [],
+  );
+
+  React.useEffect(() => {
+    dispatch(setCurrentDashboard(dashboardSettings));
+  }, [dashboardSettings, dispatch]);
+
+  const { defaultSettings } = realtimeDashboardsSettings;
+  const dashboardLayout: WidgetGrid[] = getGridLayout(dashboardWidgets);
+  const gridLayout = {
+    lg: dashboardLayout,
+    md: dashboardLayout,
+  };
+
+  const pollRequest: DashboardRequest = React.useMemo(
+    () => generateDashboardQuery(dashboardWidgets),
+    [dashboardWidgets],
+  );
+
+  const dashboardPoll: any = useDashboardPoll(tempTenantId, pollRequest);
 
   return (
-    <Paper style={classes.paper}>
-      Here is your dashboard:
-      {dashboardId}
-    </Paper>
+    <WidgetLayout
+      settings={defaultSettings}
+      layouts={gridLayout}
+      widgets={dashboardWidgets}
+      data={dashboardPoll?.data}
+      loading={dashboardPoll.isLoading}
+    />
   );
 }
