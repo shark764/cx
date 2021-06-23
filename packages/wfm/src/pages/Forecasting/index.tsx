@@ -18,6 +18,7 @@ import { Table } from '@cx/components/Table';
 import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
+import { Ellipsis } from '@cx/components/Icons/Ellipsis';
 import { selectedRangeFn } from '@cx/utilities/date';
 // import { BulkAdjustment } from './bulkAdjustment';
 
@@ -144,6 +145,7 @@ export function Forecasting() {
   const [deleteForecast, setDeleteForecast] = useState(false);
   const [singlePointAdjustment, setSinglePointAdjustment] = useState(false);
   // const [localAdjustedData, setLocalAdjustedData] = useState([]);
+  const [latestAdjustmentId, setLatestAdjustmentId] = useState('');
   const [
     localAdjustments,
     // setLocalAdjustemnts
@@ -179,7 +181,7 @@ export function Forecasting() {
     // isLoading: timelineAdjustmentsLoading,
     // error: timelineQueryError
     refetch: refetchAdjustments,
-  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline,  viewBy);
+  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline?.id,  viewBy);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
   const timelineQueryTableData = useMemoTableData(
@@ -194,7 +196,6 @@ export function Forecasting() {
     refetchAdjustments,
     );
   const timelineQueryStaffingEstimate = useMemoStaffingData(timelineQuery, intervalLength, selectedCompetence);
-
 
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
     label: `${startDate} - ${endDate}`,
@@ -215,7 +216,6 @@ export function Forecasting() {
     ],
   };
 
-
   const showSpecificSenarioRange = (start: string, end: string) => {
     dispatch(setStartDate(start));
     dispatch(setEndDate(end));
@@ -234,6 +234,11 @@ export function Forecasting() {
       dispatch(fetchForecastScenarios(selectedTimeline));
     }
   }, [dispatch, selectedTimeline]);
+
+  useEffect(() => {
+    refetchAdjustments();
+    refetchTimeline();
+  }, [latestAdjustmentId, refetchAdjustments, refetchTimeline]);
 
   const setLocalAdjustment = (value: number, key: string, timestamp: string) => {
     const keyConversion: ConversionMap = {
@@ -301,7 +306,7 @@ export function Forecasting() {
             isOptionEqualToValue={(option, value) => option.id === value.id}
             size="small"
             sx={{ width: 250, display: 'inline-block', marginLeft: '20px' }}
-            renderInput={(params: any) => <TextField {...params} label="Forecasted Range" variant="outlined" />}
+            renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
             value={selectedScenario}
             autoSelect
             onChange={(e, scenario: any) => {
@@ -370,7 +375,7 @@ export function Forecasting() {
 
       <ChartsWrapper>
         <ForecastGraphHeader>
-          <Title> Forecasted Interaction Volume </Title>
+          <Title> Forecasted Interaction Volume  { timelineIsFetching ? <span style={{marginLeft: '15px'}} ><Ellipsis animated={true} /></span> : null } </Title>
           <SinglePointAdjustment singlePointAdjustment={singlePointAdjustment} setSinglePointAdjustment={setSinglePointAdjustment} />
         </ForecastGraphHeader>
         {timelineQueryLoading ?
@@ -386,6 +391,8 @@ export function Forecasting() {
             singlePointAdjustment={singlePointAdjustment}
           />
         }
+
+        <Title> Forecasted Adjustments </Title>
         <BulkAdjustmentPanel crud={{
             create: createAdjustment(
               tenant_id,
@@ -403,7 +410,7 @@ export function Forecasting() {
               viewBy,
               selectedCompetence,
             ),
-            refresh: () => {}
+            refresh: setLatestAdjustmentId
           }}
           adjustments={timelineAdjustments}
           localBulkAdjustments={localBulkAdjustments}

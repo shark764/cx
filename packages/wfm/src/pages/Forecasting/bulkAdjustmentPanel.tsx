@@ -7,10 +7,9 @@ const Cell = styled.div`
 `;
 
 const Divider = styled.div`
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
   border-bottom: 1px solid lightgrey;
-  margin: 15px 0;
 `;
 
 export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetchTimeline, timelineIsFetching, localBulkAdjustments }: any) => {
@@ -30,19 +29,19 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
   };
   const adjustmentCrud = {create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };
 
+  const multiIntervalAdjustments =  adjustments.filter(({numberOfIntervals}: any) => numberOfIntervals > 1);
+
   return <span>
-    {localBulkAdjustments?.adjustedNco?.start?.timestamp &&
           <BulkAdjustment
             adjustmentKey="nco"
-            starting={localBulkAdjustments?.adjustedNco?.start?.timestamp}
-            ending={localBulkAdjustments?.adjustedNco?.end?.timestamp}
+            starting={localBulkAdjustments?.adjustedNco?.start?.timestamp || null}
+            ending={localBulkAdjustments?.adjustedNco?.end?.timestamp || null}
             refetchTimeline={refetchTimeline}
             timelineIsFetching={timelineIsFetching}
             intervalLength={intervalLength}
             initValue={0}
             crud={adjustmentCrud}
           />
-        }
         {localBulkAdjustments?.adjustedAht?.start?.timestamp &&
           <BulkAdjustment
             adjustmentKey="aht"
@@ -56,9 +55,9 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
           />
         }
 
-    { adjustments.length > 0 ? <Divider /> : null }
+    { multiIntervalAdjustments.length > 0 ? <Divider /> : null }
 
-    { adjustments.map(({id, startDateTime, endDateTime, metric, value}: any) => {
+    { multiIntervalAdjustments.map(({id, startDateTime, endDateTime, metric, value}: any) => {
       const starting = DateTime.fromISO(startDateTime);
       const ending = DateTime.fromISO(endDateTime);
       return AdjustmentCell({crud: adjustmentCrud, adjustmentKey: metric, id, refetchTimeline, timelineIsFetching, intervalLength , starting, ending, initValue: value})

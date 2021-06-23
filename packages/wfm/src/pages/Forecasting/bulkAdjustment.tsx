@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import AdapterLuxon from '@material-ui/lab/AdapterLuxon';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
@@ -33,6 +34,7 @@ const Actions = styled.span`
 
 export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetching, crud, intervalLength , starting, ending, initValue, id}: any): any => {
 
+  const [metric, setMetric] = useState<any>(adjustmentKey);
   const [start, setStart] = useState<any>(starting);
   const [end, setEnd] = useState<any>(ending);
   const [value, setValue] = useState<number>(initValue);
@@ -65,7 +67,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
   };
 
   const deleteSavedAdjustment = () => {
-    return crud.delete({adjustment_id: id});
+    return crud.delete({adjustment_id: id}).then(() => id);
   };
   const saveNewAdjustment = () => {
     return crud.create({
@@ -85,11 +87,11 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
     });
   };
 
-  const withLoading = (apiCall: any) => {
+  const withLoading = (apiCall: any, value: number) => {
     turnOnLoading();
     apiCall()
-      .then(() => {
-        crud.refresh();
+      .then((data: any) => {
+        crud.refresh(`${data.id}${value}`);
         turnOffLoading()
       });
   }
@@ -97,6 +99,25 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
   return (
     <Container className="multi-interval-adjustment">
       <LocalizationProvider dateAdapter={AdapterLuxon}>
+
+        { metric && <TextField
+          id="outlined-select-currency"
+          select
+          label="Metric"
+          value={metric}
+          onChange={({target: { value }}: any) => setMetric(value)}
+          variant="outlined"
+          style={{ width: '80px' }}
+          size="small"
+        >
+          <MenuItem value='nco'>
+            nco
+          </MenuItem>
+          <MenuItem value='aht'>
+            aht
+          </MenuItem>
+        </TextField>}
+
         <DateTimeInput>
           <DateTimePicker
             renderInput={(props) =>
@@ -105,7 +126,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
                 size="small"
                 helperText={false}
               />}
-            label={`Start ${adjustmentKey} adjustment `}
+            label={`Start`}
             value={start}
             minutesStep={15}
             onChange={(newValue: any) => {
@@ -121,11 +142,11 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
             InputLabelProps={{
               shrink: true,
             }}
-            label="Adjustment Value"
+            label="Value"
             variant="outlined"
             value={value}
             onChange={({target: { value }}) => setValue(parseInt(value))}
-            sx={{width: '130px'}}
+            sx={{width: '80px'}}
           />
         </span>
 
@@ -137,7 +158,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
                 size="small"
                 helperText={false}
               />}
-            label={`End ${adjustmentKey} adjustment`}
+            label={`End`}
             value={end}
             minutesStep={15}
             onChange={(newValue: any) => {
@@ -148,15 +169,15 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
       </LocalizationProvider>
 
     <Actions>
-      { (!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => saveNewAdjustment()) }  /> : null}
+      { (!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => saveNewAdjustment(), value) }  /> : null}
 
-      { (id && !isLoading ) ? <SaveIcon sx={{color: 'lightgrey'}} onClick={() => withLoading(() => updateSavedAdjustment())  }  /> : null}
+      { (id && !isLoading ) ? <SaveIcon sx={{color: 'lightgrey', cursor: 'pointer'}} onClick={() => withLoading(() => updateSavedAdjustment(), value)  }  /> : null}
 
       { isLoading ? <Loading size={20} fill="grey" /> : null}
 
-      { (id && !isLoading ) ? <Trashcan onClick={() =>  withLoading(() => deleteSavedAdjustment())  } /> : null }
+      { (id && !isLoading ) ? <Trashcan onClick={() =>  withLoading(() => deleteSavedAdjustment(), value)  } /> : null }
 
-      { (id && !isLoading ) ? <UndoIcon sx={{color: 'lightgrey'}}  onClick={() => {} } /> : null }
+      { (id && !isLoading ) && (initValue !== value) ? <UndoIcon sx={{color: 'lightgrey', cursor: 'pointer'}}  onClick={() => setValue(initValue) } /> : null }
     </Actions>
 
     </Container>

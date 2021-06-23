@@ -2,10 +2,12 @@ import { wfm } from '../../api';
 import { useQuery } from 'react-query';
 import { DateTime } from 'luxon';
 
-export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams: any, selectedTimeline: any, viewBy: string) => useQuery<any, any>(
+export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams: any, selectedTimeline: string, viewBy: string) => useQuery<any, any>(
   ['Timeline Adjustments', tenant_id, selectedTimeline, viewBy],
   () => {
-    // TODO: this seems to fire twice?
+    if(!tenant_id || !selectedTimeline) {
+      return;
+    }
     const allAdjustmentStartDate = DateTime.fromISO(historicalQueryParams.startDateTime)
       .startOf('day').toISO({ includeOffset: true });
 
@@ -14,7 +16,7 @@ export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams:
 
     return wfm.forecasting.api.get_all_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments({
       pathParams: {
-        tenant_id, forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3"
+        tenant_id, forecast_timeline_id: selectedTimeline
       },
       queryString: {
         interval: viewBy,
@@ -27,7 +29,6 @@ export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams:
   },
   {
     refetchOnWindowFocus: false,
-    enabled: !!tenant_id,
   }
 );
 
