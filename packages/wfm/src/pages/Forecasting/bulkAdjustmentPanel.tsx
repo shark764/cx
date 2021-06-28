@@ -7,9 +7,9 @@ const Cell = styled.div`
 `;
 
 const Divider = styled.div`
-  width: 70%;
-  margin: 0 auto;
-  border-bottom: 1px solid lightgrey;
+  width: 60%;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #d3d3d382;
 `;
 
 export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetchTimeline, timelineIsFetching, localBulkAdjustments }: any) => {
@@ -31,7 +31,7 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
 
   const multiIntervalAdjustments =  adjustments.filter(({numberOfIntervals}: any) => numberOfIntervals > 1);
 
-  return <span>
+  return <div>
           <BulkAdjustment
             adjustmentKey="nco"
             starting={localBulkAdjustments?.adjustedNco?.start?.timestamp || null}
@@ -63,7 +63,7 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
       return AdjustmentCell({crud: adjustmentCrud, adjustmentKey: metric, id, refetchTimeline, timelineIsFetching, intervalLength , starting, ending, initValue: value})
     }
     )}
-  </span>
+  </div>
 };
 
 

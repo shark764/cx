@@ -57,7 +57,8 @@ export const useMemoTableData = (
       .filter((adjustment: any) => (
         adjustment.metric === 'nco' &&
         adjustment.startDateTime === timestamp &&
-        adjustment.competency === selectedCompetence
+        adjustment.competency === selectedCompetence &&
+        adjustment.numberOfIntervals === 1
       )),
     ncoLocalAdjustement: localAdjustments['adjustedNco']?.[timestamp],
     aht: aht,
@@ -67,7 +68,8 @@ export const useMemoTableData = (
     .filter((adjustment: any) => (
       adjustment.metric === 'aht' &&
       adjustment.startDateTime === timestamp &&
-      adjustment.competency === selectedCompetence
+      adjustment.competency === selectedCompetence &&
+      adjustment.numberOfIntervals === 1
     )),
     ahtLocalAdjustment: localAdjustments['adjustedAht']?.[timestamp],
     crud: {

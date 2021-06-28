@@ -17,8 +17,10 @@ const Trashcan = styled(DeleteIcon)`
   cursor: pointer;
 `;
 
-const Container = styled.div`
+const Container = styled.span`
   padding: 20px 45px;
+  display: inline-block;
+  margin: 0 auto;
 `;
 
 const DateTimeInput = styled.span`
@@ -33,6 +35,9 @@ const Actions = styled.span`
 `;
 
 export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetching, crud, intervalLength , starting, ending, initValue, id}: any): any => {
+
+  const withoutSeconds = (newValue: any) =>
+    DateTime.fromISO(newValue).set({second: 0, millisecond: 0});
 
   const [metric, setMetric] = useState<any>(adjustmentKey);
   const [start, setStart] = useState<any>(starting);
@@ -120,6 +125,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
 
         <DateTimeInput>
           <DateTimePicker
+            disablePast
             renderInput={(props) =>
               <TextField
                 {...props}
@@ -130,7 +136,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
             value={start}
             minutesStep={15}
             onChange={(newValue: any) => {
-              setStart(newValue);
+              setStart(withoutSeconds(newValue));
             }}
           />
         </DateTimeInput>
@@ -152,6 +158,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
 
         <DateTimeInput>
           <DateTimePicker
+            disablePast
             renderInput={(props) =>
               <TextField
                 {...props}
@@ -162,7 +169,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
             value={end}
             minutesStep={15}
             onChange={(newValue: any) => {
-              setEnd(newValue);
+              setEnd(withoutSeconds(newValue));
             }}
           />
         </DateTimeInput>

@@ -15,8 +15,8 @@ const Checkbox = styled.input`
 export const SinglePointAdjustment = ({singlePointAdjustment, setSinglePointAdjustment}: any): any => {
   return (
     <Spa>
-      <Label>Single Point Adjustment</Label>
-      <Checkbox checked={singlePointAdjustment} title=" " placeholder=" " type="checkbox" onChange={({target: { checked }}) => setSinglePointAdjustment(checked)} />
+      <Label>Time Span Selection</Label>
+      <Checkbox checked={!singlePointAdjustment} title=" " placeholder=" " type="checkbox" onChange={({target: { checked }}) => setSinglePointAdjustment(!checked)} />
     </Spa>
   )
 };

@@ -19,6 +19,7 @@ import { BarChart } from '@cx/components/Charts/BarChart';
 import { LineChart } from '@cx/components/Charts/LineChart';
 import { Loading } from '@cx/components/Icons/Loading';
 import { Ellipsis } from '@cx/components/Icons/Ellipsis';
+import { Chevron } from '@cx/components/Icons/Chevron';
 import { selectedRangeFn } from '@cx/utilities/date';
 // import { BulkAdjustment } from './bulkAdjustment';
 
@@ -74,6 +75,11 @@ const {
 } = forecasting.actions;
 
 type ConversionMap = {[key: string]: any};
+
+const ToggleView = styled(Chevron)`
+  vertical-align: text-top;
+  margin-left: 20px;
+`;
 
 const Title = styled.h4`
   color: grey;
@@ -142,8 +148,9 @@ export function Forecasting() {
   const [selectedScenario, setSelectedScenario] = useState<any>();
   const [createNewForecast, setCreateNewForecast] = useState(false);
   const [createNewTimeline, setCreateNewTimeline] = useState(false);
+  const [showBulkAdjustments, setShowBulkAdjustments] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
-  const [singlePointAdjustment, setSinglePointAdjustment] = useState(false);
+  const [singlePointAdjustment, setSinglePointAdjustment] = useState(true);
   // const [localAdjustedData, setLocalAdjustedData] = useState([]);
   const [latestAdjustmentId, setLatestAdjustmentId] = useState('');
   const [
@@ -262,6 +269,9 @@ export function Forecasting() {
     });
   };
   const setLocalBulkAdjustment = (data: any) => {
+
+    setShowBulkAdjustments(true);
+
     const parseAndSort = (key: any) =>
       data.filter((adjustment: any) => adjustment.key === key )
       .sort((a: any,b: any) => a.timestamp - b.timestamp);
@@ -392,8 +402,8 @@ export function Forecasting() {
           />
         }
 
-        <Title> Forecasted Adjustments </Title>
-        <BulkAdjustmentPanel crud={{
+        <Title> Forecasted Adjustments <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments) } /> </Title>
+        { showBulkAdjustments && <BulkAdjustmentPanel crud={{
             create: createAdjustment(
               tenant_id,
               selectedTimeline?.id,
@@ -417,7 +427,7 @@ export function Forecasting() {
           intervalLength={viewBy}
           refetchTimeline={refetchTimeline}
           timelineIsFetching={timelineIsFetching}
-        />
+        />}
       </ChartsWrapper>
 
       <ChartsWrapper>
