@@ -278,9 +278,8 @@ export function Forecasting() {
     const firstAndLast = (array: any) => ({start: array[0], end: array.pop()});
 
     const adjustedNco = firstAndLast(parseAndSort('adjustedNco'));
-    const adjustedAht = firstAndLast(parseAndSort('adjustedAht'));
 
-    setLocalBulkAdjustemnts({adjustedNco,adjustedAht});
+    setLocalBulkAdjustemnts({adjustedNco});
   };
 
 

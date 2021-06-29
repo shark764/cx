@@ -14,8 +14,9 @@ import { useRef, useEffect, useState } from 'react';
 import { fromEvent } from 'rxjs';
 import { tap, map, switchMap, takeUntil, takeLast, throttleTime } from 'rxjs/operators';
 
-import { SelectionRect } from './selectionRect';
+// import { SelectionRect } from './selectionRect';
 import { CustomizedDot } from './customizedDot';
+import { TimeSelection } from './timeSelection';
 import { Dot } from './dot';
 
 const Wrapper = styled.div`
@@ -116,9 +117,7 @@ export const LineChart: React.VFC<ChartProps> = ({
             .filter((dot: any) => dot.key.includes('adjusted'))
             .filter((dot: any) => {
 
-              if((dot.x >= startingX && dot.x <= endingX) && (dot.y >= startingY && dot.y <= endingY)) {
-                // TODO: selecting only works left to right atm..(down, right)   try other combos up right, left up, left down
-                // TODO: make it so the item can;t drag past the edges
+              if((dot.x >= startingX && dot.x <= endingX)) {
                 return true
               } else {
                 return false
@@ -140,7 +139,7 @@ export const LineChart: React.VFC<ChartProps> = ({
     } else if (intervalLength === 'twoDays') {
       return 4;
     } else if (intervalLength === 'day') {
-      return 4;
+      return 3;
     } else {
       return 0;
     }
@@ -169,7 +168,7 @@ export const LineChart: React.VFC<ChartProps> = ({
   return (
     <Wrapper ref={ref}>
       {statName && <StatName>{statName}</StatName>}
-      <SelectionRect className="selection" isDragging={isDragging} selectionArea={selectionArea} selectionArea2={selectionArea2} />
+      <TimeSelection className="selection" isDragging={isDragging} selectionArea={selectionArea} selectionArea2={selectionArea2} />
       <ResponsiveContainer
         id={`${chartName}-responsive-container`}
         width={containerWidth}
@@ -178,7 +177,7 @@ export const LineChart: React.VFC<ChartProps> = ({
         <ComposedChart
           data={data}
           // @ts-ignore
-          cursor={singlePointAdjustment ? 'grab' : 'crosshair'}
+          cursor={singlePointAdjustment ? 'grab' : 'col-resize'}
         >
 
           <XAxis
@@ -209,7 +208,7 @@ export const LineChart: React.VFC<ChartProps> = ({
               key={item.name}
               name={item.name}
               dataKey={item.key}
-              dot={<CustomizedDot isDragging={isDragging} ></CustomizedDot>}
+              dot={<CustomizedDot isDragging={false} ></CustomizedDot>}
               type="linear"
               yAxisId={item.yAxisId}
               stroke={item.color}
