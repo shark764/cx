@@ -174,6 +174,8 @@ export function Forecasting() {
     data: timelines = [],
     // isLoading: timelinesLoading,
     // error: timelinesError
+    isFetching: timelinesIsFetching,
+    refetch: refetchTimelines
   } = useTimelines(tenant_id);
 
   const {
@@ -285,7 +287,7 @@ export function Forecasting() {
 
   return (<>
       <Actions>
-        {(timelines?.length === 0) &&
+        {(timelines?.length === 0) && !timelinesIsFetching &&
           <Button
             style={{ color: '#4c4a4a' }}
             onClick={() => setCreateNewTimeline(true)}
@@ -305,6 +307,7 @@ export function Forecasting() {
             renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
             value={selectedTimeline}
             autoSelect
+            disableClearable
             onChange={(event: any, newValue: string | null) => setSelectedTimeline(newValue) }
           />
         }
@@ -318,6 +321,7 @@ export function Forecasting() {
             renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
             value={selectedScenario}
             autoSelect
+            disableClearable
             onChange={(e, scenario: any) => {
                 showSpecificSenarioRange(scenario.startDate, scenario.endDate);
                 setSelectedScenario(scenario);
@@ -352,7 +356,7 @@ export function Forecasting() {
               defaultValues={{}}
               formDefenition={createTimelineFormDefenition}
               onCancel={() => setCreateNewTimeline(false)}
-              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, tenant_id, 'refetch') }}
+              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, tenant_id, refetchTimelines) }}
               isFormSubmitting={false}
             ></DynamicForm>
           </FormDialog>

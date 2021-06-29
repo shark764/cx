@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
 import { Loading } from '@cx/components/Icons/Loading';
-import { Plus } from '@cx/components/Icons/Plus';
+import South from '@material-ui/icons/South';
 
 const Trashcan = styled(DeleteIcon)`
   color: lightgrey;
@@ -176,7 +176,7 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
       </LocalizationProvider>
 
     <Actions>
-      { (!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => saveNewAdjustment(), value) }  /> : null}
+      { (!id && !isLoading) ? <South sx={{fill: 'grey', cursor: 'pointer'}} onClick={() => withLoading(() => saveNewAdjustment(), value) }  /> : null}
 
       { (id && !isLoading ) ? <SaveIcon sx={{color: 'lightgrey', cursor: 'pointer'}} onClick={() => withLoading(() => updateSavedAdjustment(), value)  }  /> : null}
 

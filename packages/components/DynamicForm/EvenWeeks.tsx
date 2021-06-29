@@ -7,8 +7,8 @@ import { DateTime } from 'luxon';
 import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 import RemoveIcon from '@material-ui/icons/Remove';
+import South from '@material-ui/icons/South';
 import AddIcon from '@material-ui/icons/Add';
-import { Plus } from '@cx/components/Icons/Plus';
 import { addDays } from '@cx/utilities/date';
 
 
@@ -32,9 +32,11 @@ const Trashcan = styled(DeleteIcon)`
   visibility: hidden;
   cursor: pointer;
 `;
-const PositionedPlus = styled(Plus)`
+const PositionedSouth = styled(South)`
   visibility: hidden;
   margin-top: 25px;
+  fill: #808080be;
+  cursor: pointer;
 `;
 const Decrement = styled(RemoveIcon)`
   color: #aeaaaa;
@@ -51,7 +53,7 @@ const RangeContainer = styled.div`
   &:hover ${Trashcan} {
     visibility: visible;
   }
-  &:hover ${PositionedPlus} {
+  &:hover ${PositionedSouth} {
     visibility: visible;
   }
 `;
@@ -220,7 +222,7 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue 
           </div>
           {multiValue && <Controls >
             <Trashcan onClick={() => remove(index)} fontSize="small" />
-            <PositionedPlus onClick={() => add(index)} size={15} />
+            <PositionedSouth onClick={() => add(index)}></PositionedSouth>
           </Controls>}
         </RangeContainer>
       })}
