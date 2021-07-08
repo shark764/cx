@@ -362,7 +362,7 @@ export function Forecasting() {
           </FormDialog>
           <FormDialog open={createNewForecast} title='Create Forecast Scenario' close={() => setCreateNewForecast(false)} >
             <DynamicForm
-              defaultValues={defaultForecastFormValues()}
+              defaultValues={defaultForecastFormValues(memoScenariosOptions)}
               formDefenition={createForecastFormDefenition}
               onCancel={() => setCreateNewForecast(false)}
               onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, tenant_id, selectedTimeline.id) }}

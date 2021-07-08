@@ -9,8 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import RemoveIcon from '@material-ui/icons/Remove';
 import South from '@material-ui/icons/South';
 import AddIcon from '@material-ui/icons/Add';
-import { addDays } from '@cx/utilities/date';
-
+import { addDays, getDiffInWeeks } from '@cx/utilities/date';
 
 interface Props {
   control: Control;
@@ -81,28 +80,43 @@ const IncrementControls = styled.span`
 `;
 
 const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
-const displayToDate = (endDate) => {
-  const result = formatDate(endDate);
-  // @ts-ignore
-  return DateTime.fromJSDate(endDate).isValid ? result : 'Choose a start date';
+
+const displayToDate = (endDate: any) => {
+  if (endDate.isValid) {
+    return endDate.toFormat('yyyy / LL / dd');
+  } else if (DateTime.fromJSDate(endDate).isValid) {
+    return formatDate(endDate);
+  } else {
+    return 'Choose a start date';
+  }
 };
 
-export const EvenWeeks: React.VFC<Props> = ({ control, name, errors, constraints, defaultValue, multiValue }) =>
-  <Controller
-    control={control}
-    name={name}
-    defaultValue={defaultValue}
-    render={({ onChange }) => (
-      <DatePickers
-        onChange={onChange}
-        name={name}
-        multiValue={multiValue}
-        control={control}
-        errors={errors}
-        constraints={constraints}
-      />
-    )}
-  />;
+export const EvenWeeks: React.VFC<Props> = ({ control, name, errors, constraints, defaultValue, multiValue }: any) => {
+
+  const defaultStartDate = defaultValue?.[0]?.startDate;
+  const defaultEndDate = defaultValue?.[0]?.endDate;
+
+  const totalWeeks = getDiffInWeeks(defaultStartDate, defaultEndDate);
+
+  const newEntry = { startDate: defaultStartDate || null, endDate: defaultEndDate || null, totalWeeks: totalWeeks };
+
+  return <Controller
+  control={control}
+  name={name}
+  defaultValue={newEntry}
+  render={({ onChange }) => (
+    <DatePickers
+      onChange={onChange}
+      name={name}
+      multiValue={multiValue}
+      control={control}
+      errors={errors}
+      constraints={constraints}
+      initValue={newEntry}
+    />
+  )}
+/>
+};
 
 interface EvenWeeks {
   startDate: Date | null,
@@ -110,9 +124,10 @@ interface EvenWeeks {
   totalWeeks: number;
 };
 
-const DatePickers = ({ onChange, name, control, errors, constraints, multiValue }: any) => {
+const DatePickers = ({ onChange, name, control, errors, constraints, multiValue, initValue }: any) => {
+
   const newEntry = { startDate: null, endDate: null, totalWeeks: 1 };
-  const [dateRanges, setDateRanges] = useState<EvenWeeks[]>([newEntry]);
+  const [dateRanges, setDateRanges] = useState<EvenWeeks[]>([ initValue ]);
 
   const add = (index: number) => {
     const newRanges = [...dateRanges];
@@ -158,7 +173,7 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue 
                 control={control}
                 name={`${name}.startDate`}
                 className={name + '-startDate'}
-                defaultValue={''}
+                defaultValue={startDate}
                 rules={{
                   validate: {
                     required: (value) => !!value || constraints[name]?.startDate?.required,

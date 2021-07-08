@@ -52,6 +52,22 @@ export const getDiffInDaysFn = (startDateTime: string, endDateTime: string): any
   return days;
 }
 
+const weekDiff = (date1: DateTime, date2: DateTime) => {
+  const diffInWeeks = date2.diff(date1, 'weeks').toObject();
+  const { weeks } = diffInWeeks;
+  return weeks;
+};
+
+export const getDiffInWeeks = (start: DateTime, end: DateTime): number | undefined => {
+  const convertedStart = start.toUTC().startOf('day');
+  const convertedEnd = end.toUTC().startOf('day');
+  if ( convertedStart > convertedEnd ) {
+    return weekDiff(convertedStart.plus({days: 1}), convertedEnd);
+  } else {
+    return weekDiff(convertedStart, convertedEnd.plus({days: 1}));
+  }
+}
+
 export const selectedRangeFn = ( startDateTime: string, endDateTime: string): string => {
   const diffDays = getDiffInDaysFn(startDateTime, endDateTime);
   const rangeMap:{[key: number]: string} = {

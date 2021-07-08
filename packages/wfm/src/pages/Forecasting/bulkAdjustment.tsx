@@ -3,8 +3,6 @@ import { DateTime } from 'luxon';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import AdapterLuxon from '@material-ui/lab/AdapterLuxon';
-import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
@@ -103,7 +101,6 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
 
   return (
     <Container className="multi-interval-adjustment">
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
 
         { metric && <TextField
           id="outlined-select-currency"
@@ -173,7 +170,6 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
             }}
           />
         </DateTimeInput>
-      </LocalizationProvider>
 
     <Actions>
       { (!id && !isLoading) ? <South sx={{fill: 'grey', cursor: 'pointer'}} onClick={() => withLoading(() => saveNewAdjustment(), value) }  /> : null}

@@ -7,6 +7,9 @@ import { QueryProvider } from './providers/queryProvider';
 import { AppThemeProvider } from './providers/appThemeProvider';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
+// Material date localization provider accompanied by luxon
+import AdapterDateFns from '@material-ui/lab/AdapterLuxon';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { StyledEngineProvider } from '@material-ui/core/styles';
 import './index.css';
@@ -54,7 +57,9 @@ const getSession = async () => await new Promise((resolve, reject) => {
           <Provider store={store}>
             <QueryProvider>
               <AppThemeProvider>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <App tenant_id={data.tenant?.tenantId} />
+                </LocalizationProvider>
               </AppThemeProvider>
             </QueryProvider>
           </Provider>

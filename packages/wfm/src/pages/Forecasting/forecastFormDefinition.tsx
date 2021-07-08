@@ -28,7 +28,10 @@ export const createForecastFormDefenition = [
         multiValue: false,
         constraints: {
           forecastRange: {
-            startDate: { required: 'From Date is required.', isMonday: 'Start date should start on a monday.' },
+            startDate: {
+              required: 'From Date is required.',
+              isMonday: 'Start date should start on a monday.'
+            },
             weeks: { required: 'No.of weeks is required.' },
             endDate: { required: 'To Date is required.' }
           },

@@ -66,7 +66,9 @@ interface DynamicFormBuilder {
   }[]
 };
 
-export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValues, formDefenition}) => {
+export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValues, formDefenition}: any) => {
+
+
 
   const findDefaultedToggles = (toggleFields: any, defaultToggled: any) => {
     if (!toggleFields || !defaultToggled) { return {}; }

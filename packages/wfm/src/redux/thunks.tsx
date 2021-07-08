@@ -86,18 +86,16 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
 
     const allChannels = [
       'voice',
-      // 'messaging',
-      // 'sms',
-      // 'email',
-      // 'work_item'
+      'messaging',
+      'sms',
+      'email',
+      'work-item'
     ];
-    const currentCompetencies = [
-      // Currently this is the users selected competence
-      store.getState()?.forecasting?.competence
-    ];
-    const series = currentCompetencies.flatMap((competency) =>
+    const currentCompetencies = store.getState()?.main?.competencies;
+
+    const series = currentCompetencies.flatMap((competency: any) =>
       allChannels.map((channelType) => ({
-        competency: competency,
+        competency: competency?.id,
         channel: channelType,
         direction: 'inbound',
       }))
@@ -116,7 +114,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     */
     const { id: forecast_scenario_id } = await wfm.forecasting.api.post_tenants_tenant_id_wfm_forecastscenarios({
       pathParams: { tenant_id },
-      body: { name, description, startDate, endDate, scenarioType },
+      body: { name, description, startDate: startDate.toISODate(), endDate: endDate.toISODate(), scenarioType },
     });
 
     /**
@@ -127,12 +125,23 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     /**
      * Then update the forecasts scenarios settings
      */
+    const swapReverseDates = (dates: any) => {
+      return dates?.map(({startDate, endDate}: any) => {
+        const start = startDate.toISODate();
+        const end = endDate.toISODate();
+        if (start > end) {
+          return { startDate: end, endDate: start }
+        } else {
+          return { startDate: start, endDate: end };
+        }
+      });
+    };
     await wfm.forecasting.api.put_params_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_params({
       pathParams: { tenant_id, forecast_scenario_id },
       body: {
         ...scenarioConfig,
         series,
-        dayCurveDateRange: scenarioConfig.dayCurveDateRanges[0],
+        dayCurveDateRange: swapReverseDates(scenarioConfig.dayCurveDateRanges)?.[0],
         algorithmOptions: formattedAlgorithmOptions,
       },
     });
@@ -153,8 +162,8 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       pathParams: { tenant_id, forecast_timeline_id },
       body: {
         forecastScenarioId: forecast_scenario_id,
-        startDate,
-        endDate,
+        startDate: startDate.toISODate(),
+        endDate: endDate.toISODate(),
       }
     });
 
