@@ -7,8 +7,9 @@ import { EntityTypes, FilterOptions, WidgetData } from 'settings/types';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { DashboardState } from 'redux/reducers/dashboard';
-import { setWidgetsFilter } from 'redux/thunks/dashboard';
+import { applyWidgetsFilter } from 'redux/thunks/dashboard';
 import { FilterSelect } from 'components/Filters/FilterSelect';
+import { MainState } from 'redux/reducers/main';
 
 const Container = styled.div`
   width: 100%;
@@ -45,8 +46,11 @@ const entityMap: EntityMap = {
 export function SourceSwitcherWidget({ widget }: { widget: WidgetData }) {
   const dispatch = useDispatch();
 
+  const dashboardId: string = useSelector(
+    (state: { main: MainState }) => state.main.dashboard?.id ?? '',
+  );
   const filter: string | number = useSelector(
-    (state: { dashboard: DashboardState }) => state.dashboard.filters[widget.id] ?? 'all',
+    (state: { dashboard: DashboardState }) => state.dashboard.filters[dashboardId]?.[widget.id] ?? 'all',
   );
 
   const entity: EntityTypes = entityMap[widget.entity ?? '']?.name;
@@ -68,7 +72,7 @@ export function SourceSwitcherWidget({ widget }: { widget: WidgetData }) {
   const handleChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
-    dispatch(setWidgetsFilter(widget.id, event.target.value));
+    dispatch(applyWidgetsFilter(dashboardId, widget.id, event.target.value));
   };
 
   return (

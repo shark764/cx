@@ -452,7 +452,7 @@ export function Forecasting() {
         <TableSpacer>
           <Table
             themeVariant='forecast'
-            columnDefenitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
+            columnDefinitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
             tableData={timelineQueryTableData}
             viewMode={viewBy}
             rowComponent={AdjustmentPanel}

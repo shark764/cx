@@ -11,9 +11,9 @@ import {
 import styled from 'styled-components';
 import { ITable } from '@cx/types/table';
 import { LoadSpinner } from '../LoadSpinner';
-import { Pagination } from './Pagination';
-import { DefaultColumnFilter } from './filters/DefaultColumnFilter';
-import { fuzzyText, startsWithText } from './filterTypes';
+import { Pagination } from '../Table/Pagination';
+import { DefaultColumnFilter } from '../Table/filters/DefaultColumnFilter';
+import { fuzzyText, startsWithText } from '../Table/filterTypes';
 
 const TrText = styled.span`
   display: block;

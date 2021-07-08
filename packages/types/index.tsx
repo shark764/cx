@@ -40,3 +40,11 @@ export interface LinkGroup {
   links: LinkItem[];
   open: boolean;
 }
+
+export type StatisticFormat =
+  | 'count'
+  | 'time'
+  | 'timestamp'
+  | 'percent'
+  | 'ratio'
+  | 'json';

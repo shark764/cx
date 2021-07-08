@@ -2,9 +2,11 @@ import { CircularProgress, Typography } from '@material-ui/core';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label,
 } from 'recharts';
-import { DashboardResults, WidgetData, WidgetFormat } from 'settings/types';
-import { getStatisticFormat, gaugeColorLevel } from 'settings/settings';
+import { DashboardResults, WidgetData } from 'settings/types';
+import { getStatisticFormat } from '@cx/utilities/statistic';
+import { gaugeColorLevel } from 'settings/settings';
 import styled from 'styled-components';
+import { StatisticFormat } from '@cx/types';
 import {
   Card, CardContent, CardFooter, CardHeader, Container,
 } from './Card';
@@ -24,9 +26,12 @@ export function GaugeWidget({
   loading: boolean;
 }) {
   const value: any = data?.body?.results[widget?.query?.responseKey ?? ''];
-  const format: WidgetFormat = widget.presentation.value?.format ?? 'count';
+  const format: StatisticFormat = widget.presentation.value?.format ?? 'count';
   const wgValue: number | string = getStatisticFormat(value, format, 'gauge');
   const fillColor: string = gaugeColorLevel(widget, value);
+  // The value can be duration in milliseconds or different value from percent
+  // or count, so we just show 100% for these cases.
+  const chartValue = typeof value !== 'number' || value > 100 ? 100 : value;
 
   return (
     <Container key={widget.id} variant="outlined" elevation={0}>
@@ -53,8 +58,8 @@ export function GaugeWidget({
               >
                 <Pie
                   data={[
-                    { name: 'Percent', value },
-                    { name: 'Base', value: 100 - value },
+                    { name: 'Percent', value: chartValue },
+                    { name: 'Base', value: 100 - chartValue },
                   ]}
                   dataKey="value"
                   cx="50%"

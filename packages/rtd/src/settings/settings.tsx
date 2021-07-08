@@ -1,4 +1,3 @@
-import { Duration } from 'luxon';
 import { dashboardAgentDetails } from './dashboards/dashboardAgentDetails';
 import { dashboardAgentState } from './dashboards/dashboardAgentState';
 import { dashboardInteractions } from './dashboards/dashboardInteractions';
@@ -15,9 +14,7 @@ import {
   DashboardResponse,
   DashboardResults,
   DashboardSetting,
-  FormatMap,
   WidgetData,
-  WidgetFormat,
   WidgetGrid,
 } from './types';
 
@@ -111,33 +108,19 @@ export const generateDashboardQuery = (
   return formattedRequest;
 }, {});
 
-export const statisticFormatMap: FormatMap = {
-  count: (input: number | string) => input,
-  percent: (input: number | string) => `${input}%`,
-  time: (input: number, type: string) => {
-    const duration = Duration.fromMillis(input);
-    if (input > 60000 || type === 'table') {
-      return duration.toFormat('hh:mm:ss');
-    }
-    const durationObject = duration
-      .shiftTo('hours', 'minutes', 'seconds', 'milliseconds')
-      .normalize()
-      .toObject();
-    return `${durationObject.seconds}s`;
-  },
-  ratio: (input: number | string) => `${input}%`,
-  json: (input: number | string) => '--',
-};
-
-export const getStatisticFormat = (
-  input: number,
-  format: WidgetFormat,
-  type: string,
-) => statisticFormatMap[format](input, type);
-
 export const gaugeColorLevel = (widget: WidgetData, value: number): string => {
   const pattern: string[] = widget.presentation.gaugeConfig?.color?.pattern ?? [];
   const threshold: number[] = widget.presentation.gaugeConfig?.color?.threshold?.values ?? [];
   const index: number = threshold.findIndex((thValue: number) => (thValue === 100 ? value <= thValue : value < thValue));
   return index !== -1 ? pattern[index] : 'rgba(0,0,0,0.6)';
+};
+
+export interface WidgetFilterMap {
+  [key: string]: string;
+}
+export const widgetFilterMap: WidgetFilterMap = {
+  queueId: 'queue-id',
+  resourceId: 'resource-id',
+  skillId: 'skill-id',
+  groupId: 'group-id',
 };

@@ -1,6 +1,7 @@
 import { CircularProgress, Typography } from '@material-ui/core';
-import { DashboardResults, WidgetData, WidgetFormat } from 'settings/types';
-import { getStatisticFormat } from 'settings/settings';
+import { DashboardResults, WidgetData } from 'settings/types';
+import { getStatisticFormat } from '@cx/utilities/statistic';
+import { StatisticFormat } from '@cx/types';
 import {
   Card, CardContent, CardFooter, CardHeader, Container,
 } from './Card';
@@ -15,7 +16,7 @@ export function StatisticWidget({
   loading: boolean;
 }) {
   const value: any = data?.body?.results[widget?.query?.responseKey ?? ''];
-  const format: WidgetFormat = widget.presentation.value?.format ?? 'count';
+  const format: StatisticFormat = widget.presentation.value?.format ?? 'count';
   const wgValue: number | string = getStatisticFormat(
     value,
     format,

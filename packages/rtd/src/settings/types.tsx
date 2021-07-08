@@ -1,3 +1,5 @@
+import { StatisticFormat } from '@cx/types';
+
 export type EntityTypes =
   | 'users'
   | 'queues'
@@ -12,8 +14,6 @@ export type WidgetType =
   | 'source-switcher'
   | 'gauge'
   | 'table';
-
-export type WidgetFormat = 'count' | 'time' | 'percent' | 'ratio' | 'json';
 
 export interface DashboardTableField {
   header: {
@@ -82,7 +82,7 @@ export interface WidgetPresentation {
     text?: string;
   };
   value?: {
-    format?: WidgetFormat;
+    format?: StatisticFormat;
   };
   footer?: {
     show?: boolean;
@@ -100,6 +100,9 @@ export interface WidgetData {
     endpoint: string;
     responseKey: string;
     parameters: { [key: string]: string };
+    // Used to keep a copy of source-switchers used
+    // as request parameters
+    widgetParameters?: { [key: string]: string };
     middleware?: string[];
     customMiddleware?: string[];
   };
@@ -141,7 +144,11 @@ export interface DashboardSetting {
 }
 
 export type FilterTypes = 'channelType' | 'direction' | 'group-id' | 'skill-id';
-export type WidgetFilterTypes = 'resources' | 'queues' | 'groups' | 'skills';
+export type WidgetFilterTypes =
+  | 'resource-id'
+  | 'queue-id'
+  | 'group-id'
+  | 'skill-id';
 
 export interface FilterOptions {
   id: string;
@@ -159,6 +166,7 @@ export interface GlobalFilters {
   'skill-id': string;
 }
 export interface WidgetFilter {
+  dashboard: string;
   filter: string;
   value: string;
 }
@@ -169,6 +177,11 @@ export interface WidgetFilters {
 export interface DashboardFilter {
   filter: FilterTypes | WidgetFilterTypes;
   value: string;
+}
+export interface WidgetTableHiddenColumns {
+  dashboard: string;
+  widget: string;
+  columns: string[];
 }
 
 export interface DashboardRequest {

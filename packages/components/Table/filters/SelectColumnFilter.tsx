@@ -7,7 +7,7 @@ export function SelectColumnFilter({
   column: {
     filterValue, setFilter, preFilteredRows, id,
   },
-}: IFilter) {
+}: IFilter): JSX.Element {
   // Calculate the options for filtering
   // using the preFilteredRows
   const options = React.useMemo(() => {

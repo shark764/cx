@@ -8,9 +8,8 @@ export const capitalize = (s: string): string => {
 export const getUserDisplay = (data: any): string => {
   if (data === undefined) {
     return '';
-  } else if (data.firstName || data.lastName) {
+  } if (data.firstName || data.lastName) {
     return `${data.firstName || ''} ${data.lastName || ''}`.trim();
-  } else {
-    return data.email;
   }
+  return data.email;
 };
