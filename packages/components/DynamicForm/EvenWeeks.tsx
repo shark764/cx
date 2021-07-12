@@ -80,6 +80,7 @@ const IncrementControls = styled.span`
 `;
 
 const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
+const convertDate = (date: any) => date.isValid ? date : DateTime.fromJSDate(date);
 
 const displayToDate = (endDate: any) => {
   if (endDate.isValid) {
@@ -142,7 +143,7 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue,
 
   const updateStartDate = (index: number, startDate: Date): void => {
     const { totalWeeks } = dateRanges[index];
-    const newRange = { startDate, endDate: addDays(startDate, totalWeeks * 7), totalWeeks };
+    const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1), totalWeeks };
     const newArray = [...dateRanges];
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
@@ -158,8 +159,8 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue,
   };
 
   useEffect(() => {
-    onChange(dateRanges.map(({ startDate, endDate }) => ({ startDate: formatDate(startDate), endDate: formatDate(endDate) })))
-  }, [dateRanges]);
+    onChange(dateRanges.map(({ startDate, endDate }) => ({ startDate: convertDate(startDate), endDate: convertDate(endDate) })))
+  }, [dateRanges, onChange]);
 
   return (
     <span>

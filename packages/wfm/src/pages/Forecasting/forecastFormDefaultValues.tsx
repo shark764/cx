@@ -31,6 +31,6 @@ export const defaultForecastFormValues = (memoScenariosOptions: any = []) => {
   scenarioType: 'temporary',
   // AlgorithmOptions fields
   // the above algorithm options are hidden the below correspond to form fields
-  activate_filter: false,
+  activate_filter: true,
   distribution_weight: 'exponential',
 })};
