@@ -190,7 +190,7 @@ export const Table: React.VFC<any> = ({
     {
       columns,
       data,
-      autoResetExpanded: true,
+      autoResetExpanded: false,
       defaultColumn,
       filterTypes,
       initialState: { hiddenColumns, pageIndex, pageSize },
@@ -295,6 +295,7 @@ export const Table: React.VFC<any> = ({
                           themeVariant={themeVariant}
                           columnBackground={cell.column.columnBackground}
                           // columnTemplate={gridTemplateColumns}
+                          key={cell.getCellProps().key}
                         >
                           <span>{cell.render('Cell', { ...rest })}</span>
                         </TableCell>

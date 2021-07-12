@@ -1,9 +1,9 @@
 import { CreateUUID } from '@cx/utilities/uuid';
 import { DateTime } from 'luxon';
 
-export const defaultForecastFormValues = (memoScenariosOptions: any) => {
+export const defaultForecastFormValues = (memoScenariosOptions: any = []) => {
 
-  const { endDate } = memoScenariosOptions[memoScenariosOptions.length - 1] || {};
+  const endDate = memoScenariosOptions?.[0]?.endDate;
 
   // Default foprecast range continues from last scenario
   const initStart = DateTime.fromISO(endDate).plus({days: 1}).startOf('day');
@@ -16,7 +16,10 @@ export const defaultForecastFormValues = (memoScenariosOptions: any) => {
   return ({
   name: CreateUUID(),
   description: '',
-  forecastRange: [{ startDate: initStart, endDate: initEnd }],
+  forecastRange: [{
+    startDate: initStart.isValid ? initStart : DateTime.now().startOf('week').startOf('day'),
+    endDate: initEnd.isValid ? initEnd : DateTime.now().endOf('week').startOf('day'),
+  }],
   dayCurveDateRanges: [{ startDate: initIntradayStart, endDate: initIntradayEnd }],
   algorithm: 'prophet',
   includeDayCurve: true,

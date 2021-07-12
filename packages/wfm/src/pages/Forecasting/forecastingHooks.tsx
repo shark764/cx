@@ -32,19 +32,15 @@ export const useMemoLineChartData = (data: any, intervalLength: string, selected
 
 }, [data, intervalLength, selectedCompetence, localAdjustments]);
 
-
-
 export const useMemoTableData = (
   data: any,
   viewBy: IntervalLength,
   selectedCompetence: string,
-  localAdjustments: any,
-  globalInitialAdjustments: any,
+  timelineAdjustments: any,
   tenant_id: string,
   selectedTimeline: string,
-  refetchTimeline: any,
-  refetchAdjustments: any,
-  ) => useMemo(() => {
+  setLatestAdjustmentId: any,
+) => useMemo(() => {
 
   const competency = pluckCompetence(data, selectedCompetence);
 
@@ -53,25 +49,23 @@ export const useMemoTableData = (
     nco: nco,
     adjustedNco: competency?.adjusted[index].nco - nco,
     speculatedNco: competency?.adjusted[index].nco,
-    ncoDerivedAdjustments: globalInitialAdjustments
+    ncoDerivedAdjustments: timelineAdjustments
       .filter((adjustment: any) => (
         adjustment.metric === 'nco' &&
         adjustment.startDateTime === timestamp &&
         adjustment.competency === selectedCompetence &&
         adjustment.numberOfIntervals === 1
       )),
-    ncoLocalAdjustement: localAdjustments['adjustedNco']?.[timestamp],
     aht: aht,
     adjustedAht: competency?.adjusted[index].aht - aht,
     speculatedAht: competency?.adjusted[index].aht,
-    ahtDerivedAdjustments: globalInitialAdjustments
-    .filter((adjustment: any) => (
-      adjustment.metric === 'aht' &&
-      adjustment.startDateTime === timestamp &&
-      adjustment.competency === selectedCompetence &&
-      adjustment.numberOfIntervals === 1
-    )),
-    ahtLocalAdjustment: localAdjustments['adjustedAht']?.[timestamp],
+    ahtDerivedAdjustments: timelineAdjustments
+      .filter((adjustment: any) => (
+        adjustment.metric === 'aht' &&
+        adjustment.startDateTime === timestamp &&
+        adjustment.competency === selectedCompetence &&
+        adjustment.numberOfIntervals === 1
+      )),
     crud: {
       create: createAdjustment(
         tenant_id,
@@ -89,16 +83,14 @@ export const useMemoTableData = (
         viewBy,
         selectedCompetence,
       ),
-      refresh: () => {
-          refetchTimeline();
+      refresh: (id: string) => {
+        setLatestAdjustmentId(id)
       }
     }
   })
   ) || []
 
-}, [data, selectedCompetence, localAdjustments, globalInitialAdjustments, viewBy, tenant_id, selectedTimeline,refetchTimeline]);
-
-
+}, [data, viewBy, selectedCompetence, timelineAdjustments, tenant_id, selectedTimeline, setLatestAdjustmentId]);
 
 export const useMemoTimelineAdjustments = (timelineAdjustments: any, selectedCompetence: string) => useMemo(() =>
   timelineAdjustments?.filter(({ competency }: any) => competency === selectedCompetence)
@@ -119,4 +111,4 @@ export const useMemoStaffingData = (data: any, intervalLength: string, selectedC
   })
   ) || []
 
-  }, [data, intervalLength, selectedCompetence]);
+}, [data, intervalLength, selectedCompetence]);

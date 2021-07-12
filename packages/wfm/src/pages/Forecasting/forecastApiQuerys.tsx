@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams: any, selectedTimeline: string, viewBy: string) => useQuery<any, any>(
   ['Timeline Adjustments', tenant_id, selectedTimeline, viewBy],
   () => {
-    if(!tenant_id || !selectedTimeline) {
+    if (!tenant_id || !selectedTimeline) {
       return;
     }
     const allAdjustmentStartDate = DateTime.fromISO(historicalQueryParams.startDateTime)
@@ -32,12 +32,12 @@ export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams:
   }
 );
 
-export const useUpdateAdjustment = (tenant_id: string, adjustment: any, viewBy: string, selectedCompetence: string) => useQuery<any, any>(
+export const useUpdateAdjustment = (tenant_id: string, adjustment: any, viewBy: string, selectedCompetence: string, selectedTimeline: string) => useQuery<any, any>(
   ['Update Adjustment'],
   () => wfm.forecasting.api.patch_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment_patch({
     pathParams: {
       tenant_id,
-      forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3",
+      forecast_timeline_id: selectedTimeline,
       adjustment_id: adjustment.adjustmentId
     },
     body: {
@@ -58,12 +58,12 @@ export const useUpdateAdjustment = (tenant_id: string, adjustment: any, viewBy: 
   }
 );
 
-export const useDeleteAdjustment = (tenant_id: string, adjustment: any) => useQuery<any, any>(
+export const useDeleteAdjustment = (tenant_id: string, adjustment: any, selectedTimeline: string) => useQuery<any, any>(
   ['Delete Adjustment'],
   () => wfm.forecasting.api.delete_tenants_tenant_forecasttimeline_forecast_timeline_adjustments_adjustment({
     pathParams: {
       tenant_id,
-      forecast_timeline_id: "eb195977-9ae0-44ae-bb7c-12af2a4975d3",
+      forecast_timeline_id: selectedTimeline,
       adjustment_id: adjustment.adjustmentId
     }
   }),

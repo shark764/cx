@@ -9,14 +9,15 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "yarn workspace @cx/wfm run start",
+    "start-windows": "yarn workspace @cx/wfm run start-windows",
     "start:rtd": "cd packages/rtd && yarn start",
     "build": "yarn workspace @cx/wfm run build",
     "storybook": "cd packages/components && yarn storybook",
     "test:all": "lerna run test",
     "new-version": "lerna version --conventional-commits --yes",
     "diff": "lerna diff",
-    "lint": "eslint '*/**/*.{ts,tsx}' --quiet",
-    "lint:fix": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
+    "lint": "eslint \"*/**/*.{ts,tsx}\" --quiet",
+    "lint:fix": "eslint \"*/**/*.{ts,tsx}\" --quiet --fix",
     "e2e": "cd packages/puppeteer && jest",
     "e2e:single": "cd packages/puppeteer && jest -t 'zzz'",
     "config-ui": "http-server ../config-ui/dist -p 3000 "

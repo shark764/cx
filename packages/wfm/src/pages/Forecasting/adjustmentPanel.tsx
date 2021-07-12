@@ -45,7 +45,7 @@ const Grid = styled.div`
   grid-template-columns: minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px)minmax(80px,200px);
 `;
 
-export const AdjustmentInput = ({initValue}: any) => {
+export const AdjustmentInput = ({ initValue }: any) => {
   const [value, setValue] = useState(initValue);
 
   return (<>
@@ -59,7 +59,7 @@ export const AdjustmentInput = ({initValue}: any) => {
         e.preventDefault();
         e.stopPropagation();
       }}
-      onChange={({target: {value}}) => setValue(value)}
+      onChange={({ target: { value } }) => setValue(value)}
     />
   </>);
 };
@@ -84,7 +84,7 @@ const Divider = styled.div`
 export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: any) => {
 
   const deleteSavedAdjustment = (adjustment_id: string) => {
-    return crud.delete({adjustment_id});
+    return crud.delete({ adjustment_id });
   };
   const saveNewAdjustment = (value: string) => {
     return crud.create({
@@ -101,20 +101,31 @@ export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: an
       metric: type,
     });
   };
-  const adjustmentCrud = {create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };
+  const adjustmentCrud = { create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };
 
   return <span>
-    { AdjustmentCell({ id: null, value: 0, crud: adjustmentCrud }) }
+    {
+      <AdjustmentCell
+        id={null}
+        value={0}
+        crud={adjustmentCrud}
+      />
+    }
 
-    { adjustments.length > 0 ? <Divider /> : null }
+    {adjustments.length > 0 ? <Divider /> : null}
 
-    { adjustments.map(({id, value}: any) =>
-      AdjustmentCell({id, value, crud: adjustmentCrud })
+    {adjustments.map(({ id, value }: any) =>
+      <AdjustmentCell
+        id={id}
+        key={id}
+        value={value}
+        crud={ adjustmentCrud }
+      />
     )}
   </span>
 };
 
-export const AdjustmentCell = ( {id, value, crud}: any ) => {
+export const AdjustmentCell = ({ id, value, crud }: any) => {
   const [newVal, setNewValue] = useState(value);
   const [isLoading, setIsLoading] = useState(false);
   const turnOffLoading = () => setIsLoading(false);
@@ -123,9 +134,10 @@ export const AdjustmentCell = ( {id, value, crud}: any ) => {
   const withLoading = (apiCall: any) => {
     turnOnLoading();
     apiCall()
-      .then(() => {
-        crud.refresh();
-        turnOffLoading()
+      .then((data: any) => {
+        const actionId = (data && data.id) || id;
+        crud.refresh(actionId);
+        turnOffLoading();
       });
   }
 
@@ -140,19 +152,19 @@ export const AdjustmentCell = ( {id, value, crud}: any ) => {
         e.preventDefault();
         e.stopPropagation();
       }}
-      onChange={({target: {value}}) => setNewValue(value)}
+      onChange={({ target: { value } }) => setNewValue(value)}
     />
 
     <CellOperations>
-      { (!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => crud.create(newVal, id)) }  /> : null}
+      {(!id && !isLoading) ? <Plus fill="lightgrey" size={20} onClick={() => withLoading(() => crud.create(newVal, id))} /> : null}
 
-      { (id && !isLoading ) ? <SaveIcon sx={{color: 'lightgrey'}} onClick={() => withLoading(() => crud.update(newVal, id))  }  /> : null}
+      {(id && !isLoading) ? <SaveIcon sx={{ color: 'lightgrey' }} onClick={() => withLoading(() => crud.update(newVal, id))} /> : null}
 
-      { isLoading ? <Loading size={20} fill="grey" /> : null}
+      {isLoading ? <Loading size={20} fill="grey" /> : null}
 
-      { (id && !isLoading ) ? <Trashcan onClick={() =>  withLoading(() => crud.delete(id))  } /> : null }
+      {(id && !isLoading) ? <Trashcan onClick={() => withLoading(() => crud.delete(id))} /> : null}
 
-      { (id && !isLoading ) ? <UndoIcon sx={{color: 'lightgrey'}}  onClick={() =>  setNewValue(value)  } /> : null }
+      {(id && !isLoading) && (newVal !== value) ? <UndoIcon sx={{ color: 'lightgrey' }} onClick={() => setNewValue(value)} /> : null}
     </CellOperations>
 
   </Cell>

@@ -74,7 +74,7 @@ const {
   setEndDate
 } = forecasting.actions;
 
-type ConversionMap = {[key: string]: any};
+type ConversionMap = { [key: string]: any };
 
 const ToggleView = styled(Chevron)`
   vertical-align: text-top;
@@ -162,11 +162,11 @@ export function Forecasting() {
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
   const viewBy: any = {
-      day: 'quarter-hour',
-      twoDays: 'hour',
-      week: 'hour',
-      range: 'day'
-    }[intervalLength] || 'day';
+    day: 'quarter-hour',
+    twoDays: 'hour',
+    week: 'hour',
+    range: 'day'
+  }[intervalLength] || 'day';
 
 
   // React Queries
@@ -190,20 +190,18 @@ export function Forecasting() {
     // isLoading: timelineAdjustmentsLoading,
     // error: timelineQueryError
     refetch: refetchAdjustments,
-  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline?.id,  viewBy);
+  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline?.id, viewBy);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
   const timelineQueryTableData = useMemoTableData(
     timelineQuery,
     viewBy,
     selectedCompetence,
-    localAdjustments,
     timelineAdjustments,
     tenant_id,
     selectedTimeline?.id,
-    refetchTimeline,
-    refetchAdjustments,
-    );
+    setLatestAdjustmentId
+  );
   const timelineQueryStaffingEstimate = useMemoStaffingData(timelineQuery, intervalLength, selectedCompetence);
 
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
@@ -264,217 +262,217 @@ export function Forecasting() {
       value: value,
       metric: keyConversion[key],
     })
-    // @ts-ignore
-    .then(() => {
-      refetchTimeline();
-      refetchAdjustments();
-    });
+      // @ts-ignore
+      .then(() => {
+        refetchTimeline();
+        refetchAdjustments();
+      });
   };
   const setLocalBulkAdjustment = (data: any) => {
 
     setShowBulkAdjustments(true);
 
     const parseAndSort = (key: any) =>
-      data.filter((adjustment: any) => adjustment.key === key )
-      .sort((a: any,b: any) => a.timestamp - b.timestamp);
-    const firstAndLast = (array: any) => ({start: array[0], end: array.pop()});
+      data.filter((adjustment: any) => adjustment.key === key)
+        .sort((a: any, b: any) => a.timestamp - b.timestamp);
+    const firstAndLast = (array: any) => ({ start: array[0], end: array.pop() });
 
     const adjustedNco = firstAndLast(parseAndSort('adjustedNco'));
 
-    setLocalBulkAdjustemnts({adjustedNco});
+    setLocalBulkAdjustemnts({ adjustedNco });
   };
 
 
   return (<>
-      <Actions>
-        {(timelines?.length === 0) && !timelinesIsFetching &&
-          <Button
-            style={{ color: '#4c4a4a' }}
-            onClick={() => setCreateNewTimeline(true)}
-            variant="outlined"
-            color="primary"
-            startIcon={<ScheduleIcon />}
-          >
-            Create Timeline
-          </Button>
-        }
-        {(timelines?.length > 0) && selectedTimeline &&
-          <Autocomplete
-            id="choose_timeline"
-            options={timelines || []}
-            size="small"
-            sx={{ width: 250, display: 'inline-block' }}
-            renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
-            value={selectedTimeline}
-            autoSelect
-            disableClearable
-            onChange={(event: any, newValue: string | null) => setSelectedTimeline(newValue) }
-          />
-        }
-        {(allScenarios?.length > 0) &&
-          <Autocomplete
-            id="choose_scenario"
-            options={memoScenariosOptions}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            size="small"
-            sx={{ width: 250, display: 'inline-block', marginLeft: '20px' }}
-            renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
-            value={selectedScenario}
-            autoSelect
-            disableClearable
-            onChange={(e, scenario: any) => {
-                showSpecificSenarioRange(scenario.startDate, scenario.endDate);
-                setSelectedScenario(scenario);
-              }
-            }
-          />
-        }
-        <ProgressIcon>
-          <InProgress selectedTimeline={selectedTimeline} />
-        </ProgressIcon>
-        <ButtonsWrapper>
-          <Button
-            style={{ color: '#4c4a4a' }}
-            variant="outlined"
-            onClick={() => setDeleteForecast(true)}
-            startIcon={<DeleteIcon />}
-          >
-            Delete
-          </Button>
-          <Button
-            className="createForecast"
-            onClick={() => setCreateNewForecast(true)}
-            variant="contained"
-            disableElevation
-            color="primary"
-            startIcon={<AddIcon />}
-          >
-            Create Forecast
-          </Button>
-          <FormDialog open={createNewTimeline} title='Create New Timeline' close={() => setCreateNewTimeline(false)} >
-            <DynamicForm
-              defaultValues={{}}
-              formDefenition={createTimelineFormDefenition}
-              onCancel={() => setCreateNewTimeline(false)}
-              onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, tenant_id, refetchTimelines) }}
-              isFormSubmitting={false}
-            ></DynamicForm>
-          </FormDialog>
-          <FormDialog open={createNewForecast} title='Create Forecast Scenario' close={() => setCreateNewForecast(false)} >
-            <DynamicForm
-              defaultValues={defaultForecastFormValues(memoScenariosOptions)}
-              formDefenition={createForecastFormDefenition}
-              onCancel={() => setCreateNewForecast(false)}
-              onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, tenant_id, selectedTimeline.id) }}
-              isFormSubmitting={false}
-            ></DynamicForm>
-          </FormDialog>
-          <FormDialog open={deleteForecast} title='Delete forecast' close={() => setDeleteForecast(false)} >
-            <DynamicForm
-              defaultValues={{}}
-              formDefenition={deleteForcastFormDefinition}
-              onCancel={() => setDeleteForecast(false)}
-              onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastScenario(data, tenant_id, selectedTimeline.id) }}
-              isFormSubmitting={false}
-            ></DynamicForm>
-          </FormDialog>
-        </ButtonsWrapper>
-      </Actions>
-
-      <ForecastFilters>
-        <Filters />
-      </ForecastFilters>
-
-
-      <ChartsWrapper>
-        <ForecastGraphHeader>
-          <Title> Forecasted Interaction Volume  { timelineIsFetching ? <span style={{marginLeft: '15px'}} ><Ellipsis animated={true} /></span> : null } </Title>
-          <SinglePointAdjustment singlePointAdjustment={singlePointAdjustment} setSinglePointAdjustment={setSinglePointAdjustment} />
-        </ForecastGraphHeader>
-        {timelineQueryLoading ?
-          <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
-          <LineChart
-            chartName="forecast"
-            intervalLength={intervalLength}
-            data={timelineQueryData}
-            xDataKey={linechartConfig.xDataKey}
-            dataKeys={linechartConfig.dataKeys}
-            adjustemntCallback={setLocalAdjustment}
-            bulkAdjustemntCallback={setLocalBulkAdjustment}
-            singlePointAdjustment={singlePointAdjustment}
-          />
-        }
-
-        <Title> Forecasted Adjustments <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments) } /> </Title>
-        { showBulkAdjustments && <BulkAdjustmentPanel crud={{
-            create: createAdjustment(
-              tenant_id,
-              selectedTimeline?.id,
-              viewBy,
-              selectedCompetence,
-            ),
-            delete: deleteAdjustment(
-              tenant_id,
-              selectedTimeline?.id,
-            ),
-            update: updateAdjustment(
-              tenant_id,
-              selectedTimeline?.id,
-              viewBy,
-              selectedCompetence,
-            ),
-            refresh: setLatestAdjustmentId
-          }}
-          adjustments={timelineAdjustments}
-          localBulkAdjustments={localBulkAdjustments}
-          intervalLength={viewBy}
-          refetchTimeline={refetchTimeline}
-          timelineIsFetching={timelineIsFetching}
-        />}
-      </ChartsWrapper>
-
-      <ChartsWrapper>
-        <Title> Staffing Estimate Per Channel </Title>
-        <BarChart
-          chartName="staffingEstimate"
-          statName="Staffing Estimate"
-          data={timelineQueryStaffingEstimate}
-          stackId={viewBy === 'dateRange' ? 'a' : null}
-          xDataKey={'timestamp'}
-          dataKeys={['staffing_estimate']}
-          intervalLength={intervalLength}
+    <Actions>
+      {(timelines?.length === 0) && !timelinesIsFetching &&
+        <Button
+          style={{ color: '#4c4a4a' }}
+          onClick={() => setCreateNewTimeline(true)}
+          variant="outlined"
+          color="primary"
+          startIcon={<ScheduleIcon />}
+        >
+          Create Timeline
+        </Button>
+      }
+      {(timelines?.length > 0) && selectedTimeline &&
+        <Autocomplete
+          id="choose_timeline"
+          options={timelines || []}
+          size="small"
+          sx={{ width: 250, display: 'inline-block' }}
+          renderInput={(params: any) => <TextField {...params} label="Timeline" variant="outlined" />}
+          value={selectedTimeline}
+          autoSelect
+          disableClearable
+          onChange={(event: any, newValue: string | null) => setSelectedTimeline(newValue)}
         />
-      </ChartsWrapper>
+      }
+      {(allScenarios?.length > 0) &&
+        <Autocomplete
+          id="choose_scenario"
+          options={memoScenariosOptions}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          size="small"
+          sx={{ width: 250, display: 'inline-block', marginLeft: '20px' }}
+          renderInput={(params: any) => <TextField {...params} label="Forecasted Ranges" variant="outlined" />}
+          value={selectedScenario}
+          autoSelect
+          disableClearable
+          onChange={(e, scenario: any) => {
+            showSpecificSenarioRange(scenario.startDate, scenario.endDate);
+            setSelectedScenario(scenario);
+          }
+          }
+        />
+      }
+      <ProgressIcon>
+        <InProgress selectedTimeline={selectedTimeline} />
+      </ProgressIcon>
+      <ButtonsWrapper>
+        <Button
+          style={{ color: '#4c4a4a' }}
+          variant="outlined"
+          onClick={() => setDeleteForecast(true)}
+          startIcon={<DeleteIcon />}
+        >
+          Delete
+        </Button>
+        <Button
+          className="createForecast"
+          onClick={() => setCreateNewForecast(true)}
+          variant="contained"
+          disableElevation
+          color="primary"
+          startIcon={<AddIcon />}
+        >
+          Create Forecast
+        </Button>
+        <FormDialog open={createNewTimeline} title='Create New Timeline' close={() => setCreateNewTimeline(false)} >
+          <DynamicForm
+            defaultValues={{}}
+            formDefenition={createTimelineFormDefenition}
+            onCancel={() => setCreateNewTimeline(false)}
+            onSubmit={(data: any) => { setCreateNewTimeline(false); createNewTimelineApi(data, tenant_id, refetchTimelines) }}
+            isFormSubmitting={false}
+          ></DynamicForm>
+        </FormDialog>
+        <FormDialog open={createNewForecast} title='Create Forecast Scenario' close={() => setCreateNewForecast(false)} >
+          <DynamicForm
+            defaultValues={defaultForecastFormValues(memoScenariosOptions)}
+            formDefenition={createForecastFormDefenition}
+            onCancel={() => setCreateNewForecast(false)}
+            onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, tenant_id, selectedTimeline.id) }}
+            isFormSubmitting={false}
+          ></DynamicForm>
+        </FormDialog>
+        <FormDialog open={deleteForecast} title='Delete forecast' close={() => setDeleteForecast(false)} >
+          <DynamicForm
+            defaultValues={{}}
+            formDefenition={deleteForcastFormDefinition}
+            onCancel={() => setDeleteForecast(false)}
+            onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastScenario(data, tenant_id, selectedTimeline.id) }}
+            isFormSubmitting={false}
+          ></DynamicForm>
+        </FormDialog>
+      </ButtonsWrapper>
+    </Actions>
 
-      <TableWrapper>
-        <Title> Forecast table view </Title>
+    <ForecastFilters>
+      <Filters />
+    </ForecastFilters>
 
-        <TableSpacer>
-          <Table
-            themeVariant='forecast'
-            columnDefinitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
-            tableData={timelineQueryTableData}
-            viewMode={viewBy}
-            rowComponent={AdjustmentPanel}
-          />
-        </TableSpacer>
-      </TableWrapper>
 
-      <Button
-        style={{ color: '#4c4a4a', marginTop: '50px' }}
-        variant="outlined"
-        onClick={() => {
-          timelineAdjustments.forEach(({id}: any) => {
-            deleteAdjustment(
-              tenant_id,
-              selectedTimeline?.id,
-            )({adjustment_id: id })
-          });
-        }}
-        startIcon={<DeleteIcon />}
-      >
-        Reset Adjustments
-      </Button>
+    <ChartsWrapper>
+      <ForecastGraphHeader>
+        <Title> Forecasted Interaction Volume  {timelineIsFetching ? <span style={{ marginLeft: '15px' }} ><Ellipsis animated={true} /></span> : null} </Title>
+        <SinglePointAdjustment singlePointAdjustment={singlePointAdjustment} setSinglePointAdjustment={setSinglePointAdjustment} />
+      </ForecastGraphHeader>
+      {timelineQueryLoading ?
+        <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
+        <LineChart
+          chartName="forecast"
+          intervalLength={intervalLength}
+          data={timelineQueryData}
+          xDataKey={linechartConfig.xDataKey}
+          dataKeys={linechartConfig.dataKeys}
+          adjustemntCallback={setLocalAdjustment}
+          bulkAdjustemntCallback={setLocalBulkAdjustment}
+          singlePointAdjustment={singlePointAdjustment}
+        />
+      }
 
-    </>)
+      <Title> Forecasted Adjustments <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments)} /> </Title>
+      {showBulkAdjustments && <BulkAdjustmentPanel crud={{
+        create: createAdjustment(
+          tenant_id,
+          selectedTimeline?.id,
+          viewBy,
+          selectedCompetence,
+        ),
+        delete: deleteAdjustment(
+          tenant_id,
+          selectedTimeline?.id,
+        ),
+        update: updateAdjustment(
+          tenant_id,
+          selectedTimeline?.id,
+          viewBy,
+          selectedCompetence,
+        ),
+        refresh: setLatestAdjustmentId
+      }}
+        adjustments={timelineAdjustments}
+        localBulkAdjustments={localBulkAdjustments}
+        intervalLength={viewBy}
+        refetchTimeline={refetchTimeline}
+        timelineIsFetching={timelineIsFetching}
+      />}
+    </ChartsWrapper>
+
+    <ChartsWrapper>
+      <Title> Staffing Estimate Per Channel </Title>
+      <BarChart
+        chartName="staffingEstimate"
+        statName="Staffing Estimate"
+        data={timelineQueryStaffingEstimate}
+        stackId={viewBy === 'dateRange' ? 'a' : null}
+        xDataKey={'timestamp'}
+        dataKeys={['staffing_estimate']}
+        intervalLength={intervalLength}
+      />
+    </ChartsWrapper>
+
+    <TableWrapper>
+      <Title> Forecast table view </Title>
+
+      <TableSpacer>
+        <Table
+          themeVariant='forecast'
+          columnDefinitions={['timestamp', 'nco', 'adjustedNco', 'speculatedNco', 'aht', 'adjustedAht', 'speculatedAht']}
+          tableData={timelineQueryTableData}
+          viewMode={viewBy}
+          rowComponent={AdjustmentPanel}
+        />
+      </TableSpacer>
+    </TableWrapper>
+
+    <Button
+      style={{ color: '#4c4a4a', marginTop: '50px' }}
+      variant="outlined"
+      onClick={() => {
+        timelineAdjustments.forEach(({ id }: any) => {
+          deleteAdjustment(
+            tenant_id,
+            selectedTimeline?.id,
+          )({ adjustment_id: id })
+        });
+      }}
+      startIcon={<DeleteIcon />}
+    >
+      Reset Adjustments
+    </Button>
+
+  </>)
 };
