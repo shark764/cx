@@ -13,6 +13,7 @@ import { forecasting } from '../../redux/reducers/forecasting';
 import Zoom from '@material-ui/core/Zoom';
 import Arrow from '@material-ui/icons/ArrowRightAlt';
 import { CloseIcon } from '@cx/components/Icons/Close';
+import { DateTime } from 'luxon';
 
 const {
   setScenarioInProgress,
@@ -60,19 +61,34 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
   const dispatch = useDispatch();
   const tenant_id = useSelector((state: RootState) => state.main.session.tenant_id);
   const { startDate, endDate, forecast_scenario_id } = useSelector((state: RootState) => state.forecasting.scenarioInProgress);
+  const [insightStatus, setInsightStatus] = React.useState('');
 
   const { data: generatedForecasts } = useQuery<any, any>(
     ['timelinesData', tenant_id, forecast_scenario_id],
-    () => forecast_scenario_id && wfm.forecasting.api.get_all_wfm_forecastscenarios_scenario_id_series({
+    () => forecast_scenario_id && wfm.forecasting.api.get_all_tenants_tenant_id_wfm_forecastscenarios_scenario_id_series({
       pathParams: { tenant_id, scenario_id: forecast_scenario_id },
     }),
     {
-      refetchInterval: 15000,
+      refetchInterval: 2000,
     }
   );
 
-  const [status] = useMemo(() => {
-    const anyNotFinished = generatedForecasts?.data?.some(({ status }: any) => status !== 'success') || generatedForecasts?.data?.length === 0;
+  const [animatedStatus] = useMemo(() => {
+    const anyNotFinished = (generatedForecasts?.length > 0 && generatedForecasts?.some(({ status }: any) => status !== 'success'))
+      || generatedForecasts?.length === 0;
+    if (generatedForecasts?.length === 0) { // unknow status
+      setInsightStatus('started');
+    } else if (generatedForecasts?.length > 0) {
+      if (generatedForecasts?.some(({ status }: any) => status === 'running')) { // running status
+        setInsightStatus('running');
+      } else if (generatedForecasts?.some(({ status }: any) => status === 'pending')) { // pending status
+        setInsightStatus('pending');
+      } else if (generatedForecasts?.some(({ status }: any) => status === 'success')) { // success status
+        setInsightStatus('success');
+      } else {
+        setInsightStatus('error'); // error status
+      }
+    }
     return [anyNotFinished];
   }, [generatedForecasts]);
 
@@ -81,9 +97,10 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
     dispatch(setEndDate(end));
   };
 
+  const formatDate = (date: any) => DateTime.fromISO(date).toFormat('yyyy-LL-dd');
 
   return <>
-    { forecast_scenario_id &&
+    {forecast_scenario_id &&
       <div>
         <Tooltip
           classes={classes}
@@ -91,10 +108,10 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
           arrow
           title={
             <Container>
-              <span> {startDate} - {endDate} </span>
-              {!status && <>
+              {<span> {formatDate(startDate)} - {formatDate(endDate)} </span>}
+              {!animatedStatus && insightStatus === 'success' && <>
                 <Tooltip title="Go to date range">
-                  <span style={{height: '24px'}}>
+                  <span style={{ height: '24px' }}>
                     <Arrow
                       style={{ color: 'grey', transform: 'scale(2)', margin: '0 auto', cursor: 'pointer' }}
                       onClick={() => showSpecificSenarioRange(startDate, endDate)}
@@ -111,7 +128,7 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
                   </span>
                 </Tooltip>
               </>}
-              {status && <>
+              {(animatedStatus || insightStatus !== 'success') && <>
                 <Tooltip title="In Progress">
                   <span style={{ marginBottom: '2px' }}>
                     <Ellipsis width={25} animated />
@@ -123,10 +140,9 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
         >
           <InsightsContainer>
             <Insights
-              fill="rgb(241, 113, 0)"
-              alternateFill="rgb(25, 161, 26)"
               width={40}
-              animated={status}
+              animated={animatedStatus}
+              status={insightStatus}
               className="forecast-in-progress"
             />
           </InsightsContainer>
