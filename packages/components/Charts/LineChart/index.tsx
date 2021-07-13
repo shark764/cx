@@ -147,23 +147,51 @@ export const LineChart: React.VFC<ChartProps> = ({
 
   const [ncoYDomain, ahtYDomain] = useMemo(() => {
 
-    const roundToNearestTen = (value: number) => Math.ceil(value / 10) * 10;
-    // @ts-ignore
-    const sortDesc = (key) => [...data].sort((a, b) => (b[key] - a[key]))[0]?.[key];
+    if (data.length < 1) {
+      return [ 0, 0 ];
+    }
 
-    const largestNco = sortDesc('nco');
-    const largestNcoAdjusted = sortDesc('adjustedNco');
-    const largestAht = sortDesc('aht');
-    const largestAhtAdjusted = sortDesc('adjustedAht');
+    const truncateYDomain = intervalLength === 'range';
+
+    const roundUpToNearestTen = (value: number) => Math.ceil(value / 10) * 10;
+    const roundDownToNearestTen = (value: number) => Math.floor(value / 10) * 10;
+    // @ts-ignore
+    const sortDesc = (key) => [...data].sort((a, b) => (b[key] - a[key]));
+
+    const pluck = (key: string, object: any) => object[key];
+    const first = (array: any[]) => array[0];
+    const last = (array: any[]) => array[array.length - 1];
+
+    const domainEnd = (array: any[], key: string, lastOrFirst: any) => pluck(key, lastOrFirst(array));
+
+
+    const sortedNco = sortDesc('nco');
+    const sortedNcoAdjusted = sortDesc('adjustedNco');
+    const sortedAht = sortDesc('aht');
+    const sortedAhtAdjusted = sortDesc('adjustedAht');
+
+    const largestNco = domainEnd(sortedNco, 'nco', first);
+    const largestNcoAdjusted = domainEnd(sortedNcoAdjusted, 'adjustedNco', first);
+    const largestAht = domainEnd(sortedAht, 'aht', first);
+    const largestAhtAdjusted = domainEnd(sortedAhtAdjusted, 'adjustedAht', first);
+
+    const smallestNco = domainEnd(sortedNco, 'nco', last);
+    const smallestNcoAdjusted = domainEnd(sortedNcoAdjusted, 'adjustedNco', last);
+    const smallestAht = domainEnd(sortedAht, 'aht', last);
+    const smallestAhtAdjusted = domainEnd(sortedAhtAdjusted, 'adjustedAht', last);
+
 
     const topNco = largestNco > largestNcoAdjusted ? largestNco : largestNcoAdjusted;
     const topAht = largestAht > largestAhtAdjusted ? largestAht : largestAhtAdjusted;
 
-    // TODO: apply some arithmatic based on place value ie 10s round to nearest ten 100s round to nearest 100
-    const ncoYDomain = [0, roundToNearestTen(topNco)];
-    const ahtYDomain = [0, roundToNearestTen(topAht)];
+    const bottomNco = smallestNco > smallestNcoAdjusted ? smallestNco : smallestNcoAdjusted;
+    const bottomAht = smallestAht > smallestAhtAdjusted ? smallestAht : smallestAhtAdjusted;
+
+    const ncoYDomain = [truncateYDomain ? roundDownToNearestTen(bottomNco) : 0, roundUpToNearestTen(topNco)];
+    const ahtYDomain = [truncateYDomain ? roundDownToNearestTen(bottomAht) : 0, roundUpToNearestTen(topAht)];
+
     return [ncoYDomain, ahtYDomain];
-  }, [data]);
+  }, [data, intervalLength]);
 
   return (
     <Wrapper ref={ref}>
@@ -188,13 +216,13 @@ export const LineChart: React.VFC<ChartProps> = ({
           />
           <YAxis
             yAxisId="left"
-            label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15 }}
+            label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15, fill: '#07487a' }}
             domain={ncoYDomain}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: 'AHT _ _ _ _', angle: -90, position: 'center', dx: 15 }}
+            label={{ value: 'AHT ______', angle: -90, position: 'center', dx: 15, fill: 'grey' }}
             domain={ahtYDomain}
           />
 

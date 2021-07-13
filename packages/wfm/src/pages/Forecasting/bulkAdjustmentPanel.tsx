@@ -42,18 +42,6 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
             initValue={0}
             crud={adjustmentCrud}
           />
-        {localBulkAdjustments?.adjustedAht?.start?.timestamp &&
-          <BulkAdjustment
-            adjustmentKey="aht"
-            starting={localBulkAdjustments?.adjustedNco?.start?.timestamp}
-            ending={localBulkAdjustments?.adjustedNco?.end?.timestamp}
-            refetchTimeline={refetchTimeline}
-            timelineIsFetching={timelineIsFetching}
-            intervalLength={intervalLength}
-            initValue={0}
-            crud={adjustmentCrud}
-          />
-        }
 
     { multiIntervalAdjustments.length > 0 ? <Divider /> : null }
 

@@ -33,7 +33,6 @@ const {
 const Main = styled.main`
   margin: 0;
   overflow: auto;
-  background: #80808014;
 `;
 
 const Content = styled.section<{ isMobile: boolean }>`
@@ -66,7 +65,7 @@ const linkMap: LinksArray = {
   ],
   forecasting: [
     { label: 'Forecast', to: '/forecasting', LinkIcon: Timeline },
-    { label: 'Settings', to: '/forecasting/settings', LinkIcon: Settings },
+    // { label: 'Settings', to: '/forecasting/settings', LinkIcon: Settings },
   ],
   agent: [
     { label: 'Schedule', to: '/agent/schedule', LinkIcon: CalendarToday },

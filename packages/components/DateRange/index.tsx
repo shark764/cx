@@ -29,7 +29,7 @@ const StyledArrow = styled(Arrow)`
 const DateFields = styled.span`
   display: grid;
   align-items: center;
-  grid-template-columns: 200px 170px 50px 170px;
+  grid-template-columns: 200px 180px 50px 180px;
 `;
 
 interface DateRangeProps {
@@ -41,14 +41,12 @@ interface DateRangeProps {
 export const DateRange: React.FC<DateRangeProps> = ({ startDateTime, endDateTime, combinedOnchanges }) => {
 
   const start = DateTime.fromISO(startDateTime);
-  const startInJS = start.toJSDate();
   const end = DateTime.fromISO(endDateTime);
-  const endInJS = end.toJSDate();
   const selectedRange = selectedRangeFn(startDateTime, endDateTime);
   const dateRangeVal = dateOptions.find(({ id }) => id === selectedRange)?.id || '';
 
-  const handleDates = (e: Date, dateType: 'startDate' | 'endDate') => {
-    const selectedDate = DateTime.fromJSDate(e).toString();
+  const handleDates = (e: any, dateType: 'startDate' | 'endDate') => {
+    const selectedDate = e.toString();
 
     if (dateType === 'startDate') {
       combinedOnchanges(changeRangeFn(selectedDate, endDateTime, selectedRange, dateType));
@@ -83,7 +81,7 @@ export const DateRange: React.FC<DateRangeProps> = ({ startDateTime, endDateTime
       </TextField>
 
       <StyledDatePicker
-        selected={startInJS}
+        selected={start}
         onChange={(e: Date) => handleDates(e, 'startDate')}
       />
 
@@ -91,10 +89,10 @@ export const DateRange: React.FC<DateRangeProps> = ({ startDateTime, endDateTime
         <>
           <StyledArrow />
           <StyledDatePicker
-            selected={startInJS >= endInJS ? startInJS : endInJS}
-            onChange={(e: Date) => handleDates(e, 'endDate')}
+            selected={start >= end ? start : end}
+            onChange={(e: any) => handleDates(e, 'endDate')}
             disabled={selectedRange === 'twoDays' || selectedRange === 'week'}
-            minDate={selectedRange === 'range' ? startInJS : undefined}
+            minDate={selectedRange === 'range' ? start : undefined}
           />
         </>
       }

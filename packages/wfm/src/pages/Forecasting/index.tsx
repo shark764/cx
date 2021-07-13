@@ -383,7 +383,6 @@ export function Forecasting() {
       <Filters />
     </ForecastFilters>
 
-
     <ChartsWrapper>
       <ForecastGraphHeader>
         <Title> Forecasted Interaction Volume  {timelineIsFetching ? <span style={{ marginLeft: '15px' }} ><Ellipsis animated={true} /></span> : null} </Title>
@@ -458,7 +457,7 @@ export function Forecasting() {
       </TableSpacer>
     </TableWrapper>
 
-    <Button
+    {/* <Button
       style={{ color: '#4c4a4a', marginTop: '50px' }}
       variant="outlined"
       onClick={() => {
@@ -472,7 +471,7 @@ export function Forecasting() {
       startIcon={<DeleteIcon />}
     >
       Reset Adjustments
-    </Button>
+    </Button> */}
 
   </>)
 };

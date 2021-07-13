@@ -176,7 +176,7 @@ export const AdjustmentPanel = (props: any) => {
     </Header>
     <Grid>
       <span>
-        Some adjustments may be automatically calculated based off of unevenly weighted NCO adjustments
+        For more information on how adjustment totals are derived check out the documentation
       </span>
 
       <span>
