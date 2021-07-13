@@ -34,11 +34,13 @@ export const fetchTenantCompetencies = () => {
     const data = await wfm.planning.api.get_all_competencies_tenants_tenant_id_wfm_competencies({
       pathParams: { tenant_id },
     });
+    // Filter out inactive competencies
+    const filteredCompetencies = data.filter(({active}: any) => active);
     // Set all global known competencies
-    dispatch(setCompetencies(data));
+    dispatch(setCompetencies(filteredCompetencies));
     // Set the default selected competence for forecasting filters
     // for now we can just choose the first one in the list
-    const defaultCompetence = data[0]?.id;
+    const defaultCompetence = filteredCompetencies[0]?.id;
     dispatch(setForecastingDefaultCompetence(defaultCompetence));
   };
 }
