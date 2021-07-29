@@ -49,7 +49,13 @@ export const BarChart: React.VFC<ChartProps> = ({
   containerHeight = 300,
 }) => {
 
-  const fillColors = ['#07487a', 'orange', 'green'];
+  const colorKey: any = {
+    'staffingEstimateVoice': '#0d84a5',
+    'staffingEstimateMessaging': '#ca472f',
+    'staffingEstimateSms': '#9dd766',
+    'staffingEstimateEmail': '#f6c85f',
+    'staffingEstimateWork-item': '#6f4e7c',
+  };
 
   const interval = useMemo(() => {
     if (intervalLength === 'week') {
@@ -73,7 +79,7 @@ export const BarChart: React.VFC<ChartProps> = ({
             <Tooltip formatter={(value: any) => value} />
           )}
           {dataKeys.map((item: any, index) => (
-            <Bar key={index.toString()} dataKey={item} fill={fillColors[index]} barSize={20} stackId={stackId} />
+            <Bar key={index.toString()} dataKey={item} fill={colorKey[item]} barSize={20} stackId={stackId} />
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>

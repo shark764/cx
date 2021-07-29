@@ -7,6 +7,8 @@ const initialState = {
   theme: null,
   displaySize: 720,
   competencies: [],
+  channels: ['voice'],
+  tableChannel: 'voice'
 };
 
 export const main = createSlice({
@@ -18,6 +20,12 @@ export const main = createSlice({
     },
     setCompetencies: (state, action) => {
       state.competencies = action.payload;
+    },
+    setChannels: (state, action) => {
+      state.channels = action.payload;
+    },
+    setTableChannel: (state, action) => {
+      state.tableChannel = action.payload;
     },
     setSessionData: (state, action) => {
       state.session = action.payload;

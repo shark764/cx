@@ -6,6 +6,8 @@ export interface RootState {
     theme: any;
     displaySize: number;
     competencies: any[];
+    channels: any[];
+    tableChannel: string;
     session: {
       tenant_id: string;
     };

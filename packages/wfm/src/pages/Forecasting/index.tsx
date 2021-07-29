@@ -4,14 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import styled from 'styled-components';
 import TextField from '@material-ui/core/TextField';
-// import MenuItem from '@material-ui/core/MenuItem';
-
 import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/core/Autocomplete';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
 import { Table } from '@cx/components/Table';
@@ -21,44 +18,26 @@ import { Loading } from '@cx/components/Icons/Loading';
 import { Ellipsis } from '@cx/components/Icons/Ellipsis';
 import { Chevron } from '@cx/components/Icons/Chevron';
 import { selectedRangeFn } from '@cx/utilities/date';
-// import { BulkAdjustment } from './bulkAdjustment';
-
 import { defaultForecastFormValues } from './forecastFormDefaultValues';
-
 import { AdjustmentPanel } from './adjustmentPanel';
-
 import {
   createForecastApi,
   deleteForecastScenario,
   createNewTimelineApi,
   fetchForecastScenarios,
-  // competence
 } from '../../redux/thunks';
-
-import {
-  // filters,
-  // tableData
-} from './fakeData';
 import { createForecastFormDefenition } from './forecastFormDefinition';
 import { deleteForcastFormDefinition } from './deleteForcastFormDefinition';
 import { createTimelineFormDefenition } from './newTimelineFormDefenition';
 import { InProgress } from './inProgress';
 import { Filters } from './filters';
-
 import { forecasting } from '../../redux/reducers/forecasting';
-
 // WFM Api Utilities and Services
 import {
   useMemoLineChartData,
-  // useMemoTimelineAdjustments,
   useMemoTableData,
-  useMemoStaffingData,
 } from './forecastingHooks';
 import {
-  // useTimelineAdjustments,
-  // createAdjustment,
-  // useUpdateAdjustment,
-  // useDeleteAdjustment,
   useTimelineAdjustments
 } from './forecastApiQuerys';
 import { useTimelineQuery } from '../../api/useTimelineQuery';
@@ -142,6 +121,7 @@ export function Forecasting() {
   const historicalQueryParams = useSelector((state: RootState) => state.forecasting.historicalQueryParams);
   const allScenarios = useSelector((state: RootState) => state.forecasting.scenarios);
   const selectedCompetence = useSelector((state: RootState) => state.forecasting.competence);
+  const channels = useSelector((state: RootState) => state.main.channels);
 
   // Local State
   const [selectedTimeline, setSelectedTimeline] = useState<any>();
@@ -151,12 +131,7 @@ export function Forecasting() {
   const [showBulkAdjustments, setShowBulkAdjustments] = useState(false);
   const [deleteForecast, setDeleteForecast] = useState(false);
   const [singlePointAdjustment, setSinglePointAdjustment] = useState(true);
-  // const [localAdjustedData, setLocalAdjustedData] = useState([]);
   const [latestAdjustmentId, setLatestAdjustmentId] = useState('');
-  const [
-    localAdjustments,
-    // setLocalAdjustemnts
-  ] = useState({});
   const [localBulkAdjustments, setLocalBulkAdjustemnts] = useState<any>(null);
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
@@ -172,8 +147,6 @@ export function Forecasting() {
   // React Queries
   const {
     data: timelines = [],
-    // isLoading: timelinesLoading,
-    // error: timelinesError
     isFetching: timelinesIsFetching,
     refetch: refetchTimelines
   } = useTimelines(tenant_id);
@@ -181,18 +154,15 @@ export function Forecasting() {
   const {
     data: timelineQuery = [],
     isLoading: timelineQueryLoading,
-    // error: timelineQueryError
     refetch: refetchTimeline,
     isFetching: timelineIsFetching,
-  } = useTimelineQuery(tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy);
+  } = useTimelineQuery(tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy, channels);
   const {
     data: timelineAdjustments = [],
-    // isLoading: timelineAdjustmentsLoading,
-    // error: timelineQueryError
     refetch: refetchAdjustments,
   } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline?.id, viewBy);
 
-  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence, localAdjustments, timelineAdjustments);
+  const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence);
   const timelineQueryTableData = useMemoTableData(
     timelineQuery,
     viewBy,
@@ -202,7 +172,6 @@ export function Forecasting() {
     selectedTimeline?.id,
     setLatestAdjustmentId
   );
-  const timelineQueryStaffingEstimate = useMemoStaffingData(timelineQuery, intervalLength, selectedCompetence);
 
   const memoScenariosOptions = useMemo(() => allScenarios?.map(({ startDate, endDate, forecastScenarioId }: any) => ({
     label: `${startDate} - ${endDate}`,
@@ -210,18 +179,45 @@ export function Forecasting() {
     endDate,
     id: forecastScenarioId,
   })) || [], [allScenarios]);
-
-
   const linechartConfig = {
     xDataKey: 'timestamp',
     dataKeys: [
-      { key: 'nco', lineType: 'monotone', yAxisId: 'left', name: 'NCO', color: '#07487a' },
-      { key: 'adjustedNco', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO', lineStroke: 'dotted', color: '#07487a' },
+      { key: 'ncoVoice', lineType: 'monotone', yAxisId: 'left', name: 'NCO Voice', color: '#0d84a5', channelTag: 'voice' },
+      { key: 'adjustedNcoVoice', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Voice', lineStroke: 'dotted', color: '#0d84a5', channelTag: 'voice' },
+      { key: 'ahtVoice', lineType: 'monotone', yAxisId: 'right', name: 'AHT Voice', color: 'lightgrey', channelTag: 'voice' },
+      { key: 'adjustedAhtVoice', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT Voice', lineStroke: 'dotted', color: 'lightgrey', channelTag: 'voice' },
 
-      { key: 'aht', lineType: 'monotone', yAxisId: 'right', name: 'AHT', color: 'lightgrey' },
-      { key: 'adjustedAht', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT', lineStroke: 'dotted', color: 'lightgrey' },
-    ],
+      { key: 'ncoSms', lineType: 'monotone', yAxisId: 'left', name: 'NCO SMS', color: '#9dd766', channelTag: 'sms' },
+      { key: 'adjustedNcoSms', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO SMS', lineStroke: 'dotted', color: '#9dd766', channelTag: 'sms' },
+      { key: 'ahtSms', lineType: 'monotone', yAxisId: 'right', name: 'AHT SMS', color: 'lightgrey', channelTag: 'sms' },
+      { key: 'adjustedAhtSms', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT SMS', lineStroke: 'dotted', color: 'lightgrey' , channelTag: 'sms'},
+
+      { key: 'ncoMessaging', lineType: 'monotone', yAxisId: 'left', name: 'NCO Messaging', color: '#ca472f', channelTag: 'messaging' },
+      { key: 'adjustedNcoMessaging', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Messaging', lineStroke: 'dotted', color: '#ca472f', channelTag: 'messaging' },
+      { key: 'ahtMessaging', lineType: 'monotone', yAxisId: 'right', name: 'AHT Messaging', color: 'lightgrey' , channelTag: 'messaging'},
+      { key: 'adjustedAhtMessaging', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT Messaging', lineStroke: 'dotted', color: 'lightgrey', channelTag: 'messaging' },
+
+      { key: 'ncoEmail', lineType: 'monotone', yAxisId: 'left', name: 'NCO Email', color: '#f6c85f', channelTag: 'email' },
+      { key: 'adjustedNcoEmail', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Email', lineStroke: 'dotted', color: '#f6c85f', channelTag: 'email' },
+      { key: 'ahtEmail', lineType: 'monotone', yAxisId: 'right', name: 'AHT Email', color: 'lightgrey', channelTag: 'email' },
+      { key: 'adjustedAhtEmail', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT Email', lineStroke: 'dotted', color: 'lightgrey', channelTag: 'email' },
+
+      { key: 'ncoWorkItem', lineType: 'monotone', yAxisId: 'left', name: 'NCO Work Item', color: '#6f4e7c' , channelTag: 'work-item'},
+      { key: 'adjustedNcoWorkItem', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Work Item', lineStroke: 'dotted', color: '#6f4e7c', channelTag: 'work-item' },
+      { key: 'ahtWorkItem', lineType: 'monotone', yAxisId: 'right', name: 'AHT Work Item', color: 'lightgrey', channelTag: 'work-item'},
+      { key: 'adjustedAhtWorkItem', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT Work Item', lineStroke: 'dotted', color: 'lightgrey', channelTag: 'work-item' },
+    ].filter(({channelTag}) => channels.includes(channelTag)),
   };
+
+  const multipleChannelsSelected = channels.length !== 1;
+
+  const memoDataKeys = useMemo(() => {
+    if(multipleChannelsSelected) {
+      return linechartConfig.dataKeys.filter(({name}) => !name.includes('AHT') );
+    } else {
+      return linechartConfig.dataKeys;
+    }
+  }, [linechartConfig.dataKeys, multipleChannelsSelected]);
 
   const showSpecificSenarioRange = (start: string, end: string) => {
     dispatch(setStartDate(start));
@@ -270,16 +266,18 @@ export function Forecasting() {
   };
   const setLocalBulkAdjustment = (data: any) => {
 
+    const channelType = data?.[0].key
     setShowBulkAdjustments(true);
 
     const parseAndSort = (key: any) =>
       data.filter((adjustment: any) => adjustment.key === key)
         .sort((a: any, b: any) => a.timestamp - b.timestamp);
+
     const firstAndLast = (array: any) => ({ start: array[0], end: array.pop() });
 
-    const adjustedNco = firstAndLast(parseAndSort('adjustedNco'));
+    const adjusted = firstAndLast(parseAndSort(channelType));
 
-    setLocalBulkAdjustemnts({ adjustedNco });
+    setLocalBulkAdjustemnts({ [channelType]: adjusted});
   };
 
 
@@ -386,7 +384,7 @@ export function Forecasting() {
     <ChartsWrapper>
       <ForecastGraphHeader>
         <Title> Forecasted Interaction Volume  {timelineIsFetching ? <span style={{ marginLeft: '15px' }} ><Ellipsis animated={true} /></span> : null} </Title>
-        <SinglePointAdjustment singlePointAdjustment={singlePointAdjustment} setSinglePointAdjustment={setSinglePointAdjustment} />
+        { !multipleChannelsSelected && <SinglePointAdjustment singlePointAdjustment={singlePointAdjustment} setSinglePointAdjustment={setSinglePointAdjustment} />}
       </ForecastGraphHeader>
       {timelineQueryLoading ?
         <LoadingWrapper><div><Loading size={60} /></div></LoadingWrapper> :
@@ -395,15 +393,16 @@ export function Forecasting() {
           intervalLength={intervalLength}
           data={timelineQueryData}
           xDataKey={linechartConfig.xDataKey}
-          dataKeys={linechartConfig.dataKeys}
+          dataKeys={memoDataKeys}
           adjustemntCallback={setLocalAdjustment}
           bulkAdjustemntCallback={setLocalBulkAdjustment}
           singlePointAdjustment={singlePointAdjustment}
+          multipleChannelsSelected={multipleChannelsSelected}
         />
       }
 
-      <Title> Forecasted Adjustments <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments)} /> </Title>
-      {showBulkAdjustments && <BulkAdjustmentPanel crud={{
+      { !multipleChannelsSelected && <Title> Forecasted Adjustments <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments)} /> </Title>}
+      {showBulkAdjustments && !multipleChannelsSelected && <BulkAdjustmentPanel crud={{
         create: createAdjustment(
           tenant_id,
           selectedTimeline?.id,
@@ -435,15 +434,15 @@ export function Forecasting() {
       <BarChart
         chartName="staffingEstimate"
         statName="Staffing Estimate"
-        data={timelineQueryStaffingEstimate}
-        stackId={viewBy === 'dateRange' ? 'a' : null}
+        data={timelineQueryData}
+        stackId={'a'}
         xDataKey={'timestamp'}
-        dataKeys={['staffing_estimate']}
+        dataKeys={['staffingEstimateVoice', 'staffingEstimateSms', 'staffingEstimateMessaging', 'staffingEstimateEmail', 'staffingEstimateWork-item']}
         intervalLength={intervalLength}
       />
     </ChartsWrapper>
 
-    <TableWrapper>
+    { !multipleChannelsSelected && <TableWrapper>
       <Title> Forecast table view </Title>
 
       <TableSpacer>
@@ -455,7 +454,7 @@ export function Forecasting() {
           rowComponent={AdjustmentPanel}
         />
       </TableSpacer>
-    </TableWrapper>
+    </TableWrapper>}
 
     {/* <Button
       style={{ color: '#4c4a4a', marginTop: '50px' }}

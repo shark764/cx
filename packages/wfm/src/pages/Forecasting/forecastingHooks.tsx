@@ -16,21 +16,41 @@ const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
 
 const pluckCompetence = (data: any, competencId: string) => data?.find(({ competency }: any) => competency === competencId)
 
-export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string, localAdjustments: any, globalInitialAdjustments: any) => useMemo(() => {
+export const useMemoLineChartData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
 
-  const competency = pluckCompetence(data, selectedCompetence);
+  const dataPointsTotal = data.find( ({forecast}: any) => forecast.length > 0 )?.forecast?.length;
+  const fillerArray = new Array(dataPointsTotal).fill({});
 
-  return competency?.forecast.map(({ timestamp, nco, aht, abandons }: any, index: number) => ({
-    timestamp: chooseXaxisLabel(timestamp, intervalLength),
-    ogTimestamp: timestamp,
-    nco: nco,
-    adjustedNco: localAdjustments?.['adjustedNco']?.[timestamp] || competency?.adjusted[index].nco,
-    aht: aht,
-    adjustedAht: localAdjustments?.['adjustedAht']?.[timestamp] || competency?.adjusted[index].aht
-  })
-  ) || []
+  const chartData = data.reduce((lineChartData: any, { channel, competency, forecast, adjusted, direction, staffing }: any, index: number) => {
 
-}, [data, intervalLength, selectedCompetence, localAdjustments]);
+    const channelKey = channel.charAt(0).toUpperCase() + channel.slice(1);
+
+      return {
+        ...lineChartData,
+        [competency]:
+        fillerArray.map((_: any, index: number) => {
+          const { timestamp, nco, aht  } = forecast[index] ?? {};
+          const { nco: adjustedNco, aht: adjustedAht } = adjusted[index] ?? {};
+          const { staffing_estimate } = staffing[index] ?? {};
+          return {
+            timestamp: chooseXaxisLabel(timestamp, intervalLength),
+            ogTimestamp: timestamp,
+            ...lineChartData?.[competency]?.[index],
+            [ `nco${channelKey}` ]: nco,
+            [ `adjustedNco${channelKey}` ]: adjustedNco,
+            [ `aht${channelKey}` ]: aht,
+            [ `adjustedAht${channelKey}` ]: adjustedAht,
+            [ `staffingEstimate${channelKey}` ]: staffing_estimate,
+          };
+
+        }),
+      };
+
+  }, {});
+
+  return chartData?.[selectedCompetence] || [];
+
+}, [data, intervalLength, selectedCompetence]);
 
 export const useMemoTableData = (
   data: any,
@@ -99,16 +119,3 @@ export const useMemoTimelineAdjustments = (timelineAdjustments: any, selectedCom
       id: id,
       adjustment: value
     })) || [], [timelineAdjustments, selectedCompetence]);
-
-
-export const useMemoStaffingData = (data: any, intervalLength: string, selectedCompetence: string) => useMemo(() => {
-
-  const competency = pluckCompetence(data, selectedCompetence);
-
-  return competency?.staffing.map(({ timestamp, staffing_estimate }: any) => ({
-    timestamp: chooseXaxisLabel(timestamp, intervalLength),
-    staffing_estimate,
-  })
-  ) || []
-
-}, [data, intervalLength, selectedCompetence]);

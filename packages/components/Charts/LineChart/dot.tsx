@@ -10,13 +10,13 @@ import { pluck, tap, map, switchMap, takeUntil, takeLast } from 'rxjs/operators'
 const StyledCircle = styled.circle.attrs<{ yOffset: number }>(({ yOffset, cy }) => ({
   cy: yOffset || cy
 }))`
-  cursor: grab;
   .small {
     font-family: Arial, Helvetica, sans-serif;
   }
 `;
 
 export const Dot: React.VFC<any> = ({ containerHeight, topValue, adjustemntCallback, dataKey, ...props }) => {
+
   const ref: any = useRef(null);
   const [yOffset, setYoffset] = useState(0);
   const [adjustment, setAdjustment] = useState(0);
@@ -61,9 +61,7 @@ export const Dot: React.VFC<any> = ({ containerHeight, topValue, adjustemntCallb
     return () => drag$.unsubscribe();
   }, [graphHeight, pixelsPerTick, adjustemntCallback, dataKey, timestamp, value]);
 
-  if (dataKey === 'nco' || dataKey === 'aht') {
-    return (<></>);
-  }
+  if (!value ) { return null; };
 
   return (<>
     <StyledCircle
@@ -76,7 +74,7 @@ export const Dot: React.VFC<any> = ({ containerHeight, topValue, adjustemntCallb
 
     { adjustment &&
       <text
-        // TODO: move this to the left if there's no room on the right
+        // TODO: move this into the tooltip?
         x={props.cx - 100}
         y={yOffset + 5}
         className="small"

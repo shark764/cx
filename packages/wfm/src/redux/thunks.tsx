@@ -90,10 +90,10 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       'voice',
       'messaging',
       'sms',
-      'email',
-      'work-item'
+      // 'email',
+      // 'work-item'
     ];
-    const currentCompetencies = store.getState()?.main?.competencies;
+    const currentCompetencies = [store.getState()?.main?.competencies?.[0]];
 
     const series = currentCompetencies.flatMap((competency: any) =>
       allChannels.map((channelType) => ({

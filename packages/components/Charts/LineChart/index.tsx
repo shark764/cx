@@ -52,6 +52,7 @@ export interface ChartProps {
   adjustemntCallback?: any;
   bulkAdjustemntCallback?: any;
   singlePointAdjustment?: boolean;
+  multipleChannelsSelected?: boolean;
 };
 
 export const LineChart: React.VFC<ChartProps> = ({
@@ -66,6 +67,7 @@ export const LineChart: React.VFC<ChartProps> = ({
   adjustemntCallback,
   bulkAdjustemntCallback,
   singlePointAdjustment = false,
+  multipleChannelsSelected,
 }) => {
   const ref: any = useRef(null);
   const [isDragging, setDragging] = useState(false);
@@ -75,7 +77,7 @@ export const LineChart: React.VFC<ChartProps> = ({
   useEffect(() => {
     const element = ref.current;
 
-    if (!element || singlePointAdjustment) {
+    if (!element || singlePointAdjustment || multipleChannelsSelected) {
       return;
     }
 
@@ -131,7 +133,7 @@ export const LineChart: React.VFC<ChartProps> = ({
       });
 
     return () => drag$.unsubscribe();
-  }, [singlePointAdjustment, bulkAdjustemntCallback]);
+  }, [singlePointAdjustment, bulkAdjustemntCallback, multipleChannelsSelected]);
 
   const interval = useMemo(() => {
     if (intervalLength === 'week') {
@@ -193,6 +195,18 @@ export const LineChart: React.VFC<ChartProps> = ({
     return [ncoYDomain, ahtYDomain];
   }, [data, intervalLength]);
 
+  const whichCursor = () => {
+    if(multipleChannelsSelected) {
+      return 'default';
+    };
+
+    if (singlePointAdjustment) {
+      return 'grab';
+    } else if (!singlePointAdjustment) {
+      return 'col-resize';
+    }
+  };
+
   return (
     <Wrapper ref={ref}>
       {statName && <StatName>{statName}</StatName>}
@@ -205,7 +219,7 @@ export const LineChart: React.VFC<ChartProps> = ({
         <ComposedChart
           data={data}
           // @ts-ignore
-          cursor={singlePointAdjustment ? 'grab' : 'col-resize'}
+          cursor={whichCursor()}
         >
 
           <XAxis
@@ -222,7 +236,7 @@ export const LineChart: React.VFC<ChartProps> = ({
           <YAxis
             yAxisId="right"
             orientation="right"
-            label={{ value: 'AHT ______', angle: -90, position: 'center', dx: 15, fill: 'grey' }}
+            label={{ value: multipleChannelsSelected ? '' : 'AHT ______', angle: -90, position: 'center', dx: 15, fill: 'grey' }}
             domain={ahtYDomain}
           />
 

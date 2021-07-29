@@ -11,8 +11,8 @@ interface TimelineRequest {
   body: TimelineSeriesRequestObject;
 };
 
-export const useTimelineQuery = (tenant_id: any, historicalQueryParams: any, selectedTimeline: any, selectedCompetence: any, viewBy: any) => useQuery<TimelineSeriesData, Error>(
-  ['Timeline Query', tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy],
+export const useTimelineQuery = (tenant_id: any, historicalQueryParams: any, selectedTimeline: any, selectedCompetence: any, viewBy: any, channels: any[]) => useQuery<TimelineSeriesData, Error>(
+  ['Timeline Query', tenant_id, historicalQueryParams, selectedTimeline, selectedCompetence, viewBy, channels],
   () => {
     const requestDetails: TimelineRequest = {
       pathParams: { tenant_id, timeline_id: selectedTimeline?.id },
@@ -20,15 +20,10 @@ export const useTimelineQuery = (tenant_id: any, historicalQueryParams: any, sel
         startDate: historicalQueryParams.startDateTime,
         endDate: historicalQueryParams.endDateTime,
         interval: viewBy,
-        /**
-         * TODO: right now we are selecting only one competency which the user has selected and is in state
-         * however the api can support mulitple as an array but testing would need to be done to see what is more
-         * efficient..   getting all competencies or just the one your interested in?
-         */
         competencyIds: [
           selectedCompetence
         ],
-        channels: ['voice', 'messaging', 'sms', 'email', 'work-item'],
+        channels: channels,
         directions: ['inbound'],
         includeAdjusted: true,
         includeForecast: true,
