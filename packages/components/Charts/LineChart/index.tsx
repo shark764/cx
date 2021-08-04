@@ -239,7 +239,7 @@ export const LineChart: React.VFC<ChartProps> = ({
             yAxisId="right"
             orientation="right"
             label={{ value: multipleChannelsSelected ? '' : 'AHT ______', angle: -90, position: 'center', dx: 15, fill: 'grey' }}
-            domain={ahtYDomain}
+            domain={multipleChannelsSelected ? null : ahtYDomain}
           />
 
           {singlePointAdjustment && <Tooltip
