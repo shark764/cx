@@ -53,8 +53,6 @@ const {
   setEndDate
 } = forecasting.actions;
 
-type ConversionMap = { [key: string]: any };
-
 const ToggleView = styled(Chevron)`
   vertical-align: text-top;
   margin-left: 20px;
@@ -244,10 +242,7 @@ export function Forecasting() {
   }, [latestAdjustmentId, refetchAdjustments, refetchTimeline]);
 
   const setLocalAdjustment = (value: number, key: string, timestamp: string) => {
-    const keyConversion: ConversionMap = {
-      'adjustedNco': 'nco',
-      'adjustedAht': 'aht',
-    };
+    const keyConversion = (key: string) => key.includes('aht') ? 'aht' : 'nco';
     createAdjustment(
       tenant_id,
       selectedTimeline?.id,
@@ -256,7 +251,7 @@ export function Forecasting() {
     )({
       timestamp: timestamp,
       value: value,
-      metric: keyConversion[key],
+      metric: keyConversion(key),
     })
       // @ts-ignore
       .then(() => {

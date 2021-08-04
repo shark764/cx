@@ -166,21 +166,23 @@ export const LineChart: React.VFC<ChartProps> = ({
 
     const domainEnd = (array: any[], key: string, lastOrFirst: any) => pluck(key, lastOrFirst(array));
 
+    // eslint-disable-next-line
+    const [_, _2, nco, adjustedNco, aht, adjustedAht] = Object.keys(data[0]);
 
-    const sortedNco = sortDesc('nco');
-    const sortedNcoAdjusted = sortDesc('adjustedNco');
-    const sortedAht = sortDesc('aht');
-    const sortedAhtAdjusted = sortDesc('adjustedAht');
+    const sortedNco = sortDesc(nco);
+    const sortedNcoAdjusted = sortDesc(adjustedNco);
+    const sortedAht = sortDesc(aht);
+    const sortedAhtAdjusted = sortDesc(adjustedAht);
 
-    const largestNco = domainEnd(sortedNco, 'nco', first);
-    const largestNcoAdjusted = domainEnd(sortedNcoAdjusted, 'adjustedNco', first);
-    const largestAht = domainEnd(sortedAht, 'aht', first);
-    const largestAhtAdjusted = domainEnd(sortedAhtAdjusted, 'adjustedAht', first);
+    const largestNco = domainEnd(sortedNco, nco, first);
+    const largestNcoAdjusted = domainEnd(sortedNcoAdjusted, adjustedNco, first);
+    const largestAht = domainEnd(sortedAht, aht, first);
+    const largestAhtAdjusted = domainEnd(sortedAhtAdjusted, adjustedAht, first);
 
-    const smallestNco = domainEnd(sortedNco, 'nco', last);
-    const smallestNcoAdjusted = domainEnd(sortedNcoAdjusted, 'adjustedNco', last);
-    const smallestAht = domainEnd(sortedAht, 'aht', last);
-    const smallestAhtAdjusted = domainEnd(sortedAhtAdjusted, 'adjustedAht', last);
+    const smallestNco = domainEnd(sortedNco, nco, last);
+    const smallestNcoAdjusted = domainEnd(sortedNcoAdjusted, adjustedNco, last);
+    const smallestAht = domainEnd(sortedAht, aht, last);
+    const smallestAhtAdjusted = domainEnd(sortedAhtAdjusted, adjustedAht, last);
 
 
     const topNco = largestNco > largestNcoAdjusted ? largestNco : largestNcoAdjusted;
@@ -256,7 +258,8 @@ export const LineChart: React.VFC<ChartProps> = ({
               stroke={item.color}
               animationDuration={800}
               activeDot={<Dot
-                topValue={(item.key === 'nco' || item.key === 'adjustedNco') ? ncoYDomain[1] : ahtYDomain[1]}
+              // @ts-ignore
+                topValue={(item.key.toLowerCase().includes( 'nco')) ? ncoYDomain[1] : ahtYDomain[1]}
                 containerHeight={containerHeight}
                 adjustemntCallback={adjustemntCallback}
               />}

@@ -43,10 +43,10 @@ export const Dot: React.VFC<any> = ({ containerHeight, topValue, adjustemntCallb
         () => mousemove$.pipe(
           pluck('offsetY'),
           tap((offset) => setYoffset(offset)),
-          map((offset: number) => Math.trunc((graphHeight - offset) / pixelsPerTick)),
+          map((offset: number) => Math.trunc((graphHeight - offset) / pixelsPerTick) - value  ),
           tap((adjustmentValue) => {
             // const percentageChange = Math.trunc(((adjustmentValue - value) / value) * 100);
-            setAdjustmentText(`${adjustmentValue}`);
+            setAdjustmentText(`${adjustmentValue + value}`);
             setAdjustment(adjustmentValue);
           }),
           takeUntil(mouseup$),
