@@ -20,6 +20,7 @@ import { TimeSelection } from './timeSelection';
 import { Dot } from './dot';
 
 const Wrapper = styled.div`
+  position: relative;
   margin: 20px auto;
   font-size: 12px;
 `;

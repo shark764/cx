@@ -16,7 +16,7 @@ const temp = {
     "productName": "CxEngage",
     "updatedBy": "6fe5e430-9b56-11e8-9e38-9440dab83f25",
     "active": true,
-    "styles": "{\"navbar\": \"#07487a\",\"navbarText\": \"#ffffff\",\"primaryColor\": \"#07487a\",\"accentColor\": \"#3498db\",\"accentHoverColor\": \"#e6f5ff\"}",
+    "styles": "{\"navbar\": \"#2a2af0\",\"navbarText\": \"#ffffff\",\"primaryColor\": \"#2a2af0\",\"accentColor\": \"#3498db\",\"accentHoverColor\": \"#e6f5ff\"}",
     "tenantId": "44720170-922b-11e6-8754-ca81484488df"
   }
 };

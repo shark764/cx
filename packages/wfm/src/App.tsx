@@ -3,13 +3,11 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { PageSideBar } from '@cx/components/PageSideBar';
-import { PageHeader } from '@cx/components/PageHeader';
 import { useDivWidth } from '@cx/utilities/CustomHooks/useDivWidth';
 import { fetchTenantCompetencies } from './redux/thunks';
 import { main } from './redux/reducers/main';
 import './App.css';
-import { CssBaseline, Toolbar } from '@material-ui/core';
-import { inIframe } from '@cx/utilities';
+import { CssBaseline } from '@material-ui/core';
 import { LinksArray } from '@cx/types';
 import {
   AllInbox,
@@ -46,12 +44,6 @@ const Content = styled.section<{ isMobile: boolean }>`
         `)}
 `;
 
-const navLinks = [
-  { label: 'Planning', to: '/planning' },
-  { label: 'Forecasting', to: '/forecasting' },
-  { label: 'Agent', to: '/agent' },
-  { label: 'Admin', to: '/admin' },
-];
 const linkMap: LinksArray = {
   planning: [
     { label: 'Schedule', to: '/planning/schedule', LinkIcon: CalendarToday },
@@ -130,17 +122,9 @@ export function App({tenant_id}: any) {
     <>
       <CssBaseline />
 
-      {/* Not in iframe */}
-      {!inIframe() && (
-        <PageHeader links={navLinks} header="Workforce Management" />
-      )}
-
       <PageSideBar links={sideLinks} />
 
       <Main>
-        {/* Needed to adjust when app has a PageHeader */}
-        {!inIframe() && <Toolbar />}
-
         <Content ref={ref} isMobile={isMobile}>
           <Navigation />
         </Content>

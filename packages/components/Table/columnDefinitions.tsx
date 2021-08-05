@@ -170,7 +170,7 @@ const columnDefinitions: { [key: string]: any } = {
     Cell: function conditionalNumber({ value }: Cell): JSX.Element {
       return <ConditionalNumber value={value}>{value}</ConditionalNumber>;
     },
-    columnBackground: '#8ac6dd26',
+    columnBackground: '#adadad12',
     accessor: 'adjustedNco',
     minWidth: '80px',
     maxWidth: '200px',
@@ -192,7 +192,7 @@ const columnDefinitions: { [key: string]: any } = {
     Cell: function conditionalNumber({ value }: Cell): JSX.Element {
       return <ConditionalNumber value={value}>{value}</ConditionalNumber>;
     },
-    columnBackground: '#8ac6dd26',
+    columnBackground: '#adadad12',
     accessor: 'adjustedAht',
     minWidth: '80px',
     maxWidth: '200px',

@@ -214,8 +214,6 @@ export function PageSideBar({
           paper: open ? classes.drawerOpen : classes.drawerClose,
         }}
       >
-        {/* Needed to adjust when app has a PageHeader */}
-        {!inIframe() && <Toolbar />}
 
         <div className={classes.toolbar}>
           {open && (

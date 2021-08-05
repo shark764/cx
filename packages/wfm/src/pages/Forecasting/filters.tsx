@@ -42,7 +42,7 @@ const Header = styled.div`
 export function Filters() {
 
   const channelColors: any = {
-    voice: '#0d84a5',
+    voice: '#2a2af0',
     messaging: '#ca472f',
     sms: '#9dd766',
     email: '#f6c85f',
@@ -57,7 +57,7 @@ export function Filters() {
   };
 
   const channelOptions = [
-    {label: 'Voice', value: 'voice', color: '#0d84a5'},
+    {label: 'Voice', value: 'voice', color: '#2a2af0'},
     {label: 'Messaging', value: 'messaging', color: '#ca472f'},
     {label: 'SMS', value: 'sms', color: '#9dd766'},
     {label: 'Email', value: 'email', color: '#f6c85f'},

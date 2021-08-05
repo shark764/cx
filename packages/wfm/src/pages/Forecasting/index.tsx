@@ -180,8 +180,8 @@ export function Forecasting() {
   const linechartConfig = {
     xDataKey: 'timestamp',
     dataKeys: [
-      { key: 'ncoVoice', lineType: 'monotone', yAxisId: 'left', name: 'NCO Voice', color: '#0d84a5', channelTag: 'voice' },
-      { key: 'adjustedNcoVoice', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Voice', lineStroke: 'dotted', color: '#0d84a5', channelTag: 'voice' },
+      { key: 'ncoVoice', lineType: 'monotone', yAxisId: 'left', name: 'NCO Voice', color: '#2a2af0', channelTag: 'voice' },
+      { key: 'adjustedNcoVoice', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Voice', lineStroke: 'dotted', color: '', channelTag: 'voice' },
       { key: 'ahtVoice', lineType: 'monotone', yAxisId: 'right', name: 'AHT Voice', color: 'lightgrey', channelTag: 'voice' },
       { key: 'adjustedAhtVoice', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT Voice', lineStroke: 'dotted', color: 'lightgrey', channelTag: 'voice' },
 

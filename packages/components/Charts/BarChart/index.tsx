@@ -50,7 +50,7 @@ export const BarChart: React.VFC<ChartProps> = ({
 }) => {
 
   const colorKey: any = {
-    'staffingEstimateVoice': '#0d84a5',
+    'staffingEstimateVoice': '#2a2af0',
     'staffingEstimateMessaging': '#ca472f',
     'staffingEstimateSms': '#9dd766',
     'staffingEstimateEmail': '#f6c85f',
