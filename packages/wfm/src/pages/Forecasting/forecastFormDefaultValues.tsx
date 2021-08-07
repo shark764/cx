@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 
 export const defaultForecastFormValues = (memoScenariosOptions: any = []) => {
 
-  const endDate = memoScenariosOptions?.[0]?.endDate;
+  const endDate = memoScenariosOptions?.[memoScenariosOptions.length - 1]?.endDate;
 
   // Default foprecast range continues from last scenario
   const initStart = DateTime.fromISO(endDate).plus({days: 1}).startOf('day');

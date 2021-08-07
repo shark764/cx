@@ -1,37 +1,37 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { Controller, Control } from 'react-hook-form';
+import TextField from '@material-ui/core/TextField';
 
 interface Props {
   control: Control;
   isFormSubmitting: boolean;
   defaultValue: unknown;
   name: string;
+  constraints: any;
+  errors: any;
 };
 
-const Textarea = styled.textarea`
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  border-radius: 4px;
-  border: 1px solid hsl(0,0%,80%);
-  padding: 10px 15px;
-  outline: none;
-`;
-
-export const TextboxInput: React.VFC<Props> = ({control, name, isFormSubmitting, defaultValue}) =>
+export const TextboxInput: React.VFC<Props> = ({control, name, isFormSubmitting, defaultValue, constraints, errors}) =>
   <Controller
     control={control}
     name={name}
     defaultValue={defaultValue}
+    rules={{
+      validate: {
+        required: (value) => !!value || constraints?.[name]?.required,
+      }
+    }}
     render={({ onChange, onBlur, value }) => (
-      <Textarea
+      <TextField
+        multiline
+        error={ Boolean(errors[name]) }
+        helperText={errors?.[name]?.message}
         value={value || ''}
-        className={name}
+        className={`${name}-textbox`}
+        variant="outlined"
         onChange={onChange}
         onBlur={onBlur}
-        disabled={isFormSubmitting}
+        sx={{width: '85%'}}
       />
     )}
   />;

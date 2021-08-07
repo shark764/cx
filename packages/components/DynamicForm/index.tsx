@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import {DetailWrapper} from './DetailWrapper';
 import { DateInput } from './DateInput';
 import { FieldContainer } from './FieldContainer';
@@ -19,6 +19,7 @@ import { EvenWeeks } from './EvenWeeks';
 import { TypeaheadInput } from './Typeahead';
 import { FloorAndCap } from './FloorAndCap';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/core/Alert';
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,6 +31,8 @@ const FormActions = styled.div`
   margin-top: 10px;
   grid-gap: 30px;
   padding: 10px;
+`;
+const ExternalError = styled.div`
 `;
 const EmptyComponent = () => <span/>;
 const fieldComponents = {
@@ -63,10 +66,11 @@ interface DynamicFormBuilder {
     constraints: any;
     defaultToggled?: string;
     hiddenToggleField? : string;
+    externalFormError?: string;
   }[]
 };
 
-export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValues, formDefenition}: any) => {
+export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValues, formDefenition, externalFormError}: any) => {
 
 
 
@@ -90,6 +94,11 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
   };
 
   const toggleFieldsConstraints = (name: string, fields: any[])=> fields.find(f=> f.label === name)?.constraints;
+
+  const allValues = useWatch({
+    control
+  });
+  const externalErrors = useMemo(() => externalFormError(allValues), [allValues, externalFormError]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -137,6 +146,12 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
 
         </DetailWrapper>)}
 
+      { externalErrors.map((err: string, index: number) => {
+        return <ExternalError key={index} >
+        <Alert severity="error">{ err }</Alert>
+      </ExternalError>
+      })}
+
       <FormActions>
         <Button
           variant="outlined"
@@ -151,6 +166,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           color="primary"
           type="submit"
           className="dynamicFormSave"
+          disabled={externalErrors.length > 0}
         >
           Submit
         </Button>

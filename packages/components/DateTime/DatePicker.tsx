@@ -5,14 +5,21 @@ interface DatePickerProps {
   label?: string;
   disabled?: boolean;
   onChange?: any;
-  selected?: Date;
+  selected?: any;
   width?: string;
   error?: boolean;
   helperText?: string;
   minDate?: Date;
 };
 
-export const DatePicker: React.VFC<DatePickerProps> = ({ label, disabled = false, onChange, selected, width = '170px', error, helperText, minDate }) =>
+export const DatePicker: React.VFC<DatePickerProps> = ({
+  disabled = false,
+  onChange,
+  selected,
+  error,
+  helperText,
+  minDate
+}) =>
   (
       <DesktopDatePicker
         mask="____ / __ / __"

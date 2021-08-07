@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import styled from 'styled-components';
+import { DateTime } from 'luxon';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Autocomplete from '@material-ui/core/Autocomplete';
@@ -275,6 +276,18 @@ export function Forecasting() {
     setLocalBulkAdjustemnts({ [channelType]: adjusted});
   };
 
+  const scenariosValidation = (memoScenariosOptions: any) => (data: any) => {
+
+    const { startDate, endDate } = data?.forecastRange[0];
+    return memoScenariosOptions.map(({startDate: start_date, endDate: end_date}: any) => {
+      const start = DateTime.fromISO(start_date);
+      const end = DateTime.fromISO(end_date);
+      const doesOverlap = (startDate <= end) && (endDate >= start);
+      return doesOverlap? `Chosen date range overlaps with an existing forecasted range ${start_date}-${end_date}` : null
+    }).filter(Boolean);
+
+  };
+
 
   return (<>
     <Actions>
@@ -357,6 +370,7 @@ export function Forecasting() {
             formDefenition={createForecastFormDefenition}
             onCancel={() => setCreateNewForecast(false)}
             onSubmit={(data: any) => { setCreateNewForecast(false); createForecastApi(data, tenant_id, selectedTimeline.id) }}
+            externalFormError={ scenariosValidation(memoScenariosOptions) }
             isFormSubmitting={false}
           ></DynamicForm>
         </FormDialog>

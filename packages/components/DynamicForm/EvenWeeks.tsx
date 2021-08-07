@@ -80,7 +80,7 @@ const IncrementControls = styled.span`
 `;
 
 const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
-const convertDate = (date: any) => date.isValid ? date : DateTime.fromJSDate(date);
+const convertDate = (date: any) => date?.isValid ? date : DateTime.fromJSDate(date);
 
 const displayToDate = (endDate: any) => {
   if (endDate.isValid) {
@@ -105,6 +105,25 @@ export const EvenWeeks: React.VFC<Props> = ({ control, name, errors, constraints
   control={control}
   name={name}
   defaultValue={newEntry}
+  rules={{
+    validate: {
+      required: (value) => {
+        const { startDate } = value[0];
+        return startDate.isValid || constraints[name]?.required;
+      },
+      isMonday: (value) => {
+        const { startDate } = value[0];
+        return startDate.weekday!== 1 ? constraints[name]?.isMonday : !!value
+      },
+      evenWeeks: (value) => {
+        if (!constraints[name]?.evenWeeks) { return !!value; }
+        const { startDate, endDate } = value[0];
+        const diff = getDiffInWeeks(startDate, endDate) || 0;
+        const remainder = (diff % 2);
+        return (remainder === 0 || remainder === -0) ? !!value : 'Even number of weeks is required'
+      },
+    }
+  }}
   render={({ onChange }) => (
     <DatePickers
       onChange={onChange}
@@ -120,14 +139,14 @@ export const EvenWeeks: React.VFC<Props> = ({ control, name, errors, constraints
 };
 
 interface EvenWeeks {
-  startDate: Date | null,
-  endDate: Date | null,
+  startDate: DateTime | undefined,
+  endDate: DateTime | undefined,
   totalWeeks: number;
 };
 
-const DatePickers = ({ onChange, name, control, errors, constraints, multiValue, initValue }: any) => {
+const DatePickers = ({ onChange, name, errors, multiValue, initValue }: any) => {
 
-  const newEntry = { startDate: null, endDate: null, totalWeeks: 1 };
+  const newEntry = { startDate: undefined, endDate: undefined, totalWeeks: 1 };
   const [dateRanges, setDateRanges] = useState<EvenWeeks[]>([ initValue ]);
 
   const add = (index: number) => {
@@ -141,7 +160,7 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue,
     setDateRanges(newRanges);
   };
 
-  const updateStartDate = (index: number, startDate: Date): void => {
+  const updateStartDate = (index: number, startDate: DateTime): void => {
     const { totalWeeks } = dateRanges[index];
     const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1), totalWeeks };
     const newArray = [...dateRanges];
@@ -170,60 +189,29 @@ const DatePickers = ({ onChange, name, control, errors, constraints, multiValue,
           <div style={{ margin: '20px 0', width: '100%' }}>
             <MiniDate>
               <span>From</span>
-              <Controller
-                control={control}
-                name={`${name}.startDate`}
-                className={name + '-startDate'}
-                defaultValue={startDate}
-                rules={{
-                  validate: {
-                    required: (value) => !!value || constraints[name]?.startDate?.required,
-                    isMonday: (value) => {
-                      const weeks = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-                      return weeks[new Date(value).getDay()] !== 'mon' ? constraints[name]?.startDate?.isMonday : !!value;
-                    }
-                  }
-                }}
-                render={({ onChange }) => (
-                  <DatePicker
-                    error={ Boolean(errors[name]?.startDate) }
-                    helperText={errors?.[name]?.startDate?.message}
-                    selected={startDate}
-                    onChange={(date: Date) => {
-                      onChange(date);
-                      updateStartDate(index, date)
-                    }}
-                  />
-                )}
-              />
+                <DatePicker
+                  error={ Boolean(errors[name]) && Boolean(errors[name]?.type === 'isMonday') || Boolean(errors[name]?.type === 'required') }
+                  helperText={(errors[name]?.type === 'isMonday' || errors[name]?.type === 'required') ? errors?.[name]?.message : ''}
+                  selected={startDate}
+                  onChange={(date: DateTime) => {
+                    updateStartDate(index, date);
+                  }}
+                />
             </MiniDate>
             <MiniMultiplier>
               <span>Weeks</span>
               <span>
-                <Controller
-                  control={control}
-                  name={`${name}.weeks`}
-                  defaultValue={1}
-                  rules={{
-                    validate: {
-                      required: (value) => !!value || constraints[name]?.weeks?.required,
-                    }
+                <TextField
+                  size="small"
+                  value={totalWeeks}
+                  type="number"
+                  error={ Boolean(errors[name]) && Boolean(errors[name]?.type === 'evenWeeks')}
+                  helperText={errors[name]?.type === 'evenWeeks' ? errors?.[name]?.message : ''}
+                  className={`${name}-weeks`}
+                  variant="outlined"
+                  onChange={({ target: { value } }: any) => {
+                    updateTotalWeeks(index, value)
                   }}
-                  render={({ onChange }) => (
-                    <TextField
-                      size="small"
-                      error={ Boolean(errors[name]?.weeks) }
-                      helperText={errors?.[name]?.weeks?.message}
-                      value={totalWeeks}
-                      type="number"
-                      className={`${name}-weeks`}
-                      variant="outlined"
-                      onChange={({ target: { value } }: any) => {
-                        onChange(value);
-                        updateTotalWeeks(index, value)
-                      }}
-                    />
-                  )}
                 />
                 <IncrementControls>
                   <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1)} fontSize="small" />

@@ -20,6 +20,11 @@ export const createForecastFormDefenition = [
         name: 'description',
         type: 'textboxInput',
         hidden: true,
+        // constraints: {
+        //   description: {
+        //     required: 'Description is required.'
+        //   },
+        // }
       },
       {
         label: '',
@@ -28,12 +33,8 @@ export const createForecastFormDefenition = [
         multiValue: false,
         constraints: {
           forecastRange: {
-            startDate: {
-              required: 'From Date is required.',
-              isMonday: 'Start date should start on a monday.'
-            },
-            weeks: { required: 'No.of weeks is required.' },
-            endDate: { required: 'To Date is required.' }
+            required: 'From Date is required.',
+            isMonday: 'Start date should start on a monday.'
           },
         }
       }
@@ -60,9 +61,7 @@ export const createForecastFormDefenition = [
             type: 'evenWeeks',
             constraints: {
               dayValueDateRanges: {
-                startDate: { required: 'From Date is required.'},
-                weeks: { required: 'No.of weeks is required.' },
-                endDate: { required: 'To Date is required.' }
+                required: { required: 'From Date is required.'},
               },
             }
           },
@@ -76,9 +75,8 @@ export const createForecastFormDefenition = [
         type: 'evenWeeks',
         constraints: {
           dayCurveDateRanges: {
-            startDate: { required: 'From Date is required.' },
-            weeks: { required: 'No.of weeks is required.' },
-            endDate: { required: 'To Date is required.' }
+            required: { required: 'From Date is required.' },
+            evenWeeks: { required: 'Even number of weeks is required.' },
           },
         }
       },
