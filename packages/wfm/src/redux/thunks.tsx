@@ -124,7 +124,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
     /**
      * Save the scenario id in state so we can track its completion status
      */
-    store.dispatch(setScenarioInProgress({ startDate, endDate, forecast_scenario_id }));
+    store.dispatch(setScenarioInProgress({ startDate: startDate.toISODate(), endDate: endDate.toISODate(), forecast_scenario_id }));
 
     /**
      * Then update the forecasts scenarios settings
