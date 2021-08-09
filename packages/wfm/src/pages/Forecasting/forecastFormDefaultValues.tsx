@@ -24,9 +24,9 @@ export const defaultForecastFormValues = (memoScenariosOptions: any = []) => {
   algorithm: 'prophet',
   includeDayCurve: true,
   metrics: ['nco', 'tot', 'abandons'],
+  'country_holidays': {label: 'United States', value: 'US'},
   algorithmOptions: [
     { option: 'include_history', value: false },
-    { option: 'country_holidays', value: 'US' },
   ],
   scenarioType: 'temporary',
   // AlgorithmOptions fields

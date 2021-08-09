@@ -18,6 +18,7 @@ import { WeekMultiplier } from './WeekMultiplier';
 import { EvenWeeks } from './EvenWeeks';
 import { TypeaheadInput } from './Typeahead';
 import { FloorAndCap } from './FloorAndCap';
+import { AutoComplete } from './Autocomplete';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/core/Alert';
 
@@ -36,6 +37,7 @@ const ExternalError = styled.div`
 `;
 const EmptyComponent = () => <span/>;
 const fieldComponents = {
+  autocomplete: AutoComplete,
   date: DateInput,
   radio: RadioButton,
   radioToggle: RadioToggle,

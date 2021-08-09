@@ -70,6 +70,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       description,
       forecastRange,
       scenarioType,
+      country_holidays,
 
       distribution_weight,
       activate_filter,
@@ -84,6 +85,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       {option: 'distribution_weight', value: distribution_weight},
       {option: 'activate_filter', value: Boolean(activate_filter)},
       {option: 'growth', value: JSON.stringify(growth)},
+      {option: 'country_holidays', value: country_holidays?.value || ''},
     ];
 
     const allChannels = [

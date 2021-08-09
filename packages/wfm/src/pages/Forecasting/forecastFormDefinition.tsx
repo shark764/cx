@@ -1,3 +1,4 @@
+import { holidays } from '../../holidays';
 export const createForecastFormDefenition = [
   {
     sectionTitle: 'Forecast Range',
@@ -168,6 +169,12 @@ export const createForecastFormDefenition = [
           },
         ],
         toggleable: true,
+      },
+      {
+        label: 'Holidays',
+        name: 'country_holidays',
+        type: 'autocomplete',
+        choices: holidays,
       },
     ]
   },

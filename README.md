@@ -48,3 +48,6 @@ You don’t need any of these props on an svgs in react… xmlns="http://www.w3.
 Always use span instead of div unless you need 100% width, this makes it so we don't need to declare inline-block so much and leads to more consise code
 
 Don't use optional parameters with props that are boolean based..  you lose some of the power of typescript as it won't hint at incorrect usage if you don;t provide it. Instead just make sure the component consumer either provides the true or false explicitly.
+
+Wfm forecasts are using this library for holidays information
+https://github.com/dr-prodigy/python-holidays#available-countries
