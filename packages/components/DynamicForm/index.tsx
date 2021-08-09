@@ -68,7 +68,7 @@ interface DynamicFormBuilder {
     constraints: any;
     defaultToggled?: string;
     hiddenToggleField? : string;
-    externalFormError?: string;
+    externalFormError?: any;
   }[]
 };
 

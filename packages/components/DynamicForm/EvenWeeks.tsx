@@ -83,7 +83,7 @@ const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd
 const convertDate = (date: any) => date?.isValid ? date : DateTime.fromJSDate(date);
 
 const displayToDate = (endDate: any) => {
-  if (endDate.isValid) {
+  if (endDate?.isValid) {
     return endDate.toFormat('yyyy / LL / dd');
   } else if (DateTime.fromJSDate(endDate).isValid) {
     return formatDate(endDate);

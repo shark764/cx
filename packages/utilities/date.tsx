@@ -59,6 +59,9 @@ const weekDiff = (date1: DateTime, date2: DateTime) => {
 };
 
 export const getDiffInWeeks = (start: DateTime, end: DateTime): number | undefined => {
+  if (!start?.isValid || !end?.isValid) {
+    return 0;
+  };
   const convertedStart = start.toUTC().startOf('day');
   const convertedEnd = end.toUTC().startOf('day');
   if ( convertedStart > convertedEnd ) {

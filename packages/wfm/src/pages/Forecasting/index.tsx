@@ -131,7 +131,7 @@ export function Forecasting() {
   const [deleteForecast, setDeleteForecast] = useState(false);
   const [singlePointAdjustment, setSinglePointAdjustment] = useState(true);
   const [latestAdjustmentId, setLatestAdjustmentId] = useState('');
-  const [localBulkAdjustments, setLocalBulkAdjustemnts] = useState<any>(null);
+  const [localBulkAdjustments, setLocalBulkAdjustemnts] = useState<any>([{}]);
 
   const intervalLength = selectedRangeFn(historicalQueryParams.startDateTime, historicalQueryParams.endDateTime);
 
@@ -378,6 +378,7 @@ export function Forecasting() {
           <DynamicForm
             defaultValues={{}}
             formDefenition={deleteForcastFormDefinition}
+            externalFormError={ () => [] }
             onCancel={() => setDeleteForecast(false)}
             onSubmit={(data: any) => { setDeleteForecast(false); deleteForecastScenario(data, tenant_id, selectedTimeline.id) }}
             isFormSubmitting={false}
@@ -438,7 +439,7 @@ export function Forecasting() {
       />}
     </ChartsWrapper>
 
-    <ChartsWrapper>
+    { (intervalLength !== 'range') && <ChartsWrapper>
       <Title> Staffing Estimate Per Channel </Title>
       <BarChart
         chartName="staffingEstimate"
@@ -449,7 +450,7 @@ export function Forecasting() {
         dataKeys={['staffingEstimateVoice', 'staffingEstimateSms', 'staffingEstimateMessaging', 'staffingEstimateEmail', 'staffingEstimateWork-item']}
         intervalLength={intervalLength}
       />
-    </ChartsWrapper>
+    </ChartsWrapper>}
 
     { !multipleChannelsSelected && <TableWrapper>
       <Title> Forecast table view </Title>

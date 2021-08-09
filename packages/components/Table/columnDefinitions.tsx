@@ -33,22 +33,12 @@ export interface ColumnDefenition {
 
 const formatDateValue = ({ value, viewMode }: any) => {
   switch (viewMode) {
-    case 'day':
+    case 'quarter-hour':
       return DateTime.fromISO(value).toLocaleString(DateTime.TIME_SIMPLE);
-    case 'twoDays':
-      return DateTime.fromISO(value).toLocaleString({
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    case 'week':
-    case 'range':
-      return `${DateTime.fromISO(value)
-        .toLocaleString({ weekday: 'long' })
-        .toUpperCase()} ${DateTime.fromISO(value).toLocaleString({
-        day: '2-digit',
-      })}`;
+    case 'hour':
+      return DateTime.fromISO(value).toLocaleString({ month:'short', day: 'numeric', ...DateTime.TIME_SIMPLE});
     default:
-      return DateTime.fromISO(value).toLocaleString(DateTime.TIME_SIMPLE);
+      return DateTime.fromISO(value).toLocaleString(DateTime.DATE_SHORT);
   }
 };
 

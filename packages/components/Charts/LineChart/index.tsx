@@ -138,9 +138,9 @@ export const LineChart: React.VFC<ChartProps> = ({
 
   const interval = useMemo(() => {
     if (intervalLength === 'week') {
-      return 24;
+      return 23;
     } else if (intervalLength === 'twoDays') {
-      return 4;
+      return 3;
     } else if (intervalLength === 'day') {
       return 3;
     } else {

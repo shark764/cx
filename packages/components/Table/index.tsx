@@ -297,7 +297,7 @@ export const Table: React.VFC<any> = ({
                           // columnTemplate={gridTemplateColumns}
                           key={cell.getCellProps().key}
                         >
-                          <span>{cell.render('Cell', { ...rest })}</span>
+                          <span>{cell.render('Cell', {viewMode, ...rest })}</span>
                         </TableCell>
                       ))}
                     </Columns>

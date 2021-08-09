@@ -176,7 +176,7 @@ export const AdjustmentPanel = (props: any) => {
     </Header>
     <Grid>
       <span>
-        For more information on how adjustment totals are derived check out the documentation
+        {/* For more information on how adjustment totals are derived check out the documentation */}
       </span>
 
       <span>

@@ -38,12 +38,13 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
     // eslint-disable-next-line
     _,
     firstItem] ]: any = Object.entries( localBulkAdjustments );
-
+    const start = DateTime.fromISO(firstItem?.start?.timestamp);
+    const end = DateTime.fromISO(firstItem?.end?.timestamp);
   return <div>
           <BulkAdjustment
             adjustmentKey="nco"
-            starting={firstItem?.start?.timestamp || null}
-            ending={firstItem?.end?.timestamp || null}
+            starting={start|| null}
+            ending={end || null}
             refetchTimeline={refetchTimeline}
             timelineIsFetching={timelineIsFetching}
             intervalLength={intervalLength}

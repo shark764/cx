@@ -7,10 +7,19 @@ import { components } from '@cx/cxapi/forecast-schema';
 type IntervalLength = components["schemas"]["IntervalType"];
 
 const chooseXaxisLabel = (timestamp: string, intervalLength: string) => {
+
+  const date = DateTime.fromISO(timestamp);
+
+  if (!date.isValid) {
+    return 'No records found'
+  }
+
   if (intervalLength === 'day' || intervalLength === 'twoDays') {
-    return DateTime.fromISO(timestamp).toLocaleString({ hour: '2-digit' });
+    return date.toLocaleString({ hour: '2-digit' });
+  } else if (intervalLength === 'range') {
+    return date.toLocaleString(DateTime.DATE_SHORT);
   } else {
-    return DateTime.fromISO(timestamp).toLocaleString(DateTime.DATE_MED);
+    return date.toLocaleString(DateTime.DATE_MED);
   }
 };
 

@@ -122,7 +122,6 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
 
         <DateTimeInput>
           <DateTimePicker
-            disablePast
             renderInput={(props) =>
               <TextField
                 {...props}
@@ -155,7 +154,6 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
 
         <DateTimeInput>
           <DateTimePicker
-            disablePast
             renderInput={(props) =>
               <TextField
                 {...props}

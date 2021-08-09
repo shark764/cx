@@ -136,7 +136,11 @@ export function Filters() {
           id="select-channels"
           value={channels}
           onChange={(event, newValue) => {
-            handleChannelsChanged(newValue);
+            if (newValue.length === 0) {
+              return;
+            } else {
+              handleChannelsChanged(newValue);
+            }
           }}
           limitTags={3}
           options={channelOptions}
