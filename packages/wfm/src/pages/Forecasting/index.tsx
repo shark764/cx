@@ -177,7 +177,9 @@ export function Forecasting() {
     startDate,
     endDate,
     id: forecastScenarioId,
-  })) || [], [allScenarios]);
+  })).sort(({startDate:a},{startDate:b}) =>
+    a > b ? -1 : a < b ? 1 : 0
+  ) || [], [allScenarios]);
   const linechartConfig = {
     xDataKey: 'timestamp',
     dataKeys: [
