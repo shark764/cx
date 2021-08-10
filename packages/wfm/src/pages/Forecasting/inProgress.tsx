@@ -5,8 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useQuery } from 'react-query';
 import { wfm } from '../../api';
-import Tooltip from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/styles';
+import Tooltip, { tooltipClasses } from '@material-ui/core/Tooltip';
 import { Ellipsis } from '@cx/components/Icons/Ellipsis';
 import { Insights } from '@cx/components/Icons/Insights';
 import { forecasting } from '../../redux/reducers/forecasting';
@@ -36,27 +35,26 @@ const InsightsContainer = styled.div`
   }
 `;
 
-const useStylesBootstrap = makeStyles(() => ({
-  arrow: {
-    color: 'white',
-  },
-  tooltip: {
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: 'white',
-    boxShadow: '0px 1px 3px 0px grey',
     color: 'black',
-    maxWidth: 500,
+    boxShadow: '0px 1px 3px 0px grey',
     fontSize: '16px',
     fontWeight: 'bold',
+    maxWidth: 500,
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'white',
   },
 }));
-
 interface Props {
   selectedTimeline: string;
 };
 
 export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
-
-  const classes = useStylesBootstrap();
 
   const dispatch = useDispatch();
   const tenant_id = useSelector((state: RootState) => state.main.session.tenant_id);
@@ -102,8 +100,7 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
   return <>
     {forecast_scenario_id &&
       <div>
-        <Tooltip
-          classes={classes}
+        <LightTooltip
           TransitionComponent={Zoom}
           arrow
           title={
@@ -146,7 +143,7 @@ export const InProgress: React.FC<Props> = ({ selectedTimeline }) => {
               className="forecast-in-progress"
             />
           </InsightsContainer>
-        </Tooltip>
+        </LightTooltip>
       </div>
     }
   </>;
