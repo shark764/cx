@@ -1,8 +1,6 @@
 import * as React from 'react';
-import {
-  useState,
-} from 'react';
-
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
@@ -10,6 +8,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import TextField from '@material-ui/core/TextField';
 import { Loading } from '@cx/components/Icons/Loading';
 import { Plus } from '@cx/components/Icons/Plus';
+import { RootState } from '../../redux/store';
 
 const Input = styled(TextField)`
   width: 70px;
@@ -83,6 +82,8 @@ const Divider = styled.div`
 
 export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: any) => {
 
+  const channel = useSelector((state: RootState) => state.main.channels[0]);
+
   const deleteSavedAdjustment = (adjustment_id: string) => {
     return crud.delete({ adjustment_id });
   };
@@ -91,6 +92,7 @@ export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: an
       timestamp: timestamp,
       value: value,
       metric: type,
+      channel: channel,
     });
   };
   const updateSavedAdjustment = (value: string, adjustment_id: string) => {
@@ -99,6 +101,7 @@ export const AdjustmentComposition = ({ adjustments, crud, type, timestamp }: an
       value: value,
       adjustment_id,
       metric: type,
+      channel: channel,
     });
   };
   const adjustmentCrud = { create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };

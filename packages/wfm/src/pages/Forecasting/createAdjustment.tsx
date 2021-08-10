@@ -29,7 +29,7 @@ export const createAdjustment = (tenant_id: string, forecast_timeline_id: string
       startDateTime: adjustmentStartDate(adjustment.timestamp),
       intervalLength: intervalLength,
       competency: selectedCompetence,
-      channel: 'voice',
+      channel: adjustment.channel,
       direction: 'inbound',
       numberOfIntervals: adjustment.intervals || 1,
       type: 'absolute',

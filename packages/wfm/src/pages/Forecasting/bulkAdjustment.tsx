@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import DateTimePicker from '@material-ui/lab/DateTimePicker';
@@ -33,7 +35,7 @@ const Actions = styled.span`
 `;
 
 export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetching, crud, intervalLength , starting, ending, initValue, id}: any): any => {
-
+  const channel = useSelector((state: RootState) => state.main.channels[0]);
   const withoutSeconds = (newValue: any) =>
     DateTime.fromISO(newValue).set({second: 0, millisecond: 0});
 
@@ -77,7 +79,8 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
       timestamp: start,
       intervals: calcIntervals(start, end),
       value: value,
-      metric: adjustmentKey,
+      metric: metric,
+      channel: channel,
     });
   };
   const updateSavedAdjustment = () => {
@@ -86,7 +89,8 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
       intervals: calcIntervals(start, end),
       value: value,
       adjustment_id: id,
-      metric: adjustmentKey,
+      metric: metric,
+      channel: channel,
     });
   };
 
@@ -103,7 +107,6 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
     <Container className="multi-interval-adjustment">
 
         { metric && <TextField
-          id="outlined-select-currency"
           select
           label="Metric"
           value={metric}

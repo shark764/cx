@@ -166,6 +166,7 @@ export function Forecasting() {
     timelineQuery,
     viewBy,
     selectedCompetence,
+    channels[0],
     timelineAdjustments,
     tenant_id,
     selectedTimeline?.id,
@@ -184,7 +185,7 @@ export function Forecasting() {
     xDataKey: 'timestamp',
     dataKeys: [
       { key: 'ncoVoice', lineType: 'monotone', yAxisId: 'left', name: 'NCO Voice', color: '#2a2af0', channelTag: 'voice' },
-      { key: 'adjustedNcoVoice', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Voice', lineStroke: 'dotted', color: '', channelTag: 'voice' },
+      { key: 'adjustedNcoVoice', lineType: 'monotone', yAxisId: 'left', name: 'Adjusted NCO Voice', lineStroke: 'dotted', color: '#2a2af0', channelTag: 'voice' },
       { key: 'ahtVoice', lineType: 'monotone', yAxisId: 'right', name: 'AHT Voice', color: 'lightgrey', channelTag: 'voice' },
       { key: 'adjustedAhtVoice', lineType: 'monotone', yAxisId: 'right', name: 'Adjusted AHT Voice', lineStroke: 'dotted', color: 'lightgrey', channelTag: 'voice' },
 
@@ -255,6 +256,7 @@ export function Forecasting() {
       timestamp: timestamp,
       value: value,
       metric: keyConversion(key),
+      channel: channels[0]
     })
       // @ts-ignore
       .then(() => {
@@ -438,6 +440,7 @@ export function Forecasting() {
         intervalLength={viewBy}
         refetchTimeline={refetchTimeline}
         timelineIsFetching={timelineIsFetching}
+        selectedChannels={channels}
       />}
     </ChartsWrapper>
 

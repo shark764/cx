@@ -12,7 +12,9 @@ const Divider = styled.div`
   border-bottom: 1px solid #d3d3d382;
 `;
 
-export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetchTimeline, timelineIsFetching, localBulkAdjustments }: any) => {
+export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetchTimeline, timelineIsFetching, localBulkAdjustments, selectedChannels }: any) => {
+
+  const selectedChannel = selectedChannels?.[0] || '';
 
   const deleteSavedAdjustment = (details: any) => {
     return crud.delete({...details});
@@ -29,7 +31,9 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
   };
   const adjustmentCrud = {create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };
 
-  const multiIntervalAdjustments =  adjustments.filter(({numberOfIntervals}: any) => numberOfIntervals > 1);
+  const multiIntervalAdjustments =  adjustments
+    .filter(({numberOfIntervals}: any) => numberOfIntervals > 1)
+    .filter(({channel}: any) => channel === selectedChannel);
 
   if (!localBulkAdjustments) {
     return null;

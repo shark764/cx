@@ -65,6 +65,7 @@ export const useMemoTableData = (
   data: any,
   viewBy: IntervalLength,
   selectedCompetence: string,
+  selectedChannel: string,
   timelineAdjustments: any,
   tenant_id: string,
   selectedTimeline: string,
@@ -83,6 +84,7 @@ export const useMemoTableData = (
         adjustment.metric === 'nco' &&
         adjustment.startDateTime === timestamp &&
         adjustment.competency === selectedCompetence &&
+        adjustment.channel === selectedChannel &&
         adjustment.numberOfIntervals === 1
       )),
     aht: aht,
@@ -93,6 +95,7 @@ export const useMemoTableData = (
         adjustment.metric === 'aht' &&
         adjustment.startDateTime === timestamp &&
         adjustment.competency === selectedCompetence &&
+        adjustment.channel === selectedChannel &&
         adjustment.numberOfIntervals === 1
       )),
     crud: {
