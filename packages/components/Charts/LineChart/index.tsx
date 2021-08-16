@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import styled from 'styled-components';
+import { DateTime } from 'luxon';
 import {
   Line,
   XAxis,
@@ -9,15 +10,13 @@ import {
   ComposedChart,
   ResponsiveContainer,
 } from 'recharts';
-
 import { useRef, useEffect, useState } from 'react';
 import { fromEvent } from 'rxjs';
 import { tap, map, switchMap, takeUntil, takeLast, throttleTime } from 'rxjs/operators';
-
-// import { SelectionRect } from './selectionRect';
 import { CustomizedDot } from './customizedDot';
 import { TimeSelection } from './timeSelection';
-import { Dot } from './dot';
+import { CustomDot } from './dot';
+import Card from '@material-ui/core/Card';
 
 const Wrapper = styled.div`
   position: relative;
@@ -55,6 +54,14 @@ export interface ChartProps {
   singlePointAdjustment?: boolean;
   multipleChannelsSelected?: boolean;
 };
+interface DotInfo {
+  cx: number;
+  type: string;
+  ceiling: number;
+  value: number;
+  timestamp: string;
+  pixelsPerTick: number;
+};
 
 export const LineChart: React.VFC<ChartProps> = ({
   data,
@@ -74,6 +81,64 @@ export const LineChart: React.VFC<ChartProps> = ({
   const [isDragging, setDragging] = useState(false);
   const [selectionArea, setSelectionArea] = useState<any>([0,0]);
   const [selectionArea2, setSelectionArea2] = useState<any>([0,0]);
+  const [adjustmentConfig, setadjustmentconfig] = useState([0,0,'50']);
+  const [dragDateTime, setDragDateTime] = useState(null);
+
+  const singlePointDragging = adjustmentConfig[0] !== 0 && adjustmentConfig[1] !== 0;
+
+  const graphHeight = containerHeight - 30;
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element) {
+      return;
+    }
+
+    const mousedown$ = fromEvent<MouseEvent>(document, 'mousedown').pipe(tap(e => e.preventDefault()));
+    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault()),throttleTime(50));
+    const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup').pipe(tap(e => e.preventDefault()));
+    const drag$ = mousedown$.pipe(
+      map(({ target: element }) => {
+        const cx =  element.getAttribute("cx");
+        const timestamp =  element.getAttribute("data-timestamp");
+        const type =  element.getAttribute("data-type");
+        const value =  parseInt(element.getAttribute("value"));
+        const ceiling =  parseInt(element.getAttribute("data-ceiling"));
+        setDragDateTime(timestamp);
+
+        const domain = [0, ceiling]; //TODO: domain doesn't always start at zero...
+        const pixelsPerTick = graphHeight / (domain[1] - domain[0]);
+
+        return {
+          cx,
+          type,
+          ceiling,
+          value,
+          timestamp,
+          pixelsPerTick,
+        }
+      }),
+      switchMap(
+        (dotInfo: DotInfo) => mousemove$.pipe(
+          map(({offsetX, offsetY}) => {
+            const adjustmentValue = Math.trunc((graphHeight - offsetY) / dotInfo.pixelsPerTick) - dotInfo.value;
+            const { type, timestamp } = dotInfo;
+            setadjustmentconfig([dotInfo.cx,offsetY,`${adjustmentValue + dotInfo.value}`])
+            return { adjustmentValue, type, timestamp };
+          }),
+          takeUntil(mouseup$),
+          takeLast(1),
+        )
+      )).subscribe(({ adjustmentValue, type, timestamp }) => {
+        setadjustmentconfig([0,0,'']);
+        if (adjustemntCallback) {
+          adjustemntCallback(adjustmentValue, type, timestamp)
+        }
+      });
+
+    return () => drag$.unsubscribe();
+  }, [adjustemntCallback, graphHeight]);
 
   useEffect(() => {
     const element = ref.current;
@@ -203,10 +268,36 @@ export const LineChart: React.VFC<ChartProps> = ({
       return 'default';
     };
 
+    if(singlePointDragging) {
+      return 'none';
+    }
+
     if (singlePointAdjustment) {
       return 'grab';
     } else if (!singlePointAdjustment) {
       return 'col-resize';
+    }
+  };
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    const time = DateTime.fromISO(singlePointDragging? dragDateTime : payload[0]?.payload.ogTimestamp).toLocaleString(DateTime.TIME_SIMPLE);
+
+    if (active && payload && payload.length) {
+      return (
+        <Card sx={{padding: '20px'}} variant="outlined">
+          { singlePointDragging ? <>
+            <p>{`${time}`}</p>
+            <p> Set value to: {adjustmentConfig[2]}</p>
+          </> : <>
+            <p>{time}</p>
+            {payload.map(({color, name, value}: any, index:number) => <p style={{color: color}} key={index}>
+              {name} : {value}
+            </p>) }
+          </>}
+        </Card>
+      );
+    } else {
+      return null;
     }
   };
 
@@ -229,23 +320,33 @@ export const LineChart: React.VFC<ChartProps> = ({
             dataKey={xDataKey}
             interval={interval}
             dy={10.47}
-            // scale="band"
           />
           <YAxis
             yAxisId="left"
             label={{ value: 'NCO ______', angle: -90, position: 'center', dx: -15, fill: '#07487a' }}
+            // @ts-ignore
             domain={ncoYDomain}
           />
           <YAxis
             yAxisId="right"
             orientation="right"
             label={{ value: multipleChannelsSelected ? '' : 'AHT ______', angle: -90, position: 'center', dx: 15, fill: 'grey' }}
+            // @ts-ignore
             domain={multipleChannelsSelected ? null : ahtYDomain}
           />
 
           {singlePointAdjustment && <Tooltip
             cursor={false}
             offset={20}
+            content={<CustomTooltip />}
+          />}
+
+          {singlePointDragging && <circle
+            cx={adjustmentConfig[0]}
+            cy={adjustmentConfig[1]}
+            r={9}
+            fill="white"
+            stroke="grey"
           />}
 
           {dataKeys.map((item: DataKeys) => (
@@ -253,18 +354,17 @@ export const LineChart: React.VFC<ChartProps> = ({
               key={item.name}
               name={item.name}
               dataKey={item.key}
-              dot={<CustomizedDot isDragging={false} ></CustomizedDot>}
               type="linear"
               yAxisId={item.yAxisId}
               stroke={item.color}
               animationDuration={800}
-              activeDot={<Dot
-              // @ts-ignore
-                topValue={(item.key.toLowerCase().includes( 'nco')) ? ncoYDomain[1] : ahtYDomain[1]}
-                containerHeight={containerHeight}
-                adjustemntCallback={adjustemntCallback}
+              activeDot={ item.key?.includes('adjusted') && !singlePointDragging && <CustomDot
+                topValue={(item.key?.toLowerCase().includes( 'nco')) ? ncoYDomain[1] : ahtYDomain[1]}
               />}
               strokeDasharray={item.lineStroke && '5 5'}
+              dot={<CustomizedDot
+                isDragging={false}
+              ></CustomizedDot>}
             />
           ))}
         </ComposedChart>

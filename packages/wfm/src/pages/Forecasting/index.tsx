@@ -246,7 +246,8 @@ export function Forecasting() {
   }, [latestAdjustmentId, refetchAdjustments, refetchTimeline]);
 
   const setLocalAdjustment = (value: number, key: string, timestamp: string) => {
-    const keyConversion = (key: string) => key.includes('aht') ? 'aht' : 'nco';
+    const keyConversion = (key: string) => key.toLowerCase().includes('aht') ? 'aht' : 'nco';
+
     createAdjustment(
       tenant_id,
       selectedTimeline?.id,

@@ -122,7 +122,7 @@ export const useMemoTableData = (
   })
   ) || []
 
-}, [data, viewBy, selectedCompetence, timelineAdjustments, tenant_id, selectedTimeline, setLatestAdjustmentId]);
+}, [data, viewBy, selectedCompetence, timelineAdjustments, tenant_id, selectedTimeline, setLatestAdjustmentId, selectedChannel]);
 
 export const useMemoTimelineAdjustments = (timelineAdjustments: any, selectedCompetence: string) => useMemo(() =>
   timelineAdjustments?.filter(({ competency }: any) => competency === selectedCompetence)
