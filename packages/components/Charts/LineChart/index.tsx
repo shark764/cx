@@ -95,7 +95,7 @@ export const LineChart: React.VFC<ChartProps> = ({
       return;
     }
 
-    const mousedown$ = fromEvent<MouseEvent>(document, 'mousedown').pipe(tap(e => e.preventDefault()));
+    const mousedown$ = fromEvent<MouseEvent>(element, 'mousedown').pipe(tap(e => e.preventDefault()));
     const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault()),throttleTime(50));
     const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup').pipe(tap(e => e.preventDefault()));
     const drag$ = mousedown$.pipe(
@@ -280,7 +280,7 @@ export const LineChart: React.VFC<ChartProps> = ({
   };
 
   const CustomTooltip = ({ active, payload }: any) => {
-    const time = DateTime.fromISO(singlePointDragging? dragDateTime : payload[0]?.payload.ogTimestamp).toLocaleString(DateTime.TIME_SIMPLE);
+    const time = DateTime.fromISO(singlePointDragging? dragDateTime : payload?.[0]?.payload.ogTimestamp).toLocaleString(DateTime.TIME_SIMPLE);
 
     if (active && payload && payload.length) {
       return (

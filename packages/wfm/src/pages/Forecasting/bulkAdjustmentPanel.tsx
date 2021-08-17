@@ -32,7 +32,6 @@ export const BulkAdjustmentPanel = ({ adjustments, crud, intervalLength, refetch
   const adjustmentCrud = {create: saveNewAdjustment, update: updateSavedAdjustment, delete: deleteSavedAdjustment, refresh: crud.refresh };
 
   const multiIntervalAdjustments =  adjustments
-    .filter(({numberOfIntervals}: any) => numberOfIntervals > 1)
     .filter(({channel}: any) => channel === selectedChannel);
 
   if (!localBulkAdjustments) {

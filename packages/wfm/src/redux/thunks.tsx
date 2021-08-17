@@ -145,7 +145,7 @@ export const createForecastApi = async (formData: any, tenant_id: string, foreca
       body: {
         ...scenarioConfig,
         series,
-        dayCurveDateRange: swapReverseDates(scenarioConfig.dayCurveDateRanges)?.[0],
+        dayCurveDateRange: swapReverseDates(scenarioConfig.dayCurveDateRange)?.[0],
         algorithmOptions: formattedAlgorithmOptions,
       },
     });

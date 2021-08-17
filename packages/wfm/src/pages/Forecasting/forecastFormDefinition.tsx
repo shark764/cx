@@ -72,12 +72,12 @@ export const createForecastFormDefenition = [
       },
       {
         label: 'Intraday',
-        name: 'dayCurveDateRanges',
+        name: 'dayCurveDateRange',
         type: 'evenWeeks',
         constraints: {
-          dayCurveDateRanges: {
+          dayCurveDateRange: {
             required: { required: 'From Date is required.' },
-            evenWeeks: { required: 'Even number of weeks is required.' },
+          //  evenWeeks: { required: 'Even number of weeks is required.' },
           },
         }
       },

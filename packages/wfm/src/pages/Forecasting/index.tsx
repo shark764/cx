@@ -21,6 +21,7 @@ import { Chevron } from '@cx/components/Icons/Chevron';
 import { selectedRangeFn } from '@cx/utilities/date';
 import { defaultForecastFormValues } from './forecastFormDefaultValues';
 import { AdjustmentPanel } from './adjustmentPanel';
+import { AdjustmentsTotal } from './adjustmentsTotal';
 import {
   createForecastApi,
   deleteForecastScenario,
@@ -246,7 +247,7 @@ export function Forecasting() {
   }, [latestAdjustmentId, refetchAdjustments, refetchTimeline]);
 
   const setLocalAdjustment = (value: number, key: string, timestamp: string) => {
-    const keyConversion = (key: string) => key.toLowerCase().includes('aht') ? 'aht' : 'nco';
+    const keyConversion = (key: string) => key?.toLowerCase().includes('aht') ? 'aht' : 'nco';
 
     createAdjustment(
       tenant_id,
@@ -416,7 +417,7 @@ export function Forecasting() {
         />
       }
 
-      { !multipleChannelsSelected && <Title> Forecasted Adjustments <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments)} /> </Title>}
+      { !multipleChannelsSelected && <Title> Forecasted Adjustments <AdjustmentsTotal adjustments={timelineAdjustments} /> <ToggleView size={16} rotate={showBulkAdjustments ? -90 : 90} onClick={() => setShowBulkAdjustments(!showBulkAdjustments)} /> </Title>}
       {showBulkAdjustments && !multipleChannelsSelected && <BulkAdjustmentPanel crud={{
         create: createAdjustment(
           tenant_id,

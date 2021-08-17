@@ -79,7 +79,7 @@ const IncrementControls = styled.span`
   justify-content: space-evenly;
 `;
 
-const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy-LL-dd');
+const formatDate = (date: any) => DateTime.fromJSDate(date).toFormat('yyyy / LL / dd');
 const convertDate = (date: any) => date?.isValid ? date : DateTime.fromJSDate(date);
 
 const displayToDate = (endDate: any) => {
@@ -160,18 +160,23 @@ const DatePickers = ({ onChange, name, errors, multiValue, initValue }: any) => 
     setDateRanges(newRanges);
   };
 
-  const updateStartDate = (index: number, startDate: DateTime): void => {
+  const updateStartDate = (index: number, startDate: DateTime, reverse?: boolean): void => {
     const { totalWeeks } = dateRanges[index];
-    const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1), totalWeeks };
+    const endDate = reverse ?
+      startDate.plus({weeks: totalWeeks}).plus({days: 1}) :
+      startDate.plus({weeks: totalWeeks}).minus({days: 1});
+    const newRange = { startDate, endDate, totalWeeks };
     const newArray = [...dateRanges];
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
   };
 
-  const updateTotalWeeks = (index: number, totalWeeks: number): void => {
+  const updateTotalWeeks = (index: number, totalWeeks: number, reverse?: boolean): void => {
     const { startDate } = dateRanges[index];
-    // the minus 1 is to make the range inclusive and not exclusive
-    const newRange = { startDate, endDate: addDays(startDate, (totalWeeks * 7) - 1), totalWeeks };
+    const endDate = reverse ?
+      startDate.plus({weeks: totalWeeks}).plus({days: 1}) :
+      startDate.plus({weeks: totalWeeks}).minus({days: 1});
+    const newRange = { startDate, endDate, totalWeeks };
     const newArray = [...dateRanges];
     newArray.splice(index, 1, newRange);
     setDateRanges(newArray);
@@ -194,7 +199,7 @@ const DatePickers = ({ onChange, name, errors, multiValue, initValue }: any) => 
                   helperText={(errors[name]?.type === 'isMonday' || errors[name]?.type === 'required') ? errors?.[name]?.message : ''}
                   selected={startDate}
                   onChange={(date: DateTime) => {
-                    updateStartDate(index, date);
+                    updateStartDate(index, date, totalWeeks < 0 );
                   }}
                 />
             </MiniDate>
@@ -210,12 +215,12 @@ const DatePickers = ({ onChange, name, errors, multiValue, initValue }: any) => 
                   className={`${name}-weeks`}
                   variant="outlined"
                   onChange={({ target: { value } }: any) => {
-                    updateTotalWeeks(index, value)
+                    updateTotalWeeks(index, value, (value < 0))
                   }}
                 />
                 <IncrementControls>
-                  <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1)} fontSize="small" />
-                  <Increment className={name + '-increment'} onClick={() => updateTotalWeeks(index, totalWeeks + 1)} fontSize="small" />
+                  <Decrement className={name + '-decrement'} onClick={() => updateTotalWeeks(index, totalWeeks - 1, (totalWeeks - 1 < 0))} fontSize="small" />
+                  <Increment className={name + '-increment'} onClick={() => updateTotalWeeks(index, totalWeeks + 1, (totalWeeks + 1 < 0))} fontSize="small" />
                 </IncrementControls>
               </span>
             </MiniMultiplier>
