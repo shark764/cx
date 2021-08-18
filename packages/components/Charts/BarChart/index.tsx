@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import styled from 'styled-components';
+import { DateTime } from 'luxon';
 import {
   Bar,
   XAxis,
@@ -9,6 +10,7 @@ import {
   ResponsiveContainer,
   BarChart as RechartsBarChart,
 } from 'recharts';
+import Card from '@material-ui/core/Card';
 
 const Wrapper = styled.div`
   margin-top: 20px;
@@ -23,7 +25,7 @@ export interface Data {
 export interface ChartProps {
   data: Data[];
   onClick?: () => void;
-  dataKeys: Array<string>;
+  dataKeys: Array<any>;
   xDataKey?: string;
   statName?: string;
   chartName?: string;
@@ -34,6 +36,25 @@ export interface ChartProps {
   containerWidth?: string;
   containerHeight?: number;
   intervalLength?: any;
+};
+
+const CustomTooltip = ({ active, payload }: any) => {
+  const time = DateTime.fromISO( payload?.[0]?.payload.ogTimestamp );
+  const timeDisplay = time.isValid ? time.toLocaleString(DateTime.TIME_SIMPLE) : '';
+
+  if (active && payload && payload.length) {
+    console.log(payload);
+    return (
+      <Card sx={{padding: '20px'}} variant="outlined">
+        <p>{timeDisplay}</p>
+        {payload.map(({color, name, value}: any, index:number) => <p style={{color: color}} key={index}>
+          {name} : {value}
+        </p>) }
+      </Card>
+    );
+  } else {
+    return null;
+  }
 };
 
 export const BarChart: React.VFC<ChartProps> = ({
@@ -48,14 +69,6 @@ export const BarChart: React.VFC<ChartProps> = ({
   containerWidth = '96%',
   containerHeight = 300,
 }) => {
-
-  const colorKey: any = {
-    'staffingEstimateVoice': '#2a2af0',
-    'staffingEstimateMessaging': '#ca472f',
-    'staffingEstimateSms': '#9dd766',
-    'staffingEstimateEmail': '#f6c85f',
-    'staffingEstimateWork-item': '#6f4e7c',
-  };
 
   const interval = useMemo(() => {
     if (intervalLength === 'week') {
@@ -76,10 +89,17 @@ export const BarChart: React.VFC<ChartProps> = ({
           <XAxis dataKey={xDataKey} interval={interval} dy={10} />
           <YAxis />
           {showTooltip && (
-            <Tooltip formatter={(value: any) => value} />
+            <Tooltip content={<CustomTooltip />} />
           )}
-          {dataKeys.map((item: any, index) => (
-            <Bar key={index.toString()} dataKey={item} fill={colorKey[item]} barSize={20} stackId={stackId} />
+          {dataKeys.map((item: any) => (
+            <Bar
+              key={item.channelTag}
+              name={item.name}
+              dataKey={item.key}
+              fill={item.color}
+              barSize={20}
+              stackId={stackId}
+            />
           ))}
         </RechartsBarChart>
       </ResponsiveContainer>

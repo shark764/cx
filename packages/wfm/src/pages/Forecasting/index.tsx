@@ -454,7 +454,15 @@ export function Forecasting() {
         data={timelineQueryData}
         stackId={'a'}
         xDataKey={'timestamp'}
-        dataKeys={['staffingEstimateVoice', 'staffingEstimateSms', 'staffingEstimateMessaging', 'staffingEstimateEmail', 'staffingEstimateWork-item']}
+        dataKeys={
+          [
+            {channelTag: 'voice', key: 'staffingEstimateVoice', name: 'Voice', color: '#2a2af0'},
+            {channelTag: 'sms', key: 'staffingEstimateSms', name: 'SMS', color: '#9dd766'},
+            {channelTag: 'messaging', key: 'staffingEstimateMessaging', name: 'Messaging', color: '#ca472f'},
+            {channelTag: 'email', key: 'staffingEstimateEmail', name: 'Email', color: '#f6c85f'},
+            {channelTag: 'work-item', key: 'staffingEstimateWork-item', name: 'Work-Item', color: '#6f4e7c'},
+          ].filter(({channelTag}) => channels.includes(channelTag))
+        }
         intervalLength={intervalLength}
       />
     </ChartsWrapper>}

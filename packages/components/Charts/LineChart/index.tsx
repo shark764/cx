@@ -58,6 +58,7 @@ interface DotInfo {
   cx: number;
   type: string;
   ceiling: number;
+  floor: number;
   value: number;
   timestamp: string;
   pixelsPerTick: number;
@@ -96,7 +97,7 @@ export const LineChart: React.VFC<ChartProps> = ({
     }
 
     const mousedown$ = fromEvent<MouseEvent>(element, 'mousedown').pipe(tap(e => e.preventDefault()));
-    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault()),throttleTime(50));
+    const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(tap(e => e.preventDefault(), throttleTime(50)));
     const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup').pipe(tap(e => e.preventDefault()));
     const drag$ = mousedown$.pipe(
       map(({ target: element }) => {
@@ -105,15 +106,17 @@ export const LineChart: React.VFC<ChartProps> = ({
         const type =  element.getAttribute("data-type");
         const value =  parseInt(element.getAttribute("value"));
         const ceiling =  parseInt(element.getAttribute("data-ceiling"));
+        const floor =  parseInt(element.getAttribute("data-floor"));
         setDragDateTime(timestamp);
 
-        const domain = [0, ceiling]; //TODO: domain doesn't always start at zero...
-        const pixelsPerTick = graphHeight / (domain[1] - domain[0]);
+        const domainA = [floor, ceiling];
+        const pixelsPerTick = graphHeight / (domainA[1] - domainA[0]);
 
         return {
           cx,
           type,
           ceiling,
+          floor,
           value,
           timestamp,
           pixelsPerTick,
@@ -122,7 +125,7 @@ export const LineChart: React.VFC<ChartProps> = ({
       switchMap(
         (dotInfo: DotInfo) => mousemove$.pipe(
           map(({offsetX, offsetY}) => {
-            const adjustmentValue = Math.trunc((graphHeight - offsetY) / dotInfo.pixelsPerTick) - dotInfo.value;
+            const adjustmentValue = Math.trunc((graphHeight - offsetY) / dotInfo.pixelsPerTick) - (dotInfo.value - dotInfo.floor );
             const { type, timestamp } = dotInfo;
             setadjustmentconfig([dotInfo.cx,offsetY,`${adjustmentValue + dotInfo.value}`])
             return { adjustmentValue, type, timestamp };
@@ -254,8 +257,8 @@ export const LineChart: React.VFC<ChartProps> = ({
     const topNco = largestNco > largestNcoAdjusted ? largestNco : largestNcoAdjusted;
     const topAht = largestAht > largestAhtAdjusted ? largestAht : largestAhtAdjusted;
 
-    const bottomNco = smallestNco > smallestNcoAdjusted ? smallestNco : smallestNcoAdjusted;
-    const bottomAht = smallestAht > smallestAhtAdjusted ? smallestAht : smallestAhtAdjusted;
+    const bottomNco = smallestNco > smallestNcoAdjusted ?  smallestNcoAdjusted : smallestNco;
+    const bottomAht = smallestAht > smallestAhtAdjusted ? smallestAhtAdjusted : smallestAht;
 
     const ncoYDomain = [truncateYDomain ? roundDownToNearestTen(bottomNco) : 0, roundUpToNearestTen(topNco)];
     const ahtYDomain = [truncateYDomain ? roundDownToNearestTen(bottomAht) : 0, roundUpToNearestTen(topAht)];
@@ -280,16 +283,16 @@ export const LineChart: React.VFC<ChartProps> = ({
   };
 
   const CustomTooltip = ({ active, payload }: any) => {
-    const time = DateTime.fromISO(singlePointDragging? dragDateTime : payload?.[0]?.payload.ogTimestamp).toLocaleString(DateTime.TIME_SIMPLE);
-
+    const time = DateTime.fromISO(singlePointDragging? dragDateTime : payload?.[0]?.payload.ogTimestamp);
+    const timeDisplay = time.isValid ? time.toLocaleString(DateTime.TIME_SIMPLE) : '';
     if (active && payload && payload.length) {
       return (
         <Card sx={{padding: '20px'}} variant="outlined">
           { singlePointDragging ? <>
-            <p>{`${time}`}</p>
+            <p>{`${timeDisplay}`}</p>
             <p> Set value to: {adjustmentConfig[2]}</p>
           </> : <>
-            <p>{time}</p>
+            <p>{timeDisplay}</p>
             {payload.map(({color, name, value}: any, index:number) => <p style={{color: color}} key={index}>
               {name} : {value}
             </p>) }
@@ -360,6 +363,7 @@ export const LineChart: React.VFC<ChartProps> = ({
               animationDuration={800}
               activeDot={ item.key?.includes('adjusted') && !singlePointDragging && <CustomDot
                 topValue={(item.key?.toLowerCase().includes( 'nco')) ? ncoYDomain[1] : ahtYDomain[1]}
+                bottomValue={(item.key?.toLowerCase().includes( 'nco')) ? ncoYDomain[0] : ahtYDomain[0]}
               />}
               strokeDasharray={item.lineStroke && '5 5'}
               dot={<CustomizedDot
