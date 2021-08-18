@@ -43,7 +43,6 @@ const CustomTooltip = ({ active, payload }: any) => {
   const timeDisplay = time.isValid ? time.toLocaleString(DateTime.TIME_SIMPLE) : '';
 
   if (active && payload && payload.length) {
-    console.log(payload);
     return (
       <Card sx={{padding: '20px'}} variant="outlined">
         <p>{timeDisplay}</p>
