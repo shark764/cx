@@ -31,7 +31,7 @@ export const SinglePointAdjustment = ({singlePointAdjustment, setSinglePointAdju
   useEffect(() => {
 
     const shortcutDefinitions = new Map([
-      ['38,38,40,40,37,39,37,39,66,65', () => window.open('localhost:3006/#/qwertyqwerty','_blank')], // konamiCodeFired
+      ['38,38,40,40,37,39,37,39,66,65', () => window.open('http://localhost:3006/#/qwertyqwerty','_blank')], // konamiCodeFired
       ['16,84', () => setSinglePointAdjustment(!singlePointAdjustment)], // shift t
     ] as any);
 
