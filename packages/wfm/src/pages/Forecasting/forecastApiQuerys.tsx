@@ -2,8 +2,8 @@ import { wfm } from '../../api';
 import { useQuery } from 'react-query';
 import { DateTime } from 'luxon';
 
-export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams: any, selectedTimeline: string, viewBy: string) => useQuery<any, any>(
-  ['Timeline Adjustments', tenant_id, selectedTimeline, viewBy],
+export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams: any, selectedTimeline: string) => useQuery<any, any>(
+  ['Timeline Adjustments', tenant_id, selectedTimeline],
   () => {
     if (!tenant_id || !selectedTimeline) {
       return;
@@ -19,7 +19,6 @@ export const useTimelineAdjustments = (tenant_id: string, historicalQueryParams:
         tenant_id, forecast_timeline_id: selectedTimeline
       },
       queryString: {
-        interval: viewBy,
         channels: ['voice', 'messaging', 'sms', 'email', 'work_item'],
         directions: ['inbound'],
         startDateTime: allAdjustmentStartDate,

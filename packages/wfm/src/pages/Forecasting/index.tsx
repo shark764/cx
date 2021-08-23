@@ -160,7 +160,7 @@ export function Forecasting() {
   const {
     data: timelineAdjustments = [],
     refetch: refetchAdjustments,
-  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline?.id, viewBy);
+  } = useTimelineAdjustments(tenant_id, historicalQueryParams, selectedTimeline?.id);
 
   const timelineQueryData = useMemoLineChartData(timelineQuery, intervalLength, selectedCompetence);
   const timelineQueryTableData = useMemoTableData(

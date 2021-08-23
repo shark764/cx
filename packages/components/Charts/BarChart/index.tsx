@@ -41,6 +41,7 @@ export interface ChartProps {
 const CustomTooltip = ({ active, payload }: any) => {
   const time = DateTime.fromISO( payload?.[0]?.payload.ogTimestamp );
   const timeDisplay = time.isValid ? time.toLocaleString(DateTime.TIME_SIMPLE) : '';
+  const total = payload.reduce((acc: number,{value}: any) => acc += value,0);
 
   if (active && payload && payload.length) {
     return (
@@ -49,6 +50,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         {payload.map(({color, name, value}: any, index:number) => <p style={{color: color}} key={index}>
           {name} : {value}
         </p>) }
+        {payload.length > 1 && <p>Total : {total}</p>}
       </Card>
     );
   } else {

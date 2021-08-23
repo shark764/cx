@@ -11,6 +11,27 @@ import SaveIcon from '@material-ui/icons/Save';
 import UndoIcon from '@material-ui/icons/Undo';
 import { Loading } from '@cx/components/Icons/Loading';
 import South from '@material-ui/icons/South';
+import { Day } from '@cx/components/Icons/Day';
+import { FullHour } from '@cx/components/Icons/FullHour';
+import { QuarterHour } from '@cx/components/Icons/QuarterHour';
+import { Week } from '@cx/components/Icons/Week';
+import Tooltip, { tooltipClasses } from '@material-ui/core/Tooltip';
+import Zoom from '@material-ui/core/Zoom';
+
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: 'white',
+    color: 'black',
+    boxShadow: '0px 1px 3px 0px grey',
+    fontSize: '13px',
+    maxWidth: 300,
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'white',
+  },
+}));
 
 const Trashcan = styled(DeleteIcon)`
   color: lightgrey;
@@ -22,9 +43,22 @@ const Container = styled.span`
   display: inline-block;
   margin: 0 auto;
 `;
-
+const TooltipContainer = styled.span`
+  padding: 20px;
+  display: inline-block;
+  margin: 0 auto;
+`;
 const DateTimeInput = styled.span`
   margin: 0px 10px;
+`;
+const SelectedInterval = styled.span`
+  margin-right: 20px;
+  vertical-align: bottom;
+`;
+const IntervalText = styled.span`
+  margin-left: 20px;
+  vertical-align: super;
+  cursor: default;
 `;
 const Actions = styled.span`
   display: inline-grid;
@@ -103,8 +137,38 @@ export const BulkAdjustment = ({ adjustmentKey, refetchTimeline, timelineIsFetch
       });
   }
 
+  const intervalIconMap = {
+    'quarter-hour': <QuarterHour size={25} ></QuarterHour>,
+    'hour': <FullHour size={25} ></FullHour>,
+    'day': <Day size={25} ></Day>,
+    'week': <Week size={25} ></Week>,
+  } as any;
+
   return (
     <Container className="multi-interval-adjustment">
+
+        <LightTooltip
+          TransitionComponent={Zoom}
+          arrow
+          title={
+            <TooltipContainer>
+              <div>
+                <QuarterHour size={25} ></QuarterHour> <IntervalText>Quarter Hour</IntervalText>
+              </div>
+              <div>
+                <FullHour size={25} ></FullHour> <IntervalText>Hour</IntervalText>
+              </div>
+              <div>
+                <Day size={25} ></Day> <IntervalText>Day</IntervalText>
+              </div>
+              {/* <div>
+                <Week size={25} ></Week> <IntervalText>Week</IntervalText>
+              </div> */}
+            </TooltipContainer>
+          }
+        >
+          <SelectedInterval>{intervalIconMap[intervalLength]}</SelectedInterval>
+        </LightTooltip>
 
         { metric && <TextField
           select
