@@ -11,12 +11,14 @@ import Note from '@material-ui/icons/NoteAdd';
 // import { Filters } from './filters';
 // import { SheduleTable } from './table';
 import { RootState } from '../../../../redux/store';
-import { usePlans } from '../Schedule/planningApiQueries';
+import { usePlans, usePeriods } from '../Queries/planningApiQueries';
 import { FormDialog } from '@cx/components/FormDialog';
 import { DynamicForm } from '@cx/components/DynamicForm';
-import { createPlanFormDefenition } from '../Schedule/CreatePlanFormDefenition';
+import { createPlanFormDefenition } from '../Forms/CreatePlanFormDefenition';
+import { createPeriodFormDefenition } from '../Forms/CreatePeriodFormDefenition';
 import { wfm } from '../../../../api';
 import { planning } from '../../../../redux/reducers/planning';
+import { getDiffInDaysFn } from '@cx/utilities/date';
 const { setPlan } = planning.actions;
 
 
@@ -27,7 +29,7 @@ const SheduleControls = styled.section`
 const SheduleFilters = styled.section`
   margin-top: 30px;
 `;
-const SheduleTableSection = styled.section`
+const PeriodsTable = styled.section`
   margin-top: 30px;
 `;
 const Actions = styled.span`
@@ -38,6 +40,7 @@ const Actions = styled.span`
 
 export function Settings() {
   const [createNewPlan, setCreateNewPlan] = useState(false);
+  const [createNewPeriod, setCreateNewPeriod] = useState(false);
   const tenant_id = useSelector((state: RootState) => state.main.session.tenant_id);
   const dispatch = useDispatch();
   const {
@@ -45,6 +48,11 @@ export function Settings() {
     // isFetching: plansFetching,
     refetch: refetchPlans
   } = usePlans(tenant_id);
+  const {
+    data: periods = [],
+    // isFetching: plansFetching,
+    refetch: refetchPeriods
+  } = usePeriods(tenant_id);
 
   return <>
       <SheduleControls>
@@ -61,21 +69,8 @@ export function Settings() {
           >
             Create Plan
           </Button>
-          {/* <Button // Lock
-            style={{ color: '#4c4a4a' }}
-            variant="outlined"
-            startIcon={<LockIcon />}
-          >
-            Lock Shedule
-          </Button> */}
-          {/* <Button // Refresh
-            style={{ color: '#4c4a4a' }}
-            variant="outlined"
-            startIcon={<RefreshIcon />}
-          >
-            Refresh
-          </Button> */}
-          <Button // Save
+          <Button
+            onClick={() => setCreateNewPeriod(true)}
             variant="contained"
             disableElevation
             color="primary"
@@ -90,9 +85,11 @@ export function Settings() {
         {/* <Filters /> */}
       </SheduleFilters>
 
-      <SheduleTableSection>
-        {/* <SheduleTable /> */}
-      </SheduleTableSection>
+      <PeriodsTable>
+        {periods.map(({name, startDate, endDate}: any, index: any) => <span key={index}>
+          {name} {startDate} {endDate} { getDiffInDaysFn(startDate, endDate) + 1 }
+        </span>)}
+      </PeriodsTable>
 
       <FormDialog open={createNewPlan} title='Create New Plan' close={() => setCreateNewPlan(false)} >
         <DynamicForm
@@ -109,6 +106,27 @@ export function Settings() {
               refetchPlans().then(() => {
                 dispatch(setPlan({label: name, id }));
               });
+            });
+          }}
+          isFormSubmitting={false}
+          externalFormError={ () => [] }
+        ></DynamicForm>
+      </FormDialog>
+
+      <FormDialog open={createNewPeriod} title='Create Schedule Period' close={() => setCreateNewPeriod(false)} >
+        <DynamicForm
+          defaultValues={{}}
+          formDefenition={createPeriodFormDefenition}
+          onCancel={() => setCreateNewPeriod(false)}
+          onSubmit={({name, shedulePeriods}: any) => {
+            setCreateNewPeriod(false);
+            const { startDate, endDate } = shedulePeriods[0];
+            wfm.planning.api.post_tenants_tenant_id_wfm_scheduleperiods({
+              pathParams: { tenant_id },
+              body: {name, startDate: startDate.toISODate(), endDate: endDate.toISODate()},
+            })
+            .then(() => {
+              refetchPeriods();
             });
           }}
           isFormSubmitting={false}

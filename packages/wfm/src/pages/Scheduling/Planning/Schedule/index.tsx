@@ -9,7 +9,7 @@ import { ScheduleVersion } from './ScheduleVersion';
 import { Filters } from './filters';
 import { SheduleTable } from './table';
 import { RootState } from '../../../../redux/store';
-import { usePlans } from './planningApiQueries';
+import { usePlans } from '../Queries/planningApiQueries';
 
 const SheduleControls = styled.section`
   display: flex;

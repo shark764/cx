@@ -32,7 +32,7 @@ export const DetailWrapper: React.VFC<Props> = ({title, children, open = true, c
     return <>
         <Wrapper hidden={hidden} onClick={() => collapsable && setOpen(!isOpen) }>
           <span>{ title }</span>
-          <TitleBar />
+          {title && <TitleBar />}
           {collapsable && <Chevron
             rotate={isOpen ? -90 : 90}
             size={15}
