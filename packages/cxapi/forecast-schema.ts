@@ -48,8 +48,15 @@ export interface paths {
      * finishing the forecasts and a client will have to monitor the data series
      * to find out when the forecasting process has finished. The request will
      * fail if there are ongoing forecast jobs running when the request is made.
-     * All existing data series for the scenario will be overwritten. Any content
+     * All existing data series for the scenario will be deleted. Any content
      * in the request body will be disregarded.
+     *
+     * If any of the included triplets are missing historical data, no forecast
+     * will be initiated. This can either be due to missing historical data for
+     * the daily forecast or missing historical data to forecast the intraday
+     * distribution. Both of these data ranges are specified in the forecast
+     * params. A list of running series and a list of series for which no
+     * forecast was started will be returned in the response.
      */
     post: operations["init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast"];
   };
@@ -125,7 +132,7 @@ export interface paths {
   "/tenants/{tenant_id}/wfm/forecasttimeline/{forecast_timeline_id}/adjustments/{adjustment_id}": {
     /** Retrieve a single adjustment. */
     get: operations["get_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
-    /** Retrieve a single adjustment. */
+    /** Delete a single adjustment. */
     delete: operations["delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id"];
     /**
      * Update an adjustment.
@@ -216,6 +223,23 @@ export interface components {
     };
     /** The forecast algorithm that should be used. */
     ForecastAlgorithmType: "average" | "prophet";
+    /**
+     * Response to an initiated forecast.
+     *
+     * Parameters
+     * ----------
+     * series:
+     *     All series that have been created and forecasted.
+     *
+     * missing_historical_data:
+     *     For these triplets no forecast have been initiated since
+     *     no historical data was found during the period in the scenario
+     *     params.
+     */
+    ForecastResponseDTO: {
+      series?: components["schemas"]["ForecastTripletDTO"][];
+      missingHistoricalData?: components["schemas"]["ForecastTripletDTO"][];
+    };
     /** Model for forecast scenarios. */
     ForecastScenarioDTO: {
       id?: string;
@@ -334,6 +358,13 @@ export interface components {
     ForecastTimelineSeriesStaffingSeriesDto: {
       timestamp: string;
       staffing_estimate?: number;
+    };
+    /** A forecast triplet that corresponds to one data series. */
+    ForecastTripletDTO: {
+      seriesId?: string;
+      competency: string;
+      channel: components["schemas"]["ChannelType"];
+      direction: components["schemas"]["DirectionType"];
     };
     /** Type of forecast values. */
     ForecastValueType: "forecast" | "upper" | "lower";
@@ -699,6 +730,13 @@ export interface operations {
           "application/json": { [key: string]: any };
         };
       };
+      /**
+       * Failure reasons:
+       *
+       *                        * The period for intraday historical data includes
+       *                          a partial week.
+       */
+      400: unknown;
       /** Validation Error */
       422: {
         content: {
@@ -748,8 +786,15 @@ export interface operations {
    * finishing the forecasts and a client will have to monitor the data series
    * to find out when the forecasting process has finished. The request will
    * fail if there are ongoing forecast jobs running when the request is made.
-   * All existing data series for the scenario will be overwritten. Any content
+   * All existing data series for the scenario will be deleted. Any content
    * in the request body will be disregarded.
+   *
+   * If any of the included triplets are missing historical data, no forecast
+   * will be initiated. This can either be due to missing historical data for
+   * the daily forecast or missing historical data to forecast the intraday
+   * distribution. Both of these data ranges are specified in the forecast
+   * params. A list of running series and a list of series for which no
+   * forecast was started will be returned in the response.
    */
   init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast: {
     parameters: {
@@ -766,7 +811,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["ForecastResponseDTO"];
         };
       };
       /**
@@ -1297,7 +1342,7 @@ export interface operations {
       };
     };
   };
-  /** Retrieve a single adjustment. */
+  /** Delete a single adjustment. */
   delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id: {
     parameters: {
       path: {

@@ -3,7 +3,7 @@
   "info": {
     "title": "CX WFM API (Agent, Planning, Admin)",
     "description": "The purpose of this API is to provide endpoints\n    for working with agent-data and schedules in CxWFM.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "paths": {
     "/tenants/{tenant_id}/wfm/agents": {
@@ -49,7 +49,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "title": "Response Get Agents Tenants  Tenant Id  Wfm Agents Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentDTO"
+                  }
+                }
               }
             }
           },
@@ -119,7 +125,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AgentDTO"
+                }
               }
             }
           },
@@ -189,7 +197,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AddressDTO"
+                }
               }
             }
           },
@@ -267,7 +277,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AddressDTO"
+                }
               }
             }
           },
@@ -405,7 +417,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentDTO"
+                }
               }
             }
           },
@@ -483,7 +497,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentDTO"
+                }
               }
             }
           },
@@ -621,7 +637,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "title": "Response Get All Availabilities Tenants  Tenant Id  Wfm Agents  Agent Id  Availability Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentAvailabilityPatternDTO"
+                  }
+                }
               }
             }
           },
@@ -688,7 +710,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AgentAvailabilityPatternDTO"
+                "$ref": "#/components/schemas/NewAgentAvailabilityPatternDTO"
               }
             }
           },
@@ -699,7 +721,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "title": "Response Post Availability Tenants  Tenant Id  Wfm Agents  Agent Id  Availability Post",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentAvailabilityPatternDTO"
+                  }
+                }
               }
             }
           },
@@ -716,14 +744,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability/{id}": {
+    "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability/{availability_pattern_id}": {
       "get": {
         "tags": [
           "Agent"
         ],
         "summary": "Get Availability",
         "description": "Retrieve a specific assignment of an availability pattern to an agent.",
-        "operationId": "get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id",
+        "operationId": "get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -748,11 +776,11 @@
           {
             "required": true,
             "schema": {
-              "title": "Id",
+              "title": "Availability Pattern Id",
               "type": "string",
               "format": "uuid"
             },
-            "name": "id",
+            "name": "availability_pattern_id",
             "in": "path"
           },
           {
@@ -779,7 +807,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/AgentAvailabilityPatternDTO"
+                }
               }
             }
           },
@@ -801,7 +831,7 @@
         ],
         "summary": "Delete Availability",
         "description": "Remove an assigned availability pattern for an agent.",
-        "operationId": "delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id",
+        "operationId": "delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -826,11 +856,11 @@
           {
             "required": true,
             "schema": {
-              "title": "Id",
+              "title": "Availability Pattern Id",
               "type": "string",
               "format": "uuid"
             },
-            "name": "id",
+            "name": "availability_pattern_id",
             "in": "path"
           },
           {
@@ -1416,14 +1446,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_id}": {
+    "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_pattern_id}": {
       "get": {
         "tags": [
           "Availability"
         ],
         "summary": "Get",
         "description": "Retrieve a single availability.",
-        "operationId": "get_tenants_tenant_id_wfm_availabilitypatterns_availability_id",
+        "operationId": "get_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id",
         "parameters": [
           {
             "required": true,
@@ -1438,11 +1468,11 @@
           {
             "required": true,
             "schema": {
-              "title": "Availability Id",
+              "title": "Availability Pattern Id",
               "type": "string",
               "format": "uuid"
             },
-            "name": "availability_id",
+            "name": "availability_pattern_id",
             "in": "path"
           },
           {
@@ -1484,9 +1514,7 @@
             }
           }
         }
-      }
-    },
-    "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_pattern_id}": {
+      },
       "put": {
         "tags": [
           "Availability"
@@ -4539,7 +4567,7 @@
           "Optimization"
         ],
         "summary": "Put Optimization",
-        "description": "Start the current optimization.",
+        "description": "Start the current optimization.\n\nStarts an optimization using forecasts from the specified competencies,\nthe optimization will use forcasts from the timeline specified in the\nrequest. The optimization will plan and save schedules for all\nagents for the specified schedule period, if it is possible to\ncreate a schedule based on the restrictions. If\nagents have assigned restrictions those will be used, if no restrictions are\nfound the tenant defaults will be used. Breaks will be planned if there are\nbreaksettings specified, first according to settings assigned to an agent\notherwise the defaults are used. The optimization will plan default\nactivities for operator work, paid break and unpaid break, default\ntenant activities has to be specified to run the optimization.",
         "operationId": "put_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization",
         "parameters": [
           {
@@ -4603,7 +4631,7 @@
             }
           },
           "400": {
-            "description": "Failure reasons:\n\n                    * Cannot initiate a new optimization while there is one\n                    running or pending.\n                    * Cannot optimize the official plan, check the plan id.\n            "
+            "description": "Failure reasons:\n\n                    * Cannot initiate a new optimization while there is one\n                    running or pending.\n                    * Cannot optimize the official plan, check the plan id.\n                    * Competencies not found, check the competency ids.\n                    * Agents not found, check the agent ids.\n                    * Missing a default activity. Required defaults are operator\n                    work, paid break and unpaid break.\n                    * Missing default restrictions if not all agents have\n                    assigned restrictions.\n            "
           },
           "422": {
             "description": "Validation Error",
@@ -4807,7 +4835,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "title": "Response Get Agents Tenants  Tenant Id  Wfm Competencies  Competency Id  Agents Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgentDTO"
+                  }
+                }
               }
             }
           },
@@ -4894,7 +4928,7 @@
             }
           },
           "400": {
-            "description": "Failure reasons:\n              * Only agents or competencies can be provided, not both.\n              "
+            "description": "Failure reasons:\n              * Only agents or competencies can be provided, not both.\n              * Competencies not found, check the competency ids.\n              * Agents not found, check the agent ids.\n              "
           },
           "422": {
             "description": "Validation Error",
@@ -5038,10 +5072,16 @@
       "AgentAvailabilityPatternDTO": {
         "title": "AgentAvailabilityPatternDTO",
         "required": [
+          "id",
           "availabilityPatternId"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
           "availabilityPatternId": {
             "title": "Availabilitypatternid",
             "type": "string",
@@ -5049,14 +5089,72 @@
           },
           "startDate": {
             "title": "Startdate",
-            "type": "string"
+            "type": "string",
+            "format": "date"
           },
           "endDate": {
             "title": "Enddate",
-            "type": "string"
+            "type": "string",
+            "format": "date"
           }
         },
         "description": "Links an agent to an availability."
+      },
+      "AgentDTO": {
+        "title": "AgentDTO",
+        "required": [
+          "id",
+          "tenantId",
+          "firstName",
+          "lastName",
+          "role",
+          "externalId",
+          "email",
+          "active"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenantId": {
+            "title": "Tenantid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstName": {
+            "title": "Firstname",
+            "type": "string"
+          },
+          "lastName": {
+            "title": "Lastname",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "externalId": {
+            "title": "Externalid",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "capacityId": {
+            "title": "Capacityid",
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": "Represents an agent."
       },
       "AgentOccupancyLimit": {
         "title": "AgentOccupancyLimit",
@@ -5176,12 +5274,13 @@
           },
           "dayNumber": {
             "title": "Daynumber",
-            "exclusiveMaximum": 7,
-            "exclusiveMinimum": -1,
+            "maximum": 6,
+            "minimum": 0,
             "type": "integer"
           },
           "weekNumber": {
             "title": "Weeknumber",
+            "minimum": 1,
             "type": "integer",
             "default": 1
           },
@@ -5493,6 +5592,29 @@
         "type": "string",
         "description": "Status for jobs."
       },
+      "NewAgentAvailabilityPatternDTO": {
+        "title": "NewAgentAvailabilityPatternDTO",
+        "required": [
+          "availabilityPatternId"
+        ],
+        "type": "object",
+        "properties": {
+          "availabilityPatternId": {
+            "title": "Availabilitypatternid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDate": {
+            "title": "Startdate",
+            "type": "string"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string"
+          }
+        },
+        "description": "Links an agent to an availability."
+      },
       "NewAssignedRestrictionSetDTO": {
         "title": "NewAssignedRestrictionSetDTO",
         "required": [
@@ -5531,6 +5653,11 @@
         "properties": {
           "schedulePeriodId": {
             "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "timelineId": {
+            "title": "Timelineid",
             "type": "string",
             "format": "uuid"
           },
@@ -5660,6 +5787,11 @@
         "properties": {
           "schedulePeriodId": {
             "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "timelineId": {
+            "title": "Timelineid",
             "type": "string",
             "format": "uuid"
           },
@@ -6269,12 +6401,18 @@
       "SimulationRequestDTO": {
         "title": "SimulationRequestDTO",
         "required": [
-          "schedulePeriodId"
+          "schedulePeriodId",
+          "timelineId"
         ],
         "type": "object",
         "properties": {
           "schedulePeriodId": {
             "title": "Scheduleperiodid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "timelineId": {
+            "title": "Timelineid",
             "type": "string",
             "format": "uuid"
           },
@@ -6316,7 +6454,7 @@
             "default": false
           }
         },
-        "description": "A request for a simulation.\n\nA simulation request can only include agents or competencies, not both.\n\nAttributes\n----------\nschedule_period_id : UUID\n\nagents : Optional[List[UUID]]\n\ncompetencies : Optional[List[UUID]]\n\nupper_occupancy_limits : List[float] = []\n    Values can be between 0 and 1 and represent a percentage. If specified\n    the result will include an array with the number of agents above\n    the occupancy limit per 15 min period.\n\nlower_occupancy_limits : List[float] = []\n    Values can be between 0 and 1 and represent a percentage. If specified\n    the result will include an array with the number of agents below\n    the occupancy limit per 15 min period.\n\ninclude_full_agent_result : bool = False\n    If specified the occupancies per agent will be added to the result."
+        "description": "A request for a simulation.\n\nA simulation request can only include agents or competencies, not both.\n\nAttributes\n----------\nschedule_period_id : UUID\n\ntimeline_id : UUID\n\nagents : Optional[List[UUID]]\n\ncompetencies : Optional[List[UUID]]\n\nupper_occupancy_limits : List[float] = []\n    Values can be between 0 and 1 and represent a percentage. If specified\n    the result will include an array with the number of agents above\n    the occupancy limit per 15 min period.\n\nlower_occupancy_limits : List[float] = []\n    Values can be between 0 and 1 and represent a percentage. If specified\n    the result will include an array with the number of agents below\n    the occupancy limit per 15 min period.\n\ninclude_full_agent_result : bool = False\n    If specified the occupancies per agent will be added to the result."
       },
       "Synchronize": {
         "title": "Synchronize",

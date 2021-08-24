@@ -51,3 +51,7 @@ Don't use optional parameters with props that are boolean based..  you lose some
 
 Wfm forecasts are using this library for holidays information
 https://github.com/dr-prodigy/python-holidays#available-countries
+
+WFM apis:
+http://us-east-1-staging-wfm-cx-forecast.cxengagelabs.net/docs
+http://us-east-1-staging-wfm-cx-planning.cxengagelabs.net/docs

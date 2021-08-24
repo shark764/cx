@@ -17,6 +17,7 @@ export interface RootState {
     endDate: string;
     timezone: string;
     competence: string;
+    plan: {label: string; id: string};
   };
   forecasting: {
     competence: string;

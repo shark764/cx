@@ -3,7 +3,7 @@
   "info": {
     "title": "CX WFM Api (Historical, Forecast and Target)",
     "description": "CxWFM platform api for handling historical data and generating and storing forecasts.",
-    "version": "0.4.0"
+    "version": "0.8.2"
   },
   "paths": {
     "/status": {
@@ -806,6 +806,9 @@
               }
             }
           },
+          "400": {
+            "description": "Failure reasons:\n\n                       * The period for intraday historical data includes\n                         a partial week.\n                       "
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -895,7 +898,7 @@
           "Forecast Scenario"
         ],
         "summary": "Init Forecast",
-        "description": "Initialize forecast creation.\n\nKicks off a a new forecast using the params that have been assigned to the\nscenario. The forecasting process is initiated and the corresponding data\nseries are generated as empty entities. The request will return before\nfinishing the forecasts and a client will have to monitor the data series\nto find out when the forecasting process has finished. The request will\nfail if there are ongoing forecast jobs running when the request is made.\nAll existing data series for the scenario will be overwritten. Any content\nin the request body will be disregarded.",
+        "description": "Initialize forecast creation.\n\nKicks off a a new forecast using the params that have been assigned to the\nscenario. The forecasting process is initiated and the corresponding data\nseries are generated as empty entities. The request will return before\nfinishing the forecasts and a client will have to monitor the data series\nto find out when the forecasting process has finished. The request will\nfail if there are ongoing forecast jobs running when the request is made.\nAll existing data series for the scenario will be deleted. Any content\nin the request body will be disregarded.\n\nIf any of the included triplets are missing historical data, no forecast\nwill be initiated. This can either be due to missing historical data for\nthe daily forecast or missing historical data to forecast the intraday\ndistribution. Both of these data ranges are specified in the forecast\nparams. A list of running series and a list of series for which no\nforecast was started will be returned in the response.",
         "operationId": "init_forecast_tenants_tenant_id_wfm_forecastscenarios_forecast_scenario_id_forecast",
         "parameters": [
           {
@@ -942,7 +945,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponseDTO"
+                }
               }
             }
           },
@@ -2281,7 +2286,7 @@
           "Adjustment"
         ],
         "summary": "Delete",
-        "description": "Retrieve a single adjustment.",
+        "description": "Delete a single adjustment.",
         "operationId": "delete_tenants_tenant_id_wfm_forecasttimeline_forecast_timeline_id_adjustments_adjustment_id",
         "parameters": [
           {
@@ -2786,6 +2791,27 @@
         "type": "string",
         "description": "The forecast algorithm that should be used."
       },
+      "ForecastResponseDTO": {
+        "title": "ForecastResponseDTO",
+        "type": "object",
+        "properties": {
+          "series": {
+            "title": "Series",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastTripletDTO"
+            }
+          },
+          "missingHistoricalData": {
+            "title": "Missinghistoricaldata",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ForecastTripletDTO"
+            }
+          }
+        },
+        "description": "Response to an initiated forecast.\n\nParameters\n----------\nseries:\n    All series that have been created and forecasted.\n\nmissing_historical_data:\n    For these triplets no forecast have been initiated since\n    no historical data was found during the period in the scenario\n    params."
+      },
       "ForecastScenarioDTO": {
         "title": "ForecastScenarioDTO",
         "required": [
@@ -3263,6 +3289,34 @@
           }
         },
         "description": "A forecasted staffing requirement."
+      },
+      "ForecastTripletDTO": {
+        "title": "ForecastTripletDTO",
+        "required": [
+          "competency",
+          "channel",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "title": "Seriesid",
+            "type": "string",
+            "format": "uuid"
+          },
+          "competency": {
+            "title": "Competency",
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/DirectionType"
+          }
+        },
+        "description": "A forecast triplet that corresponds to one data series."
       },
       "ForecastValueType": {
         "title": "ForecastValueType",

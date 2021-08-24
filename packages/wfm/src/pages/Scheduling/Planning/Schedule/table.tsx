@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useMemo, Fragment } from 'react';
 import { useTable, useRowSelect, useExpanded} from 'react-table';
 import styled from 'styled-components';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
@@ -208,7 +208,7 @@ export function SheduleTable() {
       <TableBody className="tbody">
         {rows.map((row) => {
           prepareRow(row);
-          return (<>
+          return (<Fragment key={CreateUUID()}>
           {/* @ts-ignore */}
             <TableRow {...row.getRowProps()} className="tr" onClick={() => row.toggleRowExpanded()} >
               {row.cells.map((cell) => (
@@ -221,7 +221,7 @@ export function SheduleTable() {
             {row.isExpanded && <div>
               <ExpandedRow rowDetails={row} />
             </div>}
-          </>);
+          </Fragment>);
         })}
       </TableBody>
     </TableWrapper>

@@ -8,6 +8,7 @@ const initialState = {
   endDate: today,
   competence: '',
   timezone: '',
+  plan: null,
 };
 
 export const planning = createSlice({
@@ -25,6 +26,9 @@ export const planning = createSlice({
     },
     setTimezone: (state, action) => {
       state.timezone = action.payload;
+    },
+    setPlan: (state, action) => {
+      state.plan = action.payload;
     },
   },
 });

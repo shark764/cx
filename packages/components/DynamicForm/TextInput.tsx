@@ -1,38 +1,36 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { Controller, Control } from 'react-hook-form';
-
-const Input = styled.input`
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  border-radius: 4px;
-  border: 1px solid hsl(0,0%,80%);
-  padding: 10px 15px;
-  outline: none;
-`;
-
-
+import TextField from '@material-ui/core/TextField';
 interface Props {
   control: Control;
   isFormSubmitting: boolean;
   defaultValue: unknown;
   name: string;
   hidden?: boolean;
+  constraints?: any;
+  errors?: any
 };
-export const TextInput: React.VFC<Props> = ({control, name, isFormSubmitting, defaultValue}) =>
+export const TextInput: React.VFC<Props> = ({control, name, defaultValue, constraints, errors}) =>
   <Controller
     control={control}
     name={name}
     defaultValue={defaultValue}
+    rules={{
+      validate: {
+        required: (value) => !!value || constraints?.[name]?.required,
+      }
+    }}
     render={({ onChange, onBlur, value }) => (
-      <Input
-        value={value}
-        className={name}
+      <TextField
+        error={ Boolean(errors[name]) }
+        helperText={errors?.[name]?.message}
+        value={value || ''}
+        className={`${name}-textbox`}
+        variant="outlined"
         onChange={onChange}
         onBlur={onBlur}
-        disabled={isFormSubmitting}
+        size="small"
+        sx={{width: '85%'}}
       />
     )}
   />;

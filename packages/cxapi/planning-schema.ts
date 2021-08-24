@@ -44,11 +44,11 @@ export interface paths {
      */
     post: operations["post_availability_tenants_tenant_id_wfm_agents_agent_id_availability"];
   };
-  "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability/{id}": {
+  "/tenants/{tenant_id}/wfm/agents/{agent_id}/availability/{availability_pattern_id}": {
     /** Retrieve a specific assignment of an availability pattern to an agent. */
-    get: operations["get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id"];
+    get: operations["get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_availability_pattern_id"];
     /** Remove an assigned availability pattern for an agent. */
-    delete: operations["delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id"];
+    delete: operations["delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_availability_pattern_id"];
   };
   "/tenants/{tenant_id}/wfm/agents/{agent_id}/restrictions": {
     /** Get all restriction sets assigned to an agent. */
@@ -77,11 +77,9 @@ export interface paths {
     /** Retrieve all availabilities of one tenant. */
     get: operations["get_all_tenants_tenant_id_wfm_availabilitypatterns"];
   };
-  "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_id}": {
-    /** Retrieve a single availability. */
-    get: operations["get_tenants_tenant_id_wfm_availabilitypatterns_availability_id"];
-  };
   "/tenants/{tenant_id}/wfm/availabilitypatterns/{availability_pattern_id}": {
+    /** Retrieve a single availability. */
+    get: operations["get_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id"];
     /** Update an availability pattern. */
     put: operations["put_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id"];
     /** Delete an availability pattern. */
@@ -210,7 +208,21 @@ export interface paths {
   "/tenants/{tenant_id}/wfm/plans/{plan_id}/optimization": {
     /** Get the current optimization. */
     get: operations["get_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization"];
-    /** Start the current optimization. */
+    /**
+     * Start the current optimization.
+     *
+     * Starts an optimization using forecasts from the specified competencies,
+     * the optimization will use forcasts from the timeline specified in the
+     * request. The optimization will plan and save schedules for all
+     * agents for the specified schedule period, if it is possible to
+     * create a schedule based on the restrictions. If
+     * agents have assigned restrictions those will be used, if no restrictions are
+     * found the tenant defaults will be used. Breaks will be planned if there are
+     * breaksettings specified, first according to settings assigned to an agent
+     * otherwise the defaults are used. The optimization will plan default
+     * activities for operator work, paid break and unpaid break, default
+     * tenant activities has to be specified to run the optimization.
+     */
     put: operations["put_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization"];
     /**
      * Cancel the current optimization.
@@ -275,9 +287,22 @@ export interface components {
     };
     /** Links an agent to an availability. */
     AgentAvailabilityPatternDTO: {
+      id: string;
       availabilityPatternId: string;
       startDate?: string;
       endDate?: string;
+    };
+    /** Represents an agent. */
+    AgentDTO: {
+      id: string;
+      tenantId: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+      externalId: string;
+      email: string;
+      active: boolean;
+      capacityId?: string;
     };
     /** Contain data for how many agents are above or below the limit. */
     AgentOccupancyLimit: {
@@ -380,6 +405,12 @@ export interface components {
     };
     /** Status for jobs. */
     JobStatus: "pending" | "running" | "success" | "failed";
+    /** Links an agent to an availability. */
+    NewAgentAvailabilityPatternDTO: {
+      availabilityPatternId: string;
+      startDate?: string;
+      endDate?: string;
+    };
     /** Assigned restriction set dto for requests. */
     NewAssignedRestrictionSetDTO: {
       startDate: string;
@@ -389,6 +420,7 @@ export interface components {
     /** Class used to create a new optimization. */
     NewOptimizationDTO: {
       schedulePeriodId: string;
+      timelineId?: string;
       agents: string[];
       competencies: string[];
     };
@@ -412,6 +444,7 @@ export interface components {
     /** The response class for optimizations. */
     OptimizationDTO: {
       schedulePeriodId: string;
+      timelineId?: string;
       agents: string[];
       competencies: string[];
       id?: string;
@@ -563,6 +596,8 @@ export interface components {
      * ----------
      * schedule_period_id : UUID
      *
+     * timeline_id : UUID
+     *
      * agents : Optional[List[UUID]]
      *
      * competencies : Optional[List[UUID]]
@@ -582,6 +617,7 @@ export interface components {
      */
     SimulationRequestDTO: {
       schedulePeriodId: string;
+      timelineId: string;
       agents?: string[];
       competencies?: string[];
       upperOccupancyLimits: number[];
@@ -618,7 +654,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AgentDTO"][];
         };
       };
       /** Validation Error */
@@ -645,7 +681,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AgentDTO"];
         };
       };
       /** Validation Error */
@@ -672,7 +708,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AddressDTO"];
         };
       };
       /** Validation Error */
@@ -699,7 +735,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AddressDTO"];
         };
       };
       /** Validation Error */
@@ -758,7 +794,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["EmploymentDTO"];
         };
       };
       /** Validation Error */
@@ -785,7 +821,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["EmploymentDTO"];
         };
       };
       /** Validation Error */
@@ -844,7 +880,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AgentAvailabilityPatternDTO"][];
         };
       };
       /** Validation Error */
@@ -877,7 +913,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AgentAvailabilityPatternDTO"][];
         };
       };
       /** Validation Error */
@@ -889,17 +925,17 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AgentAvailabilityPatternDTO"];
+        "application/json": components["schemas"]["NewAgentAvailabilityPatternDTO"];
       };
     };
   };
   /** Retrieve a specific assignment of an availability pattern to an agent. */
-  get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id: {
+  get_availability_tenants_tenant_id_wfm_agents_agent_id_availability_availability_pattern_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
-        id: string;
+        availability_pattern_id: string;
       };
       header: {
         "x-cx-auth-tenant"?: string;
@@ -910,7 +946,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AgentAvailabilityPatternDTO"];
         };
       };
       /** Validation Error */
@@ -922,12 +958,12 @@ export interface operations {
     };
   };
   /** Remove an assigned availability pattern for an agent. */
-  delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_id: {
+  delete_availability_tenants_tenant_id_wfm_agents_agent_id_availability_availability_pattern_id: {
     parameters: {
       path: {
         tenant_id: string;
         agent_id: string;
-        id: string;
+        availability_pattern_id: string;
       };
       header: {
         "x-cx-auth-tenant"?: string;
@@ -1156,11 +1192,11 @@ export interface operations {
     };
   };
   /** Retrieve a single availability. */
-  get_tenants_tenant_id_wfm_availabilitypatterns_availability_id: {
+  get_tenants_tenant_id_wfm_availabilitypatterns_availability_pattern_id: {
     parameters: {
       path: {
         tenant_id: string;
-        availability_id: string;
+        availability_pattern_id: string;
       };
       header: {
         "x-cx-auth-tenant"?: string;
@@ -2399,7 +2435,21 @@ export interface operations {
       };
     };
   };
-  /** Start the current optimization. */
+  /**
+   * Start the current optimization.
+   *
+   * Starts an optimization using forecasts from the specified competencies,
+   * the optimization will use forcasts from the timeline specified in the
+   * request. The optimization will plan and save schedules for all
+   * agents for the specified schedule period, if it is possible to
+   * create a schedule based on the restrictions. If
+   * agents have assigned restrictions those will be used, if no restrictions are
+   * found the tenant defaults will be used. Breaks will be planned if there are
+   * breaksettings specified, first according to settings assigned to an agent
+   * otherwise the defaults are used. The optimization will plan default
+   * activities for operator work, paid break and unpaid break, default
+   * tenant activities has to be specified to run the optimization.
+   */
   put_optimization_tenants_tenant_id_wfm_plans_plan_id_optimization: {
     parameters: {
       path: {
@@ -2424,6 +2474,12 @@ export interface operations {
        *                     * Cannot initiate a new optimization while there is one
        *                     running or pending.
        *                     * Cannot optimize the official plan, check the plan id.
+       *                     * Competencies not found, check the competency ids.
+       *                     * Agents not found, check the agent ids.
+       *                     * Missing a default activity. Required defaults are operator
+       *                     work, paid break and unpaid break.
+       *                     * Missing default restrictions if not all agents have
+       *                     assigned restrictions.
        */
       400: unknown;
       /** Validation Error */
@@ -2514,7 +2570,7 @@ export interface operations {
       /** Successful Response */
       200: {
         content: {
-          "application/json": { [key: string]: any };
+          "application/json": components["schemas"]["AgentDTO"][];
         };
       };
       /** Validation Error */
@@ -2547,6 +2603,8 @@ export interface operations {
       /**
        * Failure reasons:
        *               * Only agents or competencies can be provided, not both.
+       *               * Competencies not found, check the competency ids.
+       *               * Agents not found, check the agent ids.
        */
       400: unknown;
       /** Validation Error */

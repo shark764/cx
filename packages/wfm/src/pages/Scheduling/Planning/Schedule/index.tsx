@@ -1,63 +1,69 @@
-import * as React from 'react';
 import styled from 'styled-components';
-import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
-// import LockOpenIcon from '@material-ui/icons/LockOpen';
 import LockIcon from '@material-ui/icons/Lock';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import SaveIcon from '@material-ui/icons/Save';
-import { ScheduleVersion } from './chooseVersion';
+import { useSelector } from 'react-redux';
+import { ScheduleVersion } from './ScheduleVersion';
 import { Filters } from './filters';
 import { SheduleTable } from './table';
-
-const useStyles = makeStyles({
-  root: {
-    height: 40,
-    padding: '0 30px',
-    marginLeft: '30px',
-    // textTransform: 'capitalize',
-  },
-});
+import { RootState } from '../../../../redux/store';
+import { usePlans } from './planningApiQueries';
 
 const SheduleControls = styled.section`
   display: flex;
   justify-content: space-between;
 `;
-
 const SheduleFilters = styled.section`
   margin-top: 30px;
 `;
-
 const SheduleTableSection = styled.section`
   margin-top: 30px;
 `;
+const Actions = styled.span`
+  button {
+    margin-left: 10px;
+  }
+`;
 
 export function PlanningSchedule() {
-  const classes = useStyles();
+  const sessionTenantId = useSelector((state: RootState) => state.main.session.tenant_id);
 
-  const buttonClass = {
-    root: classes.root,
-  };
-  return (
-    <>
+  const {
+    data: plans = [],
+    // isFetching: plansFetching,
+    // refetch: refetchPlans
+  } = usePlans(sessionTenantId);
+
+  return <>
       <SheduleControls>
-        <ScheduleVersion />
-        <span>
-          <Button classes={buttonClass} style={{ color: '#4c4a4a' }} variant="outlined" startIcon={<FileCopyIcon />}>
+        <ScheduleVersion
+          plans={plans}
+        />
+        <Actions>
+          <Button // Copy
+            style={{ color: '#4c4a4a' }}
+            variant="outlined"
+            startIcon={<FileCopyIcon />}
+          >
             Copy Shedule
           </Button>
-          {/* Have only one lock button.. and dynamic if shedule is locked or not */}
-          <Button classes={buttonClass} style={{ color: '#4c4a4a' }} variant="outlined" startIcon={<LockIcon />}>
+          <Button // Lock
+            style={{ color: '#4c4a4a' }}
+            variant="outlined"
+            startIcon={<LockIcon />}
+          >
             Lock Shedule
           </Button>
-
-          <Button classes={buttonClass} style={{ color: '#4c4a4a' }} variant="outlined" startIcon={<RefreshIcon />}>
+          <Button // Refresh
+            style={{ color: '#4c4a4a' }}
+            variant="outlined"
+            startIcon={<RefreshIcon />}
+          >
             Refresh
           </Button>
-          <Button
-            classes={buttonClass}
-            style={{ color: 'white', background: '#07487a' }}
+          <Button // Save
             variant="contained"
             disableElevation
             color="primary"
@@ -65,7 +71,7 @@ export function PlanningSchedule() {
           >
             Save
           </Button>
-        </span>
+        </Actions>
       </SheduleControls>
 
       <SheduleFilters>
@@ -75,6 +81,5 @@ export function PlanningSchedule() {
       <SheduleTableSection>
         <SheduleTable />
       </SheduleTableSection>
-    </>
-  );
+    </>;
 }
