@@ -7,9 +7,10 @@ import { planning } from '../../../../redux/reducers/planning';
 const { setPlan } = planning.actions;
 interface Props {
   plans: any[];
+  width?: number;
 };
 
-export const ScheduleVersion: React.FC<Props> = ({plans}) => {
+export const ScheduleVersion: React.FC<Props> = ({plans, width = 300}) => {
   const plan = useSelector((state: RootState) => state.planning.plan);
   const dispatch = useDispatch();
 
@@ -18,7 +19,7 @@ export const ScheduleVersion: React.FC<Props> = ({plans}) => {
       id="choose_plan"
       options={plans.map(({name, id}) => ({label: name, id}))}
       size="small"
-      sx={{ width: 300, display: 'inline-block' }}
+      sx={{ width: width, display: 'inline-block' }}
       renderInput={(params: any) => <TextField {...params} label="Plans" variant="outlined" />}
       value={plan}
       isOptionEqualToValue={(a, b) => a.id === b.id }

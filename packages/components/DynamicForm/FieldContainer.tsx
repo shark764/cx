@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-const Field = styled.div`
+const Field = styled.div<{fullWidth?: boolean, hidden?: boolean}>`
   display: ${({hidden}) => hidden? 'none' : 'grid'};
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: ${({fullWidth}) => fullWidth ? '1fr' : '1fr 2fr'};
   gap: 15px;
   margin: 0.5rem;
   font-family: Arial;
@@ -17,12 +17,13 @@ interface Props {
   label: string;
   children: React.ReactNode;
   hidden?: boolean;
+  fullWidth?: boolean;
 };
 
-export const FieldContainer: React.VFC<Props> = ({ label = '', hidden, children }) => {
+export const FieldContainer: React.VFC<Props> = ({ label = '', hidden, fullWidth, children }) => {
   return (
-    <Field hidden={hidden} >
-      {/* Error message will go here */}
+    <Field hidden={hidden} fullWidth={fullWidth} >
+
       <Label > { label } </Label>
       <span> { children } </span>
     </Field>

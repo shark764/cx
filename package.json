@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^5.0.0-alpha.34",
+    "@material-ui/data-grid": "^4.0.0-alpha.37",
     "@material-ui/icons": "^5.0.0-alpha.34",
     "@material-ui/lab": "^5.0.0-alpha.34",
     "@material-ui/styled-engine": "^5.0.0-alpha.11",

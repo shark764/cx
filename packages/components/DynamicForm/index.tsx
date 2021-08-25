@@ -7,6 +7,7 @@ import { DateInput } from './DateInput';
 import { FieldContainer } from './FieldContainer';
 import { RadioToggle, RadioButton, ContrtolledToggles } from './RadioField';
 import { TextInput } from './TextInput';
+import { NumberInput } from './NumberInput';
 import { TextboxInput } from './TextboxInput';
 import { DateRanges } from './DateRanges';
 import { SeriesInput } from './SeriesInput';
@@ -19,6 +20,8 @@ import { EvenWeeks } from './EvenWeeks';
 import { TypeaheadInput } from './Typeahead';
 import { FloorAndCap } from './FloorAndCap';
 import { AutoComplete } from './Autocomplete';
+import { DayTypes } from './DayTypes';
+import { BreakSettings } from './BreakSettings';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/core/Alert';
 
@@ -42,6 +45,7 @@ const fieldComponents = {
   radio: RadioButton,
   radioToggle: RadioToggle,
   textInput: TextInput,
+  numberInput: NumberInput,
   textboxInput: TextboxInput,
   dateRanges: DateRanges,
   series: SeriesInput,
@@ -53,6 +57,8 @@ const fieldComponents = {
   evenWeeks: EvenWeeks,
   typeahead: TypeaheadInput,
   floorAndCap: FloorAndCap,
+  dayTypes: DayTypes,
+  breakSettings: BreakSettings,
   none: EmptyComponent,
 };
 interface DynamicFormBuilder {
@@ -103,7 +109,7 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
   const externalErrors = useMemo(() => externalFormError(allValues), [allValues, externalFormError]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <Wrapper>
         {formDefenition.map(({sectionTitle, collapsable, fields, collapsableDefaultOpen, hidden}) =>
         <DetailWrapper
@@ -114,8 +120,8 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           hidden={hidden}
         >
 
-          {fields.map(({label, name, type, constraints, choices, hidden, multiValue, toggleable, toggles, toggleFields, defaultToggled, hiddenToggleField}) =>
-          <FieldContainer label={label} key={label} hidden={hidden} >
+          {fields.map(({label, name, type, constraints, choices, hidden,fullWidth, multiValue, toggleable, toggles, toggleFields, defaultToggled, hiddenToggleField}) =>
+          <FieldContainer label={label} key={label} hidden={hidden} fullWidth={fullWidth} >
             {toggleable ?
               <>
                 <ContrtolledToggles
@@ -166,9 +172,10 @@ export const DynamicForm = ({ onSubmit, onCancel, isFormSubmitting, defaultValue
           variant="contained"
           disableElevation
           color="primary"
-          type="submit"
+          type="button"
           className="dynamicFormSave"
           disabled={externalErrors.length > 0}
+          onClick={handleSubmit(onSubmit)}
         >
           Submit
         </Button>
