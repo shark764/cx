@@ -59,3 +59,29 @@ export const useBreakSettings = (tenant_id: string) => useQuery<any, any>(
     enabled: !!tenant_id
   }
 );
+
+export const useAgents = (tenant_id: string) => useQuery<any, any>(
+  ['Get Agents', tenant_id],
+  () => wfm.planning.api.get_agents_tenants_tenant_id_wfm_agents({
+    pathParams: {
+      tenant_id,
+    }
+  }),
+  {
+    refetchOnWindowFocus: false,
+    enabled: !!tenant_id
+  }
+);
+
+export const useActivities = (tenant_id: string) => useQuery<any, any>(
+  ['Get Activities', tenant_id],
+  () => wfm.planning.api.get_all_tenants_tenant_id_wfm_activities({
+    pathParams: {
+      tenant_id,
+    }
+  }),
+  {
+    refetchOnWindowFocus: false,
+    enabled: !!tenant_id
+  }
+);
